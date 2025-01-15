@@ -1,48 +1,6 @@
 import React from "react";
 import NexusLogo from "@/components/ui/NexusLogo";
-import { Linkedin, Instagram, Twitter, Youtube } from "lucide-react";
-
-const quickLinks = [
-  { name: "Home", href: "/" },
-  { name: "Features", href: "/features" },
-  { name: "Premium Plans", href: "/pricing" },
-  { name: "Tech Squads", href: "/squads" },
-  { name: "Contact Us", href: "/contact" },
-];
-
-const resources = [
-  { name: "FAQ", href: "/faq" },
-  { name: "Privacy Policy", href: "/privacy" },
-  { name: "Terms & Conditions", href: "/terms" },
-  { name: "Community Guidelines", href: "/guidelines" },
-];
-
-const socialLinks = [
-  {
-    name: "LinkedIn",
-    href: "#",
-    icon: Linkedin,
-    color: "text-[#0077B5] hover:text-[#0077B5]/80",
-  },
-  {
-    name: "Instagram",
-    href: "#",
-    icon: Instagram,
-    color: "text-[#E4405F] hover:text-[#E4405F]/80",
-  },
-  {
-    name: "Twitter",
-    href: "#",
-    icon: Twitter,
-    color: "text-[#1DA1F2] hover:text-[#1DA1F2]/80",
-  },
-  {
-    name: "YouTube",
-    href: "#",
-    icon: Youtube,
-    color: "text-[#FF0000] hover:text-[#FF0000]/80",
-  },
-];
+import { quickLinks, resources, socialLinks } from "@/utils/navigationLinks";
 
 const Footer: React.FC = () => {
   return (

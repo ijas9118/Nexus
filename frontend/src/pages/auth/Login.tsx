@@ -2,12 +2,42 @@ import SocialButton from "@/components/auth/SocialButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { loginUser, registerUser } from "@/services/authService";
+import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [signUp, setSignUp] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      if (signUp) {
+        // await registerUser(formData.name, formData.email, formData.password);
+        alert("Registration successful.");
+      } else {
+        // await loginUser(formData.email, formData.password);
+        alert("User logged in");
+      }
+    } catch (error) {
+      console.log("Error occured", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
@@ -53,31 +83,37 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-4">
-              {signUp ? (
+              {signUp && (
                 <div className="space-y-2">
                   <Input
                     type="text"
+                    name="name"
                     placeholder="Enter your full name"
-                    className="dark:border-gray-700"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required={signUp}
                   />
                 </div>
-              ) : (
-                <></>
               )}
-
               <div className="space-y-2">
                 <Input
                   type="email"
+                  name="email"
                   placeholder="name@example.com"
-                  className="dark:border-gray-700"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
                 />
               </div>
               <div className="space-y-2">
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
+                    name="password"
                     placeholder="Enter your password"
-                    className="dark:border-gray-700"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
                   />
                   <Button
                     type="button"
@@ -96,8 +132,20 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <Button className="w-full bg-primary hover:bg-primary/90">
-              {signUp ? "Register" : "Login"}
+            <Button
+              className="w-full bg-primary hover:bg-primary/90"
+              onClick={handleSubmit}
+            >
+              {loading ? (
+                <div className="flex items-center space-x-2">
+                  <Loader2 className="animate-spin" />
+                  <span>Please wait...</span>
+                </div>
+              ) : signUp ? (
+                "Register"
+              ) : (
+                "Login"
+              )}
             </Button>
 
             <p className=" text-sm text-muted-foreground">
