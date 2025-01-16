@@ -2,9 +2,13 @@ import SocialButton from "@/components/auth/SocialButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
 import { loginUser, registerUser } from "@/services/authService";
+import { isValidEmail } from "@/utils/validation";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,29 +19,65 @@ export default function LoginPage() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const isFormIncomplete = useMemo(() => {
+    return signUp
+      ? !formData.name || !formData.email || !formData.password
+      : !formData.email || !formData.password;
+  }, [signUp, formData]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
+    if (isFormIncomplete) {
+      toast({
+        variant: "destructive",
+        title: "Missing Information",
+        description: signUp
+          ? "Please fill out your name, email, and password to register."
+          : "Please provide both email and password to log in.",
+      });
+      return;
+    }
+
+    if (!isValidEmail(formData.email)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+      });
+      return;
+    }
+
+    setLoading(true);
     try {
-      if (signUp) {
-        // await registerUser(formData.name, formData.email, formData.password);
-        alert("Registration successful.");
-      } else {
-        // await loginUser(formData.email, formData.password);
-        alert("User logged in");
-      }
-    } catch (error) {
-      console.log("Error occured", error);
+      const result = signUp
+        ? await registerUser(formData.name, formData.email, formData.password)
+        : await loginUser(formData.email, formData.password);
+
+      if (result) navigate("/");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Authentication Failed",
+        description:
+          error?.message || "Something went wrong. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
   };
+
+  const buttonText = useMemo(
+    () => (loading ? "Please wait..." : signUp ? "Register" : "Login"),
+    [loading, signUp]
+  );
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
@@ -136,22 +176,14 @@ export default function LoginPage() {
               className="w-full bg-primary hover:bg-primary/90"
               onClick={handleSubmit}
             >
-              {loading ? (
-                <div className="flex items-center space-x-2">
-                  <Loader2 className="animate-spin" />
-                  <span>Please wait...</span>
-                </div>
-              ) : signUp ? (
-                "Register"
-              ) : (
-                "Login"
-              )}
+              {loading && <Loader2 className="animate-spin mr-2" />}
+              {buttonText}
             </Button>
+            <Toaster />
 
             <p className=" text-sm text-muted-foreground">
               {signUp ? "Have an account?" : "Don't have an account?"}{" "}
               <a
-                href="#"
                 className="text-primary hover:underline"
                 onClick={() => setSignUp((prev) => !prev)}
               >

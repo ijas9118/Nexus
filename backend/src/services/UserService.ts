@@ -29,16 +29,16 @@ export class UserService {
   async login(email: string, password: string): Promise<IUser> {
     const user = await this.userRepository.findUserByEmail(email);
 
-    if (!user) throw new Error("User not exist");
+    if (!user) throw new Error("User doesn't exist");
 
     const isPasswordMatch = await this.userRepository.comparePasswords(
       password,
       user.password
     );
 
-    if (!isPasswordMatch) throw new Error("Invalid credentials");
+    if (!isPasswordMatch)
+      throw new Error("Please check your email and password");
 
     return user;
   }
-
 }
