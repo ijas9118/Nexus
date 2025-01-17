@@ -61,13 +61,14 @@ export default function LoginPage() {
         ? await registerUser(formData.name, formData.email, formData.password)
         : await loginUser(formData.email, formData.password);
 
+      console.log(result);
+
       if (result) navigate("/");
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Authentication Failed",
-        description:
-          error?.message || "Something went wrong. Please try again.",
+        description: error?.message || "Something went wrong. Please try again.",
       });
     } finally {
       setLoading(false);
@@ -86,9 +87,7 @@ export default function LoginPage() {
           <div className="space-y-2">
             {signUp ? (
               <>
-                <h1 className="text-3xl font-semibold tracking-tight">
-                  Get Started Now
-                </h1>
+                <h1 className="text-3xl font-semibold tracking-tight">Get Started Now</h1>
                 <p className="text-muted-foreground">
                   Enter your details to create your account
                 </p>
