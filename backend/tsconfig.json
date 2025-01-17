@@ -8,6 +8,8 @@
     "strict": true,                           // Enable strict type checking
     "esModuleInterop": true,                  // Allow default imports from CommonJS modules
     "forceConsistentCasingInFileNames": true, // Ensure file names are case-sensitive
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
 
     /* Additional Options */
     "resolveJsonModule": true,                // Support importing JSON files
