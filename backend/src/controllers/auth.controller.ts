@@ -64,4 +64,27 @@ export class AuthController {
       res.status(400).json({ message: "Login failed", error });
     }
   }
+
+  async refreshToken(req: Request, res: Response): Promise<void> {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+
+      if (!refreshToken) {
+        res.status(401).json({ message: "Refresh token not found" });
+        return;
+      }
+
+      const tokens = await this.authService.refreshToken(refreshToken);
+      if (!tokens) {
+        res.status(403).json({ message: "Invalid or expired refresh token" });
+        return;
+      }
+
+      this.setCookies(res, tokens.accessToken, tokens.refreshToken);
+
+      res.status(200).json({ message: "Tokens refreshed successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Token refresh failed", error });
+    }
+  }
 }
