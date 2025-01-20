@@ -5,9 +5,10 @@ import { AuthService } from "../services/auth.service";
 import { LoginDto } from "../dtos/requests/auth/login.dto";
 import { RegisterDto } from "../dtos/requests/auth/register.dto";
 import { NODE_ENV } from "../utils/constants";
+import { IAuthController } from "../core/interfaces/controllers/IAuthController";
 
 @injectable()
-export class AuthController {
+export class AuthController implements IAuthController{
   constructor(@inject(TYPES.AuthService) private authService: AuthService) {}
 
   private setCookies(res: Response, accessToken: string, refreshToken: string): void {
@@ -15,14 +16,14 @@ export class AuthController {
       httpOnly: true,
       secure: NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 15 * 60 * 1000, // 15 minutes
+      maxAge: 15 * 60 * 1000,
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000, 
     });
   }
 

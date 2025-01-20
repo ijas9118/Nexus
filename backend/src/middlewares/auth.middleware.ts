@@ -1,5 +1,5 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
-import { verifyAccessToken, verifyRefreshToken } from "../utils/jwt.util";
+import { NextFunction, Request, Response } from "express";
+import { verifyRefreshToken } from "../utils/jwt.util";
 import { JwtPayload } from "jsonwebtoken";
 
 interface CustomRequest extends Request {

@@ -53,7 +53,7 @@ export function AppSidebar() {
                 <SidebarMenuButton className="h-fit">
                   <Avatar className="rounded">
                     <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarFallback>IA</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
                     <span className="text-sm">Ijas Ahammed</span>
@@ -64,10 +64,10 @@ export function AppSidebar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
                 <DropdownMenuItem>
-                  <span>Account</span>
+                  <span>Profile</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <span>Billing</span>
+                  <span>Account Details</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <span>Sign out</span>

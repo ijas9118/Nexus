@@ -1,4 +1,4 @@
-import { Document, Model, FilterQuery } from "mongoose";
+import { Document, Model, FilterQuery, UpdateQuery } from "mongoose";
 import { IBaseRepository } from "../interfaces/repositories/IBaseRepository";
 
 export abstract class BaseRepository<T extends Document> implements IBaseRepository<T> {
@@ -31,5 +31,23 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
 
   async findOne(filter: FilterQuery<T>): Promise<T | null> {
     return this.model.findOne(filter);
+  }
+
+  async addToSet(id: string, field: string, value: any): Promise<T | null> {
+    const updatedDocument = await this.model.findByIdAndUpdate(
+      id,
+      { $addToSet: { [field]: value } } as UpdateQuery<T>,
+      { new: true }
+    );
+    return updatedDocument as unknown as T | null;
+  }
+
+  async pull(id: string, field: string, value: any): Promise<T | null> {
+    const updatedDocument = await this.model.findByIdAndUpdate(
+      id,
+      { $pull: { [field]: value } } as UpdateQuery<T>,
+      { new: true }
+    );
+    return updatedDocument as unknown as T | null;
   }
 }
