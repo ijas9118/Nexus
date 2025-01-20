@@ -1,14 +1,16 @@
 import React from "react";
-import LoginPage from "./pages/auth/Login";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/normal/Home";
+import UserRoutes from "./routes/UserRoutes";
+import MentorRoutes from "./routes/MentorRoutes";
+import AdminRoutes from "./routes/AdminRoutes";
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/*" element={<UserRoutes />} />
+        <Route path="/mentor/*" element={<MentorRoutes />} />
+        <Route path="/admin/*" element={<AdminRoutes />} />
       </Routes>
     </BrowserRouter>
   );

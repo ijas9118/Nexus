@@ -29,6 +29,7 @@ export class AuthService {
     const refreshToken = generateRefreshToken(user);
 
     return {
+      _id: user._id,
       name: user.name,
       email: user.email,
       accessToken,
@@ -46,9 +47,8 @@ export class AuthService {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
-    this.refreshToken(refreshToken);
-
     return {
+      _id: user._id,
       name: user.name,
       email: user.email,
       accessToken,

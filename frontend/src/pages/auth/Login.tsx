@@ -9,6 +9,8 @@ import { isValidEmail } from "@/utils/validation";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "@/store/slices/authSlice";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,6 +23,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -61,9 +64,16 @@ export default function LoginPage() {
         ? await registerUser(formData.name, formData.email, formData.password)
         : await loginUser(formData.email, formData.password);
 
-      console.log(result);
-
-      if (result) navigate("/");
+      if (result.user) {
+        dispatch(
+          login({
+            _id: result.user._id,
+            name: result.user.name,
+            email: result.user.email,
+          })
+        );
+        navigate("/myFeed");
+      }
     } catch (error: any) {
       toast({
         variant: "destructive",

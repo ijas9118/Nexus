@@ -29,16 +29,17 @@ export class AuthController {
   async register(req: Request, res: Response): Promise<void> {
     try {
       const registerDto: RegisterDto = req.body;
-      const user = await this.authService.register(registerDto);
+      const result = await this.authService.register(registerDto);
 
-      if (!user.accessToken || !user.refreshToken) {
-        res.status(400).json(user);
-        return;
-      }
+      this.setCookies(res, result.accessToken, result.refreshToken);
 
-      this.setCookies(res, user.accessToken, user.refreshToken);
+      const user = {
+        _id: result._id,
+        name: result.name,
+        email: result.email,
+      };
 
-      res.status(201).json({ message: "User registered successfully", user });
+      res.status(201).json({ user });
     } catch (error) {
       res.status(400).json({ message: "Registration failed", error });
     }
@@ -47,16 +48,22 @@ export class AuthController {
   async login(req: Request, res: Response): Promise<void> {
     try {
       const loginDto: LoginDto = req.body;
-      const user = await this.authService.login(loginDto);
+      const userData = await this.authService.login(loginDto);
 
-      if (user) {
-        if (!user.accessToken || !user.refreshToken) {
-          res.status(400).json(user);
+      if (userData) {
+        if (!userData.accessToken || !userData.refreshToken) {
+          res.status(400).json(userData);
           return;
         }
 
-        this.setCookies(res, user.accessToken, user.refreshToken);
-        res.status(200).json({ message: "Login successful", user });
+        this.setCookies(res, userData.accessToken, userData.refreshToken);
+
+        const user = {
+          _id: userData._id,
+          name: userData.name,
+          email: userData.email,
+        };
+        res.status(200).json({ user });
       } else {
         res.status(401).json({ message: "Invalid credentials" });
       }
@@ -82,7 +89,7 @@ export class AuthController {
 
       this.setCookies(res, tokens.accessToken, tokens.refreshToken);
 
-      res.status(200).json({ message: "Tokens refreshed successfully" });
+      res.status(200).json({ accessToken: tokens.accessToken });
     } catch (error) {
       res.status(500).json({ message: "Token refresh failed", error });
     }
