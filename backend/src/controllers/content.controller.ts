@@ -3,20 +3,22 @@ import { ContentService } from "../services/content.service";
 import { TYPES } from "../di/types";
 import { IContentController } from "../core/interfaces/controllers/IContentController";
 import { Request, Response } from "express";
+import { CustomRequest } from "../core/types/CustomRequest";
 
 @injectable()
 export class ContentController implements IContentController {
   constructor(@inject(TYPES.ContentService) private contentService: ContentService) {}
 
-  createContent: IContentController["createContent"] = async (req, res) => {
+  async createContent(req: CustomRequest, res: Response): Promise<void> {
     try {
-      const contentData = { ...req.body, author: req.user.userId };
+      const contentData = { ...req.body, author: req.user };
       const content = await this.contentService.createContent(contentData);
+      console.log(content);
       res.status(201).json(content);
     } catch (error) {
       res.status(400).json({ message: "Failed to create content", error });
     }
-  };
+  }
 
   async getContent(req: Request, res: Response): Promise<void> {
     try {
@@ -40,7 +42,8 @@ export class ContentController implements IContentController {
     }
   }
 
-  async likeContent(req: Request, res: Response): Promise<void> {
+  async likeContent(req: CustomRequest, res: Response): Promise<void> {
+    console.log(req.params.id, req.user?._id);
     // try {
     //   const content = await this.contentService.likeContent(
     //     req.params.id,

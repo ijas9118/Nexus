@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { likeContent } from "@/services/authService";
 import { Bookmark, Gem, MessageCircle, Share2, ThumbsUp } from "lucide-react";
 import React from "react";
 
@@ -19,6 +20,13 @@ interface ContentCardProps {
 }
 
 const ContentCard: React.FC<ContentCardProps> = (props) => {
+  const handleLike = async () => {
+    try {
+      const updatedContent = await likeContent("12");
+      console.log(updatedContent);
+    } catch (error) {}
+  };
+
   return (
     <Card className="flex flex-col">
       <CardHeader className="flex-row gap-4 space-y-0">
@@ -44,15 +52,17 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
         </div>
         <h2 className="mb-2 text-xl font-bold">{props.heading}</h2>
         <div className="flex flex-wrap gap-2">
-          {props.tags.map((tag) => (
-            <Badge variant="outline">#{tag}</Badge>
+          {props.tags.map((tag, index) => (
+            <Badge key={index} variant="outline">
+              #{tag}
+            </Badge>
           ))}
         </div>
         <p className="mt-2 text-sm text-muted-foreground">{props.date}</p>
       </CardContent>
       <CardFooter className="border-t py-3">
         <div className="flex w-full items-center justify-between">
-          <Button variant="ghost" size="sm" className="gap-2">
+          <Button variant="ghost" size="sm" className="gap-2" onClick={handleLike}>
             <ThumbsUp className="h-4 w-4" />
             {props.likes}
           </Button>

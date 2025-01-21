@@ -25,8 +25,14 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    const accessToken = generateAccessToken(user);
-    const refreshToken = generateRefreshToken(user);
+    const userData = {
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+    };
+
+    const accessToken = generateAccessToken(userData);
+    const refreshToken = generateRefreshToken(userData);
 
     return {
       _id: user._id,
@@ -42,10 +48,17 @@ export class AuthService {
     const user = await this.userRepository.findByEmail(email);
     if (!user) return null;
 
+    const userData = {
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+    };
+
     const isPasswordValid = await compare(password, user.password);
     if (!isPasswordValid) return null;
-    const accessToken = generateAccessToken(user);
-    const refreshToken = generateRefreshToken(user);
+
+    const accessToken = generateAccessToken(userData);
+    const refreshToken = generateRefreshToken(userData);
 
     return {
       _id: user._id,
@@ -62,12 +75,18 @@ export class AuthService {
     try {
       const decoded = verifyRefreshToken(refreshToken);
 
-      const user = await this.userRepository.findById(decoded.userId);
+      const user = await this.userRepository.findById(decoded.user._id);
 
       if (!user) throw new Error("User not found");
 
-      const accessToken = generateAccessToken(user);
-      const newRefreshToken = generateRefreshToken(user);
+      const userData = {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+      };
+
+      const accessToken = generateAccessToken(userData);
+      const newRefreshToken = generateRefreshToken(userData);
 
       return { accessToken, refreshToken: newRefreshToken };
     } catch (error) {

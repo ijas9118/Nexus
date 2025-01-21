@@ -5,12 +5,12 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "./constants";
 const ACCESS_TOKEN_SECRET = ACCESS_TOKEN || "access_secret";
 const REFRESH_TOKEN_SECRET = REFRESH_TOKEN || "refresh_secret";
 
-export const generateAccessToken = (user: IUser): string => {
-  return jwt.sign({ userId: user._id }, ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+export const generateAccessToken = (user: object): string => {
+  return jwt.sign({ user }, ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
 };
 
-export const generateRefreshToken = (user: IUser): string => {
-  return jwt.sign({ userId: user._id }, REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+export const generateRefreshToken = (user: object): string => {
+  return jwt.sign({ user }, REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
 };
 
 export const verifyAccessToken = (token: string): any => {

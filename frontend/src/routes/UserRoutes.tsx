@@ -1,4 +1,5 @@
 import LoginPage from "@/pages/auth/Login";
+import AddPost from "@/pages/normal/AddPost";
 import Home from "@/pages/normal/Home";
 import Layout from "@/pages/normal/Layout";
 import MyFeed from "@/pages/normal/MyFeed";
@@ -14,8 +15,8 @@ const UserRoutes: React.FC = () => {
       <Route path="/" element={<Layout />}>
         <Route path="myFeed" element={<MyFeed />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="addPost" element={<AddPost />} />
       </Route>
-
       {/* <Route path="/not-found" element={<NotFound />} /> */}
     </Routes>
   );
