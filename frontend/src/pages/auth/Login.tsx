@@ -4,17 +4,25 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
-import { loginUser, registerUser } from "@/services/authService";
+import { loginUser, registerUser, verifyOtp } from "@/services/authService";
 import { isValidEmail } from "@/utils/validation";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/store/slices/authSlice";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { RootState } from "@/store/store";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [signUp, setSignUp] = useState(false);
+  const [showOTP, setShowOTP] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -72,8 +80,10 @@ export default function LoginPage() {
             email: result.user.email,
           })
         );
-        navigate("/myFeed");
       }
+      if (signUp) {
+        setShowOTP(true);
+      } else navigate("/myFeed");
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -90,116 +100,161 @@ export default function LoginPage() {
     [loading, signUp]
   );
 
+  const handleComplete = async (value: string) => {
+    try {
+      const result = await verifyOtp(formData.email, value);
+      if (result) navigate("/myFeed");
+    } catch (error: any) {
+      console.log("Error occured: ", error.message);
+    }
+  };
+
+  const onResend = () => {};
+
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
       <Card className="p-8 md:p-12 flex flex-col justify-center">
         <div className="w-full max-w-sm mx-auto space-y-8">
-          <div className="space-y-2">
-            {signUp ? (
-              <>
-                <h1 className="text-3xl font-semibold tracking-tight">Get Started Now</h1>
-                <p className="text-muted-foreground">
-                  Enter your details to create your account
-                </p>
-              </>
-            ) : (
-              <>
+          {showOTP ? (
+            <>
+              <div className="space-y-4">
                 <h1 className="text-3xl font-semibold tracking-tight">
-                  Welcome Back to Nexus
+                  Verify Your Email
                 </h1>
                 <p className="text-muted-foreground">
-                  Log in to continue exploring and learning with professionals.
+                  Enter the OTP sent to your email to complete registration
                 </p>
-              </>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <SocialButton variant="google" />
-              <SocialButton variant="github" />
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t dark:border-gray-700" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  or continue with
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {signUp && (
-                <div className="space-y-2">
-                  <Input
-                    type="text"
-                    name="name"
-                    placeholder="Enter your full name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required={signUp}
-                  />
-                </div>
-              )}
-              <div className="space-y-2">
-                <Input
-                  type="email"
-                  name="email"
-                  placeholder="name@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <div className="relative">
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-0 top-1/2 -translate-y-1/2"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOffIcon className="h-4 w-4" />
-                    ) : (
-                      <EyeIcon className="h-4 w-4" />
-                    )}
+                <div className="space-y-8 flex flex-col items-center">
+                  <InputOTP maxLength={6} onComplete={handleComplete}>
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                    </InputOTPGroup>
+                    <InputOTPSeparator />
+                    <InputOTPGroup>
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                  <Button onClick={onResend} className="w-full">
+                    Resend OTP
                   </Button>
                 </div>
               </div>
-            </div>
+            </>
+          ) : (
+            <>
+              <div className="space-y-2">
+                {signUp ? (
+                  <>
+                    <h1 className="text-3xl font-semibold tracking-tight">
+                      Get Started Now
+                    </h1>
+                    <p className="text-muted-foreground">
+                      Enter your details to create your account
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h1 className="text-3xl font-semibold tracking-tight">
+                      Welcome Back to Nexus
+                    </h1>
+                    <p className="text-muted-foreground">
+                      Log in to continue exploring and learning with professionals.
+                    </p>
+                  </>
+                )}
+              </div>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <SocialButton variant="google" />
+                  <SocialButton variant="github" />
+                </div>
 
-            <Button
-              className="w-full bg-primary hover:bg-primary/90"
-              onClick={handleSubmit}
-            >
-              {loading && <Loader2 className="animate-spin mr-2" />}
-              {buttonText}
-            </Button>
-            <Toaster />
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t dark:border-gray-700" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      or continue with
+                    </span>
+                  </div>
+                </div>
 
-            <p className=" text-sm text-muted-foreground">
-              {signUp ? "Have an account?" : "Don't have an account?"}{" "}
-              <a
-                className="text-primary hover:underline"
-                onClick={() => setSignUp((prev) => !prev)}
-              >
-                {signUp ? "Sign in" : "Register"}
-              </a>
-            </p>
-          </div>
+                <div className="space-y-4">
+                  {signUp && (
+                    <div className="space-y-2">
+                      <Input
+                        type="text"
+                        name="name"
+                        placeholder="Enter your full name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required={signUp}
+                      />
+                    </div>
+                  )}
+                  <div className="space-y-2">
+                    <Input
+                      type="email"
+                      name="email"
+                      placeholder="name@example.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        placeholder="Enter your password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-1/2 -translate-y-1/2"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOffIcon className="h-4 w-4" />
+                        ) : (
+                          <EyeIcon className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <Button
+                  className="w-full bg-primary hover:bg-primary/90"
+                  onClick={handleSubmit}
+                >
+                  {loading && <Loader2 className="animate-spin mr-2" />}
+                  {buttonText}
+                </Button>
+                <Toaster />
+
+                <p className=" text-sm text-muted-foreground">
+                  {signUp ? "Have an account?" : "Don't have an account?"}{" "}
+                  <a
+                    className="text-primary hover:underline"
+                    onClick={() => setSignUp((prev) => !prev)}
+                  >
+                    {signUp ? "Sign in" : "Register"}
+                  </a>
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </Card>
 

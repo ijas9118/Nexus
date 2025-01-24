@@ -13,7 +13,7 @@ export class ContentController implements IContentController {
     try {
       const contentData = { ...req.body, author: req.user };
       const content = await this.contentService.createContent(contentData);
-      console.log(content);
+      this.contentService.find({})
       res.status(201).json(content);
     } catch (error) {
       res.status(400).json({ message: "Failed to create content", error });

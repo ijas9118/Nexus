@@ -6,9 +6,10 @@ import { LoginDto } from "../dtos/requests/auth/login.dto";
 import { RegisterDto } from "../dtos/requests/auth/register.dto";
 import { NODE_ENV } from "../utils/constants";
 import { IAuthController } from "../core/interfaces/controllers/IAuthController";
+import redisClient from "../config/redisClient.config";
 
 @injectable()
-export class AuthController implements IAuthController{
+export class AuthController implements IAuthController {
   constructor(@inject(TYPES.AuthService) private authService: AuthService) {}
 
   private setCookies(res: Response, accessToken: string, refreshToken: string): void {
@@ -23,14 +24,55 @@ export class AuthController implements IAuthController{
       httpOnly: true,
       secure: NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, 
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
   }
 
   async register(req: Request, res: Response): Promise<void> {
     try {
-      const registerDto: RegisterDto = req.body;
-      const result = await this.authService.register(registerDto);
+      const userData: RegisterDto = req.body;
+
+      const existingUser = await this.authService.findUserByEmail(userData.email);
+      if (existingUser) {
+        res.status(400).json({ message: "User already exists" });
+        return;
+      }
+
+      const otp = this.authService.generateOTP();
+
+      const data = JSON.stringify({ userData, otp });
+
+      await redisClient.setex(`otp:${userData.email}`, 900, data);
+
+      await this.authService.sendOtpEmail(userData.email, otp);
+
+      res.status(200).json({ message: "OTP sent to email. Please verify in 15 min" });
+    } catch (error) {
+      res.status(400).json({ message: "Registration failed", error });
+    }
+  }
+
+  async verifyOTP(req: Request, res: Response): Promise<void> {
+    try {
+      const { email, otp } = req.body;
+
+      const storedData = await redisClient.get(`otp:${email}`);
+
+      if (!storedData) {
+        res.status(400).json({ message: "OTP expired or invalid." });
+        return;
+      }
+
+      const { userData, otp: storedOTP } = JSON.parse(storedData);
+
+      if (otp !== storedOTP) {
+        res.status(400).json({ message: "Invalid OTP." });
+        return;
+      }
+
+      const result = await this.authService.register(userData);
+
+      await redisClient.del(`otp:${email}`);
 
       this.setCookies(res, result.accessToken, result.refreshToken);
 
@@ -38,11 +80,13 @@ export class AuthController implements IAuthController{
         _id: result._id,
         name: result.name,
         email: result.email,
+        accessToken: userData.accessToken,
+
       };
 
       res.status(201).json({ user });
     } catch (error) {
-      res.status(400).json({ message: "Registration failed", error });
+      res.status(500).json({ message: "OTP verification failed", error });
     }
   }
 
@@ -63,6 +107,7 @@ export class AuthController implements IAuthController{
           _id: userData._id,
           name: userData.name,
           email: userData.email,
+          accessToken: userData.accessToken,
         };
         res.status(200).json({ user });
       } else {

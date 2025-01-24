@@ -21,7 +21,6 @@ api.interceptors.response.use(
             withCredentials: true,
           }
         );
-        console.log(response.data);
         const { accessToken } = response.data;
 
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;

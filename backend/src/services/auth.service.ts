@@ -11,10 +11,28 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from "../utils/jwt.util";
+import redisClient from "../config/redisClient.config";
+import crypto from "crypto";
+import { BaseService } from "../core/abstracts/base.service";
+
+
 
 @injectable()
 export class AuthService {
   constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
+
+  generateOTP(): string {
+    return crypto.randomInt(100000, 999999).toString();
+  }
+
+  async sendOtpEmail(email: string, otp: string): Promise<void> {
+    console.log(email, otp);
+  }
+
+  async findUserByEmail(email: string): Promise<boolean> {
+    const user = await this.userRepository.findByEmail(email);
+    return !!user; 
+  }
 
   async register(registerDto: RegisterDto): Promise<RegisterResponseDto> {
     const { name, email, password } = registerDto;
@@ -33,6 +51,9 @@ export class AuthService {
 
     const accessToken = generateAccessToken(userData);
     const refreshToken = generateRefreshToken(userData);
+
+    const key = `refreshToken:${user._id}`;
+    await redisClient.set(key, refreshToken, "EX", 7 * 24 * 60 * 60);
 
     return {
       _id: user._id,
@@ -60,6 +81,9 @@ export class AuthService {
     const accessToken = generateAccessToken(userData);
     const refreshToken = generateRefreshToken(userData);
 
+    const key = `refreshToken:${user._id}`;
+    await redisClient.set(key, refreshToken, "EX", 7 * 24 * 60 * 60);
+
     return {
       _id: user._id,
       name: user.name,
@@ -75,6 +99,13 @@ export class AuthService {
     try {
       const decoded = verifyRefreshToken(refreshToken);
 
+      const key = `refreshToken:${decoded.user._id}`;
+      const storedToken = await redisClient.get(key);
+
+      if (!storedToken || storedToken !== refreshToken) {
+        throw new Error("Invalid or expired Refresh token");
+      }
+
       const user = await this.userRepository.findById(decoded.user._id);
 
       if (!user) throw new Error("User not found");
@@ -87,6 +118,8 @@ export class AuthService {
 
       const accessToken = generateAccessToken(userData);
       const newRefreshToken = generateRefreshToken(userData);
+
+      await redisClient.set(key, newRefreshToken, "EX", 7 * 24 * 60 * 60);
 
       return { accessToken, refreshToken: newRefreshToken };
     } catch (error) {
