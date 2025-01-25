@@ -1,4 +1,3 @@
-import SocialButton from "@/components/auth/SocialButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { loginUser, registerUser, verifyOtp } from "@/services/authService";
 import { isValidEmail } from "@/utils/validation";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "@/store/slices/authSlice";
@@ -18,6 +17,8 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import GoogleButton from "@/components/auth/GoogleButton";
+import { FaGithub } from "react-icons/fa";
+import useAuth from "@/hooks/useAuth";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -32,6 +33,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const dispatch = useDispatch();
+  const { isAuthenticated, authLoading } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -111,6 +113,20 @@ export default function LoginPage() {
 
   const onResend = () => {};
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/myFeed");
+    }
+  }, [isAuthenticated, navigate]);
+
+  if (authLoading) {
+    return (
+      <div className="container mx-auto px-8 py-8 flex h-screen justify-center items-center">
+        Loading...
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
       <Card className="p-8 md:p-12 flex flex-col justify-center">
@@ -168,10 +184,11 @@ export default function LoginPage() {
                 )}
               </div>
               <div className="space-y-4">
-                <div className="flex flex-col w-full gap-2">
+                <div className="flex flex-col gap-2">
                   <GoogleButton />
-                  <SocialButton variant="google" />
-                  <SocialButton variant="github" />
+                  <Button variant="outline">
+                    <FaGithub /> Sign in with Github
+                  </Button>
                 </div>
 
                 <div className="relative">

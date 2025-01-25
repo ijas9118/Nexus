@@ -7,6 +7,7 @@ import Profile from "@/pages/normal/Profile";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -21,9 +22,11 @@ const UserRoutes: React.FC = () => {
         }
       />
       <Route path="/" element={<Layout />}>
-        <Route path="myFeed" element={<MyFeed />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="addPost" element={<AddPost />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="myFeed" element={<MyFeed />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="addPost" element={<AddPost />} />
+        </Route>
       </Route>
       {/* <Route path="/not-found" element={<NotFound />} /> */}
     </Routes>

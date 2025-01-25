@@ -7,6 +7,7 @@ import { RegisterDto } from "../dtos/requests/auth/register.dto";
 import { NODE_ENV } from "../utils/constants";
 import { IAuthController } from "../core/interfaces/controllers/IAuthController";
 import redisClient from "../config/redisClient.config";
+import { verifyAccessToken } from "../utils/jwt.util";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -117,6 +118,30 @@ export class AuthController implements IAuthController {
     }
   }
 
+  async logout(req: Request, res: Response): Promise<void> {
+    try {
+      const refreshToken = req.cookies?.refreshToken;
+
+      if (refreshToken) await redisClient.del(refreshToken);
+
+      res.clearCookie("accessToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
+
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
+      res.status(200).json({ message: "Logged out successfully." });
+    } catch (error) {
+      console.error("Error during logout:", error);
+      res.status(500).json({ message: "An error occurred during logout." });
+    }
+  }
+
   async refreshToken(req: Request, res: Response): Promise<void> {
     try {
       const refreshToken = req.cookies.refreshToken;
@@ -138,6 +163,31 @@ export class AuthController implements IAuthController {
     } catch (error) {
       res.status(500).json({ message: "Token refresh failed", error });
     }
+  }
+
+  async verifyToken(req: Request, res: Response): Promise<void> {
+    const accessToken = req.cookies.accessToken;
+
+    if (!accessToken) {
+      res.status(401).json({ message: "Access token not found" });
+      return;
+    }
+
+    const payload = verifyAccessToken(accessToken);
+
+    if (!payload) {
+      res.status(403).json({ message: "Invalid or expired access token" });
+      return;
+    }
+
+    const user = await this.authService.findUserByEmail(payload.user.email);
+
+    if (!user) {
+      res.status(403).json({ message: "Invalid or expired access token" });
+      return;
+    }
+
+    res.status(200).json(payload.user);
   }
 
   async googleAuth(req: Request, res: Response): Promise<void> {

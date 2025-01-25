@@ -15,4 +15,8 @@ router.post("/refresh-token", validateRefreshToken, (req, res) =>
 );
 router.post("/google", (req, res) => authController.googleAuth(req, res));
 
+router.get("/verify-token", (req, res) => authController.verifyToken(req, res));
+
+router.get("/logout", (req, res) => authController.logout(req, res));
+
 export default router;

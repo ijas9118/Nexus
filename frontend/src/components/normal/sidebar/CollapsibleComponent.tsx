@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ChevronDown } from "lucide-react";
 import { FC } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarCollapsibleSectionProps {
   title: string;
@@ -16,6 +17,7 @@ interface SidebarCollapsibleSectionProps {
 }
 
 const CollapsibleComponent: FC<SidebarCollapsibleSectionProps> = ({ title, items }) => {
+  const navigate = useNavigate();
   return (
     <SidebarGroup>
       <SidebarGroupLabel asChild>
@@ -29,11 +31,11 @@ const CollapsibleComponent: FC<SidebarCollapsibleSectionProps> = ({ title, items
           <SidebarMenu>
             {items.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
-                  <a href={item.url}>
+                <SidebarMenuButton asChild onClick={() => navigate(`${item.url}`)}>
+                  <div className="cursor-pointer">
                     <item.icon />
                     <span>{item.title}</span>
-                  </a>
+                  </div>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}

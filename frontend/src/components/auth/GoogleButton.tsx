@@ -29,6 +29,7 @@ const GoogleButton: FC = () => {
       };
 
       const result = await googleAuth(userDetails);
+
       if (result.user) {
         dispatch(
           login({

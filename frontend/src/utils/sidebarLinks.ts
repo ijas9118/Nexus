@@ -13,7 +13,7 @@ import {
 export const items = [
   {
     title: "My feed",
-    url: "#",
+    url: "/myFeed",
     icon: Home,
   },
   {

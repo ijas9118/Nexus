@@ -20,14 +20,23 @@ import CollapsibleComponent from "./CollapsibleComponent";
 import SquadSubmenu from "./SquadSubmenu";
 import { items, networkItems } from "@/utils/sidebarLinks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useNavigate } from "react-router-dom";
+import { logout } from "@/services/authService";
+import useLogout from "@/hooks/useLogout";
 
 export function AppSidebar() {
+  const navigate = useNavigate();
+  const logoutUser = useLogout();
+
   return (
     <Sidebar collapsible="icon">
       <SidebarContent className="py-6">
         <SidebarGroup>
           <SidebarMenu>
-            <SidebarMenuButton className="bg-slate-950 hover:bg-slate-900 text-slate-100 hover:text-slate-100">
+            <SidebarMenuButton
+              className="bg-slate-950 hover:bg-slate-900 text-slate-100 hover:text-slate-100"
+              onClick={() => navigate("/addPost")}
+            >
               <Plus />
               <span>New Post</span>
             </SidebarMenuButton>
@@ -69,7 +78,7 @@ export function AppSidebar() {
                 <DropdownMenuItem>
                   <span>Account Details</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => logoutUser()}>
                   <span>Sign out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
