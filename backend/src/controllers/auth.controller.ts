@@ -81,7 +81,6 @@ export class AuthController implements IAuthController {
         name: result.name,
         email: result.email,
         accessToken: userData.accessToken,
-
       };
 
       res.status(201).json({ user });
@@ -138,6 +137,34 @@ export class AuthController implements IAuthController {
       res.status(200).json({ accessToken: tokens.accessToken });
     } catch (error) {
       res.status(500).json({ message: "Token refresh failed", error });
+    }
+  }
+
+  async googleAuth(req: Request, res: Response): Promise<void> {
+    try {
+      const googleAccountData = req.body;
+
+      const userData = await this.authService.googleLoginOrRegister(googleAccountData);
+      if (userData) {
+        if (!userData.accessToken || !userData.refreshToken) {
+          res.status(400).json(userData);
+          return;
+        }
+
+        this.setCookies(res, userData.accessToken, userData.refreshToken);
+
+        const user = {
+          _id: userData._id,
+          name: userData.name,
+          email: userData.email,
+          accessToken: userData.accessToken,
+        };
+        res.status(200).json({ user });
+      } else {
+        res.status(401).json({ message: "Google Authentication Failed" });
+      }
+    } catch (error) {
+      res.status(400).json({ message: "Login failed", error });
     }
   }
 }

@@ -9,7 +9,7 @@ import { isValidEmail } from "@/utils/validation";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { login } from "@/store/slices/authSlice";
 import {
   InputOTP,
@@ -17,7 +17,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { RootState } from "@/store/store";
+import GoogleButton from "@/components/auth/GoogleButton";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -168,7 +168,8 @@ export default function LoginPage() {
                 )}
               </div>
               <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col w-full gap-2">
+                  <GoogleButton />
                   <SocialButton variant="google" />
                   <SocialButton variant="github" />
                 </div>

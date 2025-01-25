@@ -1,7 +1,7 @@
 import { Container } from "inversify";
 import { TYPES } from "./types";
 import { UserRepository } from "../repositories/user.repository";
-import { UserService } from "../services/user.service";
+import { UserService } from "../services/user.service"; 
 import { AuthService } from "../services/auth.service";
 import { AuthController } from "../controllers/auth.controller";
 import { IUserRepository } from "../core/interfaces/repositories/IUserRepository";

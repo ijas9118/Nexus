@@ -44,6 +44,28 @@ export const verifyOtp = async (email: string, otp: string) => {
   }
 };
 
+export const googleAuth = async (userData: {
+  name?: string;
+  email?: string;
+  picture?: string;
+}) => {
+  try {
+    const { name, email, picture } = userData;
+    const response = await api.post("/auth/google", {
+      name,
+      email,
+      picture,
+    });
+    localStorage.setItem("accessToken", response.data.user.accessToken);
+    return response.data;
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.message ||
+      "An unexpected error occurred during verifying otp.";
+    throw new Error(errorMessage);
+  }
+};
+
 export const likeContent = async (contentId: string) => {
   try {
     const response = await api.post(`/content/${contentId}/like`);

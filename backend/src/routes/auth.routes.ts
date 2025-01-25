@@ -13,5 +13,6 @@ router.post("/login", (req, res) => authController.login(req, res));
 router.post("/refresh-token", validateRefreshToken, (req, res) =>
   authController.refreshToken(req, res)
 );
+router.post("/google", (req, res) => authController.googleAuth(req, res));
 
 export default router;
