@@ -9,13 +9,14 @@ import {
 import { ChevronDown, Filter } from "lucide-react";
 import React, { useState } from "react";
 
-const topics = ["frontend", "javascript", "react", "webdev", "career", "startup"];
+interface FilterProps {
+  selectedTopics: string[];
+  setSelectedTopics: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
-const FilterComponent: React.FC = () => {
-  const [selectedTopics, setSelectedTopics] = useState<string[]>([
-    "frontend",
-    "javascript",
-  ]);
+const topics = [ "javascript", "react", "nodejs", "next"];
+
+const FilterComponent: React.FC<FilterProps> = ({selectedTopics, setSelectedTopics}) => {
   return (
     <div className="flex flex-wrap gap-4">
       <DropdownMenu>
@@ -55,7 +56,6 @@ const FilterComponent: React.FC = () => {
           <span className="cursor-pointer">&times;</span>
         </Badge>
       ))}
-      
     </div>
   );
 };

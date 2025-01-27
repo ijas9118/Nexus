@@ -9,7 +9,11 @@ import { getAllContent } from "@/services/contentService";
 export default function MyFeed() {
   const dispatch = useDispatch();
   const [feedContent, setFeedContent] = useState([]);
+  const [filterContent, setFilterContent] = useState([]);
   const [error, setError] = useState<string | null>(null);
+  const [selectedTab, setSelectedTab] = useState<string>("all");
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+
   useEffect(() => {
     dispatch(
       setBreadcrumbs([
@@ -31,15 +35,39 @@ export default function MyFeed() {
     fetchContent();
   }, []);
 
+  useEffect(() => {
+    let filteredContent = feedContent;
+
+    if (selectedTab !== "all") {
+      filteredContent = filteredContent.filter(
+        (item: any) => item.contentType === selectedTab
+      );
+    }
+
+    if (selectedTopics.length > 0) {
+      console.log(selectedTopics);
+      filteredContent = filteredContent.filter((item: any) =>
+        selectedTopics.some((topic) =>
+          item.squad.toLowerCase().includes(topic.toLowerCase())
+        )
+      );
+    }
+
+    setFilterContent(filteredContent);
+  }, [selectedTab, feedContent, selectedTopics]);
+
   return (
     <div className="container mx-auto px-8 py-8">
-      <FilterComponent />
-      <ContentTypeTab />
+      <FilterComponent
+        selectedTopics={selectedTopics}
+        setSelectedTopics={setSelectedTopics}
+      />
+      <ContentTypeTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 
       {error && <p className="text-red-500">Error: {error}</p>}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {feedContent.map((item: any, index) => (
+        {filterContent.map((item: any, index) => (
           <ContentCard
             key={index}
             avatarFallback={"IA"}
