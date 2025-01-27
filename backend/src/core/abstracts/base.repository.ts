@@ -1,10 +1,10 @@
-import { Document, Model, FilterQuery, UpdateQuery } from "mongoose";
+import { Document, Model, FilterQuery, UpdateQuery, DeleteResult, Types } from "mongoose";
 import { IBaseRepository } from "../interfaces/repositories/IBaseRepository";
 
 export abstract class BaseRepository<T extends Document> implements IBaseRepository<T> {
   constructor(protected model: Model<T>) {}
 
-  async findById(id: string): Promise<T | null> {
+  async findById(id: string | Types.ObjectId): Promise<T | null> {
     return this.model.findById(id);
   }
 
@@ -23,6 +23,10 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
 
   async delete(id: string): Promise<T | null> {
     return this.model.findByIdAndDelete(id);
+  }
+
+  async deleteOne(filter: FilterQuery<T>): Promise<DeleteResult> {
+    return this.model.deleteOne(filter);
   }
 
   async find(filter: FilterQuery<T>): Promise<T[]> {

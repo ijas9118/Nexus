@@ -15,6 +15,9 @@ export interface IContent extends Document {
   thumbnailUrl: string;
   videoUrl: string;
   content: string;
+  likeCount: number;
+  commentCount: number;
+  bookmarkCount: number;
 }
 
 const ContentSchema: Schema = new Schema(
@@ -73,6 +76,18 @@ const ContentSchema: Schema = new Schema(
       required: function (this: any) {
         return this.contentType === "blog";
       },
+    },
+    likeCount: {
+      type: Number,
+      default: 0,
+    },
+    commentCount: {
+      type: Number,
+      default: 0,
+    },
+    bookmarkCount: {
+      type: Number,
+      default: 0,
     },
   },
   {

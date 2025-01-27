@@ -1,0 +1,35 @@
+import { Request, Response } from "express";
+import { ILikesController } from "../core/interfaces/controllers/ILikesController";
+import { LikeService } from "../services/like.service";
+import { CustomRequest } from "../core/types/CustomRequest";
+import { injectable } from "inversify";
+
+@injectable()
+export class LikesController implements ILikesController {
+  constructor( private likeService: LikeService) {}
+
+  async toggleLike(req: CustomRequest, res: Response): Promise<void> {
+    try {
+      const { id: contentId } = req.params;
+      const userId = req.user?._id;
+
+      if (!userId) {
+        res.status(400).json({ message: "User is not authenticated" });
+        return;
+      }
+
+      const result = await this.likeService.toggleLike(contentId, userId);
+    } catch (error) {}
+  }
+
+  async getLikesByContent(req: Request, res: Response): Promise<void> {
+    try {
+      const { id: contentId } = req.params;
+
+      const likes = await this.likeService.getLikesByContent(contentId);
+      res.status(200).json({ likes });
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  }
+}

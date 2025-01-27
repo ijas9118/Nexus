@@ -54,37 +54,4 @@ export class ContentController implements IContentController {
       res.status(400).json({ message: "Failed to get contents", error });
     }
   }
-
-  async likeContent(req: CustomRequest, res: Response): Promise<void> {
-    console.log(req.params.id, req.user?._id);
-    // try {
-    //   const content = await this.contentService.likeContent(
-    //     req.params.id,
-    //     req.user.userId
-    //   );
-    //   if (content) {
-    //     res.json(content);
-    //   } else {
-    //     res.status(404).json({ message: "Content not found" });
-    //   }
-    // } catch (error) {
-    //   res.status(400).json({ message: "Failed to like content", error });
-    // }
-  }
-
-  async unlikeContent(req: Request, res: Response): Promise<void> {
-    // try {
-    //   const content = await this.contentService.unlikeContent(
-    //     req.params.id,
-    //     req.user.userId
-    //   );
-    //   if (content) {
-    //     res.json(content);
-    //   } else {
-    //     res.status(404).json({ message: "Content not found" });
-    //   }
-    // } catch (error) {
-    //   res.status(400).json({ message: "Failed to unlike content", error });
-    // }
-  }
 }
