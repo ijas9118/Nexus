@@ -13,7 +13,6 @@ import {
 } from "../utils/jwt.util";
 import redisClient from "../config/redisClient.config";
 import crypto from "crypto";
-import { BaseService } from "../core/abstracts/base.service";
 
 @injectable()
 export class AuthService {
