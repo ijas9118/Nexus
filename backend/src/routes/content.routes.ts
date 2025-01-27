@@ -12,6 +12,12 @@ router.post("/:id/like", authenticate, (req, res) =>
 );
 router.post("/:id/unlike", (req, res) => contentController.unlikeContent(req, res));
 
-router.post("/posts", authenticate,  (req, res) => contentController.createContent(req, res));
+router.get("/posts", (req, res) =>
+  contentController.getAllContent(req, res)
+);
+
+router.post("/posts", authenticate, (req, res) =>
+  contentController.createContent(req, res)
+);
 
 export default router;

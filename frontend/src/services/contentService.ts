@@ -50,3 +50,15 @@ export const addContent = async (requestData: {
     );
   }
 };
+
+export const getAllContent = async () => {
+  try {
+    const response = await api.get("/content/posts");
+    return response.data;
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.message ||
+      "An unexpected error occurred during fetching contents.";
+    throw new Error(errorMessage);
+  }
+};

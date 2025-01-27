@@ -21,6 +21,7 @@ import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { addContent, uploadFiles } from "@/services/contentService";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   contentType: "blog" | "video";
@@ -38,6 +39,7 @@ const AddPost: React.FC = () => {
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(
@@ -122,7 +124,9 @@ const AddPost: React.FC = () => {
           variant: "default",
           title: "Wohoo!",
           description: result.message,
+          duration: 3000,
         });
+        setTimeout(() => navigate("/myFeed"), 3000);
       }
     } catch (error) {
       console.error("Error submitting form", error);
@@ -199,9 +203,10 @@ const AddPost: React.FC = () => {
                     <SelectValue placeholder="Select squad" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="alpha">Alpha Squad</SelectItem>
-                    <SelectItem value="beta">Beta Squad</SelectItem>
-                    <SelectItem value="gamma">Gamma Squad</SelectItem>
+                    <SelectItem value="Javascript">Javascript</SelectItem>
+                    <SelectItem value="Nodejs">Nodejs</SelectItem>
+                    <SelectItem value="React">React</SelectItem>
+                    <SelectItem value="Next">Next</SelectItem>
                   </SelectContent>
                 </Select>
               )}

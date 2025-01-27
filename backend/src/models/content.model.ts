@@ -14,6 +14,7 @@ export interface IContent extends Document {
   isPremium: boolean;
   thumbnailUrl: string;
   videoUrl: string;
+  content: string;
 }
 
 const ContentSchema: Schema = new Schema(
@@ -66,6 +67,12 @@ const ContentSchema: Schema = new Schema(
     },
     videoUrl: {
       type: String,
+    },
+    content: {
+      type: String,
+      required: function (this: any) {
+        return this.contentType === "blog";
+      },
     },
   },
   {
