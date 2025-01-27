@@ -3,11 +3,11 @@ import AddPost from "@/pages/normal/AddPost";
 import Home from "@/pages/normal/Home";
 import Layout from "@/pages/normal/Layout";
 import MyFeed from "@/pages/normal/MyFeed";
-import Profile from "@/pages/normal/Profile";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
+import UserProfile from "@/pages/normal/Profile";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -24,7 +24,7 @@ const UserRoutes: React.FC = () => {
       <Route path="/" element={<Layout />}>
         <Route element={<ProtectedRoute />}>
           <Route path="myFeed" element={<MyFeed />} />
-          <Route path="profile" element={<Profile />} />
+          <Route path="profile" element={<UserProfile />} />
           <Route path="addPost" element={<AddPost />} />
         </Route>
       </Route>

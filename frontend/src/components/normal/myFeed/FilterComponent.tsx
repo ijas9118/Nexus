@@ -7,16 +7,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Filter } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 
 interface FilterProps {
   selectedTopics: string[];
   setSelectedTopics: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const topics = [ "javascript", "react", "nodejs", "next"];
+const topics = ["javascript", "react", "nodejs", "next"];
 
-const FilterComponent: React.FC<FilterProps> = ({selectedTopics, setSelectedTopics}) => {
+const FilterComponent: React.FC<FilterProps> = ({
+  selectedTopics,
+  setSelectedTopics,
+}) => {
   return (
     <div className="flex flex-wrap gap-4">
       <DropdownMenu>

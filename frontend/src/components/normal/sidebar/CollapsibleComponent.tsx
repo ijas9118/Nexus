@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/sidebar";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { ChevronDown } from "lucide-react";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

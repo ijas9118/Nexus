@@ -22,10 +22,25 @@ import { items, networkItems } from "@/utils/sidebarLinks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import useLogout from "@/hooks/useLogout";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 
 export function AppSidebar() {
   const navigate = useNavigate();
   const logoutUser = useLogout();
+  const user = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
+
+  const handleMenuClick = (url: string, title: string) => {
+    dispatch(
+      setBreadcrumbs([
+        { title: "Home", url: "/" },
+        { title, url },
+      ])
+    );
+    navigate(url);
+  };
 
   return (
     <Sidebar collapsible="icon">
@@ -60,22 +75,19 @@ export function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="h-fit">
                   <Avatar className="rounded">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>IA</AvatarFallback>
+                    {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
+                    <AvatarFallback>{user.name.slice(0, 2)}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
-                    <span className="text-sm">Ijas Ahammed</span>
-                    <span className="text-xs text-neutral-500">@ijasahmmed</span>
+                    <span className="text-sm">{user.name}</span>
+                    {/* <span className="text-xs text-neutral-500">@ijasahmmed</span> */}
                   </div>
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleMenuClick("/profile", "Profile")}>
                   <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Account Details</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => logoutUser()}>
                   <span>Sign out</span>
