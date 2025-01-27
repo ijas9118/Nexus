@@ -1,27 +1,26 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { ContentStatus, ContentType, Tag } from "../core/types/content.types";
 import { IUser } from "./user.model";
 
 export interface IContent extends Document {
   avatarFallback: string;
   author: IUser["_id"];
   userName: string;
-  type: ContentType;
-  heading: string;
+  contentType: string;
+  title: string;
   date: string;
   likes: number;
   comments: number;
-  tags: Tag[];
+  squad: string;
   isPremium: boolean;
-  thumbnail: string;
-  status: ContentStatus;
+  thumbnailUrl: string;
+  videoUrl: string;
 }
 
 const ContentSchema: Schema = new Schema(
   {
     avatarFallback: {
       type: String,
-      required: true,
+      // required: true,
     },
     author: {
       type: Schema.Types.ObjectId,
@@ -32,12 +31,12 @@ const ContentSchema: Schema = new Schema(
       type: String,
       required: true,
     },
-    type: {
+    contentType: {
       type: String,
-      enum: Object.values(ContentType),
+      enum: ["blog", "video"],
       required: true,
     },
-    heading: {
+    title: {
       type: String,
       required: true,
     },
@@ -47,31 +46,26 @@ const ContentSchema: Schema = new Schema(
     },
     likes: {
       type: Number,
-      required: true,
       default: 0,
     },
     comments: {
       type: Number,
-      required: true,
       default: 0,
     },
-    tags: {
-      type: [{ id: String, name: String }],
+    squad: {
+      type: String,
       required: true,
     },
     isPremium: {
       type: Boolean,
       required: true,
     },
-    thumbnail: {
+    thumbnailUrl: {
       type: String,
       required: true,
     },
-    status: {
+    videoUrl: {
       type: String,
-      enum: Object.values(ContentStatus),
-      required: true,
-      default: ContentStatus.DRAFT,
     },
   },
   {

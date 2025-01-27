@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { likeContent } from "@/services/authService";
+import { likeContent } from "@/services/contentService";
 import { Bookmark, Gem, MessageCircle, Share2, ThumbsUp } from "lucide-react";
 import React from "react";
 

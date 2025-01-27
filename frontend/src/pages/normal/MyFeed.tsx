@@ -1,8 +1,21 @@
 import FilterComponent from "@/components/normal/myFeed/FilterComponent";
 import ContentTypeTab from "@/components/normal/myFeed/ContentTypeTab";
 import ContentCard from "@/components/normal/myFeed/ContentCard";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 
 export default function MyFeed() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      setBreadcrumbs([
+        { title: "Home", url: "/" },
+        { title: "My Feed", url: "/myFeed" },
+      ])
+    );
+  }, []);
+
   return (
     <div className="container mx-auto px-8 py-8">
       <FilterComponent />

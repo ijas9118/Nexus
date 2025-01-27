@@ -11,10 +11,23 @@ export class ContentController implements IContentController {
 
   async createContent(req: CustomRequest, res: Response): Promise<void> {
     try {
-      const contentData = { ...req.body, author: req.user };
+      const contentData = {
+        ...req.body,
+        author: req.user?._id,
+        userName: req.user?.name,
+        date: new Date().toLocaleDateString("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+        }),
+      };
+
       const content = await this.contentService.createContent(contentData);
-      this.contentService.find({})
-      res.status(201).json(content);
+      res.status(201).json({
+        success: true,
+        message: "Content created successfully",
+        contentId: content._id,
+      });
     } catch (error) {
       res.status(400).json({ message: "Failed to create content", error });
     }

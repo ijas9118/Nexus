@@ -63,17 +63,7 @@ export const googleAuth = async (userData: {
   }
 };
 
-export const likeContent = async (contentId: string) => {
-  try {
-    const response = await api.post(`/content/${contentId}/like`);
-    console.log(response.data);
-    return response.data;
-  } catch (error: any) {
-    const errorMessage =
-      error.response?.data?.message || "An unexpected error occurred during liking.";
-    throw new Error(errorMessage);
-  }
-};
+
 
 export const verifyAccessToken = async () => {
   try {

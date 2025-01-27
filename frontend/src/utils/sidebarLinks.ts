@@ -12,7 +12,7 @@ import {
 
 export const items = [
   {
-    title: "My feed",
+    title: "My Feed",
     url: "/myFeed",
     icon: Home,
   },
