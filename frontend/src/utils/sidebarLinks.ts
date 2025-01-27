@@ -38,7 +38,7 @@ export const items = [
   },
   {
     title: "Get Premium",
-    url: "#",
+    url: "/getPremium",
     icon: Gem,
   },
 ];

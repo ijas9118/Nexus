@@ -47,7 +47,7 @@ const testimonials = [
   },
 ];
 
-const plans = [
+export const plans = [
   {
     name: "Basic",
     price: "0",

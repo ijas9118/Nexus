@@ -45,7 +45,7 @@ const AddPost: React.FC = () => {
     dispatch(
       setBreadcrumbs([
         { title: "Home", url: "/" },
-        { title: "New Post", url: "/myFeed" },
+        { title: "New Post", url: "" },
       ])
     );
   }, [dispatch]);

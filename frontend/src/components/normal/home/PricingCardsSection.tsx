@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import { useDispatch } from "react-redux";
 
 interface Plan {
   name: string;
@@ -23,15 +25,24 @@ interface PricingCardsSectionProps {
 }
 
 const PricingCardsSection: React.FC<PricingCardsSectionProps> = ({ plans }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      setBreadcrumbs([
+        { title: "Home", url: "/" },
+        { title: "Get Premium", url: "" },
+      ])
+    );
+  }, [dispatch]);
+
   return (
     <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
       {plans.map((plan, index) => (
         <Card
           key={index}
           className={`relative ${
-            plan.popular
-              ? "border-2 border-blue-700 shadow-lg"
-              : "border-gray-200"
+            plan.popular ? "border-2 border-blue-700 shadow-lg" : "border-gray-200"
           }`}
         >
           {plan.popular && (
@@ -46,9 +57,7 @@ const PricingCardsSection: React.FC<PricingCardsSectionProps> = ({ plans }) => {
                 <span className="text-4xl font-bold">₹{plan.price}</span>
                 <span className="text-gray-500 ml-1">{plan.period}</span>
                 {plan.saving && (
-                  <span className="block text-sm text-green-600 mt-1">
-                    {plan.saving}
-                  </span>
+                  <span className="block text-sm text-green-600 mt-1">{plan.saving}</span>
                 )}
               </div>
             </CardHeader>

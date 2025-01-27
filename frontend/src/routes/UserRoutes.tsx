@@ -8,6 +8,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import UserProfile from "@/pages/normal/Profile";
+import GetPremium from "@/pages/normal/GetPremium";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ const UserRoutes: React.FC = () => {
           <Route path="myFeed" element={<MyFeed />} />
           <Route path="profile" element={<UserProfile />} />
           <Route path="addPost" element={<AddPost />} />
+          <Route path="getPremium" element={<GetPremium />} />
         </Route>
       </Route>
       {/* <Route path="/not-found" element={<NotFound />} /> */}
