@@ -1,19 +1,17 @@
-export interface DIContainer {
-  UserRepository: any;
-  UserService: any;
-  AuthService: any;
-  AuthController: any;
-  ContentRepository: any;
-  ContentService: any;
-  ContentController: any;
-}
-
 export const TYPES = {
+  // Repositories
   UserRepository: Symbol.for("UserRepository"),
-  UserService: Symbol.for("UserService"),
-  AuthService: Symbol.for("AuthService"),
-  AuthController: Symbol.for("AuthController"),
+  AdminRepository: Symbol.for("AdminRepository"),
   ContentRepository: Symbol.for("ContentRepository"),
+
+  // Services
+  UserService: Symbol.for("UserService"),
+  AdminAuthService: Symbol.for("AdminAuthService"),
+  AuthService: Symbol.for("AuthService"),
   ContentService: Symbol.for("ContentService"),
+
+  // Controllers
+  AuthController: Symbol.for("AuthController"),
+  AdminAuthController: Symbol.for("AdminAuthController"),
   ContentController: Symbol.for("ContentController"),
 };
