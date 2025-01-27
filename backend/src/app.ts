@@ -3,10 +3,12 @@ import express from "express";
 import cors from "cors";
 import { connectDB } from "./config/database.config";
 import { CLIENT_URL, PORT } from "./utils/constants";
+import cookieParser from "cookie-parser";
+
 import authRoutes from "./routes/auth.routes";
 import contentRoutes from "./routes/content.routes";
 import adminRoutes from "./routes/admin/admin.auth.route";
-import cookieParser from "cookie-parser";
+import likesRoutes from "./routes/likes.routes";
 
 const app = express();
 
@@ -24,6 +26,7 @@ app.use(cookieParser());
 app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/content", contentRoutes);
+app.use("/api/content", likesRoutes);
 
 const startServer = async () => {
   try {

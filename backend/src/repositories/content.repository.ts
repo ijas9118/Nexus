@@ -1,7 +1,9 @@
+import { injectable } from "inversify";
 import { BaseRepository } from "../core/abstracts/base.repository";
 import { IContentRepository } from "../core/interfaces/repositories/IContentRepository";
 import ContentModel, { IContent } from "../models/content.model";
 
+@injectable()
 export class ContentRepository
   extends BaseRepository<IContent>
   implements IContentRepository

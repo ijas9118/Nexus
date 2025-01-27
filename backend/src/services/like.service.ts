@@ -1,13 +1,15 @@
-import { Types } from "mongoose";
 import { ILikeService } from "../core/interfaces/services/ILikeService";
 import { ContentRepository } from "../repositories/content.repository";
 import { LikesRepository } from "../repositories/likes.repository";
 import { ILike } from "../models/likes.model";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../di/types";
 
+@injectable()
 export class LikeService implements ILikeService {
   constructor(
-    private likesRepository: LikesRepository,
-    private contentRepository: ContentRepository
+    @inject(TYPES.LikesRepository) private likesRepository: LikesRepository,
+    @inject(TYPES.ContentRepository) private contentRepository: ContentRepository
   ) {}
 
   async toggleLike(

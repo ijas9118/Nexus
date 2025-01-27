@@ -7,10 +7,7 @@ import { authenticate } from "../middlewares/auth.middleware";
 const router = Router();
 const contentController = container.get<ContentController>(TYPES.ContentController);
 
-
-router.get("/posts", (req, res) =>
-  contentController.getAllContent(req, res)
-);
+router.get("/posts", (req, res) => contentController.getAllContent(req, res));
 
 router.post("/posts", authenticate, (req, res) =>
   contentController.createContent(req, res)
