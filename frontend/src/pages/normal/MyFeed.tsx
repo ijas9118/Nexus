@@ -69,6 +69,7 @@ export default function MyFeed() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filterContent.map((item: any, index) => (
           <ContentCard
+            id={item._id}
             key={index}
             avatarFallback={"IA"}
             userName={item.userName}

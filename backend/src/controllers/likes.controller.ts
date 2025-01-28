@@ -20,7 +20,10 @@ export class LikesController implements ILikesController {
       }
 
       const result = await this.likeService.toggleLike(contentId, userId);
-    } catch (error) {}
+      res.status(200).json({ ...result });
+    } catch (error) {
+      res.status(500).json({ message: "Error toggling like", error });
+    }
   }
 
   async getLikesByContent(req: Request, res: Response): Promise<void> {

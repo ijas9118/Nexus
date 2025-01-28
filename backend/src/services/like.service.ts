@@ -15,7 +15,7 @@ export class LikeService implements ILikeService {
   async toggleLike(
     contentId: string,
     userId: string
-  ): Promise<{ status: "liked" | "unliked" }> {
+  ): Promise<{ status: "liked" | "unliked"; likeCount: number | undefined }> {
     const content = await this.contentRepository.findById(contentId);
     if (!content) throw new Error("Content not found");
 
@@ -23,11 +23,18 @@ export class LikeService implements ILikeService {
 
     if (existingLike) {
       await this.likesRepository.deleteOne({ contentId, userId });
-      return { status: "unliked" };
+      await this.contentRepository.updateOne({ _id: contentId }, { $inc: { likes: -1 } });
     } else {
       await this.likesRepository.create({ contentId, userId });
-      return { status: "liked" };
+      await this.contentRepository.updateOne({ _id: contentId }, { $inc: { likes: 1 } });
     }
+
+    const updatedContent = await this.contentRepository.findById(contentId);
+
+    return {
+      status: existingLike ? "unliked" : "liked",
+      likeCount: updatedContent?.likes,
+    };
   }
 
   async getLikesByContent(contentId: string): Promise<ILike[]> {

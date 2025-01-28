@@ -2,11 +2,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { likeContent } from "@/services/contentService";
+import { likeContent } from "@/services/likeService";
 import { Bookmark, Gem, MessageCircle, Share2, ThumbsUp } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 
 interface ContentCardProps {
+  id: string;
   avatarFallback: string;
   userName: string;
   contentType: "Blog" | "Video";
@@ -20,11 +21,17 @@ interface ContentCardProps {
 }
 
 const ContentCard: React.FC<ContentCardProps> = (props) => {
-  const handleLike = async () => {
+  const [likes, setLikes] = useState<number>(props.likes);
+
+  const handleLike = async (id: string) => {
     try {
-      const updatedContent = await likeContent("12");
-      console.log(updatedContent);
-    } catch (error) {}
+      const updatedContent = await likeContent(id);
+      if (updatedContent && updatedContent.likeCount !== undefined) {
+        setLikes(updatedContent.likeCount);
+      }
+    } catch (error) {
+      console.error("Failed to like content", error);
+    }
   };
 
   return (
@@ -62,9 +69,14 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
       </CardContent>
       <CardFooter className="border-t py-3">
         <div className="flex w-full items-center justify-between">
-          <Button variant="ghost" size="sm" className="gap-2" onClick={handleLike}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-2"
+            onClick={() => handleLike(props.id)}
+          >
             <ThumbsUp className="h-4 w-4" />
-            {props.likes}
+            {likes}
           </Button>
           <Button variant="ghost" size="sm" className="gap-2">
             <MessageCircle className="h-4 w-4" />
