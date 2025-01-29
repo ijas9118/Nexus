@@ -37,10 +37,11 @@ export class LikeService implements ILikeService {
     };
   }
 
-  async getLikesByContent(contentId: string): Promise<ILike[]> {
-    const content = await this.contentRepository.findById(contentId);
-    if (!content) throw new Error("Content not found");
-
-    return await this.likesRepository.find({ contentId });
+  async getLikedContentsId(userId: string): Promise<Set<string>> {
+    const likedContents = await this.likesRepository.getLikedContentByUser(userId);
+    const likedContentIds = new Set(
+      likedContents.map((like) => like.contentId.toString())
+    );
+    return likedContentIds;
   }
 }

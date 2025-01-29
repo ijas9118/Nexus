@@ -81,6 +81,7 @@ export default function MyFeed() {
             tags={[item.squad]}
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
+            isLiked={item.isLiked}
           />
         ))}
       </div>

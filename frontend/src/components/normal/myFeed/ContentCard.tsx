@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { likeContent } from "@/services/likeService";
 import { Bookmark, Gem, MessageCircle, Share2, ThumbsUp } from "lucide-react";
 import React, { useState } from "react";
+import { FaThumbsUp } from "react-icons/fa";
 
 interface ContentCardProps {
   id: string;
@@ -18,15 +19,18 @@ interface ContentCardProps {
   tags: string[];
   isPremium: boolean;
   image: string;
+  isLiked: boolean;
 }
 
 const ContentCard: React.FC<ContentCardProps> = (props) => {
   const [likes, setLikes] = useState<number>(props.likes);
+  const [isLiked, setIsLiked] = useState<boolean>(props.isLiked);
 
   const handleLike = async (id: string) => {
     try {
       const updatedContent = await likeContent(id);
       if (updatedContent && updatedContent.likeCount !== undefined) {
+        setIsLiked((prev) => !prev);
         setLikes(updatedContent.likeCount);
       }
     } catch (error) {
@@ -75,7 +79,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
             className="gap-2"
             onClick={() => handleLike(props.id)}
           >
-            <ThumbsUp className="h-4 w-4" />
+            {isLiked ? <FaThumbsUp /> : <ThumbsUp className="h-4 w-4" />}
             {likes}
           </Button>
           <Button variant="ghost" size="sm" className="gap-2">

@@ -16,7 +16,7 @@ export class LikesRepository extends BaseRepository<ILike> implements ILikesRepo
     return;
   }
 
-  async getLikesByContent(contentId: ObjectId): Promise<ILike[]> {
-    return await this.find({ contentId });
+  async getLikedContentByUser(userId: string): Promise<ILike[]> {
+    return await this.find({ userId });
   }
 }

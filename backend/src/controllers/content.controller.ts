@@ -4,10 +4,14 @@ import { TYPES } from "../di/types";
 import { IContentController } from "../core/interfaces/controllers/IContentController";
 import { Request, Response } from "express";
 import { CustomRequest } from "../core/types/CustomRequest";
+import { LikeService } from "../services/like.service";
 
 @injectable()
 export class ContentController implements IContentController {
-  constructor(@inject(TYPES.ContentService) private contentService: ContentService) {}
+  constructor(
+    @inject(TYPES.ContentService) private contentService: ContentService,
+    @inject(TYPES.LikesService) private likeService: LikeService
+  ) {}
 
   async createContent(req: CustomRequest, res: Response): Promise<void> {
     try {
@@ -46,10 +50,22 @@ export class ContentController implements IContentController {
     }
   }
 
-  async getAllContent(req: Request, res: Response): Promise<void> {
+  async getAllContent(req: CustomRequest, res: Response): Promise<void> {
     try {
       const contents = await this.contentService.getAllContent();
-      res.json(contents);
+
+      if (!req.user) {
+        res.status(401).json({ message: "User is not authenticated" });
+        return;
+      }
+      const userLikes = await this.likeService.getLikedContentsId(req.user?._id);
+
+      const feedData = contents.map((content: any) => ({
+        ...content.toObject(),
+        isLiked: userLikes.has(content._id.toString()),
+      }));
+
+      res.json(feedData);
     } catch (error) {
       res.status(400).json({ message: "Failed to get contents", error });
     }

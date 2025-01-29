@@ -4,5 +4,5 @@ import { ObjectId } from "mongoose";
 
 export interface ILikesRepository extends BaseRepository<ILike> {
   unlikeContent(contentId: ObjectId, userId: ObjectId): Promise<void>;
-  getLikesByContent(contentId: ObjectId): Promise<ILike[]>;
+  getLikedContentByUser(userId: string): Promise<ILike[]>;
 }

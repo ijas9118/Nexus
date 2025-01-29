@@ -1,9 +1,6 @@
 import { ILike } from "../../../models/likes.model";
 
 export interface ILikeService {
-  toggleLike(
-    contentId: string,
-    userId: string
-  ): Promise<{ status: "liked" | "unliked" }>;
-  getLikesByContent(contentId: string): Promise<ILike[]>;
+  toggleLike(contentId: string, userId: string): Promise<{ status: "liked" | "unliked" }>;
+  getLikedContentsId(userId: string): Promise<Set<string>>;
 }

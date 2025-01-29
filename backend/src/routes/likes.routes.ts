@@ -12,8 +12,4 @@ router.post("/posts/:id/like", authenticate, (req, res) =>
   likesController.toggleLike(req, res)
 );
 
-router.get("/posts/:id/like", authenticate, (req, res) =>
-  likesController.getLikesByContent(req, res)
-);
-
 export default router;

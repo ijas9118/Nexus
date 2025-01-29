@@ -25,11 +25,4 @@ export class ContentService extends BaseService<IContent> implements IContentSer
     return this.contentRepository.findAll();
   }
 
-  async likeContent(contentId: string, userId: string): Promise<IContent | null> {
-    return this.contentRepository.addLike(contentId, userId);
-  }
-
-  async unlikeContent(contentId: string, userId: string): Promise<IContent | null> {
-    return this.contentRepository.removeLike(contentId, userId);
-  }
 }
