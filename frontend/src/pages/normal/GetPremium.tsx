@@ -43,7 +43,7 @@ const GetPremium: FC = () => {
         </Button>
       </section>
 
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-neutral-50 dark:bg-neutral-900">
         <h2 className="text-3xl md:text-4xl text-center mb-16 text-foreground">
           Why Go Premium?
         </h2>

@@ -1,3 +1,4 @@
+import { ModeToggle } from "@/components/mode-toggle";
 import { AppSidebar } from "@/components/normal/sidebar/app-sidebar";
 import {
   Breadcrumb,
@@ -56,6 +57,7 @@ export default function Layout() {
               </Breadcrumb>
             </div>
             <div className="flex items-center gap-4">
+              <ModeToggle />
               <Bell />
               <Button variant="outline" onClick={() => logoutUser()}>
                 Logout

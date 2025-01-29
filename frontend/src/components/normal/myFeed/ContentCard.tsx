@@ -36,12 +36,12 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
 
   return (
     <Card className="flex flex-col">
-      <CardHeader className="flex-row gap-4 space-y-0">
+      <CardHeader className="flex-row gap-4 space-y-0 items-center">
         <Avatar>
           <AvatarImage src="https://avatar.iran.liara.run/public" />
           <AvatarFallback>{props.avatarFallback}</AvatarFallback>
         </Avatar>
-        <div className="flex flex-col gap-1">
+        <div className="w-full flex justify-between items-center">
           <h3 className="font-semibold">{props.userName}</h3>
           <Badge variant="secondary" className="w-fit">
             {props.contentType}
@@ -61,14 +61,14 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
         <div className="flex flex-wrap gap-2">
           {props.tags.map((tag, index) => (
             <Badge key={index} variant="outline">
-              #{tag}
+              # {tag}
             </Badge>
           ))}
         </div>
         <p className="mt-2 text-sm text-muted-foreground">{props.date}</p>
       </CardContent>
       <CardFooter className="border-t py-3">
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-around">
           <Button
             variant="ghost"
             size="sm"

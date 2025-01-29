@@ -48,7 +48,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuButton
-              className="bg-slate-950 hover:bg-slate-900 text-slate-100 hover:text-slate-100"
+              className="bg-slate-950 hover:bg-slate-900 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-slate-100 hover:text-slate-100"
               onClick={() => navigate("/addPost")}
             >
               <Plus />

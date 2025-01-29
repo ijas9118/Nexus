@@ -161,7 +161,7 @@ const AddPost: React.FC = () => {
 
   return (
     <div className="flex justify-center min-h-screen px-4 pt-4 pb-8">
-      <div className="container max-w-2xl p-8 bg-white shadow-lg border-[0.5px] border-gray-100 rounded-2xl">
+      <div className="container max-w-2xl p-8 shadow-lg border-[0.5px]  rounded-2xl">
         <h1 className="text-4xl text-center font-bold mb-6">Post New Content</h1>
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
           <div>

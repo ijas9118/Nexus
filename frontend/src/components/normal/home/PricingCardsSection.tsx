@@ -46,7 +46,7 @@ const PricingCardsSection: React.FC<PricingCardsSectionProps> = ({ plans }) => {
           }`}
         >
           {plan.popular && (
-            <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-blue-700 text-white text-sm rounded-full">
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-blue-700 text-white   text-sm rounded-full">
               Popular
             </span>
           )}
@@ -57,7 +57,7 @@ const PricingCardsSection: React.FC<PricingCardsSectionProps> = ({ plans }) => {
                 <span className="text-4xl font-bold">₹{plan.price}</span>
                 <span className="text-gray-500 ml-1">{plan.period}</span>
                 {plan.saving && (
-                  <span className="block text-sm text-green-600 mt-1">{plan.saving}</span>
+                  <span className="block text-sm text-green-600 dark:text-green-300 mt-1">{plan.saving}</span>
                 )}
               </div>
             </CardHeader>
@@ -65,19 +65,15 @@ const PricingCardsSection: React.FC<PricingCardsSectionProps> = ({ plans }) => {
               <ul className="space-y-4">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
-                    <span className="text-gray-600">{feature}</span>
+                    <Check className="w-5 h-5 text-green-500 dark:text-green-700 shrink-0 mt-0.5" />
+                    <span className="text-neutral-700 dark:text-neutral-300">{feature}</span>
                   </li>
                 ))}
               </ul>
             </CardContent>
             <CardFooter>
               <Button
-                className={`w-full ${
-                  plan.popular
-                    ? "bg-indigo-700 hover:bg-indigo-900"
-                    : "bg-gray-900 hover:bg-gray-800"
-                }`}
+                className={`w-full `}
               >
                 Get Started
               </Button>
