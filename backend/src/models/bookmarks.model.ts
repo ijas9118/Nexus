@@ -1,8 +1,8 @@
 import { Schema, model, Document, Types } from "mongoose";
 
 interface IBookmark extends Document {
-  contentId: Types.ObjectId;
-  userId: Types.ObjectId;
+  contentId: Types.ObjectId | string;
+  userId: Types.ObjectId | string;
   timestamp: Date;
 }
 

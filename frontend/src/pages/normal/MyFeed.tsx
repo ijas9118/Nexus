@@ -25,6 +25,7 @@ export default function MyFeed() {
     const fetchContent = async () => {
       try {
         const data = await getAllContent();
+        console.log(data);
         setFeedContent(data);
       } catch (err: any) {
         setError(err.message);
@@ -82,6 +83,7 @@ export default function MyFeed() {
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
             isLiked={item.isLiked}
+            isBookmarked={item.isBookmarked}
           />
         ))}
       </div>

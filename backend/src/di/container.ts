@@ -28,6 +28,12 @@ import { ILikeService } from "../core/interfaces/services/ILikeService";
 import { LikeService } from "../services/like.service";
 import { ILikesController } from "../core/interfaces/controllers/ILikesController";
 import { LikesController } from "../controllers/likes.controller";
+import { IBookmarkRepository } from "../core/interfaces/repositories/IBookmarnRepository";
+import { BookmarkRepository } from "../repositories/bookmark.repository";
+import { IBookmarkService } from "../core/interfaces/services/IBookmarkService";
+import { BookmarkService } from "../services/bookmark.service";
+import { IBookmarkController } from "../core/interfaces/controllers/IBookmarkController";
+import { BookmarkController } from "../controllers/bookmark.controller";
 
 const container = new Container();
 
@@ -47,5 +53,9 @@ container.bind<IContentController>(TYPES.ContentController).to(ContentController
 container.bind<ILikesRepository>(TYPES.LikesRepository).to(LikesRepository);
 container.bind<ILikeService>(TYPES.LikesService).to(LikeService);
 container.bind<ILikesController>(TYPES.LikesController).to(LikesController);
+
+container.bind<IBookmarkRepository>(TYPES.BookmarkRepository).to(BookmarkRepository);
+container.bind<IBookmarkService>(TYPES.BookmarkService).to(BookmarkService);
+container.bind<IBookmarkController>(TYPES.BookmarkController).to(BookmarkController);
 
 export { container };

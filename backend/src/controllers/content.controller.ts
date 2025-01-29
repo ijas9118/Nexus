@@ -5,12 +5,14 @@ import { IContentController } from "../core/interfaces/controllers/IContentContr
 import { Request, Response } from "express";
 import { CustomRequest } from "../core/types/CustomRequest";
 import { LikeService } from "../services/like.service";
+import { BookmarkService } from "../services/bookmark.service";
 
 @injectable()
 export class ContentController implements IContentController {
   constructor(
     @inject(TYPES.ContentService) private contentService: ContentService,
-    @inject(TYPES.LikesService) private likeService: LikeService
+    @inject(TYPES.LikesService) private likeService: LikeService,
+    @inject(TYPES.BookmarkService) private bookmarkService: BookmarkService
   ) {}
 
   async createContent(req: CustomRequest, res: Response): Promise<void> {
@@ -58,11 +60,13 @@ export class ContentController implements IContentController {
         res.status(401).json({ message: "User is not authenticated" });
         return;
       }
-      const userLikes = await this.likeService.getLikedContentsId(req.user?._id);
+      const userLikes = await this.likeService.getLikedContentsId(req.user._id);
+      const userBookmarks = await this.bookmarkService.getBookmarks(req.user._id);
 
       const feedData = contents.map((content: any) => ({
         ...content.toObject(),
         isLiked: userLikes.has(content._id.toString()),
+        isBookmarked: userBookmarks.has(content._id.toString()),
       }));
 
       res.json(feedData);

@@ -15,7 +15,7 @@ export class LikeService implements ILikeService {
   async toggleLike(
     contentId: string,
     userId: string
-  ): Promise<{ status: "liked" | "unliked"; likeCount: number | undefined }> {
+  ): Promise<{ status: boolean; likeCount: number | undefined }> {
     const content = await this.contentRepository.findById(contentId);
     if (!content) throw new Error("Content not found");
 
@@ -32,7 +32,7 @@ export class LikeService implements ILikeService {
     const updatedContent = await this.contentRepository.findById(contentId);
 
     return {
-      status: existingLike ? "unliked" : "liked",
+      status: existingLike ? false : true,
       likeCount: updatedContent?.likes,
     };
   }

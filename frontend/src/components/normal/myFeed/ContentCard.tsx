@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { bookmarkContent } from "@/services/bookmarkService";
 import { likeContent } from "@/services/likeService";
 import { Bookmark, Gem, MessageCircle, Share2, ThumbsUp } from "lucide-react";
 import React, { useState } from "react";
@@ -20,19 +21,32 @@ interface ContentCardProps {
   isPremium: boolean;
   image: string;
   isLiked: boolean;
+  isBookmarked: boolean;
 }
 
 const ContentCard: React.FC<ContentCardProps> = (props) => {
   const [likes, setLikes] = useState<number>(props.likes);
   const [isLiked, setIsLiked] = useState<boolean>(props.isLiked);
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(props.isBookmarked);
 
   const handleLike = async (id: string) => {
     try {
+      setIsLiked((prev) => !prev);
+      setLikes(isLiked ? likes - 1 : likes + 1);
       const updatedContent = await likeContent(id);
-      if (updatedContent && updatedContent.likeCount !== undefined) {
-        setIsLiked((prev) => !prev);
-        setLikes(updatedContent.likeCount);
+      if (!updatedContent || updatedContent.likeCount === undefined) {
+        setLikes(isLiked ? likes + 1 : likes - 1);
       }
+    } catch (error) {
+      setIsLiked((prev) => !prev);
+      console.error("Failed to like content", error);
+    }
+  };
+
+  const handleBookmark = async (id: string) => {
+    try {
+      const result = await bookmarkContent(id);
+      setIsBookmarked(result.status);
     } catch (error) {
       console.error("Failed to like content", error);
     }
@@ -86,8 +100,8 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
             <MessageCircle className="h-4 w-4" />
             {props.comments}
           </Button>
-          <Button variant="ghost" size="sm">
-            <Bookmark className="h-4 w-4" />
+          <Button variant="ghost" size="sm" onClick={() => handleBookmark(props.id)}>
+            {isBookmarked ? <Bookmark fill="#FCAE1E" color="#FCAE1E" /> : <Bookmark />}
           </Button>
           <Button variant="ghost" size="sm">
             <Share2 className="h-4 w-4" />
