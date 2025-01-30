@@ -23,4 +23,19 @@ export class BookmarkController implements IBookmarkController {
       res.status(500).json({ message: "Error toggling like", error });
     }
   }
+
+  async getAllBookmarks(req: CustomRequest, res: Response): Promise<void> {
+    try {
+      if (!req.user) {
+        res.status(400).json({ message: "User is not authenticated" });
+        return;
+      }
+
+      const bookmarkedContents = await this.bookmarkService.getBookmarks(req.user?._id);
+
+      res.status(200).json(bookmarkedContents);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to get contents", error });
+    }
+  }
 }

@@ -18,22 +18,22 @@ export const items = [
   },
   {
     title: "Following",
-    url: "#",
+    url: "/following",
     icon: UsersRoundIcon,
   },
   {
     title: "Notification",
-    url: "#",
+    url: "/notification",
     icon: Bell,
   },
   {
     title: "Bookmark",
-    url: "#",
+    url: "/bookmark",
     icon: Bookmark,
   },
   {
     title: "History",
-    url: "#",
+    url: "/history",
     icon: History,
   },
   {
@@ -46,18 +46,18 @@ export const items = [
 export const networkItems = [
   {
     title: "Connections",
-    url: "#",
+    url: "/connections",
     icon: Star,
   },
   {
     title: "Experts",
-    url: "#",
+    url: "/experts",
     icon: CircleCheckBig,
   },
 
   {
     title: "Messages",
-    url: "#",
+    url: "/chat",
     icon: Send,
   },
 ];

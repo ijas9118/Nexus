@@ -3,6 +3,7 @@ import { BaseRepository } from "../core/abstracts/base.repository";
 import { IAdminRepository } from "../core/interfaces/repositories/IAdminRepository";
 import { IAdmin } from "../models/admin.model";
 import Admin from "../models/admin.model";
+import { Types } from "mongoose";
 
 @injectable()
 export class AdminRepository extends BaseRepository<IAdmin> implements IAdminRepository {
@@ -24,9 +25,5 @@ export class AdminRepository extends BaseRepository<IAdmin> implements IAdminRep
 
   async delete(id: string): Promise<IAdmin | null> {
     return this.model.findByIdAndDelete(id);
-  }
-
-  async findById(id: string): Promise<IAdmin | null> {
-    return this.model.findById(id);
   }
 }

@@ -5,5 +5,4 @@ export interface IAdminRepository {
   create(admin: IAdmin): Promise<IAdmin>;
   update(id: string, admin: Partial<IAdmin>): Promise<IAdmin | null>;
   delete(id: string): Promise<IAdmin | null>;
-  findById(id: string): Promise<IAdmin | null>;
 }

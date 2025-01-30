@@ -54,22 +54,12 @@ export class ContentController implements IContentController {
 
   async getAllContent(req: CustomRequest, res: Response): Promise<void> {
     try {
-      const contents = await this.contentService.getAllContent();
-
       if (!req.user) {
         res.status(401).json({ message: "User is not authenticated" });
         return;
       }
-      const userLikes = await this.likeService.getLikedContentsId(req.user._id);
-      const userBookmarks = await this.bookmarkService.getBookmarks(req.user._id);
-
-      const feedData = contents.map((content: any) => ({
-        ...content.toObject(),
-        isLiked: userLikes.has(content._id.toString()),
-        isBookmarked: userBookmarks.has(content._id.toString()),
-      }));
-
-      res.json(feedData);
+      const contents = await this.contentService.getAllContent(req.user._id);
+      res.json(contents);
     } catch (error) {
       res.status(400).json({ message: "Failed to get contents", error });
     }

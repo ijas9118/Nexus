@@ -3,5 +3,5 @@ import { IContent } from "../../../models/content.model";
 export interface IContentService {
   createContent(contentData: Partial<IContent>): Promise<IContent>;
   getContentById(id: string): Promise<IContent | null>;
-  getAllContent(): Promise<IContent[]>;
+  getAllContent(userId: string): Promise<IContent[]>;
 }

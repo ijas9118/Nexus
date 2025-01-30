@@ -2,29 +2,18 @@ import FilterComponent from "@/components/normal/myFeed/FilterComponent";
 import ContentTypeTab from "@/components/normal/myFeed/ContentTypeTab";
 import ContentCard from "@/components/normal/myFeed/ContentCard";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
-import { getAllContent } from "@/services/contentService";
+import { getAllBookmarks } from "@/services/bookmarkService";
 
-export default function MyFeed() {
-  const dispatch = useDispatch();
+export default function Bookmark() {
   const [feedContent, setFeedContent] = useState([]);
-  const [filterContent, setFilterContent] = useState([]);
   const [error, setError] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState<string>("all");
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
   useEffect(() => {
-    dispatch(
-      setBreadcrumbs([
-        { title: "Home", url: "/" },
-        { title: "My Feed", url: "/myFeed" },
-      ])
-    );
-
     const fetchContent = async () => {
       try {
-        const data = await getAllContent();
+        const data = await getAllBookmarks();
         console.log(data);
         setFeedContent(data);
       } catch (err: any) {
@@ -35,27 +24,6 @@ export default function MyFeed() {
 
     fetchContent();
   }, []);
-
-  useEffect(() => {
-    let filteredContent = feedContent;
-
-    if (selectedTab !== "all") {
-      filteredContent = filteredContent.filter(
-        (item: any) => item.contentType === selectedTab
-      );
-    }
-
-    if (selectedTopics.length > 0) {
-      console.log(selectedTopics);
-      filteredContent = filteredContent.filter((item: any) =>
-        selectedTopics.some((topic) =>
-          item.squad.toLowerCase().includes(topic.toLowerCase())
-        )
-      );
-    }
-
-    setFilterContent(filteredContent);
-  }, [selectedTab, feedContent, selectedTopics]);
 
   return (
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 py-8">
@@ -68,7 +36,7 @@ export default function MyFeed() {
       {error && <p className="text-red-500">Error: {error}</p>}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filterContent.map((item: any, index) => (
+        {feedContent.map((item: any, index) => (
           <ContentCard
             id={item._id}
             key={index}

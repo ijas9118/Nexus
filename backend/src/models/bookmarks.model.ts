@@ -1,14 +1,14 @@
 import { Schema, model, Document, Types } from "mongoose";
 
 interface IBookmark extends Document {
-  contentId: Types.ObjectId | string;
-  userId: Types.ObjectId | string;
+  contentIds: Types.ObjectId[];
+  userId: Types.ObjectId;
   timestamp: Date;
 }
 
 const BookmarkSchema = new Schema<IBookmark>({
-  contentId: {
-    type: Schema.Types.ObjectId,
+  contentIds: {
+    type: [Schema.Types.ObjectId],
     ref: "Content",
     required: true,
   },

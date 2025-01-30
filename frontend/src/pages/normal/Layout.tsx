@@ -1,4 +1,4 @@
-import { ModeToggle } from "@/components/mode-toggle";
+import { ModeToggle } from "@/components/theme/mode-toggle";
 import { AppSidebar } from "@/components/normal/sidebar/app-sidebar";
 import {
   Breadcrumb,

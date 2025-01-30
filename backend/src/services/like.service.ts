@@ -16,20 +16,20 @@ export class LikeService implements ILikeService {
     contentId: string,
     userId: string
   ): Promise<{ status: boolean; likeCount: number | undefined }> {
-    const content = await this.contentRepository.findById(contentId);
+    const content = await this.contentRepository.findContent(contentId);
     if (!content) throw new Error("Content not found");
 
     const existingLike = await this.likesRepository.findOne({ contentId, userId });
 
     if (existingLike) {
-      await this.likesRepository.deleteOne({ contentId, userId });
+      await this.likesRepository.deleteLike(contentId, userId);
       await this.contentRepository.updateOne({ _id: contentId }, { $inc: { likes: -1 } });
     } else {
-      await this.likesRepository.create({ contentId, userId });
+      await this.likesRepository.createLike(contentId, userId);
       await this.contentRepository.updateOne({ _id: contentId }, { $inc: { likes: 1 } });
     }
 
-    const updatedContent = await this.contentRepository.findById(contentId);
+    const updatedContent = await this.contentRepository.findContent(contentId);
 
     return {
       status: existingLike ? false : true,

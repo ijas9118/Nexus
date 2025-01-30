@@ -3,6 +3,7 @@ import { IBookmarkService } from "../core/interfaces/services/IBookmarkService";
 import { BookmarkRepository } from "../repositories/bookmark.repository";
 import { ContentRepository } from "../repositories/content.repository";
 import { TYPES } from "../di/types";
+import mongoose from "mongoose";
 
 @injectable()
 export class BookmarkService implements IBookmarkService {
@@ -12,25 +13,39 @@ export class BookmarkService implements IBookmarkService {
   ) {}
 
   async toggleBookmark(contentId: string, userId: string): Promise<{ status: boolean }> {
-    const content = await this.contentRepository.findById(contentId);
+    const content = await this.contentRepository.findContent(contentId);
     if (!content) throw new Error("Content not found");
 
-    const bookmark = await this.bookmarkRepository.findOne({ contentId, userId });
-    if (bookmark) {
-      await this.bookmarkRepository.deleteOne({ contentId, userId });
-    } else {
-      await this.bookmarkRepository.create({ contentId, userId });
+    const contentIdObject = new mongoose.Types.ObjectId(contentId);
+    const userIdObject = new mongoose.Types.ObjectId(userId);
+
+    let bookmark = await this.bookmarkRepository.findOne({ userId: userIdObject });
+
+    if (!bookmark) {
+      bookmark = await this.bookmarkRepository.create({
+        userId: userIdObject,
+        contentIds: [contentIdObject],
+      });
+      return { status: true };
     }
 
-    return { status: bookmark ? false : true };
+    const isBookmarked = bookmark.contentIds.includes(contentIdObject);
+
+    if (isBookmarked) {
+      bookmark.contentIds = bookmark.contentIds.filter(
+        (id) => !id.equals(contentIdObject)
+      );
+      await bookmark.save();
+      return { status: false };
+    } else {
+      bookmark.contentIds.push(contentIdObject);
+      await bookmark.save();
+      return { status: true };
+    }
   }
 
-  async getBookmarks(userId: string): Promise<Set<string>> {
-    const bookmarked = await this.bookmarkRepository.getBookmarks(userId);
-    const contentId = new Set(
-      bookmarked.map((bookmark) => bookmark.contentId.toString())
-    );
-
-    return contentId;
+  async getBookmarks(userId: string): Promise<any[]> {
+    const bookmarks = await this.bookmarkRepository.getBookmarks(userId);
+    return bookmarks;
   }
 }

@@ -4,15 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { bookmarkContent } from "@/services/bookmarkService";
 import { likeContent } from "@/services/likeService";
-import { Bookmark, Gem, MessageCircle, Share2, ThumbsUp } from "lucide-react";
+import { Bookmark, Gem, MessageCircle, Share2 } from "lucide-react";
 import React, { useState } from "react";
-import { FaThumbsUp } from "react-icons/fa";
+import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 
 interface ContentCardProps {
   id: string;
   avatarFallback: string;
   userName: string;
-  contentType: "Blog" | "Video";
+  contentType: string;
   heading: string;
   date: string;
   likes: number;
@@ -68,7 +68,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
         <div className="ml-auto">{props.isPremium && <Gem color="darkblue" />}</div>
       </CardHeader>
       <CardContent className="flex-1">
-        <div className="relative mb-5 h-48 overflow-hidden rounded-lg ">
+        <div className="relative mb-5 h-40 overflow-hidden rounded-lg">
           <img
             src={props.image}
             alt="React Projects"
@@ -93,7 +93,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
             className="gap-2"
             onClick={() => handleLike(props.id)}
           >
-            {isLiked ? <FaThumbsUp /> : <ThumbsUp className="h-4 w-4" />}
+            {isLiked ? <FaThumbsUp /> : <FaRegThumbsUp />}
             {likes}
           </Button>
           <Button variant="ghost" size="sm" className="gap-2">
@@ -101,7 +101,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
             {props.comments}
           </Button>
           <Button variant="ghost" size="sm" onClick={() => handleBookmark(props.id)}>
-            {isBookmarked ? <Bookmark fill="#FCAE1E" color="#FCAE1E" /> : <Bookmark />}
+            {isBookmarked ? <Bookmark fill="#007AFF" color="#007AFF" /> : <Bookmark />}
           </Button>
           <Button variant="ghost" size="sm">
             <Share2 className="h-4 w-4" />

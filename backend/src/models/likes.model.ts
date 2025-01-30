@@ -1,8 +1,8 @@
 import { Schema, model, Document, Types } from "mongoose";
 
 interface ILike extends Document {
-  contentId: Types.ObjectId | string;
-  userId: Types.ObjectId | string;
+  contentId: Types.ObjectId;
+  userId: Types.ObjectId;
   timestamp: Date;
 }
 

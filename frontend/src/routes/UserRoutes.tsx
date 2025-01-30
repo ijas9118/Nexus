@@ -9,6 +9,8 @@ import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import UserProfile from "@/pages/normal/Profile";
 import GetPremium from "@/pages/normal/GetPremium";
+import Bookmark from "@/pages/normal/Bookmark";
+import NotFound from "@/pages/NotFound";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -27,10 +29,11 @@ const UserRoutes: React.FC = () => {
           <Route path="myFeed" element={<MyFeed />} />
           <Route path="profile" element={<UserProfile />} />
           <Route path="addPost" element={<AddPost />} />
+          <Route path="bookmark" element={<Bookmark />} />
           <Route path="getPremium" element={<GetPremium />} />
         </Route>
       </Route>
-      {/* <Route path="/not-found" element={<NotFound />} /> */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

@@ -4,7 +4,7 @@ import { IBaseRepository } from "../interfaces/repositories/IBaseRepository";
 export abstract class BaseRepository<T extends Document> implements IBaseRepository<T> {
   constructor(protected model: Model<T>) {}
 
-  async findById(id: string | Types.ObjectId): Promise<T | null> {
+  async findById(id: Types.ObjectId): Promise<T | null> {
     return this.model.findById(id);
   }
 
@@ -37,7 +37,7 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
   }
 
   async find(filter: FilterQuery<T>): Promise<T[]> {
-    return this.model.find(filter);
+    return await this.model.find(filter);
   }
 
   async findOne(filter: FilterQuery<T>): Promise<T | null> {

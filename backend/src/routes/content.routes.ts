@@ -11,8 +11,6 @@ const contentController = container.get<ContentController>(TYPES.ContentControll
 const likesController = container.get<LikesController>(TYPES.LikesController);
 const bookmarkController = container.get<BookmarkController>(TYPES.BookmarkController);
 
-console.log(12345);
-
 router.get("/", authenticate, (req, res) => contentController.getAllContent(req, res));
 
 router.post("/", authenticate, (req, res) => contentController.createContent(req, res));
@@ -23,5 +21,9 @@ router.post("/:id/like", authenticate, (req, res) =>
 
 router.post("/:id/bookmark", authenticate, (req, res) =>
   bookmarkController.toggleBookmark(req, res)
+);
+
+router.get("/bookmarks", authenticate, (req, res) =>
+  bookmarkController.getAllBookmarks(req, res)
 );
 export default router;

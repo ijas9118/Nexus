@@ -1,4 +1,4 @@
-import { Document, FilterQuery } from "mongoose";
+import { Document, FilterQuery, Types } from "mongoose";
 import { BaseRepository } from "./base.repository";
 
 export abstract class BaseService<T extends Document> {
@@ -8,7 +8,7 @@ export abstract class BaseService<T extends Document> {
     return this.repository.create(data);
   }
 
-  async findById(id: string): Promise<T | null> {
+  async findById(id: Types.ObjectId): Promise<T | null> {
     return this.repository.findById(id);
   }
 

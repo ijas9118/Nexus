@@ -1,14 +1,14 @@
 import { inject, injectable } from "inversify";
-import { IContentRepository } from "../core/interfaces/repositories/IContentRepository";
 import { IContentService } from "../core/interfaces/services/IContentService";
 import { TYPES } from "../di/types";
 import { IContent } from "../models/content.model";
 import { BaseService } from "../core/abstracts/base.service";
+import { ContentRepository } from "../repositories/content.repository";
 
 @injectable()
 export class ContentService extends BaseService<IContent> implements IContentService {
   constructor(
-    @inject(TYPES.ContentRepository) private contentRepository: IContentRepository
+    @inject(TYPES.ContentRepository) private contentRepository: ContentRepository
   ) {
     super(contentRepository);
   }
@@ -18,11 +18,10 @@ export class ContentService extends BaseService<IContent> implements IContentSer
   }
 
   async getContentById(id: string): Promise<IContent | null> {
-    return this.findById(id);
+    return this.contentRepository.findContent(id);
   }
 
-  async getAllContent(): Promise<IContent[]> {
-    return this.contentRepository.findAll();
+  async getAllContent(userId: string): Promise<IContent[]> {
+    return this.contentRepository.getFeedContents(userId);
   }
-
 }

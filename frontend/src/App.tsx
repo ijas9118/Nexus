@@ -3,7 +3,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import UserRoutes from "./routes/UserRoutes";
 import MentorRoutes from "./routes/MentorRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
-import { ThemeProvider } from "./components/theme-provider";
+import { ThemeProvider } from "./components/theme/theme-provider";
+import NotFound from "./pages/NotFound";
 
 const App: React.FC = () => {
   return (
@@ -13,6 +14,8 @@ const App: React.FC = () => {
           <Route path="/*" element={<UserRoutes />} />
           <Route path="/mentor/*" element={<MentorRoutes />} />
           <Route path="/admin/*" element={<AdminRoutes />} />
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
