@@ -33,10 +33,10 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-50">
-      <div className="w-full max-w-md py-12 px-8 bg-white rounded-xl shadow-md">
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-full max-w-md py-12 px-8 rounded-xl shadow-md border-[0.5px]">
         <h1 className="text-2xl font-bold text-center mb-4">Admin Login</h1>
-        <p className="text-sm text-slate-500 text-center mb-6">
+        <p className="text-sm text-center mb-6">
           Enter your credentials to access the admin panel
         </p>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
