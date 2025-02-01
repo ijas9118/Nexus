@@ -34,12 +34,16 @@ import { IBookmarkService } from "../core/interfaces/services/IBookmarkService";
 import { BookmarkService } from "../services/bookmark.service";
 import { IBookmarkController } from "../core/interfaces/controllers/IBookmarkController";
 import { BookmarkController } from "../controllers/bookmark.controller";
+import { IAdminController } from "../core/interfaces/controllers/admin/IAdminController";
+import { AdminController } from "../controllers/admin/admin.controller";
 
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
 container.bind<AdminAuthService>(TYPES.AdminAuthService).to(AdminAuthService);
 container.bind<IAdminAuthController>(TYPES.AdminAuthController).to(AdminAuthController);
+
+container.bind<IAdminController>(TYPES.AdminController).to(AdminController);
 
 container.bind<IUserRepository>(TYPES.UserRepository).to(UserRepository);
 container.bind<IUserService>(TYPES.UserService).to(UserService);

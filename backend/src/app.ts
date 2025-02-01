@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.routes";
 import contentRoutes from "./routes/content.routes";
-import adminRoutes from "./routes/admin/admin.auth.route";
+import adminRoutes from "./routes/admin.routes";
 
 const app = express();
 
@@ -23,6 +23,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/admin", adminRoutes);
+
 app.use("/api/auth", authRoutes);
 app.use("/api/content/posts", contentRoutes);
 

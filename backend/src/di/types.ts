@@ -17,6 +17,7 @@ export const TYPES = {
   // Controllers
   AuthController: Symbol.for("AuthController"),
   AdminAuthController: Symbol.for("AdminAuthController"),
+  AdminController: Symbol.for("AdminController"),
   ContentController: Symbol.for("ContentController"),
   LikesController: Symbol.for("LikesController"),
   BookmarkController: Symbol.for("BookmarkController"),

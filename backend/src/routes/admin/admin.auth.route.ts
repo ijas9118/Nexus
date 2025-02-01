@@ -8,6 +8,8 @@ const adminAuthController = container.get<AdminAuthController>(TYPES.AdminAuthCo
 
 const router = Router();
 
+
+
 router.post("/login", (req, res) => adminAuthController.login(req, res));
 router.post("/refresh-token", validateRefreshToken, (req, res) =>
   adminAuthController.refreshToken(req, res)

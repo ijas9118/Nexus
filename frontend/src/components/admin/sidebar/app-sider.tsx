@@ -36,31 +36,32 @@ import {
   SettingsIcon,
   Users,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const mainItem = [
   {
     title: "Dashboard",
-    url: "#",
+    url: "dashboard",
     icon: LayoutDashboard,
   },
   {
     title: "Users",
-    url: "#",
+    url: "users",
     icon: Users,
   },
   {
     title: "Mentors",
-    url: "#",
+    url: "mentors",
     icon: GraduationCap,
   },
   {
     title: "Squads",
-    url: "#",
+    url: "squads",
     icon: Compass,
   },
   {
     title: "Contents",
-    url: "#",
+    url: "contents",
     icon: Atom,
   },
 ];
@@ -68,12 +69,12 @@ const mainItem = [
 const interactionItems = [
   {
     title: "Comments",
-    url: "#",
+    url: "comments",
     icon: MessageCircleMore,
   },
   {
     title: "Notification",
-    url: "#",
+    url: "notification",
     icon: Bell,
   },
 ];
@@ -81,12 +82,12 @@ const interactionItems = [
 const revenueItems = [
   {
     title: "Subscription",
-    url: "#",
+    url: "subscription",
     icon: CreditCard,
   },
   {
     title: "Pricing",
-    url: "#",
+    url: "pricing",
     icon: IndianRupee,
   },
 ];
@@ -94,17 +95,22 @@ const revenueItems = [
 const otherItems = [
   {
     title: "Analytics",
-    url: "#",
+    url: "analytics",
     icon: ChartColumn,
   },
   {
     title: "Settings",
-    url: "#",
+    url: "settings",
     icon: SettingsIcon,
   },
 ];
 
 const AdminAppSidebar = () => {
+  const navigate = useNavigate();
+
+  const handleMenuClick = (item: { title: string; url: string }) => {
+    navigate(`${item.url}`);
+  };
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -120,7 +126,10 @@ const AdminAppSidebar = () => {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {mainItem.map((item) => (
-                    <SidebarMenuItem key={item.title}>
+                    <SidebarMenuItem
+                      key={item.title}
+                      onClick={() => handleMenuClick(item)}
+                    >
                       <SidebarMenuButton asChild>
                         <div className="cursor-pointer">
                           <item.icon />
@@ -147,7 +156,10 @@ const AdminAppSidebar = () => {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {interactionItems.map((item) => (
-                    <SidebarMenuItem key={item.title}>
+                    <SidebarMenuItem
+                      key={item.title}
+                      onClick={() => handleMenuClick(item)}
+                    >
                       <SidebarMenuButton asChild>
                         <div className="cursor-pointer">
                           <item.icon />
@@ -174,7 +186,10 @@ const AdminAppSidebar = () => {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {revenueItems.map((item) => (
-                    <SidebarMenuItem key={item.title}>
+                    <SidebarMenuItem
+                      key={item.title}
+                      onClick={() => handleMenuClick(item)}
+                    >
                       <SidebarMenuButton asChild>
                         <div className="cursor-pointer">
                           <item.icon />
@@ -201,7 +216,10 @@ const AdminAppSidebar = () => {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {otherItems.map((item) => (
-                    <SidebarMenuItem key={item.title}>
+                    <SidebarMenuItem
+                      key={item.title}
+                      onClick={() => handleMenuClick(item)}
+                    >
                       <SidebarMenuButton asChild>
                         <div className="cursor-pointer">
                           <item.icon />

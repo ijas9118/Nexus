@@ -13,4 +13,21 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   async findByEmail(email: string): Promise<IUser | null> {
     return this.model.findOne({ email });
   }
+
+  async getAllUsers(): Promise<IUser[]> {
+    return this.model.find();
+  }
+
+  async updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null> {
+    return this.model.findByIdAndUpdate(userId, userData, { new: true });
+  }
+
+  async deleteUser(userId: string): Promise<boolean> {
+    const result = await this.model.findByIdAndDelete(userId);
+    return result !== null;
+  }
+
+  async getUserById(userId: string): Promise<IUser | null> {
+    return this.model.findById(userId);
+  }
 }
