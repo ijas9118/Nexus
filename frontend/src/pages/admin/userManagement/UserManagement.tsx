@@ -8,7 +8,7 @@ const UserManagement = () => {
     id: string;
     name: string;
     email: string;
-    profilePic: string;
+    profilePic: string ;
     postsCount: number;
     joinedSquadsCount: number;
   }
@@ -19,7 +19,6 @@ const UserManagement = () => {
     const fetchUsers = async () => {
       try {
         const users = await AdminUserService.getUsers();
-        console.log(users);
         setData(users);
       } catch (error) {
         console.error("Error fetching users:", error);

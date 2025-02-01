@@ -51,7 +51,7 @@ export const columns: ColumnDef<AdminUser>[] = [
       const profilePic = row.getValue("profilePic") as string;
       return (
         <img
-          src={profilePic || "/default-avatar.png"}
+          src={profilePic || "https://avatar.iran.liara.run/public"}
           alt="Profile"
           className="w-10 h-10 rounded-full object-cover"
         />
