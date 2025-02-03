@@ -3,6 +3,7 @@ import { IUser } from "../models/user.model";
 import User from "../models/user.model";
 import { BaseRepository } from "../core/abstracts/base.repository";
 import { IUserRepository } from "../core/interfaces/repositories/IUserRepository";
+import { Types, UpdateQuery } from "mongoose";
 
 @injectable()
 export class UserRepository extends BaseRepository<IUser> implements IUserRepository {
@@ -18,8 +19,9 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     return this.model.find();
   }
 
-  async updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null> {
-    return this.model.findByIdAndUpdate(userId, userData, { new: true });
+  async updateUser(userId: string, userData: UpdateQuery<IUser>): Promise<IUser | null> {
+    const userObjectId = new Types.ObjectId(userId);
+    return this.model.findByIdAndUpdate(userObjectId, userData, { new: true });
   }
 
   async deleteUser(userId: string): Promise<boolean> {

@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
-import { loginUser, registerUser, verifyOtp } from "@/services/authService";
+import { loginUser, registerUser, resendOtp, verifyOtp } from "@/services/authService";
 import { isValidEmail } from "@/utils/validation";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -30,6 +30,10 @@ export default function LoginPage() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+
+  const [timer, setTimer] = useState(60);
+  const [canResend, setCanResend] = useState(false);
+
   const navigate = useNavigate();
   const { toast } = useToast();
   const dispatch = useDispatch();
@@ -111,7 +115,42 @@ export default function LoginPage() {
     }
   };
 
-  const onResend = () => {};
+  const onResend = async () => {
+    try {
+      await resendOtp(formData.email);
+      toast({
+        variant: "default",
+        title: "OTP Resent",
+        description: "A new OTP has been sent to your email.",
+      });
+      startCountdown();
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Failed to Resend OTP",
+        description: error?.message || "Something went wrong. Please try again.",
+      });
+    }
+  };
+
+  const startCountdown = () => {
+    setTimer(60); // Reset to 60 seconds
+    setCanResend(false);
+
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev === 1) {
+          clearInterval(interval);
+          setCanResend(true);
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  useEffect(() => {
+    if (showOTP) startCountdown();
+  }, [showOTP]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -154,10 +193,11 @@ export default function LoginPage() {
                       <InputOTPSlot index={5} />
                     </InputOTPGroup>
                   </InputOTP>
-                  <Button onClick={onResend} className="w-full">
-                    Resend OTP
+                  <Button onClick={onResend} className="w-full" disabled={!canResend}>
+                    {canResend ? "Resend OTP" : `Resend in ${timer}s`}
                   </Button>
                 </div>
+                <Toaster />
               </div>
             </>
           ) : (
@@ -184,25 +224,7 @@ export default function LoginPage() {
                 )}
               </div>
               <div className="space-y-4">
-                <div className="flex flex-col gap-2">
-                  <GoogleButton />
-                  <Button variant="outline">
-                    <FaGithub /> Sign in with Github
-                  </Button>
-                </div>
-
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t dark:border-gray-700" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">
-                      or continue with
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {signUp && (
                     <div className="space-y-2">
                       <Input
@@ -225,7 +247,7 @@ export default function LoginPage() {
                       required
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <div className="relative">
                       <Input
                         type={showPassword ? "text" : "password"}
@@ -249,6 +271,16 @@ export default function LoginPage() {
                         )}
                       </Button>
                     </div>
+                    {!signUp && (
+                      <div
+                        className="text-right"
+                        onClick={() => navigate("/login/forgot-password")}
+                      >
+                        <a className="text-primary text-sm hover:underline cursor-pointer">
+                          Forgot password?
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -270,6 +302,24 @@ export default function LoginPage() {
                     {signUp ? "Sign in" : "Register"}
                   </a>
                 </p>
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t dark:border-gray-700" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      or continue with
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <GoogleButton />
+                  <Button variant="outline">
+                    <FaGithub /> Sign in with Github
+                  </Button>
+                </div>
               </div>
             </>
           )}

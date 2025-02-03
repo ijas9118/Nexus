@@ -29,11 +29,12 @@ export class AuthController implements IAuthController {
     });
   }
 
-  async register(req: Request, res: Response): Promise<void> {
+  register = async (req: Request, res: Response): Promise<void> => {
     try {
       const userData: RegisterDto = req.body;
 
       const existingUser = await this.authService.findUserByEmail(userData.email);
+      console.log(existingUser);
       if (existingUser) {
         res.status(400).json({ message: "User already exists" });
         return;
@@ -49,11 +50,13 @@ export class AuthController implements IAuthController {
 
       res.status(200).json({ message: "OTP sent to email. Please verify in 15 min" });
     } catch (error) {
+      console.log(error);
+
       res.status(400).json({ message: "Registration failed", error });
     }
-  }
+  };
 
-  async verifyOTP(req: Request, res: Response): Promise<void> {
+  verifyOTP = async (req: Request, res: Response): Promise<void> => {
     try {
       const { email, otp } = req.body;
 
@@ -88,9 +91,39 @@ export class AuthController implements IAuthController {
     } catch (error) {
       res.status(500).json({ message: "OTP verification failed", error });
     }
-  }
+  };
 
-  async login(req: Request, res: Response): Promise<void> {
+  resendOtp = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const email = req.body.email;
+
+      const existingData = await redisClient.get(`otp:${email}`);
+
+      if (!existingData) {
+        res
+          .status(400)
+          .json({ message: "OTP expired or not found. Please register again." });
+        return;
+      }
+
+      const parsedData = JSON.parse(existingData);
+
+      const newOtp = this.authService.generateOTP();
+
+      parsedData.otp = newOtp;
+
+      await redisClient.setex(`otp:${email}`, 900, JSON.stringify(parsedData));
+
+      await this.authService.sendOtpEmail(email, newOtp);
+      
+      res.status(200).json({ message: "New OTP sent to your email." });
+    } catch (error) {
+      console.error("Error resending OTP:", error);
+      res.status(500).json({ message: "Failed to resend OTP", error });
+    }
+  };
+
+  login = async (req: Request, res: Response): Promise<void> => {
     try {
       const loginDto: LoginDto = req.body;
       const userData = await this.authService.login(loginDto);
@@ -116,9 +149,9 @@ export class AuthController implements IAuthController {
     } catch (error) {
       res.status(400).json({ message: "Login failed", error });
     }
-  }
+  };
 
-  async logout(req: Request, res: Response): Promise<void> {
+  logout = async (req: Request, res: Response): Promise<void> => {
     try {
       const refreshToken = req.cookies?.refreshToken;
 
@@ -140,9 +173,9 @@ export class AuthController implements IAuthController {
       console.error("Error during logout:", error);
       res.status(500).json({ message: "An error occurred during logout." });
     }
-  }
+  };
 
-  async refreshToken(req: Request, res: Response): Promise<void> {
+  refreshToken = async (req: Request, res: Response): Promise<void> => {
     try {
       const refreshToken = req.cookies.refreshToken;
 
@@ -163,9 +196,9 @@ export class AuthController implements IAuthController {
     } catch (error) {
       res.status(500).json({ message: "Token refresh failed", error });
     }
-  }
+  };
 
-  async verifyToken(req: Request, res: Response): Promise<void> {
+  verifyToken = async (req: Request, res: Response): Promise<void> => {
     const accessToken = req.cookies.accessToken;
 
     if (!accessToken) {
@@ -188,9 +221,9 @@ export class AuthController implements IAuthController {
     }
 
     res.status(200).json(payload.user);
-  }
+  };
 
-  async googleAuth(req: Request, res: Response): Promise<void> {
+  googleAuth = async (req: Request, res: Response): Promise<void> => {
     try {
       const googleAccountData = req.body;
 
@@ -216,5 +249,5 @@ export class AuthController implements IAuthController {
     } catch (error) {
       res.status(400).json({ message: "Login failed", error });
     }
-  }
+  };
 }

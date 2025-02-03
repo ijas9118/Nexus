@@ -65,7 +65,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
             {props.contentType}
           </Badge>
         </div>
-        <div className="ml-auto">{props.isPremium && <Gem color="darkblue" />}</div>
+        <div className="ml-auto">{props.isPremium && <Gem />}</div>
       </CardHeader>
       <CardContent className="flex-1">
         <div className="relative mb-5 h-40 overflow-hidden rounded-lg">

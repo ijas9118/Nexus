@@ -24,7 +24,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { useNavigate } from "react-router-dom";
 
 interface FormData {
-  contentType: "blog" | "video";
+  contentType: "Blog" | "Video";
   squad: string;
   thumbnail: FileList;
   video: FileList;
@@ -58,7 +58,7 @@ const AddPost: React.FC = () => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      contentType: "blog",
+      contentType: "Blog",
       squad: "",
       title: "",
       content: "",
@@ -90,7 +90,7 @@ const AddPost: React.FC = () => {
         : null;
 
       const videoUrl =
-        data.contentType === "video" && data.video[0]
+        data.contentType === "Video" && data.video[0]
           ? await uploadFile(data.video[0], videoPreset)
           : null;
 
@@ -176,11 +176,11 @@ const AddPost: React.FC = () => {
                   onValueChange={(value) => field.onChange(value)}
                 >
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="blog" id="blog" />
+                    <RadioGroupItem value="Blog" id="blog" />
                     <Label htmlFor="blog">Blog</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="video" id="video" />
+                    <RadioGroupItem value="Video" id="video" />
                     <Label htmlFor="video">Video</Label>
                   </div>
                 </RadioGroup>
@@ -254,7 +254,7 @@ const AddPost: React.FC = () => {
             )}
           </div>
 
-          {contentType === "blog" ? (
+          {contentType === "Blog" ? (
             <div>
               <Label>Content</Label>
               <Tabs defaultValue="write">

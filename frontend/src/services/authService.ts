@@ -41,6 +41,18 @@ export const verifyOtp = async (email: string, otp: string) => {
   }
 };
 
+export const resendOtp = async (email: string) => {
+  try {
+    const response = await api.post("/auth/resend-otp", { email });
+    return response.data;
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.message ||
+      "An unexpected error occurred during resending otp.";
+    throw new Error(errorMessage);
+  }
+};
+
 export const googleAuth = async (userData: {
   name?: string;
   email?: string;
@@ -61,8 +73,6 @@ export const googleAuth = async (userData: {
     throw new Error(errorMessage);
   }
 };
-
-
 
 export const verifyAccessToken = async () => {
   try {

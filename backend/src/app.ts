@@ -4,6 +4,7 @@ import cors from "cors";
 import { connectDB } from "./config/database.config";
 import { CLIENT_URL, PORT } from "./utils/constants";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
 
 import authRoutes from "./routes/auth.routes";
 import contentRoutes from "./routes/content.routes";
@@ -21,6 +22,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+app.use(morgan("dev"));
 
 app.use("/api/admin", adminRoutes);
 

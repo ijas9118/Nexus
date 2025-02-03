@@ -122,7 +122,7 @@ const AdminAppSidebar = () => {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton size="lg">
                   <div>
-                    <NexusLogo width={30} height={30}/>
+                    <NexusLogo width={30} height={30} />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="text-lg font-bold">nexus.</span>

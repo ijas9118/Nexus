@@ -11,6 +11,8 @@ import UserProfile from "@/pages/normal/Profile";
 import GetPremium from "@/pages/normal/GetPremium";
 import Bookmark from "@/pages/normal/Bookmark";
 import NotFound from "@/pages/NotFound";
+import Experts from "@/pages/normal/Experts";
+import ForgotPassword from "@/pages/auth/ForgotPassword";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -24,6 +26,7 @@ const UserRoutes: React.FC = () => {
           </GoogleOAuthProvider>
         }
       />
+      <Route path="/login/forgot-password" element={<ForgotPassword />} />
       <Route path="/" element={<Layout />}>
         <Route element={<ProtectedRoute />}>
           <Route path="myFeed" element={<MyFeed />} />
@@ -31,6 +34,7 @@ const UserRoutes: React.FC = () => {
           <Route path="addPost" element={<AddPost />} />
           <Route path="bookmark" element={<Bookmark />} />
           <Route path="getPremium" element={<GetPremium />} />
+          <Route path="experts" element={<Experts />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

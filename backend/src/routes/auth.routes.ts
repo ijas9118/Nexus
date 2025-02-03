@@ -7,16 +7,15 @@ import { validateRefreshToken } from "../middlewares/auth.middleware";
 const router = Router();
 const authController = container.get<AuthController>(TYPES.AuthController);
 
-router.post("/register", (req, res) => authController.register(req, res));
-router.post("/verify-otp", (req, res) => authController.verifyOTP(req, res));
-router.post("/login", (req, res) => authController.login(req, res));
-router.post("/refresh-token", validateRefreshToken, (req, res) =>
-  authController.refreshToken(req, res)
-);
-router.post("/google", (req, res) => authController.googleAuth(req, res));
+router.post("/register", authController.register);
+router.post("/verify-otp", authController.verifyOTP);
+router.post("/resend-otp", authController.resendOtp);
+router.post("/login", authController.login);
+router.post("/refresh-token", validateRefreshToken, authController.refreshToken);
+router.post("/google", authController.googleAuth);
 
-router.get("/verify-token", (req, res) => authController.verifyToken(req, res));
+router.get("/verify-token", authController.verifyToken);
 
-router.get("/logout", (req, res) => authController.logout(req, res));
+router.get("/logout", authController.logout);
 
 export default router;
