@@ -4,7 +4,7 @@ import { TYPES } from "../di/types";
 import { AuthService } from "../services/auth.service";
 import { LoginDto } from "../dtos/requests/auth/login.dto";
 import { RegisterDto } from "../dtos/requests/auth/register.dto";
-import { NODE_ENV } from "../utils/constants";
+import { CLIENT_URL, NODE_ENV } from "../utils/constants";
 import { IAuthController } from "../core/interfaces/controllers/IAuthController";
 import redisClient from "../config/redisClient.config";
 import { verifyAccessToken } from "../utils/jwt.util";
@@ -115,7 +115,7 @@ export class AuthController implements IAuthController {
       await redisClient.setex(`otp:${email}`, 900, JSON.stringify(parsedData));
 
       await this.authService.sendOtpEmail(email, newOtp);
-      
+
       res.status(200).json({ message: "New OTP sent to your email." });
     } catch (error) {
       console.error("Error resending OTP:", error);
@@ -172,6 +172,44 @@ export class AuthController implements IAuthController {
     } catch (error) {
       console.error("Error during logout:", error);
       res.status(500).json({ message: "An error occurred during logout." });
+    }
+  };
+
+  forgotPassword = async (req: Request, res: Response): Promise<void> => {
+    const { email } = req.body;
+
+    try {
+      const token = this.authService.generateToken();
+
+      redisClient.setex(`forgotPassword:${email}`, 900, token);
+
+      const resetLink = `${CLIENT_URL}/login/reset-password?token=${token}&email=${email}`;
+
+      await this.authService.sendResetEmail(email, resetLink);
+      res.status(200).json({ message: "Password reset link sent to your email." });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to send reset link." });
+    }
+  };
+
+  resetPassword = async (req: Request, res: Response): Promise<void> => {
+    const { email, token, password } = req.body;
+
+    try {
+      const isValid = await this.authService.validateToken(email, token);
+      if (!isValid) {
+        res.status(400).json({ error: "Invalid or expired token." });
+        return;
+      }
+
+      console.log(req.body);
+
+      await this.authService.updatePassword(email, password);
+
+      redisClient.del(`forgotPassword:${email}`);
+      res.status(200).json({ message: "Password updated successfully." });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to reset password." });
     }
   };
 

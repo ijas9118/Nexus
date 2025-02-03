@@ -10,6 +10,8 @@ const authController = container.get<AuthController>(TYPES.AuthController);
 router.post("/register", authController.register);
 router.post("/verify-otp", authController.verifyOTP);
 router.post("/resend-otp", authController.resendOtp);
+router.post("/forgot-password", authController.forgotPassword);
+router.post('/reset-password', authController.resetPassword)
 router.post("/login", authController.login);
 router.post("/refresh-token", validateRefreshToken, authController.refreshToken);
 router.post("/google", authController.googleAuth);

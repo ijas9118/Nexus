@@ -5,6 +5,7 @@ export const loginUser = async (email: string, password: string) => {
     const response = await api.post("/auth/login", { email, password });
     return response.data;
   } catch (error: any) {
+    console.log(error);
     const errorMessage =
       error.response?.data?.message || "An unexpected error occurred during login.";
     throw new Error(errorMessage);
@@ -49,6 +50,28 @@ export const resendOtp = async (email: string) => {
     const errorMessage =
       error.response?.data?.message ||
       "An unexpected error occurred during resending otp.";
+    throw new Error(errorMessage);
+  }
+};
+
+export const forgotPassword = async (email: string) => {
+  try {
+    const response = await api.post("/auth/forgot-password", { email });
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || "An unexpected error occurred.";
+    throw new Error(errorMessage);
+  }
+};
+
+export const resetPassword = async (email: string, token: string, password: string) => {
+  try {
+    const response = await api.post("/auth/reset-password", { email, token, password });
+    return response.data;
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.message ||
+      "An unexpected error occurred during resetting password.";
     throw new Error(errorMessage);
   }
 };

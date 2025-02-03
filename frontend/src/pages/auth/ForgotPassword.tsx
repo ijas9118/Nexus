@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import { forgotPassword } from "@/services/authService";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -22,8 +24,7 @@ export default function ForgotPassword() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await forgotPassword(email);
 
     toast({
       title: "Check your email",
@@ -72,6 +73,7 @@ export default function ForgotPassword() {
           </form>
         </CardContent>
       </Card>
+      <Toaster />
     </div>
   );
 }

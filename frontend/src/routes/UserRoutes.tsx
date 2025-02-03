@@ -13,6 +13,7 @@ import Bookmark from "@/pages/normal/Bookmark";
 import NotFound from "@/pages/NotFound";
 import Experts from "@/pages/normal/Experts";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
+import ResetPassword from "@/pages/auth/ResetPassword";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -27,6 +28,8 @@ const UserRoutes: React.FC = () => {
         }
       />
       <Route path="/login/forgot-password" element={<ForgotPassword />} />
+      <Route path="/login/reset-password" element={<ResetPassword />} />
+      
       <Route path="/" element={<Layout />}>
         <Route element={<ProtectedRoute />}>
           <Route path="myFeed" element={<MyFeed />} />

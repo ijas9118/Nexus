@@ -30,6 +30,19 @@ const transporter = nodemailer.createTransport({
 export class AuthService {
   constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
 
+  generateToken(): string {
+    return crypto.randomBytes(32).toString("hex");
+  }
+
+  validateToken(email: string, token: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      redisClient.get(`forgotPassword:${email}`, (err, storedToken) => {
+        if (err) reject(err);
+        resolve(storedToken === token);
+      });
+    });
+  }
+
   generateOTP(): string {
     return crypto.randomInt(100000, 999999).toString();
   }
@@ -77,6 +90,45 @@ export class AuthService {
     }
 
     console.log(email, otp);
+  }
+
+  async sendResetEmail(email: string, resetLink: string): Promise<void> {
+    const mailOptions = {
+      from: USER_EMAIL,
+      to: email,
+      subject: "Password Reset Request - Nexus",
+      text: `You requested to reset your password. Click the link below to reset your password:\n\n${resetLink}\n\nThis link is valid for 15 minutes.`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
+          <!-- Header -->
+          <div style="background-color: #007bff; color: #ffffff; text-align: center; padding: 20px; border-radius: 8px 8px 0 0;">
+            <h1 style="margin: 0; font-size: 24px;">Nexus</h1>
+          </div>
+    
+          <!-- Body -->
+          <div style="padding: 20px; color: #333333;">
+            <h2 style="font-size: 20px; margin-bottom: 20px;">Password Reset Request</h2>
+            <p style="font-size: 16px; line-height: 1.5;">Hello,</p>
+            <p style="font-size: 16px; line-height: 1.5;">You requested to reset your password. Click the button below to reset your password:</p>
+            <a href="${resetLink}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #ffffff; background-color: #007bff; text-decoration: none; border-radius: 4px; margin: 20px 0;">Reset Password</a>
+            <p style="font-size: 16px; line-height: 1.5;">This link is valid for <strong>15 minutes</strong>. If you did not request this, please ignore this email.</p>
+          </div>
+    
+          <!-- Footer -->
+          <div style="text-align: center; padding: 20px; font-size: 14px; color: #777777; background-color: #f4f4f4; border-radius: 0 0 8px 8px;">
+            <p style="margin: 0;">Best regards,<br>The Nexus Team</p>
+            <p style="margin: 10px 0 0;"><a href="https://www.nexus.com" style="color: #007bff; text-decoration: none;">Visit our website</a></p>
+            <p style="margin: 10px 0 0; font-size: 12px;">&copy; ${new Date().getFullYear()} Nexus. All rights reserved.</p>
+          </div>
+        </div>
+      `,
+    };
+    try {
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error("Error sending OTP email:", error);
+      throw new Error("Failed to send OTP. Please try again later.");
+    }
   }
 
   async findUserByEmail(email: string): Promise<boolean> {
@@ -127,7 +179,7 @@ export class AuthService {
     };
 
     const isPasswordValid = await compare(password, user.password);
-    if (!isPasswordValid) return null;
+    if (!isPasswordValid) throw new Error("Incorrect Credentials");
 
     const accessToken = generateAccessToken(userData);
     const refreshToken = generateRefreshToken(userData);
@@ -142,6 +194,16 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  async updatePassword(email: string, newPassword: string): Promise<void> {
+    const user = await this.userRepository.findOne({ email });
+    if (!user) throw new Error("User not found.");
+
+    const hashedPassword = await hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    await user.save();
   }
 
   async refreshToken(
