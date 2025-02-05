@@ -6,5 +6,6 @@ const router = Router();
 
 router.use("/", adminAuthRoutes);
 router.use("/user", adminUserRoutes);
+// router.use("/category", adminCategoryRoutes)
 
 export default router;

@@ -5,6 +5,7 @@ export const TYPES = {
   ContentRepository: Symbol.for("ContentRepository"),
   LikesRepository: Symbol.for("LikesRepository"),
   BookmarkRepository: Symbol.for("BookmarkRepository"),
+  CategoryRepository: Symbol.for("CategoryRepository"),
 
   // Services
   UserService: Symbol.for("UserService"),
@@ -13,6 +14,7 @@ export const TYPES = {
   ContentService: Symbol.for("ContentService"),
   LikesService: Symbol.for("LikesService"),
   BookmarkService: Symbol.for("BookmarkService"),
+  CategoryService: Symbol.for("CategoryService"),
 
   // Controllers
   AuthController: Symbol.for("AuthController"),
@@ -21,4 +23,5 @@ export const TYPES = {
   ContentController: Symbol.for("ContentController"),
   LikesController: Symbol.for("LikesController"),
   BookmarkController: Symbol.for("BookmarkController"),
+  CategoryController: Symbol.for("CategoryController"),
 };

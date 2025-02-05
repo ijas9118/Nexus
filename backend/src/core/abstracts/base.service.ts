@@ -20,11 +20,11 @@ export abstract class BaseService<T extends Document> {
     return this.repository.find(conditions);
   }
 
-  async update(id: string, data: Partial<T>): Promise<T | null> {
+  async update(id: Types.ObjectId, data: Partial<T>): Promise<T | null> {
     return this.repository.update(id, data);
   }
 
-  async delete(id: string): Promise<T | null> {
+  async delete(id: Types.ObjectId): Promise<T | null> {
     return this.repository.delete(id);
   }
 }

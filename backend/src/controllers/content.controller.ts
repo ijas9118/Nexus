@@ -4,16 +4,10 @@ import { TYPES } from "../di/types";
 import { IContentController } from "../core/interfaces/controllers/IContentController";
 import { Request, Response } from "express";
 import { CustomRequest } from "../core/types/CustomRequest";
-import { LikeService } from "../services/like.service";
-import { BookmarkService } from "../services/bookmark.service";
 
 @injectable()
 export class ContentController implements IContentController {
-  constructor(
-    @inject(TYPES.ContentService) private contentService: ContentService,
-    @inject(TYPES.LikesService) private likeService: LikeService,
-    @inject(TYPES.BookmarkService) private bookmarkService: BookmarkService
-  ) {}
+  constructor(@inject(TYPES.ContentService) private contentService: ContentService) {}
 
   async createContent(req: CustomRequest, res: Response): Promise<void> {
     try {

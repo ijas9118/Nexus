@@ -28,14 +28,23 @@ import { ILikeService } from "../core/interfaces/services/ILikeService";
 import { LikeService } from "../services/like.service";
 import { ILikesController } from "../core/interfaces/controllers/ILikesController";
 import { LikesController } from "../controllers/likes.controller";
+
 import { IBookmarkRepository } from "../core/interfaces/repositories/IBookmarnRepository";
 import { BookmarkRepository } from "../repositories/bookmark.repository";
 import { IBookmarkService } from "../core/interfaces/services/IBookmarkService";
 import { BookmarkService } from "../services/bookmark.service";
 import { IBookmarkController } from "../core/interfaces/controllers/IBookmarkController";
 import { BookmarkController } from "../controllers/bookmark.controller";
+
 import { IAdminController } from "../core/interfaces/controllers/admin/IAdminController";
 import { AdminController } from "../controllers/admin/admin.controller";
+
+import { ICategoryRepository } from "../core/interfaces/repositories/ICategoryRepository";
+import { CategoryRepository } from "../repositories/category.repository";
+import { ICategoryService } from "../core/interfaces/services/ICategoryService";
+import { CategoryService } from "../services/category.service";
+import { ICategoryController } from "../core/interfaces/controllers/ICategoryController";
+import { CategoryController } from "../controllers/category.controller";
 
 const container = new Container();
 
@@ -61,5 +70,9 @@ container.bind<ILikesController>(TYPES.LikesController).to(LikesController);
 container.bind<IBookmarkRepository>(TYPES.BookmarkRepository).to(BookmarkRepository);
 container.bind<IBookmarkService>(TYPES.BookmarkService).to(BookmarkService);
 container.bind<IBookmarkController>(TYPES.BookmarkController).to(BookmarkController);
+
+container.bind<ICategoryRepository>(TYPES.CategoryRepository).to(CategoryRepository);
+container.bind<ICategoryService>(TYPES.CategoryService).to(CategoryService);
+container.bind<ICategoryController>(TYPES.CategoryController).to(CategoryController);
 
 export { container };

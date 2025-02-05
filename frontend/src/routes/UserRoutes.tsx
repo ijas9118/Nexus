@@ -14,6 +14,7 @@ import NotFound from "@/pages/NotFound";
 import Experts from "@/pages/normal/Experts";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
+import Squads from "@/pages/normal/Squads";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -38,6 +39,7 @@ const UserRoutes: React.FC = () => {
           <Route path="bookmark" element={<Bookmark />} />
           <Route path="getPremium" element={<GetPremium />} />
           <Route path="experts" element={<Experts />} />
+          <Route path="squads" element={<Squads />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

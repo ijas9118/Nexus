@@ -1,4 +1,12 @@
-import { Document, Model, FilterQuery, UpdateQuery, DeleteResult, Types, UpdateWriteOpResult } from "mongoose";
+import {
+  Document,
+  Model,
+  FilterQuery,
+  UpdateQuery,
+  DeleteResult,
+  Types,
+  UpdateWriteOpResult,
+} from "mongoose";
 import { IBaseRepository } from "../interfaces/repositories/IBaseRepository";
 
 export abstract class BaseRepository<T extends Document> implements IBaseRepository<T> {
@@ -17,7 +25,7 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
     return document.save();
   }
 
-  async update(id: string, data: Partial<T>): Promise<T | null> {
+  async update(id: Types.ObjectId, data: Partial<T>): Promise<T | null> {
     return this.model.findByIdAndUpdate(id, data, { new: true });
   }
 
@@ -28,7 +36,7 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
     return this.model.updateOne(filter, update);
   }
 
-  async delete(id: string): Promise<T | null> {
+  async delete(id: Types.ObjectId): Promise<T | null> {
     return this.model.findByIdAndDelete(id);
   }
 

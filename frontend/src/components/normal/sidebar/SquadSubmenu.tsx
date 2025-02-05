@@ -11,14 +11,20 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { DiamondPlus, Podcast } from "lucide-react";
+import { Atom, DiamondPlus, Podcast } from "lucide-react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const SquadSubmenu: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Squads</SidebarGroupLabel>
       <SidebarMenu>
+        <SidebarMenuButton onClick={() => navigate('/squads')}>
+          <Atom />
+          <span>Explore Squads</span>
+        </SidebarMenuButton>
         <SidebarMenuButton>
           <Podcast />
           <span>Your Squads</span>

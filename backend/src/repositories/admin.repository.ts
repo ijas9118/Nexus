@@ -19,11 +19,12 @@ export class AdminRepository extends BaseRepository<IAdmin> implements IAdminRep
     return this.model.create(admin);
   }
 
-  async update(id: string, admin: Partial<IAdmin>): Promise<IAdmin | null> {
-    return this.model.findByIdAndUpdate(id, admin, { new: true });
+  async updateUser(id: string, admin: Partial<IAdmin>): Promise<IAdmin | null> {
+    const idObj = new Types.ObjectId(id);
+    return this.update(idObj, admin);
   }
 
-  async delete(id: string): Promise<IAdmin | null> {
-    return this.model.findByIdAndDelete(id);
-  }
+  // async delete(id: string): Promise<IAdmin | null> {
+  //   return this.model.findByIdAndDelete(id);
+  // }
 }
