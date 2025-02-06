@@ -7,6 +7,8 @@ const categoryController = container.get<CategoryController>(TYPES.CategoryContr
 
 const router = Router();
 
+router.get("/", categoryController.getAllCategories);
+router.post("/:id/toggle", categoryController.toggleCategory);
 router.post("/", categoryController.createCategory);
 
 export default router;

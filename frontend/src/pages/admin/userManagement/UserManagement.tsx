@@ -1,18 +1,9 @@
 import { useEffect, useState } from "react";
-import { DataTable } from "@/components/admin/table/data-table";
-import { columns } from "./columns";
+import { AdminUser, columns } from "./columns";
 import AdminUserService from "@/services/admin/userManagement";
+import { DataTable } from "./components/data-table";
 
 const UserManagement = () => {
-  interface AdminUser {
-    id: string;
-    name: string;
-    email: string;
-    profilePic: string ;
-    postsCount: number;
-    joinedSquadsCount: number;
-  }
-
   const [data, setData] = useState<AdminUser[]>([]);
 
   useEffect(() => {

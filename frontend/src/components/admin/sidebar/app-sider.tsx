@@ -33,6 +33,7 @@ import {
   CreditCard,
   GraduationCap,
   IndianRupee,
+  Layers,
   LayoutDashboard,
   MessageCircleMore,
   SettingsIcon,
@@ -55,6 +56,11 @@ const mainItem = [
     title: "Mentors",
     url: "mentors",
     icon: GraduationCap,
+  },
+  {
+    title: "Categories",
+    url: "category",
+    icon: Layers,
   },
   {
     title: "Squads",

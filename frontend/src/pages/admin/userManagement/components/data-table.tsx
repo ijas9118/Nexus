@@ -20,9 +20,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import React from "react";
-
-import { DataTablePagination } from "@/components/admin/table/tablePagination";
-import { DataTableToolbar } from "@/components/admin/table/tableToolbar";
+import { DataTableToolbar } from "./tableToolbar";
+import { DataTablePagination } from "./tablePagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

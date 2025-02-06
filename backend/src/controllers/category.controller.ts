@@ -46,12 +46,13 @@ export class CategoryController implements ICategoryController {
     }
   };
 
-  getAllCategories = async (req: Request, res: Response): Promise<Response> => {
+  getAllCategories = async (req: Request, res: Response): Promise<void> => {
     try {
       const categories = await this.categoryService.getAllCategories();
-      return res.status(200).json(categories);
+      
+      res.status(200).json(categories);
     } catch (error: any) {
-      return res
+      res
         .status(500)
         .json({ message: "Error fetching categories", error: error.message });
     }

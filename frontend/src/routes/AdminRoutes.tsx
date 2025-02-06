@@ -1,4 +1,5 @@
 import AdminLayout from "@/pages/admin/AdminLayout";
+import CategoryManagement from "@/pages/admin/categoryManagement/CategoryManagement";
 import Dashboard from "@/pages/admin/Dashboard";
 import Login from "@/pages/admin/Login";
 import UserManagement from "@/pages/admin/userManagement/UserManagement";
@@ -14,6 +15,7 @@ const AdminRoutes: React.FC = () => {
       <Route path="/" element={<AdminLayout />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="users" element={<UserManagement />} />
+        <Route path="category" element={<CategoryManagement />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
