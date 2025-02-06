@@ -34,7 +34,6 @@ export class AuthController implements IAuthController {
       const userData: RegisterDto = req.body;
 
       const existingUser = await this.authService.findUserByEmail(userData.email);
-      console.log(existingUser);
       if (existingUser) {
         res.status(400).json({ message: "User already exists" });
         return;

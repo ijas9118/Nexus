@@ -46,6 +46,13 @@ import { CategoryService } from "../services/category.service";
 import { ICategoryController } from "../core/interfaces/controllers/ICategoryController";
 import { CategoryController } from "../controllers/category.controller";
 
+import { ISquadRepository } from "../core/interfaces/repositories/ISquadRepository";
+import { SquadRepository } from "../repositories/squad.repository";
+import { ISquadService } from "../core/interfaces/services/ISquadService";
+import { SquadService } from "../services/squad.service";
+import { ISquadController } from "../core/interfaces/controllers/ISquadController";
+import { SquadController } from "../controllers/squad.controller";
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -74,5 +81,9 @@ container.bind<IBookmarkController>(TYPES.BookmarkController).to(BookmarkControl
 container.bind<ICategoryRepository>(TYPES.CategoryRepository).to(CategoryRepository);
 container.bind<ICategoryService>(TYPES.CategoryService).to(CategoryService);
 container.bind<ICategoryController>(TYPES.CategoryController).to(CategoryController);
+
+container.bind<ISquadRepository>(TYPES.SquadRepository).to(SquadRepository);
+container.bind<ISquadService>(TYPES.SquadService).to(SquadService);
+container.bind<ISquadController>(TYPES.SquadController).to(SquadController);
 
 export { container };
