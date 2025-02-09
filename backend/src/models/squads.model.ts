@@ -39,8 +39,7 @@ const SquadSchema: Schema = new Schema(
       required: false,
     },
     category: {
-      type: Schema.Types.ObjectId,
-      ref: "Category",
+      type: String,
       required: true,
     },
     isActive: {

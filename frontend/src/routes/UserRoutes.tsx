@@ -15,6 +15,8 @@ import Experts from "@/pages/normal/Experts";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import Squads from "@/pages/normal/Squads";
+import Messages from "@/pages/normal/Messages";
+import Connections from "@/pages/normal/Connections";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -30,7 +32,7 @@ const UserRoutes: React.FC = () => {
       />
       <Route path="/login/forgot-password" element={<ForgotPassword />} />
       <Route path="/login/reset-password" element={<ResetPassword />} />
-      
+
       <Route path="/" element={<Layout />}>
         <Route element={<ProtectedRoute />}>
           <Route path="myFeed" element={<MyFeed />} />
@@ -40,6 +42,8 @@ const UserRoutes: React.FC = () => {
           <Route path="getPremium" element={<GetPremium />} />
           <Route path="experts" element={<Experts />} />
           <Route path="squads" element={<Squads />} />
+          <Route path="chat" element={<Messages />} />
+          <Route path="connections" element={<Connections />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

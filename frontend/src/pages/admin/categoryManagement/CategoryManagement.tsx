@@ -1,7 +1,8 @@
 import CategoryService from "@/services/admin/categoryService";
 import { FC, useEffect, useState } from "react";
-import { Category, columns } from "./columns";
+import { columns } from "./columns";
 import { DataTable } from "./components/data-table";
+import { Category } from "@/types/category";
 
 const CategoryManagement: FC = () => {
   const [data, setData] = useState<Category[]>([]);

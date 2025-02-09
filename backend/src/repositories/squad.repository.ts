@@ -16,27 +16,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
   };
 
   getAllSquads = async (): Promise<ISquad[]> => {
-    return await SquadModel.aggregate([
-      {
-        $lookup: {
-          from: "categories",
-          localField: "category",
-          foreignField: "_id",
-          as: "categoryDetails",
-        },
-      },
-      { $unwind: "$categoryDetails" },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          membersCount: 1,
-          logo: 1,
-          isActive: 1,
-          category: "$categoryDetails.name",
-        },
-      },
-    ]);
+    return await this.find({});
   };
 
   toggleSquad = async (id: string): Promise<ISquad | null> => {

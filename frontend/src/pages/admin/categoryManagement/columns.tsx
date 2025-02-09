@@ -10,15 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CategoryService from "@/services/admin/categoryService";
+import { Category } from "@/types/category";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-
-export interface Category {
-  _id: string;
-  name: string;
-  squadCount: number;
-  isActive: boolean;
-}
 
 export const columns: ColumnDef<Category>[] = [
   {

@@ -10,7 +10,7 @@ const SquadManagement: FC = () => {
     const fetchSquads = async () => {
       try {
         const squads = await SquadService.getAllSquads();
-        console.log(squads);
+        
         setData(squads);
       } catch (error) {
         console.error("Error fetching users:", error);
