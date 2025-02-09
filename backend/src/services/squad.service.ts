@@ -4,15 +4,36 @@ import { ISquadService } from "../core/interfaces/services/ISquadService";
 import { ISquad } from "../models/squads.model";
 import { SquadRepository } from "../repositories/squad.repository";
 import { TYPES } from "../di/types";
+import { CategoryRepository } from "../repositories/category.repository";
 
 @injectable()
 export class SquadService extends BaseService<ISquad> implements ISquadService {
-  constructor(@inject(TYPES.SquadRepository) private squadRepository: SquadRepository) {
+  constructor(
+    @inject(TYPES.SquadRepository) private squadRepository: SquadRepository,
+    @inject(TYPES.CategoryRepository) private categoryRepository: CategoryRepository
+  ) {
     super(squadRepository);
   }
 
   createSquad = async (squadData: Partial<ISquad>): Promise<ISquad> => {
-    return await this.create(squadData);
+    const { category } = squadData;
+    if (!category || typeof category !== "string") {
+      throw new Error("Invalid category provided");
+    }
+
+    const categoryObj = await this.categoryRepository.findOne({ name: category });
+    if (!categoryObj) {
+      throw new Error("Category not found");
+    }
+
+    const squad = await this.create(squadData);
+    console.log(squad);
+
+    categoryObj.squads.push(squad._id);
+    categoryObj.squadCount += 1;
+
+    await categoryObj.save();
+    return squad;
   };
 
   getSquadByName = async (name: string): Promise<ISquad | null> => {

@@ -44,6 +44,21 @@ export const columns = (toggleSquadStatus: (id: string) => void): ColumnDef<Squa
     enableHiding: false,
   },
   {
+    accessorKey: "logo",
+    header: "Logo",
+    cell: ({ row }) => {
+      const squadLogo = row.getValue("logo") as string;
+      return (
+        <img
+          src={squadLogo || "https://avatar.iran.liara.run/public"}
+          alt="Profile"
+          className="w-10 h-10 rounded-full object-cover"
+        />
+      );
+    },
+    enableSorting: false,
+  },
+  {
     accessorKey: "name",
     header: ({ column }) => (
       <Button

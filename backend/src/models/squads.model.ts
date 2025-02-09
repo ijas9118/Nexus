@@ -1,12 +1,13 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 interface ISquad extends Document {
+  _id: mongoose.Types.ObjectId;
   name: string;
   description: string;
   handle: string;
   membersCount: number;
   logo: string;
-  category: mongoose.Types.ObjectId;
+  category: string;
   isActive: boolean;
 }
 
