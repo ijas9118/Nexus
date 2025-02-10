@@ -1,7 +1,6 @@
 import api from "../api";
 
 const SquadService = {
-
   createSquad: async (data: {
     name: string;
     description: string;
@@ -20,6 +19,15 @@ const SquadService = {
   getSquadsByCategory: async (category: string) => {
     try {
       const response = await api.get(`/squad?category=${category}`);
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  joinSquad: async (squadId: string) => {
+    try {
+      const response = await api.post(`/squad/${squadId}/join`);
       return response.data;
     } catch (error: any) {
       throw error.response?.data || error.message;

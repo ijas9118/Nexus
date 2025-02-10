@@ -3,6 +3,7 @@ import { ISquadController } from "../core/interfaces/controllers/ISquadControlle
 import { SquadService } from "../services/squad.service";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
+import { CustomRequest } from "../core/types/CustomRequest";
 
 @injectable()
 export class SquadController implements ISquadController {
@@ -57,6 +58,21 @@ export class SquadController implements ISquadController {
       res.status(200).json(squads);
     } catch (error: any) {
       res.status(500).json({ message: "Error fetching squads", error: error.message });
+    }
+  };
+
+  joinSquad = async (req: CustomRequest, res: Response): Promise<void> => {
+    console.log("asdfadsf");
+    const userId = req.user?._id as string;
+    const { squadId } = req.params;
+
+    try {
+      if (!userId) res.status(400).json({ message: "User ID is required" });
+
+      await this.squadService.joinSquad(userId, squadId);
+      res.status(200).json({ message: "Successfully joined squad" });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error joining squad", error: error.message });
     }
   };
 }

@@ -15,7 +15,7 @@ export interface IUser extends Document {
   totalViews: number;
   totalLikes: number;
   bio: string;
-  joinedSquads: Array<ObjectId>;
+  joinedSquads: mongoose.Types.ObjectId[];
   streak: {
     current: number;
     longest: number;

@@ -5,7 +5,7 @@ interface ISquad extends Document {
   name: string;
   description: string;
   handle: string;
-  membersCount: number;
+  members: mongoose.Types.ObjectId[];
   logo: string;
   category: string;
   isActive: boolean;
@@ -31,10 +31,12 @@ const SquadSchema: Schema = new Schema(
       trim: true,
       lowercase: true,
     },
-    membersCount: {
-      type: Number,
-      default: 0,
-    },
+    members: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     logo: {
       type: String,
       required: false,

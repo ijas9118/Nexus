@@ -2,11 +2,13 @@ import mongoose from "mongoose";
 import { BaseRepository } from "../core/abstracts/base.repository";
 import { ISquadRepository } from "../core/interfaces/repositories/ISquadRepository";
 import { ISquad, SquadModel } from "../models/squads.model";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../di/types";
+import { UserRepository } from "./user.repository";
 
 @injectable()
 export class SquadRepository extends BaseRepository<ISquad> implements ISquadRepository {
-  constructor() {
+  constructor(@inject(TYPES.UserRepository) private userRepository: UserRepository) {
     super(SquadModel);
   }
 
@@ -26,5 +28,15 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
     if (!squad) return null;
 
     return await this.update(objId, { isActive: !squad.isActive });
+  };
+
+  addMemberToSquad = async (userId: string, squadId: string) => {
+    const squadObjId = new mongoose.Types.ObjectId(squadId);
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    
+    await this.model.findByIdAndUpdate(squadObjId, { $addToSet: { members: userId } });
+    await this.userRepository.findByIdAndUpdate(userObjectId, {
+      $addToSet: { joinedSquads: squadId },
+    });
   };
 }

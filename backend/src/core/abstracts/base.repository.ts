@@ -16,6 +16,10 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
     return this.model.findById(id);
   }
 
+  async findByIdAndUpdate(id: Types.ObjectId, update: UpdateQuery<T>): Promise<T | null> {
+    return this.model.findByIdAndUpdate(id, update, { new: true });
+  }
+
   async findAll(): Promise<T[]> {
     return this.model.find();
   }

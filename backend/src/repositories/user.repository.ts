@@ -11,6 +11,11 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     super(User);
   }
 
+  async findUserById(id: string): Promise<IUser | null> {
+    const objId = new Types.ObjectId(id);
+    return this.findById(objId);
+  }
+
   async findByEmail(email: string): Promise<IUser | null> {
     return this.model.findOne({ email });
   }
@@ -30,6 +35,16 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   }
 
   async getUserById(userId: string): Promise<IUser | null> {
-    return this.model.findById(userId);
+    return await this.model.findById(userId);
+  }
+
+  async addSquadToUser(userId: string, squadId: string): Promise<boolean> {
+    const userObjectId = new Types.ObjectId(userId);
+    const squadObjId = new Types.ObjectId(squadId);
+    const result = await this.model.findByIdAndUpdate(userObjectId, {
+      $addToSet: { joinedSquads: squadObjId },
+    });
+  
+    return result !== null;
   }
 }

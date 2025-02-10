@@ -5,12 +5,14 @@ import { ISquad } from "../models/squads.model";
 import { SquadRepository } from "../repositories/squad.repository";
 import { TYPES } from "../di/types";
 import { CategoryRepository } from "../repositories/category.repository";
+import { UserRepository } from "../repositories/user.repository";
 
 @injectable()
 export class SquadService extends BaseService<ISquad> implements ISquadService {
   constructor(
     @inject(TYPES.SquadRepository) private squadRepository: SquadRepository,
-    @inject(TYPES.CategoryRepository) private categoryRepository: CategoryRepository
+    @inject(TYPES.CategoryRepository) private categoryRepository: CategoryRepository,
+    @inject(TYPES.UserRepository) private userRepository: UserRepository
   ) {
     super(squadRepository);
   }
@@ -54,5 +56,9 @@ export class SquadService extends BaseService<ISquad> implements ISquadService {
 
   getSquadsByCategory = async (category: string): Promise<ISquad[]> => {
     return await this.squadRepository.find({ category });
+  };
+
+  joinSquad = async (userId: string, squadId: string) => {
+    await this.squadRepository.addMemberToSquad(userId, squadId);
   };
 }

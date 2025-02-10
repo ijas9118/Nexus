@@ -2,6 +2,7 @@ import CategoryScroll from "@/components/normal/squads/CategoryScroll";
 import { CreateSquadDialog } from "@/components/normal/squads/CreateSquadDialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { toast } from "@/hooks/use-toast";
 import CategoryService from "@/services/admin/categoryService";
 import SquadService from "@/services/user/squadService";
 import { Category } from "@/types/category";
@@ -47,6 +48,17 @@ const Squads: FC = () => {
     fetchSquads();
   }, [selectedCategory]);
 
+  const handleJoinSquad = async (squadId: string) => {
+    try {
+      await SquadService.joinSquad(squadId);
+
+      toast({ description: "Successfully joined the squad!" });
+    } catch (error) {
+      console.error("Error joining squad:", error);
+      toast({ description: "Failed to join squad!", variant: "destructive" });
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 py-8 space-y-8">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -74,8 +86,8 @@ const Squads: FC = () => {
                 alt={squad.name}
                 className="rounded-full h-14 w-14"
               />
-              <Button variant="outline">
-                 Join Squad
+              <Button variant="outline" onClick={() => handleJoinSquad(squad._id)}>
+                Join Squad
               </Button>
             </div>
             <h2 className="font-semibold text-xl">{squad.name}</h2>
