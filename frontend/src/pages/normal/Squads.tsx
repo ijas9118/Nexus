@@ -6,12 +6,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/hooks/use-toast";
 import CategoryService from "@/services/admin/categoryService";
 import SquadService from "@/services/user/squadService";
+import { setSquadsByCategory } from "@/store/slices/squadSlice";
+import { RootState } from "@/store/store";
 import { Category } from "@/types/category";
 import { Squad } from "@/types/squad";
 import { Plus } from "lucide-react";
 import { FC, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const Squads: FC = () => {
+  const dispatch = useDispatch();
+  const { squadsByCategory } = useSelector((state: RootState) => state.squads);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [squads, setSquads] = useState<any[]>([]);
@@ -40,9 +45,16 @@ const Squads: FC = () => {
 
     const fetchSquads = async () => {
       setLoading(true);
+
+      const cachedSquads = squadsByCategory[selectedCategory];
+      if (cachedSquads) {
+        setSquads(cachedSquads); // Use cached squads from Redux
+        setLoading(false);
+        return;
+      }
       try {
         const squadsData = await SquadService.getSquadsByCategory(selectedCategory);
-        console.log(squadsData);
+        dispatch(setSquadsByCategory({ category: selectedCategory, squads: squadsData })); // Store squads in Redux
         setSquads(squadsData);
       } catch (error) {
         console.error("Error fetching squads:", error);
@@ -133,11 +145,9 @@ const Squads: FC = () => {
           ))
         ) : (
           <div className="col-span-full flex flex-col items-center justify-center text-center py-10">
-            <img src="/images/no-data.svg" alt="No squads" className="h-32 w-32" />
-            <p className="text-lg font-semibold text-gray-700 mt-4">
-              No squads found in this category
-            </p>
-            <p className="text-gray-500 text-sm">
+            <img src="/images/no-data.svg" alt="No squads" className="h-48" />
+            <p className="text-lg font-semibold mt-4">No squads found in this category</p>
+            <p className="text-sm">
               Be the first to create a squad and invite others to join!
             </p>
           </div>

@@ -4,7 +4,8 @@ export interface Squad {
   category: string;
   membersCount: number;
   isActive: boolean;
-  logo: string
-  description?: string
-  handle?: string
+  logo: string;
+  description?: string;
+  handle?: string;
+  isJoined?: boolean;
 }
