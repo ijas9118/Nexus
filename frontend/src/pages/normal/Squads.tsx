@@ -7,6 +7,7 @@ import { toast } from "@/hooks/use-toast";
 import CategoryService from "@/services/admin/categoryService";
 import SquadService from "@/services/user/squadService";
 import { setSquadsByCategory } from "@/store/slices/squadSlice";
+import { addUserSquad } from "@/store/slices/userSquadsSlice";
 import { RootState } from "@/store/store";
 import { Category } from "@/types/category";
 import { Squad } from "@/types/squad";
@@ -19,7 +20,7 @@ const Squads: FC = () => {
   const { squadsByCategory } = useSelector((state: RootState) => state.squads);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-  const [squads, setSquads] = useState<any[]>([]);
+  const [squads, setSquads] = useState<Squad[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -65,10 +66,15 @@ const Squads: FC = () => {
     fetchSquads();
   }, [selectedCategory]);
 
-  const handleJoinSquad = async (squadId: string) => {
+  const handleJoinSquad = async (squad: Squad) => {
     try {
-      await SquadService.joinSquad(squadId);
+      await SquadService.joinSquad(squad._id);
 
+      dispatch(addUserSquad(squad));
+
+      setSquads((prevSquads) =>
+        prevSquads.map((s) => (s._id === squad._id ? { ...s, isJoined: true } : s))
+      );
       toast({ description: "Successfully joined the squad!" });
     } catch (error) {
       console.error("Error joining squad:", error);
@@ -127,7 +133,7 @@ const Squads: FC = () => {
                     View Squad
                   </Button>
                 ) : (
-                  <Button variant="outline" onClick={() => handleJoinSquad(squad._id)}>
+                  <Button variant="outline" onClick={() => handleJoinSquad(squad)}>
                     Join Squad
                   </Button>
                 )}

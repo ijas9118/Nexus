@@ -39,7 +39,7 @@ const SquadSchema: Schema = new Schema(
     ],
     logo: {
       type: String,
-      required: false,
+      required: true,
     },
     category: {
       type: String,

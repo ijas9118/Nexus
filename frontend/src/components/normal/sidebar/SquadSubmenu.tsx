@@ -1,7 +1,3 @@
-import JS from "@/components/ui/icons/JS";
-import Next from "@/components/ui/icons/Next";
-import NodejsIcon from "@/components/ui/icons/NodejsIcon";
-import ReactIcon from "@/components/ui/icons/React";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -11,17 +7,37 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import SquadService from "@/services/user/squadService";
+import { setUserSquads } from "@/store/slices/userSquadsSlice";
 import { Atom, DiamondPlus, Podcast } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const SquadSubmenu: React.FC = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const squads = useSelector((state: any) => state.userSquads.squads);
+
+  useEffect(() => {
+    const fetchUserSquads = async () => {
+      try {
+        const fetchedSquads = await SquadService.getUserJoinedSquads(); // Make the API call here
+        dispatch(setUserSquads(fetchedSquads));
+        console.log(fetchedSquads);
+      } catch (error) {
+        console.error("Error fetching user squads:", error);
+      }
+    };
+
+    fetchUserSquads();
+  }, [dispatch]);
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Squads</SidebarGroupLabel>
       <SidebarMenu>
-        <SidebarMenuButton onClick={() => navigate('/squads')}>
+        <SidebarMenuButton onClick={() => navigate("/squads")}>
           <Atom />
           <span>Explore Squads</span>
         </SidebarMenuButton>
@@ -30,30 +46,14 @@ const SquadSubmenu: React.FC = () => {
           <span>Your Squads</span>
         </SidebarMenuButton>
         <SidebarMenuSub>
-          <SidebarMenuSubItem>
-            <SidebarMenuSubButton>
-              <JS />
-              <span>Javascript</span>
-            </SidebarMenuSubButton>
-          </SidebarMenuSubItem>
-          <SidebarMenuSubItem>
-            <SidebarMenuSubButton>
-              <NodejsIcon />
-              <span>Nodejs</span>
-            </SidebarMenuSubButton>
-          </SidebarMenuSubItem>
-          <SidebarMenuSubItem>
-            <SidebarMenuSubButton>
-              <ReactIcon />
-              <span>React</span>
-            </SidebarMenuSubButton>
-          </SidebarMenuSubItem>
-          <SidebarMenuSubItem>
-            <SidebarMenuSubButton>
-              <Next />
-              <span>Next</span>
-            </SidebarMenuSubButton>
-          </SidebarMenuSubItem>
+          {squads.map((squad: any) => (
+            <SidebarMenuSubItem key={squad._id}>
+              <SidebarMenuSubButton onClick={() => navigate(`/squads/${squad.id}`)}>
+                <img src={squad.logo} alt="" className="w-6 rounded-full" />
+                <span>{squad.name}</span>
+              </SidebarMenuSubButton>
+            </SidebarMenuSubItem>
+          ))}
         </SidebarMenuSub>
         <SidebarMenuButton>
           <DiamondPlus />

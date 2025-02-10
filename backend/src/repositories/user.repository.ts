@@ -44,7 +44,15 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     const result = await this.model.findByIdAndUpdate(userObjectId, {
       $addToSet: { joinedSquads: squadObjId },
     });
-  
+
     return result !== null;
+  }
+
+  async getUserJoinedSquads(userId: string): Promise<any[]> {
+    const user = await User.findById(userId).populate("joinedSquads");
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user.joinedSquads;
   }
 }

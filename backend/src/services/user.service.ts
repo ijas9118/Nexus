@@ -5,10 +5,11 @@ import { IUserService } from "../core/interfaces/services/IUserService";
 import { IUser } from "../models/user.model";
 import { BaseService } from "../core/abstracts/base.service";
 import { UsersDTO } from "../dtos/responses/admin/users.dto";
+import { UserRepository } from "../repositories/user.repository";
 
 @injectable()
 export class UserService extends BaseService<IUser> implements IUserService {
-  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {
+  constructor(@inject(TYPES.UserRepository) private userRepository: UserRepository) {
     super(userRepository);
   }
 
@@ -38,5 +39,9 @@ export class UserService extends BaseService<IUser> implements IUserService {
 
   async deleteUser(userId: string): Promise<boolean> {
     return this.userRepository.deleteUser(userId);
+  }
+
+  async getUserJoinedSquads(userId: string): Promise<string[]> {
+    return this.userRepository.getUserJoinedSquads(userId);
   }
 }

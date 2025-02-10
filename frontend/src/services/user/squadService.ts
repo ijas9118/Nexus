@@ -33,6 +33,16 @@ const SquadService = {
       throw error.response?.data || error.message;
     }
   },
+
+  getUserJoinedSquads: async () => {
+    try {
+      const response = await api.get(`/user/squads`);
+      console.log(response);
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || error.message;
+    }
+  },
 };
 
 export default SquadService;

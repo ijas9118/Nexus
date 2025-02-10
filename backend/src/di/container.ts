@@ -52,6 +52,8 @@ import { ISquadService } from "../core/interfaces/services/ISquadService";
 import { SquadService } from "../services/squad.service";
 import { ISquadController } from "../core/interfaces/controllers/ISquadController";
 import { SquadController } from "../controllers/squad.controller";
+import { IUserController } from "../core/interfaces/controllers/IUserController";
+import { UserController } from "../controllers/user.controller";
 
 const container = new Container();
 
@@ -65,6 +67,7 @@ container.bind<IUserRepository>(TYPES.UserRepository).to(UserRepository);
 container.bind<IUserService>(TYPES.UserService).to(UserService);
 container.bind<AuthService>(TYPES.AuthService).to(AuthService);
 container.bind<IAuthController>(TYPES.AuthController).to(AuthController);
+container.bind<IUserController>(TYPES.UserController).to(UserController);
 
 container.bind<IContentRepository>(TYPES.ContentRepository).to(ContentRepository);
 container.bind<IContentService>(TYPES.ContentService).to(ContentService);

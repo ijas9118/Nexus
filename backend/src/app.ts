@@ -10,6 +10,7 @@ import authRoutes from "./routes/auth.routes";
 import contentRoutes from "./routes/content.routes";
 import adminRoutes from "./routes/admin.routes";
 import squadRouters from "./routes/squads.routes";
+import userRoutes from "./routes/user.routes";
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/content/posts", contentRoutes);
 app.use("/api/squad", squadRouters);
+app.use("/api/user", userRoutes);
 
 const startServer = async () => {
   try {

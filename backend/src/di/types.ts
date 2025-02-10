@@ -19,6 +19,7 @@ export const TYPES = {
   SquadService: Symbol.for("SquadService"),
 
   // Controllers
+  UserController: Symbol.for("UserController"),
   AuthController: Symbol.for("AuthController"),
   AdminAuthController: Symbol.for("AdminAuthController"),
   AdminController: Symbol.for("AdminController"),
