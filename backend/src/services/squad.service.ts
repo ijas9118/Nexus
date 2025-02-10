@@ -51,4 +51,8 @@ export class SquadService extends BaseService<ISquad> implements ISquadService {
   toggleSquad = async (id: string): Promise<ISquad | null> => {
     return await this.squadRepository.toggleSquad(id);
   };
+
+  getSquadsByCategory = async (category: string): Promise<ISquad[]> => {
+    return await this.squadRepository.find({ category });
+  };
 }

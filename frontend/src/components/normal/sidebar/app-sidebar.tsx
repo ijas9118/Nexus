@@ -5,6 +5,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -25,6 +26,7 @@ import useLogout from "@/hooks/useLogout";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import NexusLogo from "@/components/ui/NexusLogo";
 
 export function AppSidebar() {
   const navigate = useNavigate();
@@ -44,7 +46,25 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarContent className="py-6">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton size="lg">
+                  <div>
+                    <NexusLogo width={30} height={30} />
+                  </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="text-lg font-bold">nexus.</span>
+                  </div>
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent >
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuButton

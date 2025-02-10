@@ -9,16 +9,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Squad } from "@/types/squad";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-export interface Squad {
-  _id: string;
-  name: string;
-  category: string;
-  membersCount: number;
-  isActive: boolean;
-}
 
 export const columns = (toggleSquadStatus: (id: string) => void): ColumnDef<Squad>[] => [
   {

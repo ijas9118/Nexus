@@ -4,7 +4,7 @@ import ContentCard from "@/components/normal/myFeed/ContentCard";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
-import { getAllContent } from "@/services/contentService";
+import { getAllContent } from "@/services/user/contentService";
 
 export default function MyFeed() {
   const dispatch = useDispatch();

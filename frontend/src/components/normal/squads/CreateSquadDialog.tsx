@@ -22,11 +22,12 @@ import {
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "@/hooks/use-toast";
-import SquadService from "@/services/admin/squadService";
+import SquadService from "@/services/user/squadService";
 import { uploadFiles } from "@/services/user/contentService";
 import { Toaster } from "@/components/ui/toaster";
 import CategoryService from "@/services/admin/categoryService";
 import { Category } from "@/types/category";
+import { Squad } from "@/types/squad";
 
 const formSchema = z.object({
   name: z
@@ -55,9 +56,14 @@ type FormData = z.infer<typeof formSchema>;
 interface CreateSquadDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSquadCreated: (newSquad: Squad) => void;
 }
 
-export function CreateSquadDialog({ open, onOpenChange }: CreateSquadDialogProps) {
+export function CreateSquadDialog({
+  open,
+  onOpenChange,
+  onSquadCreated,
+}: CreateSquadDialogProps) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -114,6 +120,7 @@ export function CreateSquadDialog({ open, onOpenChange }: CreateSquadDialogProps
 
       const result = await SquadService.createSquad(squadData);
       console.log(result);
+      onSquadCreated(result);
 
       toast({
         variant: "default",

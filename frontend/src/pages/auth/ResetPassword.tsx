@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import { resetPassword } from "@/services/authService";
+import { resetPassword } from "@/services/user/authService";
 import { Toaster } from "@/components/ui/toaster";
 
 export default function ResetPassword() {

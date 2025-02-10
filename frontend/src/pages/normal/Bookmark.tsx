@@ -2,7 +2,7 @@ import FilterComponent from "@/components/normal/myFeed/FilterComponent";
 import ContentTypeTab from "@/components/normal/myFeed/ContentTypeTab";
 import ContentCard from "@/components/normal/myFeed/ContentCard";
 import { useEffect, useState } from "react";
-import { getAllBookmarks } from "@/services/bookmarkService";
+import { getAllBookmarks } from "@/services/user/bookmarkService";
 
 export default function Bookmark() {
   const [feedContent, setFeedContent] = useState([]);

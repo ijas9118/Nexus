@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { jwtDecode, JwtPayload } from "jwt-decode";
-import { googleAuth } from "@/services/authService";
+import { googleAuth } from "@/services/user/authService";
 import { useDispatch } from "react-redux";
 import { login } from "@/store/slices/authSlice";
 import { useNavigate } from "react-router-dom";

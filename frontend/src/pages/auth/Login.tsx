@@ -3,7 +3,12 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
-import { loginUser, registerUser, resendOtp, verifyOtp } from "@/services/authService";
+import {
+  loginUser,
+  registerUser,
+  resendOtp,
+  verifyOtp,
+} from "@/services/user/authService";
 import { isValidEmail } from "@/utils/validation";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";

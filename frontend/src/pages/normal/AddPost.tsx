@@ -18,7 +18,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
-import { addContent, uploadFiles } from "@/services/contentService";
+import { addContent, uploadFiles } from "@/services/user/contentService";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { useNavigate } from "react-router-dom";

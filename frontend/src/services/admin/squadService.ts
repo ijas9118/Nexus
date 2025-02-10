@@ -1,6 +1,6 @@
 import api from "../api";
 
-const SquadService = {
+const AdminSquadService = {
   getAllSquads: async () => {
     try {
       const response = await api.get("admin/squad");
@@ -35,4 +35,4 @@ const SquadService = {
   },
 };
 
-export default SquadService;
+export default AdminSquadService;

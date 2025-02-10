@@ -9,6 +9,7 @@ import morgan from "morgan";
 import authRoutes from "./routes/auth.routes";
 import contentRoutes from "./routes/content.routes";
 import adminRoutes from "./routes/admin.routes";
+import squadRouters from "./routes/squads.routes";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api/admin", adminRoutes);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/content/posts", contentRoutes);
+app.use("/api/squad", squadRouters);
 
 const startServer = async () => {
   try {

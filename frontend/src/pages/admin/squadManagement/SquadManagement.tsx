@@ -1,7 +1,8 @@
 import { FC, useEffect, useState } from "react";
-import { columns, Squad } from "./columns";
+import { columns } from "./columns";
 import { DataTable } from "./components/data-table";
-import SquadService from "@/services/admin/squadService";
+import AdminSquadService from "@/services/admin/squadService";
+import { Squad } from "@/types/squad";
 
 const SquadManagement: FC = () => {
   const [data, setData] = useState<Squad[]>([]);
@@ -9,8 +10,8 @@ const SquadManagement: FC = () => {
   useEffect(() => {
     const fetchSquads = async () => {
       try {
-        const squads = await SquadService.getAllSquads();
-        
+        const squads = await AdminSquadService.getAllSquads();
+
         setData(squads);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -28,7 +29,7 @@ const SquadManagement: FC = () => {
     );
 
     try {
-      await SquadService.toggleStatus(id);
+      await AdminSquadService.toggleStatus(id);
     } catch (error) {
       console.error("Failed to update squad status:", error);
 
