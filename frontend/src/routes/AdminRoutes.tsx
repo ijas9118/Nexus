@@ -2,6 +2,7 @@ import AdminLayout from "@/pages/admin/AdminLayout";
 import CategoryManagement from "@/pages/admin/categoryManagement/CategoryManagement";
 import Dashboard from "@/pages/admin/Dashboard";
 import Login from "@/pages/admin/Login";
+import MentorManagement from "@/pages/admin/mentorManagement/MentorManagement";
 import SquadManagement from "@/pages/admin/squadManagement/SquadManagement";
 import UserManagement from "@/pages/admin/userManagement/UserManagement";
 
@@ -18,6 +19,7 @@ const AdminRoutes: React.FC = () => {
         <Route path="users" element={<UserManagement />} />
         <Route path="category" element={<CategoryManagement />} />
         <Route path="squads" element={<SquadManagement />} />
+        <Route path="mentors" element={<MentorManagement />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

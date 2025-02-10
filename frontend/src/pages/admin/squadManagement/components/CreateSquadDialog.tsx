@@ -27,6 +27,7 @@ import { uploadFiles } from "@/services/user/contentService";
 import { Toaster } from "@/components/ui/toaster";
 import CategoryService from "@/services/admin/categoryService";
 import { Category } from "@/types/category";
+import { DialogProps } from "@/types/dialog";
 
 const formSchema = z.object({
   name: z
@@ -52,12 +53,9 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-interface CreateSquadDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
 
-export function CreateSquadDialog({ open, onOpenChange }: CreateSquadDialogProps) {
+
+export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
 
