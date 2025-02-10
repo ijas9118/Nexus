@@ -8,7 +8,7 @@ const router = Router();
 
 const squadController = container.get<SquadController>(TYPES.SquadController);
 
-router.get("/", squadController.getSquadsByCategory);
+router.get("/", authenticate, squadController.getSquadsByCategory);
 router.post("/", squadController.createSquad);
 router.post("/:squadId/join", authenticate, squadController.joinSquad);
 

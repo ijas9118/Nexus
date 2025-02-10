@@ -21,6 +21,47 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
     return await this.find({});
   };
 
+  getSquadsByCategory = async (category: string, userId: string): Promise<any[]> => {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+
+    return await this.model.aggregate([
+      { $match: { category } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "joinedSquads",
+          as: "joinedUsers",
+        },
+      },
+      {
+        $addFields: {
+          isJoined: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: "$joinedUsers",
+                        as: "user",
+                        cond: { $eq: ["$$user._id", userObjectId] },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+        },
+      },
+      { $project: { joinedUsers: 0, members: 0 } },
+    ]);
+  };
+
   toggleSquad = async (id: string): Promise<ISquad | null> => {
     const objId = new mongoose.Types.ObjectId(id);
 
@@ -33,7 +74,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
   addMemberToSquad = async (userId: string, squadId: string) => {
     const squadObjId = new mongoose.Types.ObjectId(squadId);
     const userObjectId = new mongoose.Types.ObjectId(userId);
-    
+
     await this.model.findByIdAndUpdate(squadObjId, { $addToSet: { members: userId } });
     await this.userRepository.findByIdAndUpdate(userObjectId, {
       $addToSet: { joinedSquads: squadId },

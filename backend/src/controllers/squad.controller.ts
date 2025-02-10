@@ -47,14 +47,15 @@ export class SquadController implements ISquadController {
     }
   };
 
-  getSquadsByCategory = async (req: Request, res: Response): Promise<void> => {
+  getSquadsByCategory = async (req: CustomRequest, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
     const category = req.query.category as string;
     if (!category) {
       res.status(400).json({ message: "Category is required" });
     }
 
     try {
-      const squads = await this.squadService.getSquadsByCategory(category);
+      const squads = await this.squadService.getSquadsByCategory(userId, category);
       res.status(200).json(squads);
     } catch (error: any) {
       res.status(500).json({ message: "Error fetching squads", error: error.message });
