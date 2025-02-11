@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, ObjectId } from "mongoose";
 
-export interface IMentor extends Document {
+interface IMentor extends Document {
   userId: ObjectId;
   specialization: string;
   availability: {
@@ -22,19 +22,16 @@ const MentorSchema: Schema = new Schema(
     },
     specialization: {
       type: String,
-      required: true,
     },
     availability: {
       days: [
         {
           type: String,
-          required: true,
         },
       ],
       timeSlots: [
         {
           type: String,
-          required: true,
         },
       ],
     },
@@ -58,4 +55,5 @@ const MentorSchema: Schema = new Schema(
   }
 );
 
-export default mongoose.model<IMentor>("Mentor", MentorSchema);
+const MentorModel = mongoose.model<IMentor>("Mentor", MentorSchema);
+export { IMentor, MentorModel };

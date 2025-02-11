@@ -13,18 +13,8 @@ import {
 } from "../utils/jwt.util";
 import redisClient from "../config/redisClient.config";
 import crypto from "crypto";
-import nodemailer from "nodemailer";
-import { APP_PASSWORD, USER_EMAIL } from "../utils/constants";
-
-const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  host: "smtp.gmail.com",
-  port: 587,
-  auth: {
-    user: USER_EMAIL,
-    pass: APP_PASSWORD,
-  },
-});
+import {  USER_EMAIL } from "../utils/constants";
+import { transporter } from "../utils/nodemailerTransporter";
 
 @injectable()
 export class AuthService {

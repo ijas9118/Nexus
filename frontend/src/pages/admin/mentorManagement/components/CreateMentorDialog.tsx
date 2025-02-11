@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { DialogProps } from "@/types/dialog";
+import MentorService from "@/services/admin/mentorService";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(50),
@@ -40,11 +41,11 @@ export function CreateMentorDialog({ open, onOpenChange }: DialogProps) {
 
   const onSubmit = async (data: FormData) => {
     try {
-      // await sendMagicLink(data.email, {
-      //   name: data.name,
-      //   specialization: data.specialization,
-      //   category: data.category,
-      // });
+      await MentorService.sendInvite({
+        email: data.email,
+        name: data.name,
+        specialization: data.specialization,
+      });
 
       toast({
         variant: "default",

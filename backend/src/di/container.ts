@@ -54,6 +54,12 @@ import { ISquadController } from "../core/interfaces/controllers/ISquadControlle
 import { SquadController } from "../controllers/squad.controller";
 import { IUserController } from "../core/interfaces/controllers/IUserController";
 import { UserController } from "../controllers/user.controller";
+import { IMentorRepository } from "../core/interfaces/repositories/IMentorRepository";
+import { MentorRepository } from "../repositories/mentor.repository";
+import { IMentorService } from "../core/interfaces/services/IMentorService";
+import { MentorService } from "../services/mentor.service";
+import { IMentorController } from "../core/interfaces/controllers/IMentorController";
+import { MentorController } from "../controllers/mentor.controller";
 
 const container = new Container();
 
@@ -88,5 +94,9 @@ container.bind<ICategoryController>(TYPES.CategoryController).to(CategoryControl
 container.bind<ISquadRepository>(TYPES.SquadRepository).to(SquadRepository);
 container.bind<ISquadService>(TYPES.SquadService).to(SquadService);
 container.bind<ISquadController>(TYPES.SquadController).to(SquadController);
+
+container.bind<IMentorRepository>(TYPES.MentorRepository).to(MentorRepository);
+container.bind<IMentorService>(TYPES.MentorService).to(MentorService);
+container.bind<IMentorController>(TYPES.MentorController).to(MentorController);
 
 export { container };

@@ -30,13 +30,13 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           }
           className="max-w-xs"
         />
-        {table.getColumn("isActive") && (
+        {table.getColumn("status") && (
           <FacetedFilter
-            column={table.getColumn("isActive")}
+            column={table.getColumn("status")}
             title="Status"
             options={[
-              { label: "Active", value: "true" },
-              { label: "Inactive", value: "false" },
+              { label: "Accepted", value: "accepted" },
+              { label: "Pending", value: "pending" },
             ]}
           />
         )}

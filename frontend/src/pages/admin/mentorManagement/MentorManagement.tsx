@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./components/data-table";
 import { Mentor } from "@/types/mentor";
+import MentorService from "@/services/admin/mentorService";
 
 const MentorManagement: FC = () => {
   const [data, setData] = useState<Mentor[]>([]);
@@ -9,8 +10,8 @@ const MentorManagement: FC = () => {
   useEffect(() => {
     const fetchMentors = async () => {
       try {
-        const response = await fetch("/api/mentors"); // Replace with actual API endpoint
-        const mentors = await response.json();
+        const mentors = await MentorService.getAllMentors();
+        console.log(mentors);
         setData(mentors);
       } catch (error) {
         console.error("Error fetching mentors:", error);

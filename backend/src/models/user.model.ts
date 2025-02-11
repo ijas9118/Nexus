@@ -26,6 +26,7 @@ export interface IUser extends Document {
     github: string;
     linkedin: string;
   };
+  role: string;
 }
 
 const UserSchema: Schema = new Schema({
@@ -108,6 +109,11 @@ const UserSchema: Schema = new Schema({
     linkedin: {
       type: String,
     },
+  },
+  role: {
+    type: String,
+    required: true,
+    default: "user",
   },
 });
 
