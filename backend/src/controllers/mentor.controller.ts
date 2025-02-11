@@ -36,4 +36,23 @@ export class MentorController implements IMentorController {
       res.status(500).json({ message: error.message });
     }
   };
+
+  completeProfile = async (req: Request, res: Response): Promise<void> => {
+    const { email, name, password } = req.body;
+    console.log(req.body);
+    try {
+      await this.mentorService.completeProfile(email, name, password);
+      res.status(200).json({
+        success: true,
+        message: "Profile updated successfully!",
+      });
+    } catch (error: any) {
+      console.error("Error updating profile:", error);
+
+      res.status(500).json({
+        success: false,
+        message: "Failed to update profile. Please try again later.",
+      });
+    }
+  };
 }

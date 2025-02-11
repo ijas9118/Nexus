@@ -14,6 +14,16 @@ const MentorService = {
     try {
       console.log(token);
       const response = await api.post("admin/mentor/acceptInvite", { token });
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  completeProfile: async (data: { email: string; name: string; password: string }) => {
+    try {
+      console.log(data);
+      const response = await api.post("/mentor/register", data);
       console.log(response);
       return response.data;
     } catch (error: any) {

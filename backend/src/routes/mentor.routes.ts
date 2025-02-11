@@ -8,5 +8,6 @@ const mentorController = container.get<MentorController>(TYPES.MentorController)
 const router = Router();
 
 router.get('/', mentorController.getAllMentors)
+router.post('/register', mentorController.completeProfile)
 
 export default router;

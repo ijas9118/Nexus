@@ -9,6 +9,7 @@ import { UserRepository } from "../repositories/user.repository";
 import { MentorRepository } from "../repositories/mentor.repository";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
+import { hash } from "bcrypt";
 
 const ACCESS_TOKEN_SECRET = ACCESS_TOKEN || "access_secret";
 
@@ -111,5 +112,14 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
 
   getAllMentors = async (): Promise<IMentor[]> => {
     return this.mentorRepository.getAllMentors();
+  };
+
+  completeProfile = async (email: string, name: string, password: string) => {
+    const hashedPassword = await hash(password, 10);
+
+    return this.userRepository.updateOne(
+      { email },
+      { $set: { name, password: hashedPassword } }
+    );
   };
 }
