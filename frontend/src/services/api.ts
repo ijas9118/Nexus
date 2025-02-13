@@ -1,4 +1,4 @@
-import { clearUser, refreshAccessToken, setCredentials } from "@/store/slices/authSlice";
+import { refreshAccessToken } from "@/store/slices/authSlice";
 import store from "@/store/store";
 import axios from "axios";
 
@@ -10,6 +10,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = store.getState().auth.accessToken;
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

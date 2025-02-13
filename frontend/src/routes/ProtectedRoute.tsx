@@ -1,9 +1,13 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store"; // Adjust the path based on your project structure
+import { RootState } from "@/store/store";
 
-const ProtectedRoute: React.FC = () => {
+interface ProtectedRouteProps {
+  requiredRole?: "user" | "mentor" | "admin";
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
   const { accessToken, status } = useSelector((state: RootState) => state.auth);
 
   if (status === "loading") {
@@ -14,7 +18,12 @@ const ProtectedRoute: React.FC = () => {
     );
   }
 
-  return accessToken ? <Outlet /> : <Navigate to="/login" />;
+  if (!accessToken && requiredRole === "admin") return <Navigate to="/admin/login" />;
+  if (!accessToken) {
+    return <Navigate to="/login" />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

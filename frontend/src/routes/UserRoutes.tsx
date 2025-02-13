@@ -34,7 +34,7 @@ const UserRoutes: React.FC = () => {
       <Route path="/login/reset-password" element={<ResetPassword />} />
 
       <Route path="/" element={<Layout />}>
-        <Route element={<ProtectedRoute />}>
+        <Route element={<ProtectedRoute requiredRole="user" />}>
           <Route path="myFeed" element={<MyFeed />} />
           <Route path="profile" element={<UserProfile />} />
           <Route path="addPost" element={<AddPost />} />

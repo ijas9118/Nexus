@@ -9,17 +9,20 @@ import UserManagement from "@/pages/admin/userManagement/UserManagement";
 import NotFound from "@/pages/NotFound";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AdminRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<AdminLayout />}>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="users" element={<UserManagement />} />
-        <Route path="category" element={<CategoryManagement />} />
-        <Route path="squads" element={<SquadManagement />} />
-        <Route path="mentors" element={<MentorManagement />} />
+        <Route element={<ProtectedRoute requiredRole="admin" />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="category" element={<CategoryManagement />} />
+          <Route path="squads" element={<SquadManagement />} />
+          <Route path="mentors" element={<MentorManagement />} />
+        </Route>
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -6,11 +6,7 @@ import { RegisterDto } from "../dtos/requests/auth/register.dto";
 import { compare, hash } from "bcrypt";
 import { RegisterResponseDto } from "../dtos/responses/auth/registerResponse.dto";
 import { LoginResponseDto } from "../dtos/responses/auth/loginResponse.dto";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyRefreshToken,
-} from "../utils/jwt.util";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt.util";
 import redisClient from "../config/redisClient.config";
 import crypto from "crypto";
 import { USER_EMAIL } from "../utils/constants";
@@ -154,6 +150,7 @@ export class AuthService {
       _id: user._id,
       name: user.name,
       email: user.email,
+      role: user.role,
     };
   }
 
@@ -180,41 +177,6 @@ export class AuthService {
     }
   }
 
-  async refreshToken(
-    refreshToken: string
-  ): Promise<{ accessToken: string; refreshToken: string } | null> {
-    try {
-      const decoded = verifyRefreshToken(refreshToken);
-
-      const key = `refreshToken:${decoded.user._id}`;
-      const storedToken = await redisClient.get(key);
-
-      if (!storedToken || storedToken !== refreshToken) {
-        throw new Error("Invalid or expired Refresh token");
-      }
-
-      const user = await this.userRepository.findById(decoded.user._id);
-
-      if (!user) throw new Error("User not found");
-
-      const userData = {
-        _id: user._id,
-        email: user.email,
-        name: user.name,
-      };
-
-      const accessToken = generateAccessToken(userData);
-      const newRefreshToken = generateRefreshToken(userData);
-
-      await redisClient.set(key, newRefreshToken, "EX", 7 * 24 * 60 * 60);
-
-      return { accessToken, refreshToken: newRefreshToken };
-    } catch (error) {
-      console.error("Refresh token verification failed:", error);
-      return null;
-    }
-  }
-
   async googleLoginOrRegister(userData: {
     name: string;
     email: string;
@@ -234,7 +196,6 @@ export class AuthService {
       name: user.name,
     };
 
-    const accessToken = generateAccessToken(data);
     const refreshToken = generateRefreshToken(data);
 
     const key = `refreshToken:${user._id}`;
@@ -244,6 +205,7 @@ export class AuthService {
       _id: user._id,
       name: user.name,
       email: user.email,
+      role: "user",
     };
   }
 }

@@ -6,6 +6,7 @@ interface User {
   _id: string;
   name: string;
   email: string;
+  role: "user" | "mentor" | "admin";
 }
 
 // Authentication State
@@ -28,7 +29,11 @@ export const refreshAccessToken = createAsyncThunk(
   "auth/refreshToken",
   async (_, { rejectWithValue, dispatch }) => {
     try {
-      const response = await api.post("/auth/refresh-token", {}, { withCredentials: true });
+      const response = await api.post(
+        "/auth/refresh-token",
+        {},
+        { withCredentials: true }
+      );
       const { accessToken, user } = response.data;
 
       // Store new token in Redux state
@@ -45,7 +50,10 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<{ user: User; accessToken: string }>) => {
+    setCredentials: (
+      state,
+      action: PayloadAction<{ user: User; accessToken: string }>
+    ) => {
       state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
       state.isAuthenticated = true;

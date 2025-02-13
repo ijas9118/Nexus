@@ -7,6 +7,10 @@ import { authenticate } from "../middlewares/auth.middleware";
 const userController = container.get<UserController>(TYPES.UserController);
 const router = Router();
 
-router.get("/squads", authenticate, userController.getUserJoinedSquads);
+router.get(
+  "/squads",
+  authenticate(["user"]),
+  userController.getUserJoinedSquads
+);
 
 export default router;

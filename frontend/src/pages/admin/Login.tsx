@@ -2,10 +2,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { loginAdmin } from "@/services/admin/adminService";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setCredentials } from "@/store/slices/authSlice";
+import { RootState } from "@/store/store";
 
 type FormFields = {
   email: string;
@@ -13,6 +16,7 @@ type FormFields = {
 };
 
 export default function AdminLogin() {
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -22,10 +26,21 @@ export default function AdminLogin() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/admin/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
       setErrorMessage(null);
       const result = await loginAdmin(data.email, data.password);
+      if (result.user) {
+        const { user, accessToken } = result;
+        dispatch(setCredentials({ user, accessToken }));
+      }
       if (result) navigate("/admin/dashboard");
     } catch (error: any) {
       setErrorMessage(error.message || "An error occurred. Please try again later.");

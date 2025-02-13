@@ -79,6 +79,7 @@ export class AuthController implements IAuthController {
         _id: result._id,
         name: result.name,
         email: result.email,
+        role: "user",
       };
 
       res.status(201).json({ user, accessToken });
@@ -128,7 +129,6 @@ export class AuthController implements IAuthController {
       }
 
       setRefreshTokenCookie(res, { _id: user._id.toString(), role: "user" });
-      console.log("Login Controller");
 
       const accessToken = generateAccessToken({
         _id: user._id,
@@ -145,21 +145,7 @@ export class AuthController implements IAuthController {
 
   logout = async (req: Request, res: Response): Promise<void> => {
     try {
-      const refreshToken = req.cookies?.refreshToken;
-
-      if (refreshToken) await redisClient.del(refreshToken);
-
-      res.clearCookie("accessToken", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-      });
-
-      res.clearCookie("refreshToken", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-      });
+      clearRefreshTokenCookie(res);
       res.status(200).json({ message: "Logged out successfully." });
     } catch (error) {
       console.error("Error during logout:", error);
@@ -239,7 +225,7 @@ export class AuthController implements IAuthController {
         _id: user._id,
         name: user.name,
         email: user.email,
-        role: decodedToken.role,
+        role: decodedToken.user.role,
       });
 
       res.status(200).json({ accessToken, user });

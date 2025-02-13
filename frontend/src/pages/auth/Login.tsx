@@ -13,7 +13,7 @@ import { isValidEmail } from "@/utils/validation";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   InputOTP,
   InputOTPGroup,
@@ -22,8 +22,8 @@ import {
 } from "@/components/ui/input-otp";
 import GoogleButton from "@/components/auth/GoogleButton";
 import { FaGithub } from "react-icons/fa";
-import useAuth from "@/hooks/useAuth";
 import { setCredentials } from "@/store/slices/authSlice";
+import { RootState } from "@/store/store";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -42,7 +42,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const dispatch = useDispatch();
-  const { isAuthenticated, authLoading } = useAuth();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -82,7 +82,6 @@ export default function LoginPage() {
       const result = signUp
         ? await registerUser(formData.name, formData.email, formData.password)
         : await loginUser(formData.email, formData.password);
-
 
       if (result.user) {
         const { user, accessToken } = result;
@@ -154,18 +153,11 @@ export default function LoginPage() {
   }, [showOTP]);
 
   useEffect(() => {
+    console.log("q123df", isAuthenticated);
     if (isAuthenticated) {
       navigate("/myFeed");
     }
-  }, [isAuthenticated, navigate]);
-
-  if (authLoading) {
-    return (
-      <div className="container mx-auto px-8 py-8 flex h-screen justify-center items-center">
-        Loading...
-      </div>
-    );
-  }
+  }, []);
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">

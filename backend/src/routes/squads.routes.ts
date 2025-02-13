@@ -8,8 +8,8 @@ const router = Router();
 
 const squadController = container.get<SquadController>(TYPES.SquadController);
 
-router.get("/", authenticate, squadController.getSquadsByCategory);
-router.post("/", squadController.createSquad);
-router.post("/:squadId/join", authenticate, squadController.joinSquad);
+router.get("/", authenticate(["user"]), squadController.getSquadsByCategory);
+router.post("/", authenticate(["user"]), squadController.createSquad);
+router.post("/:squadId/join", authenticate(["user"]), squadController.joinSquad);
 
 export default router;
