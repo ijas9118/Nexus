@@ -11,7 +11,6 @@ const MentorManagement: FC = () => {
     const fetchMentors = async () => {
       try {
         const mentors = await MentorService.getAllMentors();
-        console.log(mentors);
         setData(mentors);
       } catch (error) {
         console.error("Error fetching mentors:", error);

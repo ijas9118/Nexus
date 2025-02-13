@@ -101,7 +101,6 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
       name: string;
     };
 
-    console.log(decoded);
     const storedToken = await redisClient.get(`mentorInvite:${decoded.email}`);
     if (!storedToken || storedToken !== token) {
       throw new Error("Invalid or expired token");

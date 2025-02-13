@@ -14,7 +14,6 @@ import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "@/store/slices/authSlice";
 import {
   InputOTP,
   InputOTPGroup,
@@ -24,6 +23,7 @@ import {
 import GoogleButton from "@/components/auth/GoogleButton";
 import { FaGithub } from "react-icons/fa";
 import useAuth from "@/hooks/useAuth";
+import { setCredentials } from "@/store/slices/authSlice";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -83,14 +83,10 @@ export default function LoginPage() {
         ? await registerUser(formData.name, formData.email, formData.password)
         : await loginUser(formData.email, formData.password);
 
+
       if (result.user) {
-        dispatch(
-          login({
-            _id: result.user._id,
-            name: result.user.name,
-            email: result.user.email,
-          })
-        );
+        const { user, accessToken } = result;
+        dispatch(setCredentials({ user, accessToken }));
       }
       if (signUp) {
         setShowOTP(true);

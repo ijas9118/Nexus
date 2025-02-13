@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "@/store/slices/authSlice";
 import { RootState } from "@/store/store";
 import { verifyAccessToken } from "@/services/user/authService";
 
@@ -13,8 +12,8 @@ const useAuth = () => {
     const checkAuth = async () => {
       try {
         if (!isAuthenticated) {
-          const response = await verifyAccessToken();
-          dispatch(login(response));
+          // const response = await verifyAccessToken();
+          // dispatch(setCredentials({ user, accessToken }));
         }
       } catch (error) {
         console.error("Authentication check failed:", error);

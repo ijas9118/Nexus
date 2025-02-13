@@ -36,8 +36,7 @@ const SquadService = {
 
   getUserJoinedSquads: async () => {
     try {
-      const response = await api.get(`/user/squads`);
-      console.log(response);
+      const response = await api.get('/user/squads');
       return response.data;
     } catch (error: any) {
       throw error.response?.data || error.message;

@@ -39,7 +39,6 @@ export class MentorController implements IMentorController {
 
   completeProfile = async (req: Request, res: Response): Promise<void> => {
     const { email, name, password } = req.body;
-    console.log(req.body);
     try {
       await this.mentorService.completeProfile(email, name, password);
       res.status(200).json({

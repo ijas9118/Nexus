@@ -4,6 +4,6 @@ export interface LoginResponseDto {
   _id: ObjectId;
   name: string;
   email: string;
-  accessToken: string;
-  refreshToken: string;
+  accessToken?: string;
+  refreshToken?: string;
 }

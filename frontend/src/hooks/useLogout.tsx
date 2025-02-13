@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { logout as logoutAction } from "@/store/slices/authSlice";
+import { clearUser } from "@/store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { logout } from "@/services/user/authService";
 
@@ -12,7 +12,7 @@ const useLogout = () => {
       const result = await logout();
 
       if (result.success) {
-        dispatch(logoutAction());
+        dispatch(clearUser());
         navigate("/login");
       }
     } catch (error) {

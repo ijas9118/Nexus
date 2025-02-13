@@ -7,27 +7,16 @@ import { RegisterDto } from "../dtos/requests/auth/register.dto";
 import { CLIENT_URL, NODE_ENV } from "../utils/constants";
 import { IAuthController } from "../core/interfaces/controllers/IAuthController";
 import redisClient from "../config/redisClient.config";
-import { verifyAccessToken } from "../utils/jwt.util";
+import {
+  generateAccessToken,
+  verifyAccessToken,
+  verifyRefreshToken,
+} from "../utils/jwt.util";
+import { clearRefreshTokenCookie, setRefreshTokenCookie } from "../utils/cookieUtils";
 
 @injectable()
 export class AuthController implements IAuthController {
   constructor(@inject(TYPES.AuthService) private authService: AuthService) {}
-
-  private setCookies(res: Response, accessToken: string, refreshToken: string): void {
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000,
-    });
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-  }
 
   register = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -77,16 +66,22 @@ export class AuthController implements IAuthController {
 
       await redisClient.del(`otp:${email}`);
 
-      this.setCookies(res, result.accessToken, result.refreshToken);
+      setRefreshTokenCookie(res, { _id: result._id.toString(), role: "user" });
+
+      const accessToken = generateAccessToken({
+        _id: result._id,
+        name: result.name,
+        email: result.email,
+        role: "user",
+      });
 
       const user = {
         _id: result._id,
         name: result.name,
         email: result.email,
-        accessToken: userData.accessToken,
       };
 
-      res.status(201).json({ user });
+      res.status(201).json({ user, accessToken });
     } catch (error) {
       res.status(500).json({ message: "OTP verification failed", error });
     }
@@ -125,26 +120,24 @@ export class AuthController implements IAuthController {
   login = async (req: Request, res: Response): Promise<void> => {
     try {
       const loginDto: LoginDto = req.body;
-      const userData = await this.authService.login(loginDto);
+      const user = await this.authService.login(loginDto);
 
-      if (userData) {
-        if (!userData.accessToken || !userData.refreshToken) {
-          res.status(400).json(userData);
-          return;
-        }
-
-        this.setCookies(res, userData.accessToken, userData.refreshToken);
-
-        const user = {
-          _id: userData._id,
-          name: userData.name,
-          email: userData.email,
-          accessToken: userData.accessToken,
-        };
-        res.status(200).json({ user });
-      } else {
-        res.status(401).json({ message: "Invalid credentials" });
+      if (!user) {
+        res.status(401).json({ message: "Invalid email or password" });
+        return;
       }
+
+      setRefreshTokenCookie(res, { _id: user._id.toString(), role: "user" });
+      console.log("Login Controller");
+
+      const accessToken = generateAccessToken({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: "user",
+      });
+
+      res.status(200).json({ message: "success", accessToken, user });
     } catch (error) {
       res.status(400).json({ message: "Login failed", error });
     }
@@ -201,8 +194,6 @@ export class AuthController implements IAuthController {
         return;
       }
 
-      console.log(req.body);
-
       await this.authService.updatePassword(email, password);
 
       redisClient.del(`forgotPassword:${email}`);
@@ -213,25 +204,49 @@ export class AuthController implements IAuthController {
   };
 
   refreshToken = async (req: Request, res: Response): Promise<void> => {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      res.status(401).json({ message: "Refresh token not found" });
+      return;
+    }
+
+    const decodedToken = verifyRefreshToken(refreshToken);
+    if (!decodedToken) {
+      res.status(403).json({ message: "Invalid token" });
+      return;
+    }
+
     try {
-      const refreshToken = req.cookies.refreshToken;
+      const user = await this.authService.getUserByRoleAndId(
+        decodedToken.user.role,
+        decodedToken.user._id
+      );
 
-      if (!refreshToken) {
-        res.status(401).json({ message: "Refresh token not found" });
+      if (!user) {
+        clearRefreshTokenCookie(res);
+        res.status(429).json({ message: "User not found" });
         return;
       }
 
-      const tokens = await this.authService.refreshToken(refreshToken);
-      if (!tokens) {
-        res.status(403).json({ message: "Invalid or expired refresh token" });
-        return;
-      }
+      // if (user.status === 'Blocked') {
+      //   clearRefreshTokenCookie(res);
+      //   res.status(403).json({ message: 'User is blocked' });
+      //   return;
+      // }
 
-      this.setCookies(res, tokens.accessToken, tokens.refreshToken);
+      const accessToken = generateAccessToken({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: decodedToken.role,
+      });
 
-      res.status(200).json({ accessToken: tokens.accessToken });
+      res.status(200).json({ accessToken, user });
     } catch (error) {
-      res.status(500).json({ message: "Token refresh failed", error });
+      console.error("Error refreshing token:", error);
+      clearRefreshTokenCookie(res);
+      res.status(500).json({ message: "Internal server error" });
     }
   };
 
@@ -260,31 +275,31 @@ export class AuthController implements IAuthController {
     res.status(200).json(payload.user);
   };
 
-  googleAuth = async (req: Request, res: Response): Promise<void> => {
-    try {
-      const googleAccountData = req.body;
+  // googleAuth = async (req: Request, res: Response): Promise<void> => {
+  //   try {
+  //     const googleAccountData = req.body;
 
-      const userData = await this.authService.googleLoginOrRegister(googleAccountData);
-      if (userData) {
-        if (!userData.accessToken || !userData.refreshToken) {
-          res.status(400).json(userData);
-          return;
-        }
+  //     const userData = await this.authService.googleLoginOrRegister(googleAccountData);
+  //     if (userData) {
+  //       if (!userData.accessToken || !userData.refreshToken) {
+  //         res.status(400).json(userData);
+  //         return;
+  //       }
 
-        this.setCookies(res, userData.accessToken, userData.refreshToken);
+  //       this.setCookies(res, userData.accessToken, userData.refreshToken);
 
-        const user = {
-          _id: userData._id,
-          name: userData.name,
-          email: userData.email,
-          accessToken: userData.accessToken,
-        };
-        res.status(200).json({ user });
-      } else {
-        res.status(401).json({ message: "Google Authentication Failed" });
-      }
-    } catch (error) {
-      res.status(400).json({ message: "Login failed", error });
-    }
-  };
+  //       const user = {
+  //         _id: userData._id,
+  //         name: userData.name,
+  //         email: userData.email,
+  //         accessToken: userData.accessToken,
+  //       };
+  //       res.status(200).json({ user });
+  //     } else {
+  //       res.status(401).json({ message: "Google Authentication Failed" });
+  //     }
+  //   } catch (error) {
+  //     res.status(400).json({ message: "Login failed", error });
+  //   }
+  // };
 }

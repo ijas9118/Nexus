@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, ObjectId } from "mongoose";
+import { UserRole } from "../core/types/UserTypes";
 
 export interface IUser extends Document {
   _id: ObjectId;
@@ -26,7 +27,7 @@ export interface IUser extends Document {
     github: string;
     linkedin: string;
   };
-  role: string;
+  role: UserRole;
 }
 
 const UserSchema: Schema = new Schema({

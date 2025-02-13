@@ -8,15 +8,14 @@ export const authenticate = (
   next: NextFunction
 ): void => {
   try {
-    const token = req.cookies.accessToken;
-
+    const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
       res.status(401).json({ message: "Access token not found" });
       return;
     }
 
     const decoded = verifyAccessToken(token);
-    req.user = decoded.user;
+    req.user = decoded;
     next();
   } catch (error) {
     res.status(401).json({ message: "Invalid or expired access token", error });
@@ -29,10 +28,10 @@ export const validateRefreshToken = (
   next: NextFunction
 ): void => {
   try {
-    const token = req.cookies?.refreshToken;
+    const token = req.cookies.refreshToken;
 
     if (!token) {
-      res.status(401).json({ message: "Refresh token not found" });
+      res.status(403).json({ message: "Refresh token not found" });
       return;
     }
 

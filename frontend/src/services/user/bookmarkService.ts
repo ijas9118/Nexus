@@ -14,7 +14,6 @@ export const bookmarkContent = async (contentId: string) => {
 export const getAllBookmarks = async () => {
   try {
     const response = await api.get("/content/posts/bookmarks");
-    console.log(response.data);
     return response.data;
   } catch (error: any) {
     const errorMessage =

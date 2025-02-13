@@ -11,7 +11,6 @@ const CategoryManagement: FC = () => {
     const fetchCategory = async () => {
       try {
         const categories = await CategoryService.getAllCategory();
-        console.log(categories);
         setData(categories);
       } catch (error) {
         console.error("Error fetching users:", error);

@@ -29,7 +29,6 @@ export class SquadService extends BaseService<ISquad> implements ISquadService {
     }
 
     const squad = await this.create(squadData);
-    console.log(squad);
 
     categoryObj.squads.push(squad._id);
     categoryObj.squadCount += 1;

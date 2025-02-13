@@ -13,7 +13,7 @@ import {
 } from "../utils/jwt.util";
 import redisClient from "../config/redisClient.config";
 import crypto from "crypto";
-import {  USER_EMAIL } from "../utils/constants";
+import { USER_EMAIL } from "../utils/constants";
 import { transporter } from "../utils/nodemailerTransporter";
 
 @injectable()
@@ -122,7 +122,6 @@ export class AuthService {
   }
 
   async findUserByEmail(email: string): Promise<boolean> {
-    console.log(email);
     const user = await this.userRepository.findByEmail(email);
     return !!user;
   }
@@ -136,24 +135,10 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    const userData = {
-      _id: user._id,
-      email: user.email,
-      name: user.name,
-    };
-
-    const accessToken = generateAccessToken(userData);
-    const refreshToken = generateRefreshToken(userData);
-
-    const key = `refreshToken:${user._id}`;
-    await redisClient.set(key, refreshToken, "EX", 7 * 24 * 60 * 60);
-
     return {
       _id: user._id,
       name: user.name,
       email: user.email,
-      accessToken,
-      refreshToken,
     };
   }
 
@@ -162,27 +147,13 @@ export class AuthService {
     const user = await this.userRepository.findByEmail(email);
     if (!user) return null;
 
-    const userData = {
-      _id: user._id,
-      email: user.email,
-      name: user.name,
-    };
-
     const isPasswordValid = await compare(password, user.password);
     if (!isPasswordValid) throw new Error("Incorrect Credentials");
-
-    const accessToken = generateAccessToken(userData);
-    const refreshToken = generateRefreshToken(userData);
-
-    const key = `refreshToken:${user._id}`;
-    await redisClient.set(key, refreshToken, "EX", 7 * 24 * 60 * 60);
 
     return {
       _id: user._id,
       name: user.name,
       email: user.email,
-      accessToken,
-      refreshToken,
     };
   }
 
@@ -194,6 +165,19 @@ export class AuthService {
 
     user.password = hashedPassword;
     await user.save();
+  }
+
+  async getUserByRoleAndId(role: string, id: string) {
+    switch (role) {
+      case "user":
+        return await this.userRepository.getUserById(id);
+      case "admin":
+        return await this.userRepository.getUserById(id);
+      case "mentor":
+        return await this.userRepository.getUserById(id);
+      default:
+        return null;
+    }
   }
 
   async refreshToken(
@@ -260,8 +244,6 @@ export class AuthService {
       _id: user._id,
       name: user.name,
       email: user.email,
-      accessToken,
-      refreshToken,
     };
   }
 }
