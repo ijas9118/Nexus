@@ -11,19 +11,23 @@ const contentController = container.get<ContentController>(TYPES.ContentControll
 const likesController = container.get<LikesController>(TYPES.LikesController);
 const bookmarkController = container.get<BookmarkController>(TYPES.BookmarkController);
 
-router.get("/", authenticate, (req, res) => contentController.getAllContent(req, res));
+router.get("/", authenticate(["user", "admin"]), (req, res) =>
+  contentController.getAllContent(req, res)
+);
 
-router.post("/", authenticate, (req, res) => contentController.createContent(req, res));
+router.post("/", authenticate(["user"]), (req, res) =>
+  contentController.createContent(req, res)
+);
 
-router.post("/:id/like", authenticate, (req, res) =>
+router.post("/:id/like", authenticate(["user"]), (req, res) =>
   likesController.toggleLike(req, res)
 );
 
-router.post("/:id/bookmark", authenticate, (req, res) =>
+router.post("/:id/bookmark", authenticate(["user"]), (req, res) =>
   bookmarkController.toggleBookmark(req, res)
 );
 
-router.get("/bookmarks", authenticate, (req, res) =>
+router.get("/bookmarks", authenticate(["user"]), (req, res) =>
   bookmarkController.getAllBookmarks(req, res)
 );
 export default router;

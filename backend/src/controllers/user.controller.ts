@@ -10,9 +10,9 @@ export class UserController implements IUserController {
   constructor(@inject(TYPES.UserService) private userService: UserService) {}
 
   getUserJoinedSquads = async (req: CustomRequest, res: Response): Promise<void> => {
-    console.log("adesfadsf");
     try {
       const userId = req.user?._id as string;
+
       const squads = await this.userService.getUserJoinedSquads(userId);
       res.status(200).json(squads);
     } catch (error: any) {

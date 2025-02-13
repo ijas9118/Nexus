@@ -111,7 +111,6 @@ export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
       };
 
       const result = await SquadService.createSquad(squadData);
-      console.log(result);
 
       toast({
         variant: "default",

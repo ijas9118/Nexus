@@ -119,7 +119,6 @@ export function CreateSquadDialog({
       };
 
       const result = await SquadService.createSquad(squadData);
-      console.log(result);
       onSquadCreated(result);
 
       toast({

@@ -5,6 +5,7 @@ export interface IAdmin extends Document {
   name: string;
   email: string;
   password: string;
+  role: string;
 }
 
 const AdminSchema: Schema = new Schema({
@@ -18,6 +19,9 @@ const AdminSchema: Schema = new Schema({
   password: {
     type: String,
     required: true,
+  },
+  role: {
+    type: String,
   },
 });
 

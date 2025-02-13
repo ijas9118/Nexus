@@ -97,17 +97,6 @@ export const googleAuth = async (userData: {
   }
 };
 
-export const verifyAccessToken = async () => {
-  try {
-    const response = await api.get("/auth/verify-token");
-    return response.data;
-  } catch (error: any) {
-    const errorMessage =
-      error.response?.data?.message || "An unexpected error occurred during verifying.";
-    throw new Error(errorMessage);
-  }
-};
-
 export const logout = async () => {
   try {
     await api.get("/auth/logout");

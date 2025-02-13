@@ -3,7 +3,6 @@ import api from "../api";
 export const loginAdmin = async (email: string, password: string) => {
   try {
     const response = await api.post("/admin/login", { email, password });
-    console.log(response);
     return response.data;
   } catch (error: any) {
     if (error.response?.status === 401) {

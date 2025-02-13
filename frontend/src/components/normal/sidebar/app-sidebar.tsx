@@ -31,7 +31,7 @@ import NexusLogo from "@/components/ui/NexusLogo";
 export function AppSidebar() {
   const navigate = useNavigate();
   const logoutUser = useLogout();
-  const user = useSelector((state: RootState) => state.auth);
+  const { user } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
   const handleMenuClick = (url: string, title: string) => {
@@ -64,7 +64,7 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent >
+      <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuButton
@@ -96,10 +96,10 @@ export function AppSidebar() {
                 <SidebarMenuButton className="h-fit">
                   <Avatar className="rounded">
                     {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
-                    <AvatarFallback>{user.name.slice(0, 2)}</AvatarFallback>
+                    <AvatarFallback>{user?.name.slice(0, 2)}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
-                    <span className="text-sm">{user.name}</span>
+                    <span className="text-sm">{user?.name}</span>
                     {/* <span className="text-xs text-neutral-500">@ijasahmmed</span> */}
                   </div>
                   <ChevronUp className="ml-auto" />

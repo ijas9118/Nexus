@@ -11,9 +11,9 @@ const router = Router();
 
 
 router.post("/login", (req, res) => adminAuthController.login(req, res));
-router.post("/refresh-token", validateRefreshToken, (req, res) =>
-  adminAuthController.refreshToken(req, res)
-);
+// router.post("/refresh-token", validateRefreshToken, (req, res) =>
+//   adminAuthController.refreshToken(req, res)
+// );
 router.get("/logout", (req, res) => adminAuthController.logout(req, res));
 
 export default router;

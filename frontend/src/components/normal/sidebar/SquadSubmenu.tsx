@@ -22,9 +22,8 @@ const SquadSubmenu: React.FC = () => {
   useEffect(() => {
     const fetchUserSquads = async () => {
       try {
-        const fetchedSquads = await SquadService.getUserJoinedSquads(); // Make the API call here
+        const fetchedSquads = await SquadService.getUserJoinedSquads();
         dispatch(setUserSquads(fetchedSquads));
-        console.log(fetchedSquads);
       } catch (error) {
         console.error("Error fetching user squads:", error);
       }

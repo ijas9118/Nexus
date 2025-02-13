@@ -3,7 +3,7 @@ import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { googleAuth } from "@/services/user/authService";
 import { useDispatch } from "react-redux";
-import { login } from "@/store/slices/authSlice";
+// import { login } from "@/store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
@@ -31,13 +31,13 @@ const GoogleButton: FC = () => {
       const result = await googleAuth(userDetails);
 
       if (result.user) {
-        dispatch(
-          login({
-            _id: result.user._id,
-            name: result.user.name,
-            email: result.user.email,
-          })
-        );
+        // dispatch(
+        //   login({
+        //     _id: result.user._id,
+        //     name: result.user.name,
+        //     email: result.user.email,
+        //   })
+        // );
         navigate("/myFeed");
       }
     } catch (error: any) {

@@ -25,7 +25,6 @@ export default function MyFeed() {
     const fetchContent = async () => {
       try {
         const data = await getAllContent();
-        console.log(data);
         setFeedContent(data);
       } catch (err: any) {
         setError(err.message);

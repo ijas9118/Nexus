@@ -6,14 +6,10 @@ import { RegisterDto } from "../dtos/requests/auth/register.dto";
 import { compare, hash } from "bcrypt";
 import { RegisterResponseDto } from "../dtos/responses/auth/registerResponse.dto";
 import { LoginResponseDto } from "../dtos/responses/auth/loginResponse.dto";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyRefreshToken,
-} from "../utils/jwt.util";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt.util";
 import redisClient from "../config/redisClient.config";
 import crypto from "crypto";
-import {  USER_EMAIL } from "../utils/constants";
+import { USER_EMAIL } from "../utils/constants";
 import { transporter } from "../utils/nodemailerTransporter";
 
 @injectable()
@@ -122,7 +118,6 @@ export class AuthService {
   }
 
   async findUserByEmail(email: string): Promise<boolean> {
-    console.log(email);
     const user = await this.userRepository.findByEmail(email);
     return !!user;
   }
@@ -136,24 +131,10 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    const userData = {
-      _id: user._id,
-      email: user.email,
-      name: user.name,
-    };
-
-    const accessToken = generateAccessToken(userData);
-    const refreshToken = generateRefreshToken(userData);
-
-    const key = `refreshToken:${user._id}`;
-    await redisClient.set(key, refreshToken, "EX", 7 * 24 * 60 * 60);
-
     return {
       _id: user._id,
       name: user.name,
       email: user.email,
-      accessToken,
-      refreshToken,
     };
   }
 
@@ -162,27 +143,14 @@ export class AuthService {
     const user = await this.userRepository.findByEmail(email);
     if (!user) return null;
 
-    const userData = {
-      _id: user._id,
-      email: user.email,
-      name: user.name,
-    };
-
     const isPasswordValid = await compare(password, user.password);
     if (!isPasswordValid) throw new Error("Incorrect Credentials");
-
-    const accessToken = generateAccessToken(userData);
-    const refreshToken = generateRefreshToken(userData);
-
-    const key = `refreshToken:${user._id}`;
-    await redisClient.set(key, refreshToken, "EX", 7 * 24 * 60 * 60);
 
     return {
       _id: user._id,
       name: user.name,
       email: user.email,
-      accessToken,
-      refreshToken,
+      role: user.role,
     };
   }
 
@@ -196,38 +164,16 @@ export class AuthService {
     await user.save();
   }
 
-  async refreshToken(
-    refreshToken: string
-  ): Promise<{ accessToken: string; refreshToken: string } | null> {
-    try {
-      const decoded = verifyRefreshToken(refreshToken);
-
-      const key = `refreshToken:${decoded.user._id}`;
-      const storedToken = await redisClient.get(key);
-
-      if (!storedToken || storedToken !== refreshToken) {
-        throw new Error("Invalid or expired Refresh token");
-      }
-
-      const user = await this.userRepository.findById(decoded.user._id);
-
-      if (!user) throw new Error("User not found");
-
-      const userData = {
-        _id: user._id,
-        email: user.email,
-        name: user.name,
-      };
-
-      const accessToken = generateAccessToken(userData);
-      const newRefreshToken = generateRefreshToken(userData);
-
-      await redisClient.set(key, newRefreshToken, "EX", 7 * 24 * 60 * 60);
-
-      return { accessToken, refreshToken: newRefreshToken };
-    } catch (error) {
-      console.error("Refresh token verification failed:", error);
-      return null;
+  async getUserByRoleAndId(role: string, id: string) {
+    switch (role) {
+      case "user":
+        return await this.userRepository.getUserById(id);
+      case "admin":
+        return await this.userRepository.getUserById(id);
+      case "mentor":
+        return await this.userRepository.getUserById(id);
+      default:
+        return null;
     }
   }
 
@@ -250,7 +196,6 @@ export class AuthService {
       name: user.name,
     };
 
-    const accessToken = generateAccessToken(data);
     const refreshToken = generateRefreshToken(data);
 
     const key = `refreshToken:${user._id}`;
@@ -260,8 +205,7 @@ export class AuthService {
       _id: user._id,
       name: user.name,
       email: user.email,
-      accessToken,
-      refreshToken,
+      role: "user",
     };
   }
 }

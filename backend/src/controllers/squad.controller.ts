@@ -63,7 +63,6 @@ export class SquadController implements ISquadController {
   };
 
   joinSquad = async (req: CustomRequest, res: Response): Promise<void> => {
-    console.log("asdfadsf");
     const userId = req.user?._id as string;
     const { squadId } = req.params;
 

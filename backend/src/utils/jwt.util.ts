@@ -5,8 +5,8 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "./constants";
 const ACCESS_TOKEN_SECRET = ACCESS_TOKEN || "access_secret";
 const REFRESH_TOKEN_SECRET = REFRESH_TOKEN || "refresh_secret";
 
-export const generateAccessToken = (user: object): string => {
-  return jwt.sign({ user }, ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+export const generateAccessToken = (payload: object): string => {
+  return jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
 };
 
 export const generateRefreshToken = (user: object): string => {

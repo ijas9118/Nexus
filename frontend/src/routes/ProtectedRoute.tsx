@@ -1,11 +1,16 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import useAuth from "@/hooks/useAuth";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
-const ProtectedRoute: React.FC = () => {
-  const { isAuthenticated, authLoading } = useAuth();
+interface ProtectedRouteProps {
+  requiredRole?: "user" | "mentor" | "admin";
+}
 
-  if (authLoading) {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
+  const { accessToken, status } = useSelector((state: RootState) => state.auth);
+
+  if (status === "loading") {
     return (
       <div className="container mx-auto px-8 py-8 flex h-screen justify-center items-center">
         Loading...
@@ -13,7 +18,12 @@ const ProtectedRoute: React.FC = () => {
     );
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  if (!accessToken && requiredRole === "admin") return <Navigate to="/admin/login" />;
+  if (!accessToken) {
+    return <Navigate to="/login" />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;
