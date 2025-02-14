@@ -37,6 +37,7 @@ export class ContentController implements IContentController {
     try {
       const content = await this.contentService.getContentById(req.params.id);
       if (content) {
+        
         res.json(content);
       } else {
         res.status(404).json({ message: "Content not found" });

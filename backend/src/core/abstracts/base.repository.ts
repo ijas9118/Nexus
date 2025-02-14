@@ -17,7 +17,7 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
   }
 
   async findByIdAndUpdate(id: Types.ObjectId, update: UpdateQuery<T>): Promise<T | null> {
-    return this.model.findByIdAndUpdate(id, update, { new: true });
+    return this.model.findByIdAndUpdate(id, update, { upsert: true, new: true });
   }
 
   async findAll(): Promise<T[]> {
@@ -54,6 +54,10 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
 
   async findOne(filter: FilterQuery<T>): Promise<T | null> {
     return this.model.findOne(filter);
+  }
+
+  async findOneAndUpdate(filter: FilterQuery<T>, update: UpdateQuery<T>): Promise<T> {
+    return this.model.findOneAndUpdate(filter, update, { upsert: true, new: true });
   }
 
   async addToSet(id: string, field: string, value: any): Promise<T | null> {
