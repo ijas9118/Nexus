@@ -17,6 +17,7 @@ import ResetPassword from "@/pages/auth/ResetPassword";
 import Squads from "@/pages/normal/Squads";
 import Messages from "@/pages/normal/Messages";
 import Connections from "@/pages/normal/Connections";
+import History from "@/pages/normal/History";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -44,6 +45,7 @@ const UserRoutes: React.FC = () => {
           <Route path="squads" element={<Squads />} />
           <Route path="chat" element={<Messages />} />
           <Route path="connections" element={<Connections />} />
+          <Route path="history" element={<History />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />
