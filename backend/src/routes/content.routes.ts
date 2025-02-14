@@ -19,6 +19,10 @@ router.post("/", authenticate(["user"]), (req, res) =>
   contentController.createContent(req, res)
 );
 
+router.get("/:id", authenticate(["user", "admin"]), (req, res) =>
+  contentController.getContent(req, res)
+);
+
 router.post("/:id/like", authenticate(["user"]), (req, res) =>
   likesController.toggleLike(req, res)
 );

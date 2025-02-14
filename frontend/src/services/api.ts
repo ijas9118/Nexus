@@ -28,15 +28,20 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; // Prevent infinite retry loop
 
       try {
         // Dispatch refresh token thunk
         const newToken = await store.dispatch(refreshAccessToken()).unwrap();
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
-        return api(originalRequest); // Retry failed request with new token
+        // Explicitly update headers for retry request
+        originalRequest.headers = {
+          ...originalRequest.headers,
+          Authorization: `Bearer ${newToken}`,
+        };
+
+        return api(originalRequest); // Retry with updated request
       } catch (refreshError) {
         return Promise.reject(refreshError);
       }

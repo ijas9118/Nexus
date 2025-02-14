@@ -18,6 +18,7 @@ import Squads from "@/pages/normal/Squads";
 import Messages from "@/pages/normal/Messages";
 import Connections from "@/pages/normal/Connections";
 import History from "@/pages/normal/History";
+import ContentDetails from "@/pages/normal/ContentDetails";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -46,6 +47,7 @@ const UserRoutes: React.FC = () => {
           <Route path="chat" element={<Messages />} />
           <Route path="connections" element={<Connections />} />
           <Route path="history" element={<History />} />
+          <Route path="content/:id" element={<ContentDetails />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

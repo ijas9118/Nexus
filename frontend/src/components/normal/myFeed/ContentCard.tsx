@@ -7,6 +7,7 @@ import { likeContent } from "@/services/user/likeService";
 import { Bookmark, Gem, MessageCircle, Share2 } from "lucide-react";
 import React, { useState } from "react";
 import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 interface ContentCardProps {
   id: string;
@@ -28,6 +29,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
   const [likes, setLikes] = useState<number>(props.likes);
   const [isLiked, setIsLiked] = useState<boolean>(props.isLiked);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(props.isBookmarked);
+  const navigate = useNavigate();
 
   const handleLike = async (id: string) => {
     try {
@@ -52,8 +54,12 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
     }
   };
 
+  const handleCardClick = (id: string) => {
+    navigate(`/content/${id}`);
+  };
+
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col" onClick={() => handleCardClick(props.id)}>
       <CardHeader className="flex-row gap-4 space-y-0 items-center">
         <Avatar>
           <AvatarImage src="https://avatar.iran.liara.run/public" />

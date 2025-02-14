@@ -4,10 +4,14 @@ import { TYPES } from "../di/types";
 import { IContentController } from "../core/interfaces/controllers/IContentController";
 import { Request, Response } from "express";
 import { CustomRequest } from "../core/types/CustomRequest";
+import { HistoryService } from "../services/history.service";
 
 @injectable()
 export class ContentController implements IContentController {
-  constructor(@inject(TYPES.ContentService) private contentService: ContentService) {}
+  constructor(
+    @inject(TYPES.ContentService) private contentService: ContentService,
+    @inject(TYPES.HistoryService) private historyService: HistoryService
+  ) {}
 
   async createContent(req: CustomRequest, res: Response): Promise<void> {
     try {
@@ -33,11 +37,14 @@ export class ContentController implements IContentController {
     }
   }
 
-  async getContent(req: Request, res: Response): Promise<void> {
+  async getContent(req: CustomRequest, res: Response): Promise<void> {
     try {
       const content = await this.contentService.getContentById(req.params.id);
       if (content) {
-        
+        await this.historyService.addHistory(
+          req.user?._id as string,
+          content._id as string
+        );
         res.json(content);
       } else {
         res.status(404).json({ message: "Content not found" });
