@@ -153,11 +153,10 @@ export default function LoginPage() {
   }, [showOTP]);
 
   useEffect(() => {
-    console.log("q123df", isAuthenticated);
     if (isAuthenticated) {
       navigate("/myFeed");
     }
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">

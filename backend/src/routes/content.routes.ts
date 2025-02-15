@@ -1,33 +1,10 @@
 import { Router } from "express";
-import { container } from "../di/container";
-import { TYPES } from "../di/types";
-import { ContentController } from "../controllers/content.controller";
-import { authenticate } from "../middlewares/auth.middleware";
-import { LikesController } from "../controllers/likes.controller";
-import { BookmarkController } from "../controllers/bookmark.controller";
+import postsRoutes from "./content/posts.routes";
+import historyRoutes from "./content/history.routes";
 
 const router = Router();
-const contentController = container.get<ContentController>(TYPES.ContentController);
-const likesController = container.get<LikesController>(TYPES.LikesController);
-const bookmarkController = container.get<BookmarkController>(TYPES.BookmarkController);
 
-router.get("/", authenticate(["user", "admin"]), (req, res) =>
-  contentController.getAllContent(req, res)
-);
+router.use("/posts", postsRoutes);
+router.use("/history", historyRoutes);
 
-router.post("/", authenticate(["user"]), (req, res) =>
-  contentController.createContent(req, res)
-);
-
-router.post("/:id/like", authenticate(["user"]), (req, res) =>
-  likesController.toggleLike(req, res)
-);
-
-router.post("/:id/bookmark", authenticate(["user"]), (req, res) =>
-  bookmarkController.toggleBookmark(req, res)
-);
-
-router.get("/bookmarks", authenticate(["user"]), (req, res) =>
-  bookmarkController.getAllBookmarks(req, res)
-);
 export default router;

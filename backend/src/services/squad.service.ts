@@ -11,8 +11,7 @@ import { UserRepository } from "../repositories/user.repository";
 export class SquadService extends BaseService<ISquad> implements ISquadService {
   constructor(
     @inject(TYPES.SquadRepository) private squadRepository: SquadRepository,
-    @inject(TYPES.CategoryRepository) private categoryRepository: CategoryRepository,
-    @inject(TYPES.UserRepository) private userRepository: UserRepository
+    @inject(TYPES.CategoryRepository) private categoryRepository: CategoryRepository
   ) {
     super(squadRepository);
   }
