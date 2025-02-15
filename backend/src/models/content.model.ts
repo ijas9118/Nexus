@@ -16,6 +16,7 @@ export interface IContent extends Document {
   videoUrl: string;
   content: string;
   likeCount: number;
+  
   commentCount: number;
   bookmarkCount: number;
 }

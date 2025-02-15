@@ -59,7 +59,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
   };
 
   return (
-    <Card className="flex flex-col" onClick={() => handleCardClick(props.id)}>
+    <Card className="flex flex-col">
       <CardHeader className="flex-row gap-4 space-y-0 items-center">
         <Avatar>
           <AvatarImage src="https://avatar.iran.liara.run/public" />
@@ -73,7 +73,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
         </div>
         <div className="ml-auto">{props.isPremium && <Gem />}</div>
       </CardHeader>
-      <CardContent className="flex-1">
+      <CardContent className="flex-1" onClick={() => handleCardClick(props.id)}>
         <div className="relative mb-5 h-40 overflow-hidden rounded-lg">
           <img
             src={props.image}

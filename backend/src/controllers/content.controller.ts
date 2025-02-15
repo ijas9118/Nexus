@@ -43,7 +43,7 @@ export class ContentController implements IContentController {
       if (content) {
         await this.historyService.addHistory(
           req.user?._id as string,
-          content._id as string
+          content._id as string,
         );
         res.json(content);
       } else {

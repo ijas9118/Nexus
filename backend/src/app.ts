@@ -30,7 +30,7 @@ app.use(morgan("dev"));
 app.use("/api/admin", adminRoutes);
 
 app.use("/api/auth", authRoutes);
-app.use("/api/content/posts", contentRoutes);
+app.use("/api/content", contentRoutes);
 app.use("/api/squad", squadRouters);
 app.use("/api/user", userRoutes);
 app.use("/api/mentor", mentorRoutes);

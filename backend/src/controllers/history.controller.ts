@@ -20,4 +20,15 @@ export class HistoryController implements IHistoryController {
       res.status(500).json({ message: "Error fetching squads", error: error.message });
     }
   };
+
+  getAllHistory = async (req: CustomRequest, res: Response): Promise<void> => {
+    try {
+      const userId = req.user?._id as string;
+      const history = await this.historyService.getAllHistory(userId);
+      res.status(200).json(history);
+    } catch (error: any) {
+      console.log(error);
+      res.status(500).json({ message: "Error fetching History", error: error.message });
+    }
+  };
 }
