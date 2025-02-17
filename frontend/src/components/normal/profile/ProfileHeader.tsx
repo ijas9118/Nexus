@@ -1,13 +1,19 @@
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store"; // Ensure correct import of RootState
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-export default function ProfileHeader() {
-  const user = useSelector((state: RootState) => state.auth.user);
+interface ProfileHeaderProps {
+  profileUser: {
+    id: string;
+    name: string;
+    username: string;
+    profilePicture?: string;
+    joinedAt: string;
+    bio?: string;
+  };
+}
 
-  if (!user) return null; // Avoid errors if user is not loaded
-
+export default function ProfileHeader({ profileUser }: ProfileHeaderProps) {
+  if (!profileUser) return null;
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -18,14 +24,17 @@ export default function ProfileHeader() {
         <div className="mb-4 flex justify-start bg-red-200 rounded-lg">
           <img
             alt="Profile picture"
-            src={user.profilePicture || "https://randomuser.me/api/portraits/men/4.jpg"}
+            src={
+              profileUser.profilePicture ||
+              "https://randomuser.me/api/portraits/men/4.jpg"
+            }
             className="rounded-lg outline outline-4 outline-white dark:outline-black"
             width="80"
           />
         </div>
-        <h1 className="text-start text-2xl font-semibold">{user.name}</h1>
+        <h1 className="text-start text-2xl font-semibold">{profileUser.name}</h1>
         <p className="text-start text-sm text-muted-foreground">
-          @{user.username} · Joined{" "}
+          @{profileUser.username} · Joined{" "}
           {/* {new Date(user.joinedAt).toLocaleDateString("en-US", {
             month: "long",
             year: "numeric",
@@ -43,7 +52,7 @@ export default function ProfileHeader() {
           </div>
         </div>
         <Button className="w-full" variant="outline">
-          {user.bio ? "Edit bio" : "Add bio"}
+          {profileUser.bio ? "Edit bio" : "Add bio"}
         </Button>
       </Card>
     </div>

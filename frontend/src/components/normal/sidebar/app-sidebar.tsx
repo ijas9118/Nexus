@@ -106,7 +106,9 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                <DropdownMenuItem onClick={() => handleMenuClick("/profile", "Profile")}>
+                <DropdownMenuItem
+                  onClick={() => handleMenuClick(`/profile/${user?.username}`, "Profile")}
+                >
                   <span>Profile</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => logoutUser()}>

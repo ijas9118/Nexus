@@ -20,4 +20,15 @@ export class UserController implements IUserController {
       res.status(500).json({ message: error.message });
     }
   };
+
+  getUserData = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { username } = req.params;
+      const userData = await this.userService.getUserByUsername(username);
+      res.status(200).json(userData);
+    } catch (error: any) {
+      console.log(error);
+      res.status(500).json({ message: error.message });
+    }
+  };
 }

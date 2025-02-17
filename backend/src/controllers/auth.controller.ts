@@ -221,8 +221,6 @@ export class AuthController implements IAuthController {
       //   return;
       // }
 
-      console.log(user);
-
       const accessToken = generateAccessToken({
         _id: user._id,
         name: user.name,

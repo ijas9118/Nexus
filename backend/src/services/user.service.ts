@@ -44,4 +44,8 @@ export class UserService extends BaseService<IUser> implements IUserService {
   async getUserJoinedSquads(userId: string): Promise<string[]> {
     return this.userRepository.getUserJoinedSquads(userId);
   }
+
+  async getUserByUsername(username: string): Promise<IUser | null> {
+    return this.userRepository.findOne({ username });
+  }
 }

@@ -7,10 +7,8 @@ import { authenticate } from "../middlewares/auth.middleware";
 const userController = container.get<UserController>(TYPES.UserController);
 const router = Router();
 
-router.get(
-  "/squads",
-  authenticate(["user"]),
-  userController.getUserJoinedSquads
-);
+router.get("/squads", authenticate(["user"]), userController.getUserJoinedSquads);
+
+router.post("/:username", userController.getUserData);
 
 export default router;

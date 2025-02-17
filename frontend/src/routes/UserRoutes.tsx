@@ -7,7 +7,6 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
-import UserProfile from "@/pages/normal/Profile";
 import GetPremium from "@/pages/normal/GetPremium";
 import Bookmark from "@/pages/normal/Bookmark";
 import NotFound from "@/pages/NotFound";
@@ -19,6 +18,7 @@ import Messages from "@/pages/normal/Messages";
 import Connections from "@/pages/normal/Connections";
 import History from "@/pages/normal/History";
 import ContentDetails from "@/pages/normal/ContentDetails";
+import ProfilePage from "@/pages/normal/Profile";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -38,7 +38,7 @@ const UserRoutes: React.FC = () => {
       <Route path="/" element={<Layout />}>
         <Route element={<ProtectedRoute requiredRole="user" />}>
           <Route path="myFeed" element={<MyFeed />} />
-          <Route path="profile" element={<UserProfile />} />
+          <Route path="profile/:username" element={<ProfilePage />} />
           <Route path="addPost" element={<AddPost />} />
           <Route path="bookmark" element={<Bookmark />} />
           <Route path="getPremium" element={<GetPremium />} />

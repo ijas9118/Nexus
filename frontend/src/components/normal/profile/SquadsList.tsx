@@ -16,7 +16,7 @@ export default function SquadsList() {
         Active in these Squads
       </h3>
       <ScrollArea
-        className={`w-full ${squads.length > 4 ? "h-[400px]" : "min-h-[100px]"}`}
+        className={`w-full ${squads.length > 3 ? "h-[350px]" : "min-h-[100px]"}`}
       >
         <div className="space-y-4">
           {squads.map((squad: any) => (

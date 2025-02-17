@@ -9,4 +9,5 @@ export interface IUserService {
   updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null>;
   deleteUser(userId: string): Promise<boolean>;
   getUserJoinedSquads(userId: string): Promise<string[]>;
+  getUserByUsername(username: string): Promise<IUser | null>;
 }
