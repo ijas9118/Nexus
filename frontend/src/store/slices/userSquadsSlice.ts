@@ -18,7 +18,7 @@ const userSquadsSlice = createSlice({
       state.squads = action.payload;
     },
     addUserSquad: (state, action: PayloadAction<Squad>) => {
-      state.squads.push(action.payload);
+      state.squads = [...state.squads, action.payload];
     },
   },
 });

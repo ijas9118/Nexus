@@ -15,7 +15,9 @@ export default function SquadsList() {
         <Atom />
         Active in these Squads
       </h3>
-      <ScrollArea className="h-[400px] w-full">
+      <ScrollArea
+        className={`w-full ${squads.length > 4 ? "h-[400px]" : "min-h-[100px]"}`}
+      >
         <div className="space-y-4">
           {squads.map((squad: any) => (
             <Card key={squad.handle} className="px-3 py-2">

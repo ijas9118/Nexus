@@ -1,6 +1,6 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Controller, useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { Button } from "@/components/ui/button";
@@ -39,6 +39,7 @@ const AddPost: React.FC = () => {
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const squads = useSelector((state: any) => state.userSquads.squads);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -203,10 +204,11 @@ const AddPost: React.FC = () => {
                     <SelectValue placeholder="Select squad" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Javascript">Javascript</SelectItem>
-                    <SelectItem value="Nodejs">Nodejs</SelectItem>
-                    <SelectItem value="React">React</SelectItem>
-                    <SelectItem value="Next">Next</SelectItem>
+                    {squads.map((squad: any) => (
+                      <SelectItem key={squad._id} value={squad._id}>
+                        {squad.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}

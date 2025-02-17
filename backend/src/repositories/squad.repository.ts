@@ -58,7 +58,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
           },
         },
       },
-      { $project: { joinedUsers: 0, members: 0 } },
+      { $project: { joinedUsers: 0 } },
     ]);
   };
 

@@ -70,6 +70,13 @@ import { HistoryService } from "../services/history.service";
 import { IHistoryController } from "../core/interfaces/controllers/IHistoryController";
 import { HistoryController } from "../controllers/history.controller";
 
+import { IFollowersRepository } from "../core/interfaces/repositories/IFollowersRepository";
+import { FollowersRepository } from "../repositories/followers.repository";
+import { IFollowersService } from "../core/interfaces/services/IFollowersService";
+import { FollowersService } from "../services/followers.service";
+import { IFollowersController } from "../core/interfaces/controllers/IFollowersController";
+import { FollowersController } from "../controllers/followers.controller";
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -111,5 +118,9 @@ container.bind<IMentorController>(TYPES.MentorController).to(MentorController);
 container.bind<IHistoryRepository>(TYPES.HistoryRepository).to(HistoryRepository);
 container.bind<IHistoryService>(TYPES.HistoryService).to(HistoryService);
 container.bind<IHistoryController>(TYPES.HistoryController).to(HistoryController);
+
+container.bind<IFollowersRepository>(TYPES.FollowersRepository).to(FollowersRepository);
+container.bind<IFollowersService>(TYPES.FollowersService).to(FollowersService);
+container.bind<IFollowersController>(TYPES.FollowersController).to(FollowersController);
 
 export { container };

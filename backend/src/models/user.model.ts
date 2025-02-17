@@ -9,9 +9,6 @@ export interface IUser extends Document {
   profilePic: string;
   gender: string;
   place: string;
-  followers: number;
-  following: number;
-  connections: number;
   postsCount: number;
   totalViews: number;
   totalLikes: number;
@@ -52,18 +49,6 @@ const UserSchema: Schema = new Schema({
   },
   place: {
     type: String,
-  },
-  followers: {
-    type: Number,
-    default: 0,
-  },
-  following: {
-    type: Number,
-    default: 0,
-  },
-  connections: {
-    type: Number,
-    default: 0,
   },
   postsCount: {
     type: Number,

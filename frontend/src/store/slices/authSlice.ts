@@ -1,18 +1,11 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "@/services/api";
-
-// User Interface
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: "user" | "mentor" | "admin";
-}
+import { UserInterface } from "@/types/user";
 
 // Authentication State
 interface AuthState {
   isAuthenticated: boolean;
-  user: User | null;
+  user: UserInterface | null;
   accessToken: string | null;
   status: "idle" | "loading" | "succeeded" | "failed";
 }
@@ -52,7 +45,7 @@ const authSlice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      action: PayloadAction<{ user: User; accessToken: string }>
+      action: PayloadAction<{ user: UserInterface; accessToken: string }>
     ) => {
       state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;

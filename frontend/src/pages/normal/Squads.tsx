@@ -55,6 +55,7 @@ const Squads: FC = () => {
       }
       try {
         const squadsData = await SquadService.getSquadsByCategory(selectedCategory);
+        console.log(squadsData);
         dispatch(setSquadsByCategory({ category: selectedCategory, squads: squadsData })); // Store squads in Redux
         setSquads(squadsData);
       } catch (error) {
@@ -144,7 +145,7 @@ const Squads: FC = () => {
               </p>
               <div className="pt-2 text-xs">
                 <p>
-                  {squad.handle} • {squad.membersCount} members
+                  {squad.handle} • {squad.members.length} members
                 </p>
               </div>
             </Card>
