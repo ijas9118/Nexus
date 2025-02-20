@@ -31,6 +31,8 @@ const Squads: FC = () => {
         let categoryList = data.map((category: Category) => category.name);
         if (categoryList.length > 0) {
           setSelectedCategory(categoryList[0]);
+        } else {
+          setLoading(false);
         }
         setCategories(categoryList);
       } catch (error) {

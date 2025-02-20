@@ -1,27 +1,36 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 
-export interface IFollower extends Document {
-  followerId: Types.ObjectId;
-  followedId: Types.ObjectId;
+export interface IUserFollow extends Document {
+  userId: Types.ObjectId;
+  followers: Types.ObjectId[];
+  following: Types.ObjectId[];
 }
 
-const FollowerSchema: Schema = new Schema(
+const UserFollowSchema: Schema = new Schema(
   {
-    followerId: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      unique: true,
     },
-    followedId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
 
-const FollowersModel = mongoose.model<IFollower>("Follower", FollowerSchema);
-export default FollowersModel;
+const UserFollowModel = mongoose.model<IUserFollow>("UserFollow", UserFollowSchema);
+export default UserFollowModel;

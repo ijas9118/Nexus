@@ -1,41 +1,75 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useSelector } from "react-redux";
 
 interface ProfileHeaderProps {
   profileUser: {
-    id: string;
+    _id: string;
     name: string;
     username: string;
-    profilePicture?: string;
+    profilePic?: string;
     joinedAt: string;
     bio?: string;
   };
+  isFollowing: boolean;
+  onFollowToggle: () => void;
 }
 
-export default function ProfileHeader({ profileUser }: ProfileHeaderProps) {
-  if (!profileUser) return null;
+export default function ProfileHeader({
+  profileUser,
+  isFollowing,
+  onFollowToggle,
+}: ProfileHeaderProps) {
+  const currentUser = useSelector((state: any) => state.auth.user?.username || "");
+
+  if (!profileUser) return <p>Loading profile...</p>;
+
+  const isCurrentUser = profileUser.username === currentUser;
+
+  // const handleFollow = async (followedId: string) => {
+  //   try {
+  //     await followUser(followedId);
+  //     toast({
+  //       variant: "default",
+  //       title: "Success",
+  //       description: "You are now following them.",
+  //     });
+  //   } catch (error) {
+  //     console.error("Error completing profile", error);
+  //     toast({
+  //       variant: "destructive",
+  //       title: "Error",
+  //       description: "Failed to follow user. Please try again.",
+  //     });
+  //   }
+  // };
+
+  const handleConnect = () => {
+    console.log("Connect button clicked for", profileUser._id);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-medium">Profile</h2>
-        <Button className="text-sm font-medium">Edit profile</Button>
+        {isCurrentUser && <Button className="text-sm font-medium">Edit profile</Button>}
       </div>
       <Card className="p-6">
         <div className="mb-4 flex justify-start bg-red-200 rounded-lg">
           <img
             alt="Profile picture"
             src={
-              profileUser.profilePicture ||
+              profileUser.profilePic ||
               "https://randomuser.me/api/portraits/men/4.jpg"
             }
-            className="rounded-lg outline outline-4 outline-white dark:outline-black"
+            className="rounded-lg outline outline-4 outline-white bg-white dark:outline-black"
             width="80"
           />
         </div>
         <h1 className="text-start text-2xl font-semibold">{profileUser.name}</h1>
         <p className="text-start text-sm text-muted-foreground">
           @{profileUser.username} · Joined{" "}
-          {/* {new Date(user.joinedAt).toLocaleDateString("en-US", {
+          {/* {new Date(profileUser.joinedAt).toLocaleDateString("en-US", {
             month: "long",
             year: "numeric",
           })} */}
@@ -51,9 +85,21 @@ export default function ProfileHeader({ profileUser }: ProfileHeaderProps) {
             <span className="font-semibold text-foreground text-lg">12</span> Connections
           </div>
         </div>
-        <Button className="w-full" variant="outline">
-          {profileUser.bio ? "Edit bio" : "Add bio"}
-        </Button>
+        {isCurrentUser && (
+          <Button className="w-full" variant="outline">
+            {profileUser.bio ? "Edit bio" : "Add bio"}
+          </Button>
+        )}
+        {!isCurrentUser && (
+          <div className="mt-4 flex gap-2">
+            <Button className="w-1/2" variant="outline" onClick={onFollowToggle}>
+              {isFollowing ? "Unfollow" : "Follow"}
+            </Button>
+            <Button className="w-1/2" variant="outline" onClick={() => handleConnect()}>
+              Connect
+            </Button>
+          </div>
+        )}
       </Card>
     </div>
   );

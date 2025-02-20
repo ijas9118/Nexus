@@ -1,9 +1,8 @@
-import { IFollower } from "../../../models/followers.model";
 
 export interface IFollowersRepository {
-  followUser(followerId: string, followedId: string): Promise<IFollower | null>;
+  followUser(followerId: string, followedId: string): Promise<boolean>;
   unfollowUser(followerId: string, followedId: string): Promise<boolean>;
-  getFollowers(userId: string): Promise<IFollower[]>;
-  getFollowing(userId: string): Promise<IFollower[]>;
+  getFollowers(userId: string): Promise<any[]>;
+  getFollowing(userId: string): Promise<any[]>;
   isFollowing(followerId: string, followedId: string): Promise<boolean>;
 }

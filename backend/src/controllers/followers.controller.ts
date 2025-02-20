@@ -16,12 +16,20 @@ export class FollowersController implements IFollowersController {
       const { followedId } = req.body;
       const followerId = req.user?._id as string;
 
-      const result = await this.followersService.followUser(followerId, followedId);
-      if (!result) res.status(400).json({ message: "Already following this user" });
+      if (!followedId) {
+        res.status(400).json({ message: "Followed user ID is required" });
+        return;
+      }
 
-      res.status(201).json({ message: "Followed successfully", data: result });
-    } catch (error) {
-      res.status(500).json({ message: "Internal Server Error", error });
+      const result = await this.followersService.followUser(followerId, followedId);
+      if (!result) {
+        res.status(400).json({ message: "Already following this user" });
+        return;
+      }
+
+      res.status(201).json({ message: "Followed successfully" });
+    } catch (error: any) {
+      res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
   };
 
@@ -30,55 +38,76 @@ export class FollowersController implements IFollowersController {
       const { followedId } = req.body;
       const followerId = req.user?._id as string;
 
+      if (!followedId) {
+        res.status(400).json({ message: "Followed user ID is required" });
+        return;
+      }
+
       const result = await this.followersService.unfollowUser(followerId, followedId);
-      if (!result) res.status(400).json({ message: "Not following this user" });
+      if (!result) {
+        res.status(400).json({ message: "Not following this user" });
+        return;
+      }
 
       res.status(200).json({ message: "Unfollowed successfully" });
-    } catch (error) {
-      res.status(500).json({ message: "Internal Server Error", error });
+    } catch (error: any) {
+      res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
   };
 
   getFollowers = async (req: Request, res: Response): Promise<void> => {
     try {
       const { userId } = req.params;
-      const followers = await this.followersService.getFollowers(userId);
 
+      if (!userId) {
+        res.status(400).json({ message: "User ID is required" });
+        return;
+      }
+
+      const followers = await this.followersService.getFollowers(userId);
       res
         .status(200)
         .json({ message: "Followers fetched successfully", data: followers });
-    } catch (error) {
-      res.status(500).json({ message: "Internal Server Error", error });
+    } catch (error: any) {
+      res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
   };
 
   getFollowing = async (req: Request, res: Response): Promise<void> => {
     try {
       const { userId } = req.params;
-      const following = await this.followersService.getFollowing(userId);
 
+      if (!userId) {
+        res.status(400).json({ message: "User ID is required" });
+        return;
+      }
+
+      const following = await this.followersService.getFollowing(userId);
       res
         .status(200)
         .json({ message: "Following list fetched successfully", data: following });
-    } catch (error) {
-      res.status(500).json({ message: "Internal Server Error", error });
+    } catch (error: any) {
+      res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
   };
 
   isFollowing = async (req: Request, res: Response): Promise<void> => {
     try {
-      const { followerId, followedId } = req.query;
-      if (!followerId || !followedId)
+      const { followerId, followedId } = req.body;
+
+      if (!followerId || !followedId) {
         res.status(400).json({ message: "Missing required query parameters" });
+        return;
+      }
 
       const result = await this.followersService.isFollowing(
         followerId as string,
         followedId as string
       );
 
-      res.status(200).json({ isFollowing: result });
-    } catch (error) {
-      res.status(500).json({ message: "Internal Server Error", error });
+      res.status(200).json(result);
+    } catch (error: any) {
+      res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
   };
 }

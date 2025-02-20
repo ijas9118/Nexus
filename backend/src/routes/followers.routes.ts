@@ -11,6 +11,6 @@ router.post("/follow", followersController.followUser);
 router.post("/unfollow", followersController.unfollowUser);
 router.get("/:userId/followers", followersController.getFollowers);
 router.get("/:userId/following", followersController.getFollowing);
-router.get("/is-following", followersController.isFollowing);
+router.post("/is-following", followersController.isFollowing);
 
 export default router;

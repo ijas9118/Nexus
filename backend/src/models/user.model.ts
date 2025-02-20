@@ -25,6 +25,7 @@ export interface IUser extends Document {
     linkedin: string;
   };
   role: UserRole;
+  username?: string;
 }
 
 const UserSchema: Schema = new Schema({
@@ -43,6 +44,8 @@ const UserSchema: Schema = new Schema({
   },
   profilePic: {
     type: String,
+    default:
+      "https://res.cloudinary.com/dhvlhpg55/image/upload/v1740028408/nexus/images/oamn3bzchpmixago65yf.jpg",
   },
   gender: {
     type: String,
@@ -100,6 +103,10 @@ const UserSchema: Schema = new Schema({
     type: String,
     required: true,
     default: "user",
+  },
+  username: {
+    type: String,
+    required: true,
   },
 });
 

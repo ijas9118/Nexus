@@ -84,6 +84,7 @@ export class AuthController implements IAuthController {
 
       res.status(201).json({ user, accessToken });
     } catch (error) {
+      console.log(error);
       res.status(500).json({ message: "OTP verification failed", error });
     }
   };

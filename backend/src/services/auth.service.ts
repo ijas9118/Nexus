@@ -33,6 +33,16 @@ export class AuthService {
     return crypto.randomInt(100000, 999999).toString();
   }
 
+  private generateUsername(): string {
+    const adjectives = ["Witty", "Silly", "Happy", "Lazy", "Grumpy", "Quirky", "Sleepy"];
+    const nouns = ["Cactus", "Penguin", "Noodle", "Muffin", "Dolphin", "Taco", "Unicorn"];
+    const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+    const randomNum = Math.floor(1000 + Math.random() * 9000); // 4-digit number
+
+    return `${randomAdjective}${randomNoun}${randomNum}`;
+  }
+
   async sendOtpEmail(email: string, otp: string): Promise<void> {
     const expirationTime = "10 minutes";
 
@@ -69,7 +79,7 @@ export class AuthService {
     };
 
     try {
-      await transporter.sendMail(mailOptions);
+      // await transporter.sendMail(mailOptions);
     } catch (error) {
       console.error("Error sending OTP email:", error);
       throw new Error("Failed to send OTP. Please try again later.");
@@ -125,16 +135,19 @@ export class AuthService {
   async register(registerDto: RegisterDto): Promise<RegisterResponseDto> {
     const { name, email, password } = registerDto;
     const hashedPassword = await hash(password, 10);
+    let username = this.generateUsername();
     const user = await this.userRepository.create({
       name,
       email,
       password: hashedPassword,
+      username
     });
 
     return {
       _id: user._id,
       name: user.name,
       email: user.email,
+      username,
     };
   }
 
@@ -151,6 +164,7 @@ export class AuthService {
       name: user.name,
       email: user.email,
       role: user.role,
+      username: user.username,
     };
   }
 
@@ -206,6 +220,7 @@ export class AuthService {
       name: user.name,
       email: user.email,
       role: "user",
+      username: user.username,
     };
   }
 }
