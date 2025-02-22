@@ -9,6 +9,8 @@ const router = Router();
 
 router.get("/squads", authenticate(["user"]), userController.getUserJoinedSquads);
 
+router.post("/update", authenticate(["user"]), userController.updateUser);
+
 router.post("/:username", userController.getUserData);
 
 export default router;

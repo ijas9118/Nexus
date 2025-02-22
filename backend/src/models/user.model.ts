@@ -20,10 +20,7 @@ export interface IUser extends Document {
     total: number;
   };
   skills: string[];
-  socials: {
-    github: string;
-    linkedin: string;
-  };
+  socials: [{ platform: string; url: string }];
   role: UserRole;
   username?: string;
 }
@@ -91,14 +88,12 @@ const UserSchema: Schema = new Schema({
   skills: {
     type: [String],
   },
-  socials: {
-    github: {
-      type: String,
+  socials: [
+    {
+      platform: String,
+      url: String,
     },
-    linkedin: {
-      type: String,
-    },
-  },
+  ],
   role: {
     type: String,
     required: true,

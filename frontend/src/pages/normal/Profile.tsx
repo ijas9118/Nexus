@@ -30,7 +30,6 @@ export default function ProfilePage() {
         // Check if the current user follows the profile user
         if (currentUser && data?._id) {
           const followingStatus = await checkIsFollowing(currentUser, data._id);
-          console.log(followingStatus);
           setIsFollowing(followingStatus);
         }
       } catch (err: any) {

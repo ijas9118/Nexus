@@ -23,7 +23,6 @@ const SquadSubmenu: React.FC = () => {
     const fetchUserSquads = async () => {
       try {
         const fetchedSquads = await SquadService.getUserJoinedSquads();
-        console.log(fetchedSquads);
         dispatch(setUserSquads(fetchedSquads));
       } catch (error) {
         console.error("Error fetching user squads:", error);

@@ -5,9 +5,10 @@ export interface UserInterface {
   username: string;
   role: "user" | "mentor" | "admin";
   bio?: string;
-  profilePicture?: string;
+  profilePic?: string;
   followers: number;
   following: number;
   connections: number;
   joinedAt: string;
+  socials: [{ platform: string; url: string }];
 }

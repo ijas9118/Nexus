@@ -6,4 +6,5 @@ export interface LoginResponseDto {
   email: string;
   role: string;
   username?: string;
+  profilePic?: string;
 }

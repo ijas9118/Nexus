@@ -26,6 +26,7 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
 
   async updateUser(userId: string, userData: UpdateQuery<IUser>): Promise<IUser | null> {
     const userObjectId = new Types.ObjectId(userId);
+    console.log(userData);
     return this.model.findByIdAndUpdate(userObjectId, userData, { new: true });
   }
 

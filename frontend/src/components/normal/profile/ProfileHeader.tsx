@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileHeaderProps {
   profileUser: {
@@ -21,6 +22,7 @@ export default function ProfileHeader({
   onFollowToggle,
 }: ProfileHeaderProps) {
   const currentUser = useSelector((state: any) => state.auth.user?.username || "");
+  const navigate = useNavigate();
 
   if (!profileUser) return <p>Loading profile...</p>;
 
@@ -48,19 +50,26 @@ export default function ProfileHeader({
     console.log("Connect button clicked for", profileUser._id);
   };
 
+  const handleEditClick = () => {
+    navigate("/profile/edit");
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-medium">Profile</h2>
-        {isCurrentUser && <Button className="text-sm font-medium">Edit profile</Button>}
+        {isCurrentUser && (
+          <Button className="text-sm font-medium" onClick={() => handleEditClick()}>
+            Edit profile
+          </Button>
+        )}
       </div>
       <Card className="p-6">
         <div className="mb-4 flex justify-start bg-red-200 rounded-lg">
           <img
             alt="Profile picture"
             src={
-              profileUser.profilePic ||
-              "https://randomuser.me/api/portraits/men/4.jpg"
+              profileUser.profilePic || "https://randomuser.me/api/portraits/men/4.jpg"
             }
             className="rounded-lg outline outline-4 outline-white bg-white dark:outline-black"
             width="80"

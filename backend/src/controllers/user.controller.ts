@@ -31,4 +31,16 @@ export class UserController implements IUserController {
       res.status(500).json({ message: error.message });
     }
   };
+
+  updateUser = async (req: CustomRequest, res: Response): Promise<void> => {
+    try {
+      const userId = req.user?._id as string;
+      console.log(req.body.socials.github);
+      const result = await this.userService.updateUser(userId, req.body);
+      res.status(200).json({ success: true });
+    } catch (error: any) {
+      console.log(error);
+      res.status(500).json({ message: error.message });
+    }
+  };
 }

@@ -19,6 +19,7 @@ import Connections from "@/pages/normal/Connections";
 import History from "@/pages/normal/History";
 import ContentDetails from "@/pages/normal/ContentDetails";
 import ProfilePage from "@/pages/normal/Profile";
+import EditProfile from "@/pages/normal/EditProfileLayout"; 
 
 const UserRoutes: React.FC = () => {
   return (
@@ -39,6 +40,7 @@ const UserRoutes: React.FC = () => {
         <Route element={<ProtectedRoute requiredRole="user" />}>
           <Route path="myFeed" element={<MyFeed />} />
           <Route path="profile/:username" element={<ProfilePage />} />
+          <Route path="profile/edit" element={<EditProfile />} />
           <Route path="addPost" element={<AddPost />} />
           <Route path="bookmark" element={<Bookmark />} />
           <Route path="getPremium" element={<GetPremium />} />

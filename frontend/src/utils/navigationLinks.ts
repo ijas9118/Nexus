@@ -48,3 +48,5 @@ export const navbarLinks = [
   { name: "Pricing", href: "#pricing" },
   { name: "Contact", href: "#contact" },
 ];
+
+export const editProfileTabs = ["Profile", "Security"];

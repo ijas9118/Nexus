@@ -140,7 +140,7 @@ export class AuthService {
       name,
       email,
       password: hashedPassword,
-      username
+      username,
     });
 
     return {
@@ -165,6 +165,7 @@ export class AuthService {
       email: user.email,
       role: user.role,
       username: user.username,
+      profilePic: user.profilePic,
     };
   }
 
