@@ -11,9 +11,10 @@ import redisClient from "../config/redisClient.config";
 import crypto from "crypto";
 import { USER_EMAIL } from "../utils/constants";
 import { transporter } from "../utils/nodemailerTransporter";
+import { IAuthService } from "../core/interfaces/services/IAuthService";
 
 @injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
   constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
 
   generateToken(): string {

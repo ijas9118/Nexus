@@ -1,13 +1,13 @@
 import { Response } from "express";
 import { IBookmarkController } from "../core/interfaces/controllers/IBookmarkController";
-import { BookmarkService } from "../services/bookmark.service";
 import { CustomRequest } from "../core/types/CustomRequest";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
+import { IBookmarkService } from "../core/interfaces/services/IBookmarkService";
 
 @injectable()
 export class BookmarkController implements IBookmarkController {
-  constructor(@inject(TYPES.BookmarkService) private bookmarkService: BookmarkService) {}
+  constructor(@inject(TYPES.BookmarkService) private bookmarkService: IBookmarkService) {}
 
   async toggleBookmark(req: CustomRequest, res: Response): Promise<void> {
     try {

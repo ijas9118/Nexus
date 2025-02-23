@@ -3,14 +3,14 @@ import { IContentService } from "../core/interfaces/services/IContentService";
 import { TYPES } from "../di/types";
 import { IContent } from "../models/content.model";
 import { BaseService } from "../core/abstracts/base.service";
-import { ContentRepository } from "../repositories/content.repository";
-import { UserRepository } from "../repositories/user.repository";
+import { IContentRepository } from "../core/interfaces/repositories/IContentRepository";
+import { IUserRepository } from "../core/interfaces/repositories/IUserRepository";
 
 @injectable()
 export class ContentService extends BaseService<IContent> implements IContentService {
   constructor(
-    @inject(TYPES.ContentRepository) private contentRepository: ContentRepository,
-    @inject(TYPES.UserRepository) private userRepository: UserRepository
+    @inject(TYPES.ContentRepository) private contentRepository: IContentRepository,
+    @inject(TYPES.UserRepository) private userRepository: IUserRepository
   ) {
     super(contentRepository);
   }
@@ -19,9 +19,7 @@ export class ContentService extends BaseService<IContent> implements IContentSer
     const createdContent = await this.create(contentData);
 
     if (createdContent.author) {
-      await this.userRepository.updateUser(createdContent.author.toString(), {
-        $inc: { postsCount: 1 },
-      });
+      await this.userRepository.addPostCount(createdContent.author.toString());
     }
 
     return createdContent;

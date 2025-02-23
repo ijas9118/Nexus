@@ -5,4 +5,5 @@ export interface IUserController {
   getUserJoinedSquads(req: CustomRequest, res: Response): Promise<void>;
   getUserData(req: Request, res: Response): Promise<void>;
   updateUser(req: CustomRequest, res: Response): Promise<void>;
+  updatePassword(req: CustomRequest, res: Response): Promise<void>;
 }

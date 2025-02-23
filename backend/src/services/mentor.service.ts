@@ -5,19 +5,19 @@ import jwt from "jsonwebtoken";
 import { ACCESS_TOKEN, CLIENT_URL, USER_EMAIL } from "../utils/constants";
 import redisClient from "../config/redisClient.config";
 import { transporter } from "../utils/nodemailerTransporter";
-import { UserRepository } from "../repositories/user.repository";
-import { MentorRepository } from "../repositories/mentor.repository";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
 import { hash } from "bcrypt";
+import { IMentorRepository } from "../core/interfaces/repositories/IMentorRepository";
+import { IUserRepository } from "../core/interfaces/repositories/IUserRepository";
 
 const ACCESS_TOKEN_SECRET = ACCESS_TOKEN || "access_secret";
 
 @injectable()
 export class MentorService extends BaseService<IMentor> implements IMentorService {
   constructor(
-    @inject(TYPES.MentorRepository) private mentorRepository: MentorRepository,
-    @inject(TYPES.UserRepository) private userRepository: UserRepository
+    @inject(TYPES.MentorRepository) private mentorRepository: IMentorRepository,
+    @inject(TYPES.UserRepository) private userRepository: IUserRepository
   ) {
     super(mentorRepository);
   }

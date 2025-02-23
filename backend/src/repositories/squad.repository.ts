@@ -4,11 +4,11 @@ import { ISquadRepository } from "../core/interfaces/repositories/ISquadReposito
 import { ISquad, SquadModel } from "../models/squads.model";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
-import { UserRepository } from "./user.repository";
+import { IUserRepository } from "../core/interfaces/repositories/IUserRepository";
 
 @injectable()
 export class SquadRepository extends BaseRepository<ISquad> implements ISquadRepository {
-  constructor(@inject(TYPES.UserRepository) private userRepository: UserRepository) {
+  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {
     super(SquadModel);
   }
 

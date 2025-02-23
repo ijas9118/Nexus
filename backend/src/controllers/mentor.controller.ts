@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import { IMentorController } from "../core/interfaces/controllers/IMentorController";
-import { MentorService } from "../services/mentor.service";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
+import { IMentorService } from "../core/interfaces/services/IMentorService";
 
 @injectable()
 export class MentorController implements IMentorController {
-  constructor(@inject(TYPES.MentorService) private mentorService: MentorService) {}
+  constructor(@inject(TYPES.MentorService) private mentorService: IMentorService) {}
 
   sendInvitation = async (req: Request, res: Response): Promise<void> => {
     try {

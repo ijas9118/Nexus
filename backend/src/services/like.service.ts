@@ -1,15 +1,14 @@
 import { ILikeService } from "../core/interfaces/services/ILikeService";
-import { ContentRepository } from "../repositories/content.repository";
-import { LikesRepository } from "../repositories/likes.repository";
-import { ILike } from "../models/likes.model";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
+import { ILikesRepository } from "../core/interfaces/repositories/ILikesRepository";
+import { IContentRepository } from "../core/interfaces/repositories/IContentRepository";
 
 @injectable()
 export class LikeService implements ILikeService {
   constructor(
-    @inject(TYPES.LikesRepository) private likesRepository: LikesRepository,
-    @inject(TYPES.ContentRepository) private contentRepository: ContentRepository
+    @inject(TYPES.LikesRepository) private likesRepository: ILikesRepository,
+    @inject(TYPES.ContentRepository) private contentRepository: IContentRepository
   ) {}
 
   async toggleLike(

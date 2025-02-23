@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { ILikesController } from "../core/interfaces/controllers/ILikesController";
-import { LikeService } from "../services/like.service";
 import { CustomRequest } from "../core/types/CustomRequest";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
+import { ILikeService } from "../core/interfaces/services/ILikeService";
 
 @injectable()
 export class LikesController implements ILikesController {
-  constructor(@inject(TYPES.LikesService) private likeService: LikeService) {}
+  constructor(@inject(TYPES.LikesService) private likeService: ILikeService) {}
 
   async toggleLike(req: CustomRequest, res: Response): Promise<void> {
     try {

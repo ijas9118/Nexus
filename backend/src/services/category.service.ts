@@ -2,13 +2,13 @@ import { inject, injectable } from "inversify";
 import { BaseService } from "../core/abstracts/base.service";
 import { ICategoryService } from "../core/interfaces/services/ICategoryService";
 import { ICategory } from "../models/categories.model";
-import { CategoryRepository } from "../repositories/category.repository";
 import { TYPES } from "../di/types";
+import { ICategoryRepository } from "../core/interfaces/repositories/ICategoryRepository";
 
 @injectable()
 export class CategoryService extends BaseService<ICategory> implements ICategoryService {
   constructor(
-    @inject(TYPES.CategoryRepository) private categoryRepository: CategoryRepository
+    @inject(TYPES.CategoryRepository) private categoryRepository: ICategoryRepository
   ) {
     super(categoryRepository);
   }

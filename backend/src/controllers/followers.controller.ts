@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import { IFollowersController } from "../core/interfaces/controllers/IFollowersController";
-import { FollowersService } from "../services/followers.service";
 import { CustomRequest } from "../core/types/CustomRequest";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
+import { IFollowersService } from "../core/interfaces/services/IFollowersService";
 
 @injectable()
 export class FollowersController implements IFollowersController {
   constructor(
-    @inject(TYPES.FollowersService) private followersService: FollowersService
+    @inject(TYPES.FollowersService) private followersService: IFollowersService
   ) {}
 
   followUser = async (req: CustomRequest, res: Response): Promise<void> => {

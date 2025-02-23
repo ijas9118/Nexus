@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import { IAdminController } from "../../core/interfaces/controllers/admin/IAdminController";
-import { UserService } from "../../services/user.service";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../di/types";
+import { IUserService } from "../../core/interfaces/services/IUserService";
 
 @injectable()
 export class AdminController implements IAdminController {
-  constructor(@inject(TYPES.UserService) private userService: UserService) {}
+  constructor(@inject(TYPES.UserService) private userService: IUserService) {}
 
   async getUsers(req: Request, res: Response): Promise<void> {
     try {

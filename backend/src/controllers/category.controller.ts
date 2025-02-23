@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import { ICategoryController } from "../core/interfaces/controllers/ICategoryController";
-import { CategoryService } from "../services/category.service";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
+import { ICategoryService } from "../core/interfaces/services/ICategoryService";
 
 @injectable()
 export class CategoryController implements ICategoryController {
-  constructor(@inject(TYPES.CategoryService) private categoryService: CategoryService) {}
+  constructor(@inject(TYPES.CategoryService) private categoryService: ICategoryService) {}
 
   createCategory = async (req: Request, res: Response): Promise<void> => {
     try {

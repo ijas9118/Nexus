@@ -10,7 +10,7 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
   return (
-    <div className="p-4 border-r md:min-h-screen w-full md:w-1/4">
+    <div className="p-4 border-r md:min-h-full w-full md:w-1/4">
       <div className="hidden md:block">
         {editProfileTabs.map((tab) => (
           <Button

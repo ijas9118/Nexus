@@ -10,4 +10,12 @@ export interface IUserService {
   deleteUser(userId: string): Promise<boolean>;
   getUserJoinedSquads(userId: string): Promise<string[]>;
   getUserByUsername(username: string): Promise<IUser | null>;
+  updatePassword(
+    userId: string,
+    passwordData: {
+      currentPassword: string;
+      newPassword: string;
+      confirmPassword: string;
+    }
+  ): Promise<boolean>;
 }

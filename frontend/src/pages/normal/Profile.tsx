@@ -5,15 +5,17 @@ import { Toaster } from "@/components/ui/toaster";
 import { getUserProfile } from "@/services/user/profileService";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   checkIsFollowing,
   followUser,
   unfollowUser,
 } from "@/services/user/followService";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 
 export default function ProfilePage() {
   const { username } = useParams();
+  const dispatch = useDispatch();
   const currentUser = useSelector((state: any) => state.auth.user?._id);
   const [profileUser, setProfileUser] = useState<any>(null);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -38,7 +40,14 @@ export default function ProfilePage() {
     };
 
     fetchUser();
-  }, [username, currentUser]);
+
+    dispatch(
+      setBreadcrumbs([
+        { title: "Home", url: "/" },
+        { title: "Profile", url: "/profile" },
+      ])
+    );
+  }, [username, currentUser, dispatch]);
 
   // Handle follow/unfollow
   const handleFollowToggle = async () => {

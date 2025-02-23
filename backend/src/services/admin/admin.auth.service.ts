@@ -1,19 +1,13 @@
 import { compare } from "bcrypt";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyRefreshToken,
-} from "../../utils/jwt.util";
 import { LoginDto } from "../../dtos/requests/auth/login.dto";
 import { LoginResponseDto } from "../../dtos/responses/auth/loginResponse.dto";
-import redisClient from "../../config/redisClient.config";
-import { AdminRepository } from "../../repositories/admin.repository";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../di/types";
+import { IAdminRepository } from "../../core/interfaces/repositories/IAdminRepository";
 
 @injectable()
 export class AdminAuthService {
-  constructor(@inject(TYPES.AdminRepository) private adminRepository: AdminRepository) {}
+  constructor(@inject(TYPES.AdminRepository) private adminRepository: IAdminRepository) {}
 
   async findUserByEmail(email: string): Promise<boolean> {
     const user = await this.adminRepository.findByEmail(email);

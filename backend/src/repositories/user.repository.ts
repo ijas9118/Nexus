@@ -17,17 +17,18 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   }
 
   async findByEmail(email: string): Promise<IUser | null> {
-    return this.model.findOne({ email });
+    return this.findOne({ email });
   }
 
   async getAllUsers(): Promise<IUser[]> {
-    return this.model.find();
+    return this.find({});
   }
 
-  async updateUser(userId: string, userData: UpdateQuery<IUser>): Promise<IUser | null> {
+  async addPostCount(userId: string): Promise<IUser | null> {
     const userObjectId = new Types.ObjectId(userId);
-    console.log(userData);
-    return this.model.findByIdAndUpdate(userObjectId, userData, { new: true });
+    return this.findByIdAndUpdate(userObjectId, {
+      $inc: { postsCount: 1 },
+    });
   }
 
   async deleteUser(userId: string): Promise<boolean> {
@@ -36,13 +37,14 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   }
 
   async getUserById(userId: string): Promise<IUser | null> {
-    return await this.model.findById(userId);
+    const userObjectId = new Types.ObjectId(userId);
+    return await this.findById(userObjectId);
   }
 
   async addSquadToUser(userId: string, squadId: string): Promise<boolean> {
     const userObjectId = new Types.ObjectId(userId);
     const squadObjId = new Types.ObjectId(squadId);
-    const result = await this.model.findByIdAndUpdate(userObjectId, {
+    const result = await this.findByIdAndUpdate(userObjectId, {
       $addToSet: { joinedSquads: squadObjId },
     });
 

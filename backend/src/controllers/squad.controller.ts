@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { ISquadController } from "../core/interfaces/controllers/ISquadController";
-import { SquadService } from "../services/squad.service";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
 import { CustomRequest } from "../core/types/CustomRequest";
+import { ISquadService } from "../core/interfaces/services/ISquadService";
 
 @injectable()
 export class SquadController implements ISquadController {
-  constructor(@inject(TYPES.SquadService) private squadService: SquadService) {}
+  constructor(@inject(TYPES.SquadService) private squadService: ISquadService) {}
 
   createSquad = async (req: Request, res: Response): Promise<void> => {
     try {
