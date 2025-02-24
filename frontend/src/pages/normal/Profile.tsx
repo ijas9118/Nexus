@@ -12,6 +12,7 @@ import {
   unfollowUser,
 } from "@/services/user/followService";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import { toast } from "@/hooks/use-toast";
 
 export default function ProfilePage() {
   const { username } = useParams();
@@ -56,16 +57,31 @@ export default function ProfilePage() {
     try {
       if (isFollowing) {
         await unfollowUser(profileUser._id);
+        toast({
+          variant: "success",
+          title: "Action Successful",
+          description: `You have unfollowed ${profileUser.name}. Hope to see you reconnect soon!`,
+        });
       } else {
         await followUser(profileUser._id);
+        toast({
+          variant: "success",
+          title: "Following!",
+          description: `You're now following ${profileUser.name}. Stay engaged and explore their content!`,
+        });
       }
 
       // Toggle the state and refetch user details
       setIsFollowing(!isFollowing);
       const updatedUser = await getUserProfile(username as string);
       setProfileUser(updatedUser);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error updating follow status:", err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: err.message,
+      });
     }
   };
 

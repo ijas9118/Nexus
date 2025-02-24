@@ -16,6 +16,7 @@ export class FollowersRepository
   followUser = async (followerId: string, followedId: string): Promise<boolean> => {
     const followerObjectId = new Types.ObjectId(followerId);
     const followedObjectId = new Types.ObjectId(followedId);
+    console.log(followerObjectId, followedObjectId);
 
     const existingFollow = await this.findOne({
       userId: followerObjectId,
@@ -23,7 +24,7 @@ export class FollowersRepository
     });
 
     if (existingFollow) {
-      return false; 
+      return false;
     }
 
     await this.findOneAndUpdate(

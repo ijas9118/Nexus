@@ -28,24 +28,6 @@ export default function ProfileHeader({
 
   const isCurrentUser = profileUser.username === currentUser;
 
-  // const handleFollow = async (followedId: string) => {
-  //   try {
-  //     await followUser(followedId);
-  //     toast({
-  //       variant: "default",
-  //       title: "Success",
-  //       description: "You are now following them.",
-  //     });
-  //   } catch (error) {
-  //     console.error("Error completing profile", error);
-  //     toast({
-  //       variant: "destructive",
-  //       title: "Error",
-  //       description: "Failed to follow user. Please try again.",
-  //     });
-  //   }
-  // };
-
   const handleConnect = () => {
     console.log("Connect button clicked for", profileUser._id);
   };

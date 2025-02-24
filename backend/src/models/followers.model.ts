@@ -26,6 +26,12 @@ const UserFollowSchema: Schema = new Schema(
         ref: "User",
       },
     ],
+    connections: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,

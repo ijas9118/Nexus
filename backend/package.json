@@ -23,7 +23,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.4",
     "nodemailer": "^6.10.0",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "stripe": "^17.6.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
