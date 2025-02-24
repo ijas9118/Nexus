@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import { updateProfile } from "@/services/user/profileService";
+import { updateUserProfile } from "@/store/slices/authSlice";
 import { Link, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm, useFormState } from "react-hook-form";
@@ -17,7 +18,7 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 import { FaSquareThreads, FaSquareXTwitter } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const socialLinks = [
   { key: "github", icon: FaGithub, label: "Github" },
@@ -33,6 +34,7 @@ const socialLinks = [
 
 const ProfileForm = () => {
   const user = useSelector((state: any) => state.auth.user);
+  console.log(user);
   const [loading, setLoading] = useState(false);
   const [visibleInputs, setVisibleInputs] = useState<Record<string, boolean>>(
     user.socials?.reduce(
@@ -43,6 +45,7 @@ const ProfileForm = () => {
       {}
     ) || {}
   );
+  const dispatch = useDispatch();
 
   const { register, handleSubmit, control } = useForm({
     defaultValues: {
@@ -81,14 +84,21 @@ const ProfileForm = () => {
 
     try {
       await updateProfile(formattedData);
+      dispatch(updateUserProfile(formattedData));
       toast({
         variant: "default",
         title: "Wohoo!",
         description: "Your profile updated.",
         duration: 3000,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Profile update failed:", error);
+      toast({
+        variant: "destructive",
+        title: "Oops!",
+        description: error.message,
+        duration: 3000,
+      });
     } finally {
       setLoading(false); // Stop loading
     }

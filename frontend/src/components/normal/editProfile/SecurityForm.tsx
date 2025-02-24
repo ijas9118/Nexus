@@ -8,6 +8,7 @@ import { Lock, Trash2 } from "lucide-react";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import PasswordInput from "./PasswordInput";
 
 const SecurityForm: FC = () => {
   const user = useSelector((state: any) => state.auth.user);
@@ -76,62 +77,37 @@ const SecurityForm: FC = () => {
             <h3 className="text-lg font-semibold">Change Password</h3>
 
             <div className="space-y-4 mt-4">
-              <div>
-                <Label htmlFor="currentPassword">Current Password</Label>
-                <Input
-                  id="currentPassword"
-                  type="password"
-                  placeholder="Enter current password"
-                  className="rounded-lg mt-1"
-                  {...register("currentPassword", {
-                    required: "Current password is required",
-                  })}
-                />
-                {errors.currentPassword && (
-                  <p className="text-sm text-pink-600">
-                    {errors.currentPassword.message}
-                  </p>
-                )}
-              </div>
+              <PasswordInput
+                label="Current Password"
+                id="currentPassword"
+                registerOptions={register("currentPassword", {
+                  required: "Current password is required",
+                })}
+                watchValue={errors.currentPassword?.message}
+              />
 
-              <div>
-                <Label htmlFor="newPassword">New Password</Label>
-                <Input
-                  id="newPassword"
-                  type="password"
-                  placeholder="Enter new password"
-                  className="rounded-lg mt-1"
-                  {...register("newPassword", {
-                    required: "New password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters",
-                    },
-                  })}
-                />
-                {errors.newPassword && (
-                  <p className="text-sm text-pink-600">{errors.newPassword.message}</p>
-                )}
-              </div>
+              <PasswordInput
+                label="New Password"
+                id="newPassword"
+                registerOptions={register("newPassword", {
+                  required: "New password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                })}
+                watchValue={errors.newPassword?.message}
+              />
 
-              <div>
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="Confirm new password"
-                  className="rounded-lg mt-1"
-                  {...register("confirmPassword", {
-                    validate: (value) =>
-                      value === watch("newPassword") || "Passwords do not match",
-                  })}
-                />
-                {errors.confirmPassword && (
-                  <p className="text-sm text-pink-600">
-                    {errors.confirmPassword.message}
-                  </p>
-                )}
-              </div>
+              <PasswordInput
+                label="Confirm Password"
+                id="confirmPassword"
+                registerOptions={register("confirmPassword", {
+                  validate: (value) =>
+                    value === watch("newPassword") || "Passwords do not match",
+                })}
+                watchValue={errors.confirmPassword?.message}
+              />
             </div>
 
             <Button type="submit" className="w-full mt-6" disabled={loading || !isDirty}>

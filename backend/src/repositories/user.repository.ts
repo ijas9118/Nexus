@@ -31,6 +31,13 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     });
   }
 
+  async updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null> {
+    const userObjectId = new Types.ObjectId(userId);
+    let user = await this.findOne({ username: userData.username });
+    if (user) throw new Error("Username already exists");
+    return this.model.findByIdAndUpdate(userObjectId, userData, { new: true });
+  }
+
   async deleteUser(userId: string): Promise<boolean> {
     const result = await this.model.findByIdAndDelete(userId);
     return result !== null;

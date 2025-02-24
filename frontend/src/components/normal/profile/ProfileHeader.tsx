@@ -94,9 +94,18 @@ export default function ProfileHeader({
             <span className="font-semibold text-foreground text-lg">12</span> Connections
           </div>
         </div>
-        {isCurrentUser && (
-          <Button className="w-full" variant="outline">
-            {profileUser.bio ? "Edit bio" : "Add bio"}
+        {profileUser.bio && (
+          <div className="mb-3 text-sm">
+            <p>{profileUser.bio}</p>
+          </div>
+        )}
+        {isCurrentUser && !profileUser.bio && (
+          <Button
+            className="w-full"
+            variant="outline"
+            onClick={() => navigate("/profile/edit")}
+          >
+            Add bio
           </Button>
         )}
         {!isCurrentUser && (
