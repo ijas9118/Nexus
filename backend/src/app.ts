@@ -12,6 +12,7 @@ import adminRoutes from "./routes/admin.routes";
 import squadRouters from "./routes/squads.routes";
 import userRoutes from "./routes/user.routes";
 import mentorRoutes from "./routes/mentor.routes";
+import followerRoutes from "./routes/followers.routes";
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use("/api/content", contentRoutes);
 app.use("/api/squad", squadRouters);
 app.use("/api/user", userRoutes);
 app.use("/api/mentor", mentorRoutes);
+app.use("/api/followers", followerRoutes);
 
 const startServer = async () => {
   try {

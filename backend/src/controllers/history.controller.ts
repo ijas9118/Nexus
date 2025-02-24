@@ -1,13 +1,13 @@
 import { Response } from "express";
 import { IHistoryController } from "../core/interfaces/controllers/IHistoryController";
 import { CustomRequest } from "../core/types/CustomRequest";
-import { HistoryService } from "../services/history.service";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
+import { IHistoryService } from "../core/interfaces/services/IHistoryService";
 
 @injectable()
 export class HistoryController implements IHistoryController {
-  constructor(@inject(TYPES.HistoryService) private historyService: HistoryService) {}
+  constructor(@inject(TYPES.HistoryService) private historyService: IHistoryService) {}
 
   removeFromHistory = async (req: CustomRequest, res: Response): Promise<void> => {
     try {

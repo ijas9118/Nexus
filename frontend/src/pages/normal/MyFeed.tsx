@@ -83,6 +83,7 @@ export default function MyFeed() {
             image={item.thumbnailUrl}
             isLiked={item.isLiked}
             isBookmarked={item.isBookmarked}
+            username={item.username}
           />
         ))}
       </div>

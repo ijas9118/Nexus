@@ -31,7 +31,7 @@ import NexusLogo from "@/components/ui/NexusLogo";
 export function AppSidebar() {
   const navigate = useNavigate();
   const logoutUser = useLogout();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
 
   const handleMenuClick = (url: string, title: string) => {
@@ -95,7 +95,7 @@ export function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="h-fit">
                   <Avatar className="rounded">
-                    {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
+                    <AvatarImage src={user?.profilePic} />
                     <AvatarFallback>{user?.name.slice(0, 2)}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
@@ -106,7 +106,9 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                <DropdownMenuItem onClick={() => handleMenuClick("/profile", "Profile")}>
+                <DropdownMenuItem
+                  onClick={() => handleMenuClick(`/profile/${user?.username}`, "Profile")}
+                >
                   <span>Profile</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => logoutUser()}>

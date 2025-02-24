@@ -1,15 +1,15 @@
 import { inject, injectable } from "inversify";
 import { IBookmarkService } from "../core/interfaces/services/IBookmarkService";
-import { BookmarkRepository } from "../repositories/bookmark.repository";
-import { ContentRepository } from "../repositories/content.repository";
 import { TYPES } from "../di/types";
 import mongoose from "mongoose";
+import { IBookmarkRepository } from "../core/interfaces/repositories/IBookmarnRepository";
+import { IContentRepository } from "../core/interfaces/repositories/IContentRepository";
 
 @injectable()
 export class BookmarkService implements IBookmarkService {
   constructor(
-    @inject(TYPES.BookmarkRepository) private bookmarkRepository: BookmarkRepository,
-    @inject(TYPES.ContentRepository) private contentRepository: ContentRepository
+    @inject(TYPES.BookmarkRepository) private bookmarkRepository: IBookmarkRepository,
+    @inject(TYPES.ContentRepository) private contentRepository: IContentRepository
   ) {}
 
   async toggleBookmark(contentId: string, userId: string): Promise<{ status: boolean }> {

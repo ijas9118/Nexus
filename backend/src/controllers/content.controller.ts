@@ -1,16 +1,16 @@
 import { inject, injectable } from "inversify";
-import { ContentService } from "../services/content.service";
 import { TYPES } from "../di/types";
 import { IContentController } from "../core/interfaces/controllers/IContentController";
 import { Request, Response } from "express";
 import { CustomRequest } from "../core/types/CustomRequest";
-import { HistoryService } from "../services/history.service";
+import { IContentService } from "../core/interfaces/services/IContentService";
+import { IHistoryService } from "../core/interfaces/services/IHistoryService";
 
 @injectable()
 export class ContentController implements IContentController {
   constructor(
-    @inject(TYPES.ContentService) private contentService: ContentService,
-    @inject(TYPES.HistoryService) private historyService: HistoryService
+    @inject(TYPES.ContentService) private contentService: IContentService,
+    @inject(TYPES.HistoryService) private historyService: IHistoryService
   ) {}
 
   async createContent(req: CustomRequest, res: Response): Promise<void> {
@@ -43,7 +43,7 @@ export class ContentController implements IContentController {
       if (content) {
         await this.historyService.addHistory(
           req.user?._id as string,
-          content._id as string,
+          content._id as string
         );
         res.json(content);
       } else {

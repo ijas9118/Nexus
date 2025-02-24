@@ -60,6 +60,10 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
     return this.model.findOneAndUpdate(filter, update, { upsert: true, new: true });
   }
 
+  async findOneAndDelete(filter: FilterQuery<T>): Promise<T | null> {
+    return this.model.findOneAndDelete(filter);
+  }
+
   async addToSet(id: string, field: string, value: any): Promise<T | null> {
     const updatedDocument = await this.model.findByIdAndUpdate(
       id,

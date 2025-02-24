@@ -9,9 +9,6 @@ export interface IUser extends Document {
   profilePic: string;
   gender: string;
   place: string;
-  followers: number;
-  following: number;
-  connections: number;
   postsCount: number;
   totalViews: number;
   totalLikes: number;
@@ -23,11 +20,9 @@ export interface IUser extends Document {
     total: number;
   };
   skills: string[];
-  socials: {
-    github: string;
-    linkedin: string;
-  };
+  socials: [{ platform: string; url: string }];
   role: UserRole;
+  username?: string;
 }
 
 const UserSchema: Schema = new Schema({
@@ -46,24 +41,14 @@ const UserSchema: Schema = new Schema({
   },
   profilePic: {
     type: String,
+    default:
+      "https://res.cloudinary.com/dhvlhpg55/image/upload/v1740028408/nexus/images/oamn3bzchpmixago65yf.jpg",
   },
   gender: {
     type: String,
   },
   place: {
     type: String,
-  },
-  followers: {
-    type: Number,
-    default: 0,
-  },
-  following: {
-    type: Number,
-    default: 0,
-  },
-  connections: {
-    type: Number,
-    default: 0,
   },
   postsCount: {
     type: Number,
@@ -103,18 +88,20 @@ const UserSchema: Schema = new Schema({
   skills: {
     type: [String],
   },
-  socials: {
-    github: {
-      type: String,
+  socials: [
+    {
+      platform: String,
+      url: String,
     },
-    linkedin: {
-      type: String,
-    },
-  },
+  ],
   role: {
     type: String,
     required: true,
     default: "user",
+  },
+  username: {
+    type: String,
+    required: true,
   },
 });
 

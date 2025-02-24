@@ -23,6 +23,7 @@ interface ContentCardProps {
   image: string;
   isLiked: boolean;
   isBookmarked: boolean;
+  username: string;
 }
 
 const ContentCard: React.FC<ContentCardProps> = (props) => {
@@ -58,9 +59,16 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
     navigate(`/content/${id}`);
   };
 
+  const handleUserClick = (username: string) => {
+    navigate(`/profile/${username}`);
+  };
+
   return (
     <Card className="flex flex-col">
-      <CardHeader className="flex-row gap-4 space-y-0 items-center">
+      <CardHeader
+        className="flex-row gap-4 space-y-0 items-center"
+        onClick={() => handleUserClick(props.username)}
+      >
         <Avatar>
           <AvatarImage src="https://avatar.iran.liara.run/public" />
           <AvatarFallback>{props.avatarFallback}</AvatarFallback>

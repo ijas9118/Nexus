@@ -1,7 +1,6 @@
 import { injectable, inject } from "inversify";
 import { Request, Response } from "express";
 import { TYPES } from "../di/types";
-import { AuthService } from "../services/auth.service";
 import { LoginDto } from "../dtos/requests/auth/login.dto";
 import { RegisterDto } from "../dtos/requests/auth/register.dto";
 import { CLIENT_URL, NODE_ENV } from "../utils/constants";
@@ -13,10 +12,11 @@ import {
   verifyRefreshToken,
 } from "../utils/jwt.util";
 import { clearRefreshTokenCookie, setRefreshTokenCookie } from "../utils/cookieUtils";
+import { IAuthService } from "../core/interfaces/services/IAuthService";
 
 @injectable()
 export class AuthController implements IAuthController {
-  constructor(@inject(TYPES.AuthService) private authService: AuthService) {}
+  constructor(@inject(TYPES.AuthService) private authService: IAuthService) {}
 
   register = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -34,7 +34,7 @@ export class AuthController implements IAuthController {
 
       await redisClient.setex(`otp:${userData.email}`, 900, data);
 
-      await this.authService.sendOtpEmail(userData.email, otp);
+      await this.authService.sendOtpEmail(userData.email, otp as string);
 
       res.status(200).json({ message: "OTP sent to email. Please verify in 15 min" });
     } catch (error) {
@@ -84,6 +84,7 @@ export class AuthController implements IAuthController {
 
       res.status(201).json({ user, accessToken });
     } catch (error) {
+      console.log(error);
       res.status(500).json({ message: "OTP verification failed", error });
     }
   };

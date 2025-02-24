@@ -1,26 +1,21 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "@/services/api";
-
-// User Interface
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: "user" | "mentor" | "admin";
-}
+import { UserInterface } from "@/types/user";
 
 // Authentication State
 interface AuthState {
   isAuthenticated: boolean;
-  user: User | null;
+  user: UserInterface | null;
   accessToken: string | null;
   status: "idle" | "loading" | "succeeded" | "failed";
 }
 
+const storedAccessToken = localStorage.getItem("accessToken");
+
 const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
-  accessToken: null,
+  accessToken: storedAccessToken,
   status: "idle",
 };
 
@@ -34,11 +29,9 @@ export const refreshAccessToken = createAsyncThunk(
         {},
         { withCredentials: true }
       );
-      const { accessToken, user } = response.data;
-
       // Store new token in Redux state
-      dispatch(setCredentials({ user, accessToken }));
-      return accessToken;
+      // dispatch(setCredentials({ user, accessToken }));
+      return response.data;
     } catch (error: any) {
       dispatch(clearUser()); // Logout user if refresh fails
       return rejectWithValue("Session expired, please log in again.");
@@ -52,19 +45,26 @@ const authSlice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      action: PayloadAction<{ user: User; accessToken: string }>
+      action: PayloadAction<{ user: UserInterface; accessToken: string }>
     ) => {
       state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
       state.isAuthenticated = true;
+      localStorage.setItem("sessionActive", "true");
     },
     updateToken: (state, action: PayloadAction<string>) => {
       state.accessToken = action.payload;
+      localStorage.setItem("accessToken", action.payload);
     },
     clearUser: (state) => {
       state.isAuthenticated = false;
       state.user = null;
       state.accessToken = null;
+    },
+    updateUserProfile: (state, action: PayloadAction<Partial<UserInterface>>) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      }
     },
   },
   extraReducers: (builder) => {
@@ -73,7 +73,7 @@ const authSlice = createSlice({
         state.status = "loading";
       })
       .addCase(refreshAccessToken.fulfilled, (state, action) => {
-        state.accessToken = action.payload;
+         authSlice.caseReducers.setCredentials(state, action);
         state.status = "succeeded";
       })
       .addCase(refreshAccessToken.rejected, (state) => {
@@ -85,5 +85,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCredentials, updateToken, clearUser } = authSlice.actions;
+export const { setCredentials, updateToken, clearUser, updateUserProfile } =
+  authSlice.actions;
 export default authSlice.reducer;

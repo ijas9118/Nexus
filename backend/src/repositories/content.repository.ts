@@ -24,6 +24,17 @@ export class ContentRepository
     const contents = await this.model.aggregate([
       {
         $lookup: {
+          from: "users", // Users collection
+          localField: "author", // Content author field
+          foreignField: "_id", // User _id field
+          as: "authorInfo",
+        },
+      },
+      {
+        $unwind: "$authorInfo", // Convert array to object
+      },
+      {
+        $lookup: {
           from: "likes",
           let: { contentId: "$_id" },
           pipeline: [
@@ -64,12 +75,14 @@ export class ContentRepository
         $addFields: {
           isLiked: { $gt: [{ $size: "$userLike" }, 0] },
           isBookmarked: { $gt: [{ $size: "$userBookmark" }, 0] },
+          username: "$authorInfo.username",
         },
       },
       {
         $project: {
           userLike: 0,
           userBookmark: 0,
+          authorInfo: 0,
           __v: 0,
         },
       },

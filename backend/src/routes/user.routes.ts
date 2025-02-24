@@ -7,10 +7,12 @@ import { authenticate } from "../middlewares/auth.middleware";
 const userController = container.get<UserController>(TYPES.UserController);
 const router = Router();
 
-router.get(
-  "/squads",
-  authenticate(["user"]),
-  userController.getUserJoinedSquads
-);
+router.get("/squads", authenticate(["user"]), userController.getUserJoinedSquads);
+
+router.post("/update", authenticate(["user"]), userController.updateUser);
+
+router.post("/update/password", authenticate(["user"]), userController.updatePassword);
+
+router.post("/:username", userController.getUserData);
 
 export default router;
