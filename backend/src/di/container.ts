@@ -77,6 +77,20 @@ import { FollowersService } from "../services/followers.service";
 import { IFollowersController } from "../core/interfaces/controllers/IFollowersController";
 import { FollowersController } from "../controllers/followers.controller";
 
+import { IChatRepository } from "../core/interfaces/repositories/IChatRepository";
+import { ChatRepository } from "../repositories/chat.repository";
+import { IChatService } from "../core/interfaces/services/IChatService";
+import { ChatService } from "../services/chat.service";
+import { IChatController } from "../core/interfaces/controllers/IChatController";
+import { ChatController } from "../controllers/chat.controller";
+
+import { IMessageRepository } from "../core/interfaces/repositories/IMessageRepository";
+import { MessageRepository } from "../repositories/message.repository";
+import { MessageService } from "../services/message.service";
+import { IMessageService } from "../core/interfaces/services/IMessageService";
+import { IMessageController } from "../core/interfaces/controllers/IMessageController";
+import { MessageController } from "../controllers/message.controller";
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -122,5 +136,13 @@ container.bind<IHistoryController>(TYPES.HistoryController).to(HistoryController
 container.bind<IFollowersRepository>(TYPES.FollowersRepository).to(FollowersRepository);
 container.bind<IFollowersService>(TYPES.FollowersService).to(FollowersService);
 container.bind<IFollowersController>(TYPES.FollowersController).to(FollowersController);
+
+container.bind<IChatRepository>(TYPES.ChatRepository).to(ChatRepository);
+container.bind<IChatService>(TYPES.ChatService).to(ChatService);
+container.bind<IChatController>(TYPES.ChatController).to(ChatController);
+
+container.bind<IMessageRepository>(TYPES.MessageRepository).to(MessageRepository);
+container.bind<IMessageService>(TYPES.MessageService).to(MessageService);
+container.bind<IMessageController>(TYPES.MessageController).to(MessageController);
 
 export { container };

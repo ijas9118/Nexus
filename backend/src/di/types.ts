@@ -10,6 +10,8 @@ export const TYPES = {
   MentorRepository: Symbol.for("MentorRepository"),
   HistoryRepository: Symbol.for("HistoryRepository"),
   FollowersRepository: Symbol.for("FollowersRepository"),
+  ChatRepository: Symbol.for("ChatRepository"),
+  MessageRepository: Symbol.for("MessageRepository"),
 
   // Services
   UserService: Symbol.for("UserService"),
@@ -23,6 +25,8 @@ export const TYPES = {
   MentorService: Symbol.for("MentorService"),
   HistoryService: Symbol.for("HistoryService"),
   FollowersService: Symbol.for("FollowersService"),
+  ChatService: Symbol.for("ChatService"),
+  MessageService: Symbol.for("MessageService"),
 
   // Controllers
   UserController: Symbol.for("UserController"),
@@ -37,4 +41,6 @@ export const TYPES = {
   MentorController: Symbol.for("MentorController"),
   HistoryController: Symbol.for("HistoryController"),
   FollowersController: Symbol.for("FollowersController"),
+  ChatController: Symbol.for("ChatController"),
+  MessageController: Symbol.for("MessageController"),
 };

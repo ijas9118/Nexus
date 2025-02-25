@@ -10,27 +10,6 @@ import {
 } from "@/services/user/followService";
 import { useEffect, useState } from "react";
 
-const connectedUsers = [
-  {
-    id: 1,
-    name: "Alice Johnson",
-    username: "@alice_j",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: 2,
-    name: "Bob Smith",
-    username: "@bob_smith",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: 3,
-    name: "Carol White",
-    username: "@carol_w",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-];
-
 const Connections = () => {
   const [loading, setLoading] = useState(true);
   const [connections, setConnections] = useState([]);
@@ -41,11 +20,9 @@ const Connections = () => {
       setLoading(true);
       try {
         const data = await getAllConnections();
-        console.log(data);
         setConnections(data);
 
         const pendingRequests = await getPendingRequests();
-        console.log(pendingRequests);
         setRequests(pendingRequests);
       } catch (error) {
         console.error("Error fetching connections:", error);
