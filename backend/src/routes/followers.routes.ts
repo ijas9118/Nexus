@@ -22,4 +22,20 @@ router.get(
 );
 router.post("/is-following", followersController.isFollowing);
 
+router.post(
+  "/connect",
+  authenticate(["user"]),
+  followersController.sendConnectionRequest
+);
+router.post(
+  "/accept",
+  authenticate(["user"]),
+  followersController.acceptConnectionRequest
+);
+router.post(
+  "/has-requested",
+  authenticate(["user"]),
+  followersController.hasSentConnectionRequest
+);
+
 export default router;

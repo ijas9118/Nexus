@@ -11,4 +11,5 @@ export interface UserInterface {
   connections: number;
   joinedAt: string;
   socials: [{ platform: string; url: string }];
+  isPremium: boolean;
 }

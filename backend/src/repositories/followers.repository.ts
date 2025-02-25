@@ -79,4 +79,68 @@ export class FollowersRepository
 
     return !!userFollow;
   };
+
+  sendConnectionRequest = async (
+    requesterId: string,
+    recipientId: string
+  ): Promise<boolean> => {
+    const requesterObjectId = new Types.ObjectId(requesterId);
+    const recipientObjectId = new Types.ObjectId(recipientId);
+
+    const existingRequest = await this.findOne({
+      userId: recipientObjectId,
+      pendingConnectionRequests: { $in: [requesterObjectId] },
+    });
+
+    if (existingRequest) {
+      return false;
+    }
+
+    await this.findOneAndUpdate(
+      { userId: recipientObjectId },
+      { $addToSet: { pendingConnectionRequests: requesterObjectId } }
+    );
+
+    return true;
+  };
+
+  acceptConnectionRequest = async (
+    requesterId: string,
+    recipientId: string
+  ): Promise<boolean> => {
+    const requesterObjectId = new Types.ObjectId(requesterId);
+    const recipientObjectId = new Types.ObjectId(recipientId);
+
+    await this.findOneAndUpdate(
+      { userId: recipientObjectId },
+      { $pull: { pendingConnectionRequests: requesterObjectId } }
+    );
+
+    await this.findOneAndUpdate(
+      { userId: recipientObjectId },
+      { $addToSet: { connections: requesterObjectId } }
+    );
+
+    await this.findOneAndUpdate(
+      { userId: requesterObjectId },
+      { $addToSet: { connections: recipientObjectId } }
+    );
+
+    return true;
+  };
+
+  hasSentConnectionRequest = async (
+    requesterId: string,
+    recipientId: string
+  ): Promise<boolean> => {
+    const requesterObjectId = new Types.ObjectId(requesterId);
+    const recipientObjectId = new Types.ObjectId(recipientId);
+
+    const recipientUser = await this.findOne({
+      userId: recipientObjectId,
+      pendingConnectionRequests: { $in: [requesterObjectId] },
+    });
+
+    return !!recipientUser;
+  };
 }

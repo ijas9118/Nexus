@@ -32,6 +32,12 @@ const UserFollowSchema: Schema = new Schema(
         ref: "User",
       },
     ],
+    pendingConnectionRequests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,

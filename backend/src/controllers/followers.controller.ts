@@ -110,4 +110,46 @@ export class FollowersController implements IFollowersController {
       res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
   };
+
+  sendConnectionRequest = async (req: CustomRequest, res: Response): Promise<void> => {
+    try {
+      const requesterId = req.user?._id as string;
+      const { recipientId } = req.body;
+      const result = await this.followersService.sendConnectionRequest(
+        requesterId,
+        recipientId
+      );
+      res.status(result ? 200 : 400).json({ success: result });
+    } catch (error: any) {
+      res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+  };
+
+  acceptConnectionRequest = async (req: CustomRequest, res: Response): Promise<void> => {
+    try {
+      const requesterId = req.user?._id as string;
+      const { recipientId } = req.body;
+      const result = await this.followersService.acceptConnectionRequest(
+        requesterId,
+        recipientId
+      );
+      res.status(result ? 200 : 400).json({ success: result });
+    } catch (error: any) {
+      res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+  };
+
+  hasSentConnectionRequest = async (req: CustomRequest, res: Response): Promise<void> => {
+    try {
+      const requesterId = req.user?._id as string;
+      const { recipientId } = req.body;
+      const result = await this.followersService.hasSentConnectionRequest(
+        requesterId,
+        recipientId
+      );
+      res.status(result ? 200 : 400).json({ result });
+    } catch (error: any) {
+      res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+  };
 }
