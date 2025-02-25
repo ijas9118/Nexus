@@ -24,7 +24,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "@/hooks/use-toast";
 import SquadService from "@/services/admin/squadService";
 import { uploadFiles } from "@/services/user/contentService";
-import { Toaster } from "@/components/ui/toaster";
 import CategoryService from "@/services/admin/categoryService";
 import { Category } from "@/types/category";
 import { DialogProps } from "@/types/dialog";
@@ -273,7 +272,6 @@ export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
           </form>
         </DialogContent>
       </Dialog>
-      <Toaster />
     </>
   );
 }

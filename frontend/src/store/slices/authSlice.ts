@@ -19,7 +19,7 @@ const initialState: AuthState = {
   status: "idle",
 };
 
-// 🔹 Thunk to refresh access token
+// Thunk to refresh access token
 export const refreshAccessToken = createAsyncThunk(
   "auth/refreshToken",
   async (_, { rejectWithValue, dispatch }) => {
@@ -29,8 +29,6 @@ export const refreshAccessToken = createAsyncThunk(
         {},
         { withCredentials: true }
       );
-      // Store new token in Redux state
-      // dispatch(setCredentials({ user, accessToken }));
       return response.data;
     } catch (error: any) {
       dispatch(clearUser()); // Logout user if refresh fails
@@ -60,6 +58,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
       state.accessToken = null;
+      localStorage.setItem("sessionActive", "false");
     },
     updateUserProfile: (state, action: PayloadAction<Partial<UserInterface>>) => {
       if (state.user) {
@@ -73,7 +72,7 @@ const authSlice = createSlice({
         state.status = "loading";
       })
       .addCase(refreshAccessToken.fulfilled, (state, action) => {
-         authSlice.caseReducers.setCredentials(state, action);
+        authSlice.caseReducers.setCredentials(state, action);
         state.status = "succeeded";
       })
       .addCase(refreshAccessToken.rejected, (state) => {

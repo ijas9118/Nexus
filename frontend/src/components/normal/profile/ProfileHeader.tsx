@@ -13,13 +13,17 @@ interface ProfileHeaderProps {
     bio?: string;
   };
   isFollowing: boolean;
+  isConnected: boolean;
   onFollowToggle: () => void;
+  onConnectionToggle: () => void;
 }
 
 export default function ProfileHeader({
   profileUser,
   isFollowing,
+  isConnected,
   onFollowToggle,
+  onConnectionToggle,
 }: ProfileHeaderProps) {
   const currentUser = useSelector((state: any) => state.auth.user?.username || "");
   const navigate = useNavigate();
@@ -27,10 +31,6 @@ export default function ProfileHeader({
   if (!profileUser) return <p>Loading profile...</p>;
 
   const isCurrentUser = profileUser.username === currentUser;
-
-  const handleConnect = () => {
-    console.log("Connect button clicked for", profileUser._id);
-  };
 
   const handleEditClick = () => {
     navigate("/profile/edit");
@@ -95,8 +95,8 @@ export default function ProfileHeader({
             <Button className="w-1/2" variant="outline" onClick={onFollowToggle}>
               {isFollowing ? "Unfollow" : "Follow"}
             </Button>
-            <Button className="w-1/2" variant="outline" onClick={() => handleConnect()}>
-              Connect
+            <Button className="w-1/2" variant="outline" onClick={onConnectionToggle}>
+              {isConnected ? "Withdraw" : "Connect"}
             </Button>
           </div>
         )}

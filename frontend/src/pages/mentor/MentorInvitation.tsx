@@ -7,7 +7,6 @@ import { Check, Users, Calendar, Clock } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import MentorRegister from "./MentorRegister";
-import { Toaster } from "@/components/ui/toaster";
 
 export default function MentorInvitation() {
   const location = useLocation();
@@ -156,7 +155,6 @@ export default function MentorInvitation() {
             </footer>
           </div>
         )}
-        <Toaster />
       </main>
     </div>
   );

@@ -36,6 +36,7 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.10.5",
     "@types/nodemailer": "^6.4.17",
+    "@types/stripe": "^8.0.416",
     "morgan": "^1.10.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.7.3"

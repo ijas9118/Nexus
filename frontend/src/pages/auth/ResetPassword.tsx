@@ -13,7 +13,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { resetPassword } from "@/services/user/authService";
-import { Toaster } from "@/components/ui/toaster";
 
 export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState("");
@@ -116,7 +115,6 @@ export default function ResetPassword() {
           </form>
         </CardContent>
       </Card>
-      <Toaster />
     </div>
   );
 }

@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
-import { Toaster } from "@/components/ui/toaster";
 import { DialogProps } from "@/types/dialog";
 import MentorService from "@/services/admin/mentorService";
 
@@ -146,7 +145,6 @@ export function CreateMentorDialog({ open, onOpenChange }: DialogProps) {
           </form>
         </DialogContent>
       </Dialog>
-      <Toaster />
     </>
   );
 }
