@@ -20,11 +20,9 @@ const Connections = () => {
       setLoading(true);
       try {
         const data = await getAllConnections();
-        console.log(data);
         setConnections(data);
 
         const pendingRequests = await getPendingRequests();
-        console.log(pendingRequests);
         setRequests(pendingRequests);
       } catch (error) {
         console.error("Error fetching connections:", error);

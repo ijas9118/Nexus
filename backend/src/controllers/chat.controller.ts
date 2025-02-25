@@ -16,7 +16,7 @@ export class ChatController implements IChatController {
         req.user?._id as string,
         member,
       ]);
-      res.status(201).json({ message: "Chat created", success: true, data: chat });
+      res.status(201).json(chat);
     } catch (error: any) {
       res
         .status(500)
@@ -27,9 +27,7 @@ export class ChatController implements IChatController {
   getAllChats = async (req: CustomRequest, res: Response): Promise<void> => {
     try {
       const allChat = await this.chatService.getAllChats(req.user?._id as string);
-      res
-        .status(200)
-        .json({ message: "All chats fetched", success: true, data: allChat });
+      res.status(200).json(allChat);
     } catch (error: any) {
       res
         .status(500)
