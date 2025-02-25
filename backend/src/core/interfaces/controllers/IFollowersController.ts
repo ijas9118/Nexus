@@ -10,4 +10,6 @@ export interface IFollowersController {
   sendConnectionRequest(req: CustomRequest, res: Response): Promise<void>;
   acceptConnectionRequest(req: CustomRequest, res: Response): Promise<void>;
   hasSentConnectionRequest(req: CustomRequest, res: Response): Promise<void>;
+  withdrawConnectionRequest(req: CustomRequest, res: Response): Promise<void>;
+  getAllConnections(req: CustomRequest, res: Response): Promise<void>;
 }

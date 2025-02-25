@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
 import {
   loginUser,
@@ -189,7 +188,6 @@ export default function LoginPage() {
                     {canResend ? "Resend OTP" : `Resend in ${timer}s`}
                   </Button>
                 </div>
-                <Toaster />
               </div>
             </>
           ) : (
@@ -283,7 +281,6 @@ export default function LoginPage() {
                   {loading && <Loader2 className="animate-spin mr-2" />}
                   {buttonText}
                 </Button>
-                <Toaster />
 
                 <p className=" text-sm text-muted-foreground">
                   {signUp ? "Have an account?" : "Don't have an account?"}{" "}

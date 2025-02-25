@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import { updateProfile } from "@/services/user/profileService";
 import { updateUserProfile } from "@/store/slices/authSlice";
@@ -192,7 +191,6 @@ const ProfileForm = () => {
           </Button>
         </div>
       </form>
-      <Toaster />
     </div>
   );
 };

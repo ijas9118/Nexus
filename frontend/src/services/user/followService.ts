@@ -48,9 +48,21 @@ export const sendConnectionRequest = async (recipientId: string) => {
   }
 };
 
-export const acceptConnectionRequest = async (recipientId: string) => {
+export const withdrawConnectionRequest = async (recipientId: string) => {
   try {
-    const response = await api.post("/followers/accept", { recipientId });
+    const response = await api.post("/followers/withdraw", { recipientId });
+    return response.data;
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.message ||
+      "An unexpected error occurred while sending request.";
+    throw new Error(errorMessage);
+  }
+};
+
+export const acceptConnectionRequest = async (requesterId: string) => {
+  try {
+    const response = await api.post("/followers/accept", { requesterId });
     return response.data;
   } catch (error: any) {
     const errorMessage =
@@ -68,6 +80,26 @@ export const hasSentConnectionRequest = async (recipientId: string) => {
     const errorMessage =
       error.response?.data?.message ||
       "An unexpected error occurred while checking request.";
+    throw new Error(errorMessage);
+  }
+};
+
+export const getAllConnections = async () => {
+  try {
+    const response = await api.get("/followers/connections");
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || "An unexpected error occurred.";
+    throw new Error(errorMessage);
+  }
+};
+
+export const getPendingRequests = async () => {
+  try {
+    const response = await api.get("/followers/pending");
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || "An unexpected error occurred.";
     throw new Error(errorMessage);
   }
 };

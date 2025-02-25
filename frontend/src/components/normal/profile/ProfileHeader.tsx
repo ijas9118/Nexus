@@ -32,10 +32,6 @@ export default function ProfileHeader({
 
   const isCurrentUser = profileUser.username === currentUser;
 
-  const handleConnect = () => {
-    console.log("Connect button clicked for", profileUser._id);
-  };
-
   const handleEditClick = () => {
     navigate("/profile/edit");
   };

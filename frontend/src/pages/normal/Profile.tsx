@@ -1,7 +1,6 @@
 import ProfileActivity from "@/components/normal/profile/ProfileActivity";
 import ProfileHeader from "@/components/normal/profile/ProfileHeader";
 import SquadsList from "@/components/normal/profile/SquadsList";
-import { Toaster } from "@/components/ui/toaster";
 import { getUserProfile } from "@/services/user/profileService";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -12,6 +11,7 @@ import {
   hasSentConnectionRequest,
   sendConnectionRequest,
   unfollowUser,
+  withdrawConnectionRequest,
 } from "@/services/user/followService";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { toast } from "@/hooks/use-toast";
@@ -96,7 +96,7 @@ export default function ProfilePage() {
 
     try {
       if (isConnected) {
-        // revoke
+        await withdrawConnectionRequest(profileUser._id);
         toast({
           variant: "success",
           title: "Action Successful",
@@ -142,7 +142,6 @@ export default function ProfilePage() {
           <SquadsList />
         </div>
       </div>
-      <Toaster />
     </div>
   );
 }

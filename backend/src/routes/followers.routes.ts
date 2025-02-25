@@ -37,5 +37,14 @@ router.post(
   authenticate(["user"]),
   followersController.hasSentConnectionRequest
 );
+router.post(
+  "/withdraw",
+  authenticate(["user"]),
+  followersController.withdrawConnectionRequest
+);
+
+router.get("/connections", authenticate(["user"]), followersController.getAllConnections);
+
+router.get("/pending", authenticate(["user"]), followersController.getPendingRequests);
 
 export default router;

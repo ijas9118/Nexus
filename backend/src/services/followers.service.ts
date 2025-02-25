@@ -29,6 +29,14 @@ export class FollowersService implements IFollowersService {
     return this.followersRepository.isFollowing(followerId, followedId);
   };
 
+  getAllConnections = async (userId: string): Promise<any> => {
+    return this.followersRepository.getAllConnections(userId);
+  };
+
+  getPendingRequest = async (userId: string): Promise<any> => {
+    return this.followersRepository.getPendingRequests(userId);
+  };
+
   sendConnectionRequest = async (
     requesterId: string,
     recipientId: string
@@ -37,10 +45,10 @@ export class FollowersService implements IFollowersService {
   };
 
   acceptConnectionRequest = async (
-    requesterId: string,
-    recipientId: string
+    userId: string,
+    requesterId: string
   ): Promise<boolean> => {
-    return this.followersRepository.acceptConnectionRequest(requesterId, recipientId);
+    return this.followersRepository.acceptConnectionRequest(userId, requesterId);
   };
 
   hasSentConnectionRequest = async (
@@ -48,5 +56,12 @@ export class FollowersService implements IFollowersService {
     recipientId: string
   ): Promise<boolean> => {
     return this.followersRepository.hasSentConnectionRequest(requesterId, recipientId);
+  };
+
+  withdrawConnectionRequest = async (
+    requesterId: string,
+    recipientId: string
+  ): Promise<boolean> => {
+    return this.followersRepository.withdrawConnectionRequest(requesterId, recipientId);
   };
 }

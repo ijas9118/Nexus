@@ -111,6 +111,28 @@ export class FollowersController implements IFollowersController {
     }
   };
 
+  getAllConnections = async (req: CustomRequest, res: Response): Promise<void> => {
+    try {
+      const userId = req.user?._id as string;
+
+      const result = await this.followersService.getAllConnections(userId);
+      res.status(200).json(result);
+    } catch (error: any) {
+      res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+  };
+
+  getPendingRequests = async (req: CustomRequest, res: Response): Promise<void> => {
+    try {
+      const userId = req.user?._id as string;
+
+      const result = await this.followersService.getPendingRequest(userId);
+      res.status(200).json(result);
+    } catch (error: any) {
+      res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+  };
+
   sendConnectionRequest = async (req: CustomRequest, res: Response): Promise<void> => {
     try {
       const requesterId = req.user?._id as string;
@@ -127,11 +149,11 @@ export class FollowersController implements IFollowersController {
 
   acceptConnectionRequest = async (req: CustomRequest, res: Response): Promise<void> => {
     try {
-      const requesterId = req.user?._id as string;
-      const { recipientId } = req.body;
+      const userId = req.user?._id as string;
+      const { requesterId } = req.body;
       const result = await this.followersService.acceptConnectionRequest(
-        requesterId,
-        recipientId
+        userId,
+        requesterId
       );
       res.status(result ? 200 : 400).json({ success: result });
     } catch (error: any) {
@@ -144,6 +166,23 @@ export class FollowersController implements IFollowersController {
       const requesterId = req.user?._id as string;
       const { recipientId } = req.body;
       const result = await this.followersService.hasSentConnectionRequest(
+        requesterId,
+        recipientId
+      );
+      res.status(result ? 200 : 400).json({ result });
+    } catch (error: any) {
+      res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+  };
+
+  withdrawConnectionRequest = async (
+    req: CustomRequest,
+    res: Response
+  ): Promise<void> => {
+    try {
+      const requesterId = req.user?._id as string;
+      const { recipientId } = req.body;
+      const result = await this.followersService.withdrawConnectionRequest(
         requesterId,
         recipientId
       );

@@ -80,6 +80,68 @@ export class FollowersRepository
     return !!userFollow;
   };
 
+  getAllConnections = async (userId: string) => {
+    const userObjId = new Types.ObjectId(userId);
+
+    const connections = await UserFollowModel.aggregate([
+      { $match: { userId: userObjId } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "connections",
+          foreignField: "_id",
+          as: "connectedUsers",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          connectedUsers: {
+            _id: 1,
+            name: 1,
+            username: 1,
+            profilePic: 1,
+          },
+        },
+      },
+    ]);
+
+    return connections.length > 0 ? connections[0].connectedUsers : [];
+  };
+
+  getPendingRequests = async (
+    userId: string
+  ): Promise<
+    { _id: Types.ObjectId; name: string; username: string; profilePic: string }[]
+  > => {
+    const userObjId = new Types.ObjectId(userId);
+
+    const pendingRequests = await UserFollowModel.aggregate([
+      { $match: { userId: userObjId } },
+      {
+        $lookup: {
+          from: "users", // Collection name in MongoDB
+          localField: "pendingConnectionRequests", // Field in UserFollowModel
+          foreignField: "_id", // _id in User collection
+          as: "pendingUsers", // Resulting array
+        },
+      },
+      {
+        $project: {
+          _id: 0, // Exclude the parent document ID
+          pendingUsers: {
+            _id: 1,
+            name: 1,
+            username: 1,
+            profilePic: 1,
+          },
+        },
+      },
+    ]);
+
+    return pendingRequests.length > 0 ? pendingRequests[0].pendingUsers : [];
+  };
+
   sendConnectionRequest = async (
     requesterId: string,
     recipientId: string
@@ -105,25 +167,30 @@ export class FollowersRepository
   };
 
   acceptConnectionRequest = async (
-    requesterId: string,
-    recipientId: string
+    userId: string,
+    requesterId: string
   ): Promise<boolean> => {
+    const userObjectId = new Types.ObjectId(userId);
     const requesterObjectId = new Types.ObjectId(requesterId);
-    const recipientObjectId = new Types.ObjectId(recipientId);
+
+    console.log(userObjectId, requesterObjectId);
 
     await this.findOneAndUpdate(
-      { userId: recipientObjectId },
-      { $pull: { pendingConnectionRequests: requesterObjectId } }
+      { userId: userObjectId },
+      {
+        $pull: { pendingConnectionRequests: requesterObjectId },
+        $addToSet: { connections: requesterObjectId },
+      }
     );
 
-    await this.findOneAndUpdate(
-      { userId: recipientObjectId },
-      { $addToSet: { connections: requesterObjectId } }
-    );
+    // await this.findOneAndUpdate(
+    //   { userId: recipientObjectId },
+    //   { $addToSet: { connections: requesterObjectId } }
+    // );
 
     await this.findOneAndUpdate(
       { userId: requesterObjectId },
-      { $addToSet: { connections: recipientObjectId } }
+      { $addToSet: { connections: userId } }
     );
 
     return true;
@@ -142,5 +209,20 @@ export class FollowersRepository
     });
 
     return !!recipientUser;
+  };
+
+  withdrawConnectionRequest = async (
+    requesterId: string,
+    recipientId: string
+  ): Promise<boolean> => {
+    const requesterObjectId = new Types.ObjectId(requesterId);
+    const recipientObjectId = new Types.ObjectId(recipientId);
+
+    await this.findOneAndUpdate(
+      { userId: recipientObjectId },
+      { $pull: { pendingConnectionRequests: requesterObjectId } }
+    );
+
+    return true;
   };
 }
