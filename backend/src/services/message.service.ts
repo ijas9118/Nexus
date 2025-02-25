@@ -1,0 +1,27 @@
+import { inject, injectable } from "inversify";
+import { BaseService } from "../core/abstracts/base.service";
+import { TYPES } from "../di/types";
+import { IMessage } from "../models/message.model";
+import { IMessageRepository } from "../core/interfaces/repositories/IMessageRepository";
+import { IMessageService } from "../core/interfaces/services/IMessageService";
+
+@injectable()
+export class MessageService extends BaseService<IMessage> implements IMessageService {
+  constructor(
+    @inject(TYPES.MessageRepository) private messageRepository: IMessageRepository
+  ) {
+    super(messageRepository);
+  }
+
+  createNewMessage = async (data: {
+    chatId: string;
+    sender: string;
+    text: string;
+  }): Promise<IMessage> => {
+    return this.messageRepository.createNewMessage(data);
+  };
+
+  getAllMessages = async (chatId: string): Promise<IMessage[]> => {
+    return await this.messageRepository.getAllMessages(chatId);
+  };
+}

@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 import { BaseRepository } from "../core/abstracts/base.repository";
 import { IContentRepository } from "../core/interfaces/repositories/IContentRepository";
 import ContentModel, { IContent } from "../models/content.model";
-import { FilterQuery, Types } from "mongoose";
+import { Types } from "mongoose";
 
 @injectable()
 export class ContentRepository
