@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import {
   loginUser,
   registerUser,
@@ -22,6 +21,7 @@ import {
 import GoogleButton from "@/components/auth/GoogleButton";
 import { setCredentials } from "@/store/slices/authSlice";
 import { RootState } from "@/store/store";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +38,6 @@ export default function LoginPage() {
   const [canResend, setCanResend] = useState(false);
 
   const navigate = useNavigate();
-  const { toast } = useToast();
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
@@ -56,9 +55,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (isFormIncomplete) {
-      toast({
-        variant: "destructive",
-        title: "Missing Information",
+      toast.warning("Missing Information", {
         description: signUp
           ? "Please fill out your name, email, and password to register."
           : "Please provide both email and password to log in.",
@@ -67,11 +64,7 @@ export default function LoginPage() {
     }
 
     if (!isValidEmail(formData.email)) {
-      toast({
-        variant: "destructive",
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
-      });
+      toast.warning("Please enter a valid email address.");
       return;
     }
 
@@ -89,9 +82,7 @@ export default function LoginPage() {
         setShowOTP(true);
       } else navigate("/myFeed");
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Authentication Failed",
+      toast.error("Authentication Failed", {
         description: error?.message || "Something went wrong. Please try again.",
       });
     } finally {
@@ -116,16 +107,12 @@ export default function LoginPage() {
   const onResend = async () => {
     try {
       await resendOtp(formData.email);
-      toast({
-        variant: "default",
-        title: "OTP Resent",
+      toast("OTP Resent", {
         description: "A new OTP has been sent to your email.",
       });
       startCountdown();
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Failed to Resend OTP",
+      toast.error("Failed to Resend OTP", {
         description: error?.message || "Something went wrong. Please try again.",
       });
     }

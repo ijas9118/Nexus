@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/hooks/use-toast";
 import { updatePassword } from "@/services/user/profileService";
 import { Lock, Trash2 } from "lucide-react";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import PasswordInput from "./PasswordInput";
+import { toast } from "sonner";
 
 const SecurityForm: FC = () => {
   const user = useSelector((state: any) => state.auth.user);
@@ -30,19 +30,11 @@ const SecurityForm: FC = () => {
     try {
       console.log("Updating Password...", data);
       await updatePassword(data);
-      toast({
-        variant: "default",
-        title: "Success",
-        description: "Your password is updated.",
-        duration: 3000,
-      });
+      toast.success("Your password is updated.");
     } catch (error: any) {
       console.error("Failed to update password", error);
-      toast({
-        variant: "destructive",
-        title: "Failed",
+      toast.error("Failed", {
         description: error.message,
-        duration: 3000,
       });
     } finally {
       setLoading(false);

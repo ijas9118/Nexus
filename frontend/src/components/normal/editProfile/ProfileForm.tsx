@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/hooks/use-toast";
 import { updateProfile } from "@/services/user/profileService";
 import { updateUserProfile } from "@/store/slices/authSlice";
 import { Link, Loader2 } from "lucide-react";
@@ -18,6 +17,7 @@ import {
 } from "react-icons/fa";
 import { FaSquareThreads, FaSquareXTwitter } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const socialLinks = [
   { key: "github", icon: FaGithub, label: "Github" },
@@ -84,19 +84,13 @@ const ProfileForm = () => {
     try {
       await updateProfile(formattedData);
       dispatch(updateUserProfile(formattedData));
-      toast({
-        variant: "default",
-        title: "Wohoo!",
+      toast("Wohoo!", {
         description: "Your profile updated.",
-        duration: 3000,
       });
     } catch (error: any) {
       console.error("Profile update failed:", error);
-      toast({
-        variant: "destructive",
-        title: "Oops!",
+      toast.error("Oops!", {
         description: error.message,
-        duration: 3000,
       });
     } finally {
       setLoading(false); // Stop loading

@@ -14,7 +14,7 @@ import {
   withdrawConnectionRequest,
 } from "@/services/user/followService";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 export default function ProfilePage() {
   const { username } = useParams();
@@ -63,16 +63,12 @@ export default function ProfilePage() {
     try {
       if (isFollowing) {
         await unfollowUser(profileUser._id);
-        toast({
-          variant: "success",
-          title: "Action Successful",
+        toast.success("Action Successful", {
           description: `You have unfollowed ${profileUser.name}. Hope to see you reconnect soon!`,
         });
       } else {
         await followUser(profileUser._id);
-        toast({
-          variant: "success",
-          title: "Following!",
+        toast.success("Following!", {
           description: `You're now following ${profileUser.name}. Stay engaged and explore their content!`,
         });
       }
@@ -83,9 +79,7 @@ export default function ProfilePage() {
       setProfileUser(updatedUser);
     } catch (err: any) {
       console.error("Error updating follow status:", err);
-      toast({
-        variant: "destructive",
-        title: "Error",
+      toast.error("Error", {
         description: err.message,
       });
     }
@@ -97,16 +91,12 @@ export default function ProfilePage() {
     try {
       if (isConnected) {
         await withdrawConnectionRequest(profileUser._id);
-        toast({
-          variant: "success",
-          title: "Action Successful",
+        toast.success("Action Successful", {
           description: `You have unfollowed ${profileUser.name}. Hope to see you reconnect soon!`,
         });
       } else {
         await sendConnectionRequest(profileUser._id);
-        toast({
-          variant: "success",
-          title: "Request Sent!",
+        toast.success("Request Sent!", {
           description: `You're now following ${profileUser.name}. Stay engaged and explore their content!`,
         });
       }
@@ -117,9 +107,7 @@ export default function ProfilePage() {
       setProfileUser(updatedUser);
     } catch (err: any) {
       console.error("Error updating follow status:", err);
-      toast({
-        variant: "destructive",
-        title: "Error",
+      toast.error("Error", {
         description: err.message,
       });
     }

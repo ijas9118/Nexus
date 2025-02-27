@@ -3,7 +3,6 @@ import { CreateSquadDialog } from "@/components/normal/squads/CreateSquadDialog"
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "@/hooks/use-toast";
 import CategoryService from "@/services/admin/categoryService";
 import SquadService from "@/services/user/squadService";
 import { setSquadsByCategory } from "@/store/slices/squadSlice";
@@ -14,6 +13,7 @@ import { Squad } from "@/types/squad";
 import { Plus } from "lucide-react";
 import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const Squads: FC = () => {
   const dispatch = useDispatch();
@@ -78,10 +78,10 @@ const Squads: FC = () => {
       setSquads((prevSquads) =>
         prevSquads.map((s) => (s._id === squad._id ? { ...s, isJoined: true } : s))
       );
-      toast({ description: "Successfully joined the squad!" });
+      toast.success("Successfully joined the squad!");
     } catch (error) {
       console.error("Error joining squad:", error);
-      toast({ description: "Failed to join squad!", variant: "destructive" });
+      toast.error("Failed to join squad!");
     }
   };
 

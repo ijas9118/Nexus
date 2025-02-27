@@ -5,7 +5,7 @@ import { googleAuth } from "@/services/user/authService";
 import { useDispatch } from "react-redux";
 // import { login } from "@/store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface CustomJwtPayload extends JwtPayload {
   name?: string;
@@ -41,9 +41,7 @@ const GoogleButton: FC = () => {
         navigate("/myFeed");
       }
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Authentication Failed",
+      toast.error("Authentication Failed", {
         description: error?.message || "Something went wrong. Please try again.",
       });
     }

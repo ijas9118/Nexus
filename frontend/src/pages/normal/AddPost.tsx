@@ -19,7 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { addContent, uploadFiles } from "@/services/user/contentService";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 interface FormData {
@@ -120,11 +120,8 @@ const AddPost: React.FC = () => {
 
       const result = await addContent(requestData);
       if (result) {
-        toast({
-          variant: "default",
-          title: "Wohoo!",
+        toast("Wohoo!", {
           description: result.message,
-          duration: 3000,
         });
         setTimeout(() => navigate("/myFeed"), 3000);
       }
