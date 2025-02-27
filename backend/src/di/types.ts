@@ -27,6 +27,9 @@ export const TYPES = {
   FollowersService: Symbol.for("FollowersService"),
   ChatService: Symbol.for("ChatService"),
   MessageService: Symbol.for("MessageService"),
+  OTPService: Symbol.for("IOTPService"),
+  EmailService: Symbol.for("IEmailService"),
+  TokenService: Symbol.for("ITokenService"),
 
   // Controllers
   UserController: Symbol.for("UserController"),

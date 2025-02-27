@@ -4,33 +4,39 @@ import { TYPES } from "../di/types";
 import { LoginDto } from "../dtos/requests/auth/login.dto";
 import { RegisterDto } from "../dtos/requests/auth/register.dto";
 import { IAuthController } from "../core/interfaces/controllers/IAuthController";
-import {
-  generateAccessToken,
-  verifyAccessToken,
-  verifyRefreshToken,
-} from "../utils/jwt.util";
+import { generateAccessToken, verifyRefreshToken } from "../utils/jwt.util";
 import { clearRefreshTokenCookie, setRefreshTokenCookie } from "../utils/cookieUtils";
 import { IAuthService } from "../core/interfaces/services/IAuthService";
 import asyncHandler from "express-async-handler";
 import CustomError from "../utils/CustomError";
+import { StatusCodes } from "http-status-codes";
+import { IOTPService } from "../core/interfaces/services/IOTPService";
+import { IEmailService } from "../core/interfaces/services/IEmailService";
+import { ITokenService } from "../core/interfaces/services/ITokenService";
 
 @injectable()
 export class AuthController implements IAuthController {
-  constructor(@inject(TYPES.AuthService) private authService: IAuthService) {}
+  constructor(
+    @inject(TYPES.AuthService) private authService: IAuthService,
+    @inject(TYPES.OTPService) private otpService: IOTPService,
+    @inject(TYPES.EmailService) private emailService: IEmailService,
+    @inject(TYPES.TokenService) private tokenService: ITokenService
+  ) {}
 
   // Register a new user and send OTP to email
   register = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userData: RegisterDto = req.body;
 
     const existingUser = await this.authService.findUserByEmail(userData.email);
-    if (existingUser) throw new CustomError("User already exists", 400);
+    if (existingUser)
+      throw new CustomError("User already exists", StatusCodes.BAD_REQUEST);
 
-    const otp = this.authService.generateOTP();
+    const otp = this.otpService.generateOTP();
 
-    await this.authService.sendOtpEmail(userData.email, otp);
+    await this.emailService.sendOtpEmail(userData.email, otp);
 
     res
-      .status(200)
+      .status(StatusCodes.OK)
       .json({ message: "OTP sent to email. Please verify within 15 minutes" });
   });
 
@@ -38,7 +44,7 @@ export class AuthController implements IAuthController {
   verifyOTP = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { email, otp } = req.body;
 
-    const userData = await this.authService.verifyAndRetrieveUser(email, otp);
+    const userData = await this.otpService.verifyAndRetrieveUser(email, otp);
 
     const result = await this.authService.register(userData);
 
@@ -57,16 +63,16 @@ export class AuthController implements IAuthController {
       role: "user",
     };
 
-    res.status(201).json({ user, accessToken });
+    res.status(StatusCodes.CREATED).json({ user, accessToken });
   });
 
   // Resend OTP to email if OTP is expired or not received
   resendOtp = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { email } = req.body;
 
-    await this.authService.resendOtp(email);
+    await this.otpService.resendOtp(email);
 
-    res.status(200).json({ message: "New OTP sent to your email." });
+    res.status(StatusCodes.OK).json({ message: "New OTP sent to your email." });
   });
 
   // Login user and set refresh token cookie
@@ -83,44 +89,48 @@ export class AuthController implements IAuthController {
       role: "user",
     });
 
-    res.status(200).json({ message: "success", accessToken, user });
+    res.status(StatusCodes.OK).json({ message: "success", accessToken, user });
   });
 
   // Logout user and clear refresh token cookie
   logout = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     clearRefreshTokenCookie(res);
-    res.status(200).json({ message: "Logged out successfully." });
+    res.status(StatusCodes.OK).json({ message: "Logged out successfully." });
   });
 
   // Send password reset link to email with token
   forgotPassword = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { email } = req.body;
 
-    await this.authService.sendResetEmailWithToken(email);
+    await this.emailService.sendResetEmailWithToken(email);
 
-    res.status(200).json({ message: "Password reset link sent to your email." });
+    res
+      .status(StatusCodes.OK)
+      .json({ message: "Password reset link sent to your email." });
   });
 
   // Verify token and update password if token is valid
   resetPassword = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { email, token, password } = req.body;
 
-    const isValid = await this.authService.validateToken(email, token);
-    if (!isValid) throw new CustomError("Invalid or expired token.", 400);
+    const isValid = await this.tokenService.validateToken(email, token);
+    if (!isValid)
+      throw new CustomError("Invalid or expired token.", StatusCodes.BAD_REQUEST);
 
     await this.authService.updatePassword(email, password);
 
-    res.status(200).json({ message: "Password updated successfully." });
+    res.status(StatusCodes.OK).json({ message: "Password updated successfully." });
   });
 
   // Refresh access token using refresh token
   refreshToken = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const refreshToken = req.cookies.refreshToken;
 
-    if (!refreshToken) throw new CustomError("Refresh token not found", 401);
+    if (!refreshToken)
+      throw new CustomError("Refresh token not found", StatusCodes.UNAUTHORIZED);
 
     const decodedToken = verifyRefreshToken(refreshToken);
-    if (!decodedToken) throw new CustomError("Invalid token", 403);
+    if (!decodedToken) throw new CustomError("Invalid token", StatusCodes.FORBIDDEN);
 
     const user = await this.authService.getUserByRoleAndId(
       decodedToken.user.role,
@@ -129,12 +139,12 @@ export class AuthController implements IAuthController {
 
     if (!user) {
       clearRefreshTokenCookie(res);
-      throw new CustomError("User not found", 404);
+      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
     }
 
     if (user.status === "Blocked") {
       clearRefreshTokenCookie(res);
-      throw new CustomError("User is blocked", 403);
+      throw new CustomError("User is blocked", StatusCodes.FORBIDDEN);
     }
 
     const accessToken = generateAccessToken({
@@ -144,23 +154,6 @@ export class AuthController implements IAuthController {
       role: decodedToken.user.role,
     });
 
-    res.status(200).json({ accessToken, user });
-  });
-
-  // Verify access token and return user data
-  verifyToken = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const accessToken = req.cookies.accessToken;
-
-    if (!accessToken) throw new CustomError("Access token not found", 401);
-
-    const payload = verifyAccessToken(accessToken);
-
-    if (!payload) throw new CustomError("Invalid or expired access token", 403);
-
-    const user = await this.authService.findUserByEmail(payload.user.email);
-
-    if (!user) throw new CustomError("Invalid or expired access token", 403);
-
-    res.status(200).json(payload.user);
+    res.status(StatusCodes.OK).json({ accessToken, user });
   });
 }

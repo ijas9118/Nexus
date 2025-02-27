@@ -3,7 +3,7 @@ import { TYPES } from "./types";
 
 import { UserRepository } from "../repositories/user.repository";
 import { UserService } from "../services/user.service";
-import { AuthService } from "../services/auth.service";
+import { AuthService } from "../services/auth/auth.service";
 import { AuthController } from "../controllers/auth.controller";
 import { IUserRepository } from "../core/interfaces/repositories/IUserRepository";
 import { IUserService } from "../core/interfaces/services/IUserService";
@@ -90,6 +90,12 @@ import { MessageService } from "../services/message.service";
 import { IMessageService } from "../core/interfaces/services/IMessageService";
 import { IMessageController } from "../core/interfaces/controllers/IMessageController";
 import { MessageController } from "../controllers/message.controller";
+import { IOTPService } from "../core/interfaces/services/IOTPService";
+import { OTPService } from "../services/auth/otp.service";
+import { IEmailService } from "../core/interfaces/services/IEmailService";
+import { EmailService } from "../services/auth/email.service";
+import { ITokenService } from "../core/interfaces/services/ITokenService";
+import { TokenService } from "../services/auth/token.service";
 
 const container = new Container();
 
@@ -104,6 +110,9 @@ container.bind<IUserService>(TYPES.UserService).to(UserService);
 container.bind<AuthService>(TYPES.AuthService).to(AuthService);
 container.bind<IAuthController>(TYPES.AuthController).to(AuthController);
 container.bind<IUserController>(TYPES.UserController).to(UserController);
+container.bind<IOTPService>(TYPES.OTPService).to(OTPService);
+container.bind<IEmailService>(TYPES.EmailService).to(EmailService);
+container.bind<ITokenService>(TYPES.TokenService).to(TokenService);
 
 container.bind<IContentRepository>(TYPES.ContentRepository).to(ContentRepository);
 container.bind<IContentService>(TYPES.ContentService).to(ContentService);

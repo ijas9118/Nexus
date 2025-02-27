@@ -9,5 +9,4 @@ export interface IAuthController {
   forgotPassword: RequestHandler;
   resetPassword: RequestHandler;
   refreshToken: RequestHandler;
-  verifyToken: RequestHandler;
 }
