@@ -15,8 +15,10 @@ import followerRoutes from "./routes/followers.routes";
 import chatRoutes from "./routes/chat.routes";
 import messageRoutes from "./routes/message.routes";
 import errorMiddleware from "./middlewares/errorMiddleware";
+import { setupSwagger } from "./utils/swaggerConfig";
 
 const app = express();
+setupSwagger(app);
 
 const corsOptions = {
   origin: CLIENT_URL || "*",
