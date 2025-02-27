@@ -20,7 +20,6 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import GoogleButton from "@/components/auth/GoogleButton";
-import { FaGithub } from "react-icons/fa";
 import { setCredentials } from "@/store/slices/authSlice";
 import { RootState } from "@/store/store";
 

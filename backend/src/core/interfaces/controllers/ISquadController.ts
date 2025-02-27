@@ -1,6 +1,9 @@
-import { Request, Response } from "express";
+import { RequestHandler } from "express";
 
 export interface ISquadController {
-  createSquad(req: Request, res: Response): Promise<void>;
-  getAllSquads(req: Request, res: Response): Promise<void>;
+  createSquad: RequestHandler;
+  getAllSquads: RequestHandler;
+  toggleSquad: RequestHandler;
+  getSquadsByCategory: RequestHandler;
+  joinSquad: RequestHandler;
 }

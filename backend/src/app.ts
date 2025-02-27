@@ -14,6 +14,7 @@ import mentorRoutes from "./routes/mentor.routes";
 import followerRoutes from "./routes/followers.routes";
 import chatRoutes from "./routes/chat.routes";
 import messageRoutes from "./routes/message.routes";
+import errorMiddleware from "./middlewares/errorMiddleware";
 
 const app = express();
 
@@ -40,5 +41,7 @@ app.use("/api/mentor", mentorRoutes);
 app.use("/api/followers", followerRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
+
+app.use(errorMiddleware);
 
 export default app;

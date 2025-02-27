@@ -3,58 +3,59 @@ import { ICategoryController } from "../core/interfaces/controllers/ICategoryCon
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
 import { ICategoryService } from "../core/interfaces/services/ICategoryService";
+import asyncHandler from "express-async-handler";
+import CustomError from "../utils/CustomError";
 
 @injectable()
 export class CategoryController implements ICategoryController {
   constructor(@inject(TYPES.CategoryService) private categoryService: ICategoryService) {}
 
-  createCategory = async (req: Request, res: Response): Promise<void> => {
-    try {
-      const { name } = req.body;
-      const category = await this.categoryService.addCategory(name);
-      res.status(201).json(category);
-    } catch (error: any) {
-      res.status(500).json({ message: "Error creating category", error: error.message });
-    }
-  };
+  // Create a new category
+  createCategory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { name } = req.body;
 
-  updateCategory = async (req: Request, res: Response): Promise<void> => {
-    try {
-      const { id, newName } = req.body;
-      const updatedCategory = await this.categoryService.updateCategory(id, newName);
-      if (updatedCategory) {
-        res.status(200).json(updatedCategory);
-      } else {
-        res.status(404).json({ message: "Category not found" });
-      }
-    } catch (error: any) {
-      res.status(500).json({ message: "Error updating category", error: error.message });
-    }
-  };
+    if (!name) throw new CustomError("Category name is required", 400);
 
-  toggleCategory = async (req: Request, res: Response): Promise<void> => {
-    try {
-      const { id } = req.params;
-      const toggledCategory = await this.categoryService.toggleCategory(id);
-      if (toggledCategory) {
-        res.status(200).json(toggledCategory);
-      } else {
-        res.status(404).json({ message: "Category not found" });
-      }
-    } catch (error: any) {
-      res.status(500).json({ message: "Error toggling category", error: error.message });
-    }
-  };
+    const category = await this.categoryService.addCategory(name);
+    res.status(201).json(category);
+  });
 
-  getAllCategories = async (req: Request, res: Response): Promise<void> => {
-    try {
-      const categories = await this.categoryService.getAllCategories();
-      
-      res.status(200).json(categories);
-    } catch (error: any) {
-      res
-        .status(500)
-        .json({ message: "Error fetching categories", error: error.message });
+  // Update a category by ID and new name
+  updateCategory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { id, newName } = req.body;
+
+    if (!id || !newName)
+      throw new CustomError("Category ID and new name are required", 400);
+
+    const updatedCategory = await this.categoryService.updateCategory(id, newName);
+
+    if (!updatedCategory) {
+      throw new CustomError("Category not found", 404);
     }
-  };
+
+    res.status(200).json(updatedCategory);
+  });
+
+  // Toggle a category by ID
+  toggleCategory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
+
+    if (!id) throw new CustomError("Category ID is required", 400);
+
+    const toggledCategory = await this.categoryService.toggleCategory(id);
+
+    if (!toggledCategory) throw new CustomError("Category not found", 404);
+
+    res.status(200).json(toggledCategory);
+  });
+
+  // Get all categories
+  getAllCategories = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const categories = await this.categoryService.getAllCategories();
+
+    if (!categories || categories.length === 0)
+      throw new CustomError("No categories found", 404);
+
+    res.status(200).json(categories);
+  });
 }

@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { RequestHandler } from "express";
 
 export interface ICategoryController {
-  createCategory(req: Request, res: Response): Promise<void>;
-  updateCategory(req: Request, res: Response): Promise<void>;
-  toggleCategory(req: Request, res: Response): Promise<void>;
+  createCategory: RequestHandler;
+  updateCategory: RequestHandler;
+  toggleCategory: RequestHandler;
 }

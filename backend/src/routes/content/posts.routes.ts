@@ -11,27 +11,15 @@ const contentController = container.get<ContentController>(TYPES.ContentControll
 const likesController = container.get<LikesController>(TYPES.LikesController);
 const bookmarkController = container.get<BookmarkController>(TYPES.BookmarkController);
 
-router.get("/", authenticate(["user", "admin"]), (req, res) =>
-  contentController.getAllContent(req, res)
-);
+router.get("/", authenticate(["user", "admin"]), contentController.getAllContent);
 
-router.post("/", authenticate(["user"]), (req, res) =>
-  contentController.createContent(req, res)
-);
+router.post("/", authenticate(["user"]), contentController.createContent);
 
-router.get("/:id", authenticate(["user", "admin"]), (req, res) =>
-  contentController.getContent(req, res)
-);
+router.get("/:id", authenticate(["user", "admin"]), contentController.getContent);
 
-router.post("/:id/like", authenticate(["user"]), (req, res) =>
-  likesController.toggleLike(req, res)
-);
+router.post("/:id/like", authenticate(["user"]), likesController.toggleLike);
 
-router.post("/:id/bookmark", authenticate(["user"]), (req, res) =>
-  bookmarkController.toggleBookmark(req, res)
-);
+router.post("/:id/bookmark", authenticate(["user"]), bookmarkController.toggleBookmark);
 
-router.get("/bookmarks", authenticate(["user"]), (req, res) =>
-  bookmarkController.getAllBookmarks(req, res)
-);
+router.get("/bookmarks", authenticate(["user"]), bookmarkController.getAllBookmarks);
 export default router;

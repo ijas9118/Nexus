@@ -6,34 +6,19 @@ import { RegisterDto } from "../dtos/requests/auth/register.dto";
 import { compare, hash } from "bcrypt";
 import { RegisterResponseDto } from "../dtos/responses/auth/registerResponse.dto";
 import { LoginResponseDto } from "../dtos/responses/auth/loginResponse.dto";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt.util";
+import { generateRefreshToken } from "../utils/jwt.util";
 import redisClient from "../config/redisClient.config";
 import crypto from "crypto";
-import { USER_EMAIL } from "../utils/constants";
+import { CLIENT_URL, USER_EMAIL } from "../utils/constants";
 import { transporter } from "../utils/nodemailerTransporter";
 import { IAuthService } from "../core/interfaces/services/IAuthService";
+import CustomError from "../utils/CustomError";
 
 @injectable()
 export class AuthService implements IAuthService {
   constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
 
-  generateToken(): string {
-    return crypto.randomBytes(32).toString("hex");
-  }
-
-  validateToken(email: string, token: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      redisClient.get(`forgotPassword:${email}`, (err, storedToken) => {
-        if (err) reject(err);
-        resolve(storedToken === token);
-      });
-    });
-  }
-
-  generateOTP(): string {
-    return crypto.randomInt(100000, 999999).toString();
-  }
-
+  // Generate a random username for the user
   private generateUsername(): string {
     const adjectives = ["Witty", "Silly", "Happy", "Lazy", "Grumpy", "Quirky", "Sleepy"];
     const nouns = ["Cactus", "Penguin", "Noodle", "Muffin", "Dolphin", "Taco", "Unicorn"];
@@ -44,8 +29,43 @@ export class AuthService implements IAuthService {
     return `${randomAdjective}${randomNoun}${randomNum}`;
   }
 
+  // Generate a random token to store it in Redis with the email as key for password reset
+  generateToken(): string {
+    return crypto.randomBytes(32).toString("hex");
+  }
+
+  // Validate the token sent by the user for password reset
+  validateToken(email: string, token: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      redisClient.get(`forgotPassword:${email}`, (err, storedToken) => {
+        if (err) reject(err);
+        resolve(storedToken === token);
+      });
+    });
+  }
+
+  // Generate a random 6-digit OTP
+  generateOTP(): string {
+    return crypto.randomInt(100000, 999999).toString();
+  }
+
+  // Resend OTP to the user's email
+  async resendOtp(email: string): Promise<void> {
+    const existingData = await redisClient.get(`otp:${email}`);
+    if (!existingData)
+      throw new CustomError("OTP expired or not found. Please register again.", 400);
+
+    const newOtp = this.generateOTP();
+
+    await this.sendOtpEmail(email, newOtp);
+  }
+
+  // Send OTP to the user's email for verification
   async sendOtpEmail(email: string, otp: string): Promise<void> {
     const expirationTime = "10 minutes";
+    const data = JSON.stringify({ otp });
+
+    await redisClient.setex(`otp:${email}`, expirationTime, data);
 
     const mailOptions = {
       from: USER_EMAIL,
@@ -83,12 +103,25 @@ export class AuthService implements IAuthService {
       // await transporter.sendMail(mailOptions);
     } catch (error) {
       console.error("Error sending OTP email:", error);
-      throw new Error("Failed to send OTP. Please try again later.");
+      throw new CustomError("Failed to send OTP. Please try again later.", 400);
     }
 
     console.log(email, otp);
   }
 
+  // Create a reset password link with token
+  async sendResetEmailWithToken(email: string): Promise<void> {
+    const token = this.generateToken();
+    const expirationTime = 15 * 60;
+
+    await redisClient.setex(`forgotPassword:${email}`, expirationTime, token);
+
+    const resetLink = `${CLIENT_URL}/login/reset-password?token=${token}&email=${email}`;
+
+    await this.sendResetEmail(email, resetLink);
+  }
+
+  // Send password reset link to the user
   async sendResetEmail(email: string, resetLink: string): Promise<void> {
     const mailOptions = {
       from: USER_EMAIL,
@@ -124,15 +157,30 @@ export class AuthService implements IAuthService {
       await transporter.sendMail(mailOptions);
     } catch (error) {
       console.error("Error sending OTP email:", error);
-      throw new Error("Failed to send OTP. Please try again later.");
+      throw new CustomError("Failed to send OTP. Please try again later.");
     }
   }
 
+  // Check if a user with the given email exists
   async findUserByEmail(email: string): Promise<boolean> {
     const user = await this.userRepository.findByEmail(email);
     return !!user;
   }
 
+  // Verify OTP and retrieve stored user data
+  async verifyAndRetrieveUser(email: string, otp: string): Promise<RegisterDto> {
+    const storedData = await redisClient.get(`otp:${email}`);
+
+    if (!storedData) throw new CustomError("OTP expired or invalid.", 400);
+
+    const { userData, otp: storedOTP } = JSON.parse(storedData);
+
+    if (otp !== storedOTP) throw new CustomError("Invalid OTP.", 400);
+
+    return userData;
+  }
+
+  // Register a new user with the given details
   async register(registerDto: RegisterDto): Promise<RegisterResponseDto> {
     const { name, email, password } = registerDto;
     const hashedPassword = await hash(password, 10);
@@ -144,6 +192,8 @@ export class AuthService implements IAuthService {
       username,
     });
 
+    await redisClient.del(`otp:${email}`);
+
     return {
       _id: user._id,
       name: user.name,
@@ -152,13 +202,15 @@ export class AuthService implements IAuthService {
     };
   }
 
-  async login(loginDto: LoginDto): Promise<LoginResponseDto | null> {
+  // Login a user with the given email and password
+  async login(loginDto: LoginDto): Promise<LoginResponseDto> {
     const { email, password } = loginDto;
     const user = await this.userRepository.findByEmail(email);
-    if (!user) return null;
+
+    if (!user) throw new CustomError("Invalid email or password", 400);
 
     const isPasswordValid = await compare(password, user.password);
-    if (!isPasswordValid) throw new Error("Incorrect Credentials");
+    if (!isPasswordValid) throw new CustomError("Invalid password", 400);
 
     return {
       _id: user._id,
@@ -170,16 +222,20 @@ export class AuthService implements IAuthService {
     };
   }
 
+  // Update the password of the user with the given email
   async updatePassword(email: string, newPassword: string): Promise<void> {
     const user = await this.userRepository.findOne({ email });
-    if (!user) throw new Error("User not found.");
+    if (!user) throw new CustomError("User not found", 404);
 
     const hashedPassword = await hash(newPassword, 10);
 
     user.password = hashedPassword;
     await user.save();
+
+    await redisClient.del(`forgotPassword:${email}`);
   }
 
+  // Get a user by role and id from the database (used for token verification)
   async getUserByRoleAndId(role: string, id: string) {
     switch (role) {
       case "user":

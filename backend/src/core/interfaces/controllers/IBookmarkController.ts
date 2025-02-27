@@ -1,7 +1,6 @@
-import { Response } from "express";
-import { CustomRequest } from "../../types/CustomRequest";
+import { RequestHandler } from "express";
 
 export interface IBookmarkController {
-  toggleBookmark(req: CustomRequest, res: Response): Promise<void>;
-  getAllBookmarks(req: CustomRequest, res: Response): Promise<void>;
+  toggleBookmark: RequestHandler;
+  getAllBookmarks: RequestHandler;
 }

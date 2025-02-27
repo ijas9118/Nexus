@@ -12,7 +12,10 @@ export interface IAuthService {
   generateOTP(): string;
   findUserByEmail(email: string): Promise<boolean>;
   register(registerDto: RegisterDto): Promise<RegisterResponseDto>;
-  login(loginDto: LoginDto): Promise<LoginResponseDto | null>;
+  login(loginDto: LoginDto): Promise<LoginResponseDto>;
   updatePassword(email: string, newPassword: string): Promise<void>;
   getUserByRoleAndId(role: string, id: string): any;
+  sendResetEmailWithToken(email: string): Promise<void>;
+  verifyAndRetrieveUser(email: string, otp: string): Promise<RegisterDto>;
+  resendOtp(email: string): Promise<void>;
 }

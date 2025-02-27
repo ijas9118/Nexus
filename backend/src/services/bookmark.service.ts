@@ -4,17 +4,23 @@ import { TYPES } from "../di/types";
 import mongoose from "mongoose";
 import { IBookmarkRepository } from "../core/interfaces/repositories/IBookmarnRepository";
 import { IContentRepository } from "../core/interfaces/repositories/IContentRepository";
+import CustomError from "../utils/CustomError";
+import { IBookmark } from "../models/bookmarks.model";
+import { BaseService } from "../core/abstracts/base.service";
 
 @injectable()
-export class BookmarkService implements IBookmarkService {
+export class BookmarkService extends BaseService<IBookmark> implements IBookmarkService {
   constructor(
     @inject(TYPES.BookmarkRepository) private bookmarkRepository: IBookmarkRepository,
     @inject(TYPES.ContentRepository) private contentRepository: IContentRepository
-  ) {}
+  ) {
+    super(bookmarkRepository);
+  }
 
+  // Toggle bookmark for a content
   async toggleBookmark(contentId: string, userId: string): Promise<{ status: boolean }> {
     const content = await this.contentRepository.findContent(contentId);
-    if (!content) throw new Error("Content not found");
+    if (!content) throw new CustomError("Content not found", 404);
 
     const contentIdObject = new mongoose.Types.ObjectId(contentId);
     const userIdObject = new mongoose.Types.ObjectId(userId);
@@ -35,15 +41,16 @@ export class BookmarkService implements IBookmarkService {
       bookmark.contentIds = bookmark.contentIds.filter(
         (id) => !id.equals(contentIdObject)
       );
-      await bookmark.save();
+      await this.bookmarkRepository.updateBookmark(userIdObject, bookmark.contentIds);
       return { status: false };
     } else {
       bookmark.contentIds.push(contentIdObject);
-      await bookmark.save();
+      await this.bookmarkRepository.updateBookmark(userIdObject, bookmark.contentIds);
       return { status: true };
     }
   }
 
+  // Get all bookmarks of a user
   async getBookmarks(userId: string): Promise<any[]> {
     const bookmarks = await this.bookmarkRepository.getBookmarks(userId);
     return bookmarks;

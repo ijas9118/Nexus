@@ -1,6 +1,6 @@
-import { Response } from "express";
-import { CustomRequest } from "../../types/CustomRequest";
+import { RequestHandler } from "express";
 
 export interface IHistoryController {
-  removeFromHistory(req: CustomRequest, res: Response): Promise<void>;
+  removeFromHistory: RequestHandler;
+  getAllHistory: RequestHandler;
 }

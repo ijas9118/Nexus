@@ -5,7 +5,6 @@ export const loginUser = async (email: string, password: string) => {
     const response = await api.post("/auth/login", { email, password });
     return response.data;
   } catch (error: any) {
-    console.log(error);
     const errorMessage =
       error.response?.data?.message || "An unexpected error occurred during login.";
     throw new Error(errorMessage);

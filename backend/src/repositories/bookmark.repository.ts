@@ -13,10 +13,15 @@ export class BookmarkRepository
     super(BookmarkModel);
   }
 
-  async save(bookmark: IBookmark): Promise<IBookmark> {
-    return bookmark.save();
+  // Update bookmarked contents for a user by userId and contentIds
+  async updateBookmark(
+    userId: mongoose.Types.ObjectId,
+    contentIds: mongoose.Types.ObjectId[]
+  ): Promise<void> {
+    await this.updateOne({ userId }, { contentIds });
   }
 
+  // Get all bookmarked contents for a user by userId
   async getBookmarks(userId: string): Promise<IBookmark[]> {
     const userIdObject = new mongoose.Types.ObjectId(userId);
 

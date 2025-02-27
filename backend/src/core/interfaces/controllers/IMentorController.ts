@@ -1,6 +1,8 @@
-import { Request, Response } from "express";
+import { RequestHandler } from "express";
 
 export interface IMentorController {
-  sendInvitation(req: Request, res: Response): Promise<void>;
-  acceptInvitation(req: Request, res: Response): Promise<void>;
+  sendInvitation: RequestHandler;
+  acceptInvitation: RequestHandler;
+  getAllMentors: RequestHandler;
+  completeProfile: RequestHandler;
 }

@@ -3,12 +3,13 @@ import { IMentorController } from "../core/interfaces/controllers/IMentorControl
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
 import { IMentorService } from "../core/interfaces/services/IMentorService";
+import asyncHandler from "express-async-handler";
 
 @injectable()
 export class MentorController implements IMentorController {
   constructor(@inject(TYPES.MentorService) private mentorService: IMentorService) {}
 
-  sendInvitation = async (req: Request, res: Response): Promise<void> => {
+  sendInvitation = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     try {
       const { email, specialization, name } = req.body;
       await this.mentorService.sendInvitation(email, specialization, name);
@@ -16,9 +17,9 @@ export class MentorController implements IMentorController {
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  };
+  });
 
-  acceptInvitation = async (req: Request, res: Response): Promise<void> => {
+  acceptInvitation = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     try {
       const { token } = req.body;
       const email = await this.mentorService.acceptInvitation(token);
@@ -26,18 +27,18 @@ export class MentorController implements IMentorController {
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  };
+  });
 
-  getAllMentors = async (req: Request, res: Response): Promise<void> => {
+  getAllMentors = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     try {
       const mentors = await this.mentorService.getAllMentors();
       res.status(200).json(mentors);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  };
+  });
 
-  completeProfile = async (req: Request, res: Response): Promise<void> => {
+  completeProfile = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { email, name, password } = req.body;
     try {
       await this.mentorService.completeProfile(email, name, password);
@@ -53,5 +54,5 @@ export class MentorController implements IMentorController {
         message: "Failed to update profile. Please try again later.",
       });
     }
-  };
+  });
 }

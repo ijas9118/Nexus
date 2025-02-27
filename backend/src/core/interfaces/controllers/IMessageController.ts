@@ -1,4 +1,6 @@
+import { RequestHandler } from "express";
+
 export interface IMessageController {
-  createNewMessage(req: any, res: any): Promise<void>;
-  getAllMessages(req: any, res: any): Promise<void>;
+  createNewMessage: RequestHandler;
+  getAllMessages: RequestHandler;
 }

@@ -1,7 +1,7 @@
-import type { Request, Response } from "express";
+import type { RequestHandler } from "express";
 
 export interface IContentController {
-  createContent(req: Request, res: Response): Promise<void>;
-  getContent(req: Request, res: Response): Promise<void>;
-  getAllContent(req: Request, res: Response): Promise<void>;
+  createContent: RequestHandler;
+  getContent: RequestHandler;
+  getAllContent: RequestHandler;
 }

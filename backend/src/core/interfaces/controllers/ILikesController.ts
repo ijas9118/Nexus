@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
+import { RequestHandler } from "express";
 
 export interface ILikesController {
-  toggleLike(req: Request, res: Response): Promise<void>;
+  toggleLike: RequestHandler;
 }
