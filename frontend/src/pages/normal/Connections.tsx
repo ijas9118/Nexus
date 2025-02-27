@@ -2,13 +2,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "@/hooks/use-toast";
 import {
   acceptConnectionRequest,
   getAllConnections,
   getPendingRequests,
 } from "@/services/user/followService";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const Connections = () => {
   const [loading, setLoading] = useState(true);
@@ -36,19 +36,13 @@ const Connections = () => {
   const handleAccept = async (userId: string) => {
     try {
       await acceptConnectionRequest(userId);
-      toast({
-        variant: "default",
-        title: "Wohoo!",
+      toast("Wohoo!", {
         description: "Your connections updated.",
-        duration: 3000,
       });
     } catch (error: any) {
       console.log(error.message);
-      toast({
-        variant: "destructive",
-        title: "Oops!",
+      toast.error("Oops!", {
         description: error.message,
-        duration: 3000,
       });
     }
   };

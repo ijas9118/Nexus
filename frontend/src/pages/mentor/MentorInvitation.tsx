@@ -1,12 +1,12 @@
 import Navbar from "@/components/normal/home/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "@/hooks/use-toast";
 import MentorService from "@/services/admin/mentorService";
 import { Check, Users, Calendar, Clock } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import MentorRegister from "./MentorRegister";
+import { toast } from "sonner";
 
 export default function MentorInvitation() {
   const location = useLocation();
@@ -19,16 +19,12 @@ export default function MentorInvitation() {
       const mentorEmail = await MentorService.acceptInvite(token);
       setEmail(mentorEmail);
 
-      toast({
-        variant: "default",
-        title: "Invitation Accepted",
+      toast("Invitation Accepted", {
         description: `Thank you for accepting our request.`,
       });
     } catch (error) {
       console.error("Error accepting invite", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to accept invitation. Please try again.",
       });
     }

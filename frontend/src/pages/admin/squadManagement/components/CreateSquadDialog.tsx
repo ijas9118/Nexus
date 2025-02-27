@@ -21,12 +21,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { toast } from "@/hooks/use-toast";
 import SquadService from "@/services/admin/squadService";
 import { uploadFiles } from "@/services/user/contentService";
 import CategoryService from "@/services/admin/categoryService";
 import { Category } from "@/types/category";
 import { DialogProps } from "@/types/dialog";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z
@@ -51,8 +51,6 @@ const formSchema = z.object({
 });
 
 type FormData = z.infer<typeof formSchema>;
-
-
 
 export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
@@ -111,19 +109,14 @@ export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
 
       const result = await SquadService.createSquad(squadData);
 
-      toast({
-        variant: "default",
-        title: "Success",
+      toast.success("Success", {
         description: result.message || "Squad created successfully!",
-        duration: 3000,
       });
 
       onOpenChange(false);
     } catch (error) {
       console.error("Error creating squad", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to create squad. Please try again.",
       });
     }

@@ -52,6 +52,7 @@ export default function Bookmark() {
             image={item.thumbnailUrl}
             isLiked={item.isLiked}
             isBookmarked={item.isBookmarked}
+            username={item.userName}
           />
         ))}
       </div>

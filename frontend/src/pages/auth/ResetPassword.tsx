@@ -9,17 +9,16 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { resetPassword } from "@/services/user/authService";
+import { toast } from "sonner";
 
 export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
-  const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -32,10 +31,8 @@ export default function ResetPassword() {
       setEmail(emailParam);
       setToken(tokenParam);
     } else {
-      toast({
-        title: "Invalid Link",
+      toast.error("Invalid Link", {
         description: "The reset password link is invalid or expired.",
-        variant: "destructive",
       });
     }
   }, [searchParams, toast]);
@@ -47,17 +44,14 @@ export default function ResetPassword() {
     try {
       await resetPassword(email, token, newPassword);
 
-      toast({
-        title: "Password Reset Successful",
+      toast.success("Password Reset Successful", {
         description: "Your password has been updated successfully.",
       });
 
       setTimeout(() => navigate("/login"), 3000);
     } catch (error) {
-      toast({
-        title: "Failed to Reset Password",
+      toast.error("Failed to Reset Password", {
         description: "The link may be invalid or expired. Please try again.",
-        variant: "destructive",
       });
     } finally {
       setIsLoading(false);

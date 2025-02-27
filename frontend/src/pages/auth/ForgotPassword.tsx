@@ -9,15 +9,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { forgotPassword } from "@/services/user/authService";
+import { toast } from "sonner";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,8 +24,7 @@ export default function ForgotPassword() {
 
     await forgotPassword(email);
 
-    toast({
-      title: "Check your email",
+    toast.info("Check your email", {
       description:
         "If an account exists with this email, you will receive a password reset link.",
     });

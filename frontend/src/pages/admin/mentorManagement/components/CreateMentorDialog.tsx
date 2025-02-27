@@ -12,9 +12,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
 import { DialogProps } from "@/types/dialog";
 import MentorService from "@/services/admin/mentorService";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(50),
@@ -46,18 +46,14 @@ export function CreateMentorDialog({ open, onOpenChange }: DialogProps) {
         specialization: data.specialization,
       });
 
-      toast({
-        variant: "default",
-        title: "Invitation Sent",
+      toast("Invitation Sent", {
         description: `A magic link has been sent to ${data.email}.`,
       });
 
       onOpenChange(false);
     } catch (error) {
       console.error("Error sending invite", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to send invitation. Please try again.",
       });
     }

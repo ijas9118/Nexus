@@ -9,10 +9,10 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/hooks/use-toast";
 import MentorService from "@/services/admin/mentorService";
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface MentorRegisterProps {
   email: string;
@@ -26,9 +26,7 @@ const MentorRegister: FC<MentorRegisterProps> = ({ email }) => {
   const handleRegister = async () => {
     try {
       if (!name || !password) {
-        toast({
-          variant: "destructive",
-          title: "Error",
+        toast.error("Error", {
           description: "Please fill in all fields.",
         });
         return;
@@ -36,9 +34,7 @@ const MentorRegister: FC<MentorRegisterProps> = ({ email }) => {
 
       await MentorService.completeProfile({ email, name, password });
 
-      toast({
-        variant: "default",
-        title: "Profile Updated",
+      toast("Profile Updated", {
         description: "You are now ready to explore.",
       });
 
@@ -47,9 +43,7 @@ const MentorRegister: FC<MentorRegisterProps> = ({ email }) => {
       }, 3000);
     } catch (error) {
       console.error("Error completing profile", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to update profile. Please try again.",
       });
     }
