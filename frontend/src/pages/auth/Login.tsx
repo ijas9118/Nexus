@@ -303,11 +303,11 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col items-center gap-2">
                   <GoogleButton />
-                  <Button variant="outline">
+                  {/* <Button variant="outline">
                     <FaGithub /> Sign in with Github
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             </>

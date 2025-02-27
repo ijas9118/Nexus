@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import express from "express";
 import cors from "cors";
-import { connectDB } from "./config/database.config";
 import { CLIENT_URL, PORT } from "./utils/constants";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
@@ -27,6 +26,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
@@ -41,13 +41,4 @@ app.use("/api/followers", followerRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
 
-const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));
-  } catch (error) {
-    console.error("Failed to start the server:", error);
-  }
-};
-
-startServer();
+export default app;
