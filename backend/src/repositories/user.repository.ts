@@ -65,4 +65,8 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     }
     return user.joinedSquads;
   }
+
+  async getUserByRoleAndId(role: string, id: string): Promise<IUser | null> {
+    return User.findOne({ _id: id, role }).exec();
+  }
 }

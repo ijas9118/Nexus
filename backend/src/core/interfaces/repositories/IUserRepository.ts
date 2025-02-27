@@ -9,4 +9,5 @@ export interface IUserRepository extends BaseRepository<IUser> {
   addPostCount(userId: string): Promise<IUser | null>;
   deleteUser(userId: string): Promise<boolean>;
   updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null>;
+  getUserByRoleAndId(role: string, id: string): Promise<IUser | null>;
 }

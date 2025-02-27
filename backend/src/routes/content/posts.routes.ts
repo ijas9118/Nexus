@@ -21,5 +21,5 @@ router.post("/:id/like", authenticate(["user"]), likesController.toggleLike);
 
 router.post("/:id/bookmark", authenticate(["user"]), bookmarkController.toggleBookmark);
 
-router.get("/bookmarks", authenticate(["user"]), bookmarkController.getAllBookmarks);
+router.get("/bookmarks",  bookmarkController.getAllBookmarks);
 export default router;

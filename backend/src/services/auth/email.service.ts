@@ -6,11 +6,11 @@ import { StatusCodes } from "http-status-codes";
 import { transporter } from "../../utils/nodemailerTransporter";
 import { IEmailService } from "../../core/interfaces/services/IEmailService";
 import { TYPES } from "../../di/types";
-import { TokenService } from "./token.service";
+import { ITokenService } from "../../core/interfaces/services/ITokenService";
 
 @injectable()
 export class EmailService implements IEmailService {
-  constructor(@inject(TYPES.TokenService) private tokenService: TokenService) {}
+  constructor(@inject(TYPES.TokenService) private tokenService: ITokenService) {}
 
   // Send OTP to the user's email for verification
   async sendOtpEmail(email: string, otp: string): Promise<void> {

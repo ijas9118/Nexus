@@ -7,6 +7,7 @@ import { IContentRepository } from "../core/interfaces/repositories/IContentRepo
 import CustomError from "../utils/CustomError";
 import { IBookmark } from "../models/bookmarks.model";
 import { BaseService } from "../core/abstracts/base.service";
+import { StatusCodes } from "http-status-codes";
 
 @injectable()
 export class BookmarkService extends BaseService<IBookmark> implements IBookmarkService {
@@ -20,7 +21,7 @@ export class BookmarkService extends BaseService<IBookmark> implements IBookmark
   // Toggle bookmark for a content
   async toggleBookmark(contentId: string, userId: string): Promise<{ status: boolean }> {
     const content = await this.contentRepository.findContent(contentId);
-    if (!content) throw new CustomError("Content not found", 404);
+    if (!content) throw new CustomError("Content not found", StatusCodes.NOT_FOUND);
 
     const contentIdObject = new mongoose.Types.ObjectId(contentId);
     const userIdObject = new mongoose.Types.ObjectId(userId);

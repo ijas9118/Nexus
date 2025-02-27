@@ -11,23 +11,11 @@ import redisClient from "../../config/redisClient.config";
 import { IAuthService } from "../../core/interfaces/services/IAuthService";
 import CustomError from "../../utils/CustomError";
 import { StatusCodes } from "http-status-codes";
+import { UsernameGenerator } from "../../utils/usernameGenerator.util";
 
 @injectable()
 export class AuthService implements IAuthService {
-  constructor(
-    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-  ) {}
-
-  // Generate a random username for the user
-  private generateUsername(): string {
-    const adjectives = ["Witty", "Silly", "Happy", "Lazy", "Grumpy", "Quirky", "Sleepy"];
-    const nouns = ["Cactus", "Penguin", "Noodle", "Muffin", "Dolphin", "Taco", "Unicorn"];
-    const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-    const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
-    const randomNum = Math.floor(1000 + Math.random() * 9000); // 4-digit number
-
-    return `${randomAdjective}${randomNoun}${randomNum}`;
-  }
+  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
 
   // Check if a user with the given email exists
   async findUserByEmail(email: string): Promise<boolean> {
@@ -39,7 +27,7 @@ export class AuthService implements IAuthService {
   async register(registerDto: RegisterDto): Promise<RegisterResponseDto> {
     const { name, email, password } = registerDto;
     const hashedPassword = await hash(password, 10);
-    let username = this.generateUsername();
+    let username = UsernameGenerator.generateUsername();
     const user = await this.userRepository.create({
       name,
       email,
@@ -94,16 +82,7 @@ export class AuthService implements IAuthService {
 
   // Get a user by role and id from the database (used for token verification)
   async getUserByRoleAndId(role: string, id: string) {
-    switch (role) {
-      case "user":
-        return await this.userRepository.getUserById(id);
-      case "admin":
-        return await this.userRepository.getUserById(id);
-      case "mentor":
-        return await this.userRepository.getUserById(id);
-      default:
-        return null;
-    }
+    return this.userRepository.getUserByRoleAndId(role, id);
   }
 
   async googleLoginOrRegister(userData: {
