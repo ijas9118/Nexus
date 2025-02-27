@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/app.js",
-    "dev": "ts-node-dev --respawn src/app.ts",
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --respawn src/server.ts",
     "build": "tsc"
   },
   "keywords": [],

@@ -48,3 +48,7 @@ export default tseslint.config({
   },
 })
 ```
+
+
+### Environment Variables
+Create a `.env` file in the root directory based on `.env.example` and provide necessary values.
