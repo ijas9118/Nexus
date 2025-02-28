@@ -1,50 +1,69 @@
 import { Router } from "express";
 import { container } from "../di/container";
-import { FollowersController } from "../controllers/followers.controller";
 import { TYPES } from "../di/types";
 import { authenticate } from "../middlewares/auth.middleware";
+import { IFollowersController } from "../core/interfaces/controllers/IFollowersController";
+import { IConnectionsController } from "../core/interfaces/controllers/IConnectionsController";
 
-const followersController = container.get<FollowersController>(TYPES.FollowersController);
+const followersController = container.get<IFollowersController>(
+  TYPES.FollowersController
+);
+const connectionsController = container.get<IConnectionsController>(
+  TYPES.ConnectionsController
+);
 
 const router = Router();
 
 router.post("/follow", authenticate(["user"]), followersController.followUser);
+
 router.post("/unfollow", authenticate(["user"]), followersController.unfollowUser);
+
 router.get(
   "/:userId/followers",
   authenticate(["user"]),
   followersController.getFollowers
 );
+
 router.get(
   "/:userId/following",
   authenticate(["user"]),
   followersController.getFollowing
 );
+
 router.post("/is-following", followersController.isFollowing);
 
 router.post(
   "/connect",
   authenticate(["user"]),
-  followersController.sendConnectionRequest
+  connectionsController.sendConnectionRequest
 );
+
 router.post(
   "/accept",
   authenticate(["user"]),
-  followersController.acceptConnectionRequest
+  connectionsController.acceptConnectionRequest
 );
+
 router.post(
   "/has-requested",
   authenticate(["user"]),
-  followersController.hasSentConnectionRequest
+  connectionsController.hasSentConnectionRequest
 );
+
+router.post("/is-connected", connectionsController.isConnected);
+
 router.post(
   "/withdraw",
   authenticate(["user"]),
-  followersController.withdrawConnectionRequest
+  connectionsController.withdrawConnectionRequest
 );
 
-router.get("/connections", authenticate(["user"]), followersController.getAllConnections);
+router.get(
+  "/connections",
+  authenticate(["user"]),
+  connectionsController.getAllConnections
+);
 
-router.get("/pending", authenticate(["user"]), followersController.getPendingRequests);
+router.get("/pending", authenticate(["user"]), connectionsController.getPendingRequests);
 
 export default router;
