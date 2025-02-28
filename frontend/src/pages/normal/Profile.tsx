@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  checkConnected,
   checkIsFollowing,
   followUser,
   hasSentConnectionRequest,
@@ -32,14 +33,14 @@ export default function ProfilePage() {
         const data = await getUserProfile(username);
         setProfileUser(data);
 
-        if (currentUser && data?._id) {
+        if (currentUser !== data?._id) {
           const followingStatus = await checkIsFollowing(currentUser, data._id);
           setIsFollowing(followingStatus);
-        }
-
-        if (data?._id) {
           const connectionStatus = await hasSentConnectionRequest(data._id);
-          setIsConnected(connectionStatus);
+          setIsConnected(connectionStatus.result);
+
+          const connected = await checkConnected(data._id);
+          setIsConnected(connected);
         }
       } catch (err: any) {
         console.error("Error fetching profile:", err);

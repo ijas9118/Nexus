@@ -5,6 +5,7 @@ import { TYPES } from "../di/types";
 import { ICategoryService } from "../core/interfaces/services/ICategoryService";
 import asyncHandler from "express-async-handler";
 import CustomError from "../utils/CustomError";
+import { StatusCodes } from "http-status-codes";
 
 @injectable()
 export class CategoryController implements ICategoryController {
@@ -14,10 +15,11 @@ export class CategoryController implements ICategoryController {
   createCategory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { name } = req.body;
 
-    if (!name) throw new CustomError("Category name is required", 400);
+    if (!name)
+      throw new CustomError("Category name is required", StatusCodes.BAD_REQUEST);
 
     const category = await this.categoryService.addCategory(name);
-    res.status(201).json(category);
+    res.status(StatusCodes.CREATED).json(category);
   });
 
   // Update a category by ID and new name
@@ -25,28 +27,32 @@ export class CategoryController implements ICategoryController {
     const { id, newName } = req.body;
 
     if (!id || !newName)
-      throw new CustomError("Category ID and new name are required", 400);
+      throw new CustomError(
+        "Category ID and new name are required",
+        StatusCodes.BAD_REQUEST
+      );
 
     const updatedCategory = await this.categoryService.updateCategory(id, newName);
 
     if (!updatedCategory) {
-      throw new CustomError("Category not found", 404);
+      throw new CustomError("Category not found", StatusCodes.NOT_FOUND);
     }
 
-    res.status(200).json(updatedCategory);
+    res.status(StatusCodes.OK).json(updatedCategory);
   });
 
   // Toggle a category by ID
   toggleCategory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
-    if (!id) throw new CustomError("Category ID is required", 400);
+    if (!id) throw new CustomError("Category ID is required", StatusCodes.BAD_REQUEST);
 
     const toggledCategory = await this.categoryService.toggleCategory(id);
 
-    if (!toggledCategory) throw new CustomError("Category not found", 404);
+    if (!toggledCategory)
+      throw new CustomError("Category not found", StatusCodes.NOT_FOUND);
 
-    res.status(200).json(toggledCategory);
+    res.status(StatusCodes.OK).json(toggledCategory);
   });
 
   // Get all categories
@@ -54,8 +60,8 @@ export class CategoryController implements ICategoryController {
     const categories = await this.categoryService.getAllCategories();
 
     if (!categories || categories.length === 0)
-      throw new CustomError("No categories found", 404);
+      throw new CustomError("No categories found", StatusCodes.NOT_FOUND);
 
-    res.status(200).json(categories);
+    res.status(StatusCodes.OK).json(categories);
   });
 }

@@ -10,5 +10,6 @@ const router = Router();
 router.get("/", categoryController.getAllCategories);
 router.post("/:id/toggle", categoryController.toggleCategory);
 router.post("/", categoryController.createCategory);
+router.post('/update', categoryController.updateCategory);
 
 export default router;

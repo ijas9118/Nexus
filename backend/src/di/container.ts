@@ -90,12 +90,22 @@ import { MessageService } from "../services/message.service";
 import { IMessageService } from "../core/interfaces/services/IMessageService";
 import { IMessageController } from "../core/interfaces/controllers/IMessageController";
 import { MessageController } from "../controllers/message.controller";
+
 import { IOTPService } from "../core/interfaces/services/IOTPService";
 import { OTPService } from "../services/auth/otp.service";
+
 import { IEmailService } from "../core/interfaces/services/IEmailService";
 import { EmailService } from "../services/auth/email.service";
+
 import { ITokenService } from "../core/interfaces/services/ITokenService";
 import { TokenService } from "../services/auth/token.service";
+
+import { IConnectionsRepository } from "../core/interfaces/repositories/IConnectionsRepository";
+import { ConnectionsRepository } from "../repositories/connections.repository";
+import { IConnectionService } from "../core/interfaces/services/IConnectionService";
+import { ConnectionService } from "../services/connections.service";
+import { IConnectionsController } from "../core/interfaces/controllers/IConnectionsController";
+import { ConnectionsController } from "../controllers/connections.controller";
 
 const container = new Container();
 
@@ -145,6 +155,14 @@ container.bind<IHistoryController>(TYPES.HistoryController).to(HistoryController
 container.bind<IFollowersRepository>(TYPES.FollowersRepository).to(FollowersRepository);
 container.bind<IFollowersService>(TYPES.FollowersService).to(FollowersService);
 container.bind<IFollowersController>(TYPES.FollowersController).to(FollowersController);
+
+container
+  .bind<IConnectionsRepository>(TYPES.ConnectionsRepository)
+  .to(ConnectionsRepository);
+container.bind<IConnectionService>(TYPES.ConnectionService).to(ConnectionService);
+container
+  .bind<IConnectionsController>(TYPES.ConnectionsController)
+  .to(ConnectionsController);
 
 container.bind<IChatRepository>(TYPES.ChatRepository).to(ChatRepository);
 container.bind<IChatService>(TYPES.ChatService).to(ChatService);

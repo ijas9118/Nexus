@@ -6,6 +6,8 @@ import { CustomRequest } from "../core/types/CustomRequest";
 import { IContentService } from "../core/interfaces/services/IContentService";
 import { IHistoryService } from "../core/interfaces/services/IHistoryService";
 import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import CustomError from "../utils/CustomError";
 
 @injectable()
 export class ContentController implements IContentController {
@@ -16,59 +18,43 @@ export class ContentController implements IContentController {
 
   createContent = asyncHandler(
     async (req: CustomRequest, res: Response): Promise<void> => {
-      try {
-        const contentData = {
-          ...req.body,
-          author: req.user?._id,
-          userName: req.user?.name,
-          date: new Date().toLocaleDateString("en-US", {
-            month: "short",
-            day: "2-digit",
-            year: "numeric",
-          }),
-        };
+      const contentData = {
+        ...req.body,
+        author: req.user?._id,
+        userName: req.user?.name,
+        date: new Date().toLocaleDateString("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+        }),
+      };
 
-        const content = await this.contentService.createContent(contentData);
-        res.status(201).json({
-          success: true,
-          message: "Content created successfully",
-          contentId: content._id,
-        });
-      } catch (error) {
-        res.status(400).json({ message: "Failed to create content", error });
-      }
+      const content = await this.contentService.createContent(contentData);
+      res.status(StatusCodes.CREATED).json({
+        success: true,
+        message: "Content created successfully",
+        contentId: content._id,
+      });
     }
   );
 
   getContent = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
-    try {
-      const content = await this.contentService.getContentById(req.params.id);
-      if (content) {
-        await this.historyService.addHistory(
-          req.user?._id as string,
-          content._id as string
-        );
-        res.json(content);
-      } else {
-        res.status(404).json({ message: "Content not found" });
-      }
-    } catch (error) {
-      res.status(400).json({ message: "Failed to get content", error });
-    }
+    const content = await this.contentService.getContentById(req.params.id);
+
+    if (!content) throw new CustomError("Content not found", StatusCodes.NOT_FOUND);
+
+    await this.historyService.addHistory(req.user?._id as string, content._id as string);
+
+    res.status(StatusCodes.OK).json(content);
   });
 
   getAllContent = asyncHandler(
     async (req: CustomRequest, res: Response): Promise<void> => {
-      try {
-        if (!req.user) {
-          res.status(401).json({ message: "User is not authenticated" });
-          return;
-        }
-        const contents = await this.contentService.getAllContent(req.user._id);
-        res.json(contents);
-      } catch (error) {
-        res.status(400).json({ message: "Failed to get contents", error });
-      }
+      if (!req.user)
+        throw new CustomError("User is not authenticated", StatusCodes.UNAUTHORIZED);
+
+      const contents = await this.contentService.getAllContent(req.user._id);
+      res.status(StatusCodes.OK).json(contents);
     }
   );
 }

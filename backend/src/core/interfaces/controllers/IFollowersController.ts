@@ -6,9 +6,4 @@ export interface IFollowersController {
   getFollowers: RequestHandler;
   getFollowing: RequestHandler;
   isFollowing: RequestHandler;
-  sendConnectionRequest: RequestHandler;
-  acceptConnectionRequest: RequestHandler;
-  hasSentConnectionRequest: RequestHandler;
-  withdrawConnectionRequest: RequestHandler;
-  getAllConnections: RequestHandler;
 }
