@@ -5,25 +5,27 @@ import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
 import { ILikeService } from "../core/interfaces/services/ILikeService";
 import asyncHandler from "express-async-handler";
+import CustomError from "../utils/CustomError";
+import { StatusCodes } from "http-status-codes";
 
 @injectable()
 export class LikesController implements ILikesController {
   constructor(@inject(TYPES.LikesService) private likeService: ILikeService) {}
 
   toggleLike = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
-    try {
-      const { id: contentId } = req.params;
-      const userId = req.user?._id;
+    const { id: contentId } = req.params;
+    const userId = req.user?._id;
 
-      if (!userId) {
-        res.status(400).json({ message: "User is not authenticated" });
-        return;
-      }
-
-      const result = await this.likeService.toggleLike(contentId, userId);
-      res.status(200).json({ ...result });
-    } catch (error) {
-      res.status(500).json({ message: "Error toggling like", error });
+    if (!userId) {
+      throw new CustomError("User is not authenticated", StatusCodes.UNAUTHORIZED);
     }
+
+    const result = await this.likeService.toggleLike(contentId, userId);
+
+    if (!result) {
+      throw new CustomError("Failed to toggle like", StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+
+    res.status(StatusCodes.OK).json({ ...result });
   });
 }
