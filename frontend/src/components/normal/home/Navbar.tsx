@@ -1,13 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import NexusLogo from "@/components/ui/NexusLogo";
 import { navbarLinks } from "@/utils/navigationLinks";
 import { useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import useLogout from "@/hooks/useLogout";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const logoutUser = useLogout();
+
+  useEffect(() => {
+    const session = localStorage.getItem("sessionActive");
+    setIsActive(session === "true");
+  }, []);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-opacity-20 backdrop-blur-sm bg-background">
@@ -36,9 +44,18 @@ const Navbar = () => {
 
           {/* Desktop Login Button */}
           <div className="hidden md:block">
-            <Button variant="ghost" onClick={() => navigate("/login")}>
-              Log in
-            </Button>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              if (isActive) {
+                logoutUser();
+              } else {
+                navigate("/login");
+              }
+            }}
+          >
+            {isActive ? "Logout" : "Login"}
+          </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -68,8 +85,17 @@ const Navbar = () => {
               {link.name}
             </a>
           ))}
-          <Button variant="ghost" onClick={() => navigate("/login")}>
-            Log in
+          <Button
+            variant="ghost"
+            onClick={() => {
+              if (isActive) {
+                logoutUser();
+              } else {
+                navigate("/login");
+              }
+            }}
+          >
+            {isActive ? "Logout" : "Login"}
           </Button>
         </div>
       </div>

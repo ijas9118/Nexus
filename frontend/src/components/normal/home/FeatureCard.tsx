@@ -22,8 +22,8 @@ const FeatureCard = ({
       >
         {icon && <div className={`${iconColor} w-6 h-6`}>{icon}</div>}
       </div>
-      <h3 className="text-xl font-semibold text-blue-600">{title}</h3>
-      <p className="text-gray-600 leading-relaxed">{description}</p>
+      <h3 className="text-xl font-semibold text-blue-600 dark:text-purple-300/90 ">{title}</h3>
+      <p className="text-gray-600 dark:text-neutral-300 leading-relaxed">{description}</p>
     </div>
   );
 };
