@@ -8,14 +8,9 @@ interface TestimonialProps {
   text: string;
 }
 
-const TestimonialCard: React.FC<TestimonialProps> = ({
-  name,
-  username,
-  image,
-  text,
-}) => {
+const TestimonialCard: React.FC<TestimonialProps> = ({ name, username, image, text }) => {
   return (
-    <Card className="p-6 bg-gray-50 border-gray-100 h-full">
+    <Card className="p-6  h-full">
       <div className="flex items-start gap-4">
         <Avatar className="w-12 h-12">
           <AvatarImage src={image} alt={name} />
@@ -27,9 +22,9 @@ const TestimonialCard: React.FC<TestimonialProps> = ({
           </AvatarFallback>
         </Avatar>
         <div>
-          <h3 className="font-semibold text-gray-900">{name}</h3>
-          <p className="text-gray-500 text-sm">{username}</p>
-          <p className="mt-3 text-gray-600 leading-relaxed">{text}</p>
+          <h3 className="font-semibold ">{name}</h3>
+          <p className=" text-sm">{username}</p>
+          <p className="mt-3  leading-relaxed">{text}</p>
         </div>
       </div>
     </Card>
