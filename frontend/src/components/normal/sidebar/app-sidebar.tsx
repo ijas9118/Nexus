@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import NexusLogo from "@/components/ui/NexusLogo";
+import { Button } from "@/components/ui/button";
 
 export function AppSidebar() {
   const navigate = useNavigate();
@@ -67,13 +68,10 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            <SidebarMenuButton
-              className="bg-slate-950 hover:bg-slate-900 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-slate-100 hover:text-slate-100"
-              onClick={() => navigate("/addPost")}
-            >
+            <Button onClick={() => navigate("/addPost")}>
               <Plus />
               <span>New Post</span>
-            </SidebarMenuButton>
+            </Button>
           </SidebarMenu>
         </SidebarGroup>
 
