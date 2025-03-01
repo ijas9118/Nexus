@@ -14,12 +14,12 @@ import Experts from "@/pages/normal/Experts";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import Squads from "@/pages/normal/Squads";
-import Messages from "@/pages/normal/Messages";
 import Connections from "@/pages/normal/Connections";
 import History from "@/pages/normal/History";
 import ContentDetails from "@/pages/normal/ContentDetails";
 import ProfilePage from "@/pages/normal/Profile";
-import EditProfile from "@/pages/normal/EditProfileLayout"; 
+import EditProfile from "@/pages/normal/EditProfileLayout";
+import Chat from "@/pages/normal/Chat";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -46,7 +46,7 @@ const UserRoutes: React.FC = () => {
           <Route path="getPremium" element={<GetPremium />} />
           <Route path="experts" element={<Experts />} />
           <Route path="squads" element={<Squads />} />
-          <Route path="chat" element={<Messages />} />
+          <Route path="chat" element={<Chat />} />
           <Route path="connections" element={<Connections />} />
           <Route path="history" element={<History />} />
           <Route path="content/:id" element={<ContentDetails />} />

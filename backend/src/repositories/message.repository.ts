@@ -36,10 +36,12 @@ export class MessageRepository
   };
 
   getAllMessages = async (chatId: string): Promise<IMessage[]> => {
-    return (await this.find({ chatId: new mongoose.Types.ObjectId(chatId) })).sort(
-      (a, b) => {
-        return a.createdAt.getTime() - b.createdAt.getTime();
-      }
-    );
+    const messages = await MessageModel.find({
+      chatId: new mongoose.Types.ObjectId(chatId),
+    })
+      .sort({ createdAt: 1 }) // Sort by createdAt in ascending order
+      .populate("sender", "name profilePic"); // Populate sender details
+
+    return messages;
   };
 }
