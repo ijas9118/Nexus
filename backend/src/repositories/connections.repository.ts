@@ -13,7 +13,7 @@ export class ConnectionsRepository
     super(UserFollowModel);
   }
 
-  getAllConnections = async (userId: string) => {
+  getAllConnections = async (userId: string, search?: string) => {
     const userObjId = new Types.ObjectId(userId);
 
     const connections = await UserFollowModel.aggregate([
@@ -26,20 +26,35 @@ export class ConnectionsRepository
           as: "connectedUsers",
         },
       },
+      { $unwind: "$connectedUsers" }, // Flatten the connectedUsers array
+      {
+        $replaceRoot: { newRoot: "$connectedUsers" }, // Replace the root with connectedUsers
+      },
+      ...(search
+        ? [
+            {
+              $match: {
+                $or: [
+                  { name: { $regex: search, $options: "i" } }, // Case-insensitive search for name
+                  { username: { $regex: search, $options: "i" } }, // Case-insensitive search for username
+                ],
+              },
+            },
+          ]
+        : []),
       {
         $project: {
-          _id: 0,
-          connectedUsers: {
-            _id: 1,
-            name: 1,
-            username: 1,
-            profilePic: 1,
-          },
+          _id: 1,
+          name: 1,
+          username: 1,
+          avatar: "$profilePic",
         },
       },
     ]);
 
-    return connections.length > 0 ? connections[0].connectedUsers : [];
+    console.log(connections);
+
+    return connections;
   };
 
   getPendingRequests = async (

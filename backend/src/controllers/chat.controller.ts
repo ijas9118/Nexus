@@ -7,10 +7,14 @@ import { CustomRequest } from "../core/types/CustomRequest";
 import asyncHandler from "express-async-handler";
 import CustomError from "../utils/CustomError";
 import { StatusCodes } from "http-status-codes";
+import { IConnectionService } from "../core/interfaces/services/IConnectionService";
 
 @injectable()
 export class ChatController implements IChatController {
-  constructor(@inject(TYPES.ChatService) private chatService: IChatService) {}
+  constructor(
+    @inject(TYPES.ChatService) private chatService: IChatService,
+    @inject(TYPES.ConnectionService) private connectionService: IConnectionService
+  ) {}
 
   createChat = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
     const { member } = req.body;
@@ -28,12 +32,15 @@ export class ChatController implements IChatController {
 
   getAllChats = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
+    const { search } = req.query;
+    let result;
+    if (search)
+      result = await this.connectionService.getAllConnections(userId, search as string);
+    else result = await this.chatService.getAllChats(userId);
 
-    const allChats = await this.chatService.getAllChats(userId);
-
-    if (!allChats)
+    if (!result)
       throw new CustomError("Failed to fetch chats", StatusCodes.INTERNAL_SERVER_ERROR);
 
-    res.status(StatusCodes.OK).json(allChats);
+    res.status(StatusCodes.OK).json(result);
   });
 }

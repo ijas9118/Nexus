@@ -4,6 +4,7 @@ import { ChatService } from "@/services/user/chatService";
 import { PlusCircle, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import ChatItem from "./ChatItem";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface SidebarProps {
   selectedChat: any;
@@ -51,15 +52,18 @@ const Sidebar = ({ selectedChat, setSelectedChat }: SidebarProps) => {
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Smith",
     },
   ]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
   useEffect(() => {
     const fetchChats = async () => {
-      const response = await ChatService.getChat();
+      const response = await ChatService.getChats(debouncedSearchTerm);
       setChats(response);
       console.log(response);
     };
 
     fetchChats();
-  }, []);
+  }, [debouncedSearchTerm]);
 
   return (
     <div className="w-80 border-r flex flex-col">
@@ -77,6 +81,8 @@ const Sidebar = ({ selectedChat, setSelectedChat }: SidebarProps) => {
           type="text"
           placeholder="Search connections..."
           className="pl-10 w-full border-0 focus-visible:ring-0 shadow-none cursor-pointer"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 

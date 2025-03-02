@@ -10,8 +10,8 @@ export class ConnectionService implements IConnectionService {
     private connectionsRepository: IConnectionsRepository
   ) {}
 
-  getAllConnections = async (userId: string): Promise<any> => {
-    return this.connectionsRepository.getAllConnections(userId);
+  getAllConnections = async (userId: string, search?: string): Promise<any> => {
+    return this.connectionsRepository.getAllConnections(userId, search);
   };
 
   getPendingRequest = async (userId: string): Promise<any> => {

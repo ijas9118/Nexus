@@ -24,10 +24,17 @@ const ChatItem = ({ chat, selectedChat, setSelectedChat }: any) => {
           <p className="text-xs text-muted-foreground">{chat.lastMessageTime}</p>
         </div>
         <div className="flex justify-between">
-          <p className="text-sm text-muted-foreground">{chat.lastMessage}</p>
-          <div className=" h-5 w-5 rounded-full bg-emerald-500 dark:bg-emerald-400 flex items-center justify-center text-xs text-secondary font-semibold">
-            {chat.unreadMessages}
-          </div>
+          {chat.lastMessage ? (
+            <p className="text-sm text-muted-foreground">{chat.lastMessage}</p>
+          ) : (
+            <p className="text-sm text-muted-foreground">{chat.username}</p>
+          )}
+
+          {chat.unreadMessages && (
+            <div className=" h-5 w-5 rounded-full bg-emerald-500 dark:bg-emerald-400 flex items-center justify-center text-xs text-secondary font-semibold">
+              {chat.unreadMessages}
+            </div>
+          )}
         </div>
       </div>
     </div>
