@@ -47,12 +47,9 @@ const Sidebar = ({ selectedChat, setSelectedChat }: SidebarProps) => {
     try {
       const chat = await ChatService.createNewChat(connection._id);
       const response = await ChatService.getChats();
-
-      console.log(response);
       setChats(response);
 
       const newChat = response.find((c: any) => c._id === chat._id);
-
       setSelectedChat(newChat);
 
       setSearchResults([]);

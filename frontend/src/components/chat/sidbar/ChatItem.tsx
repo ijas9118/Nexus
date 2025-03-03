@@ -1,7 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { AvatarFallback } from "@radix-ui/react-avatar";
 
 const ChatItem = ({ chat, selectedChat, setSelectedChat }: any) => {
-  console.log(chat)
   return (
     <div
       key={chat._id}
@@ -13,7 +13,7 @@ const ChatItem = ({ chat, selectedChat, setSelectedChat }: any) => {
       <div className="relative">
         <Avatar className="h-12 w-12">
           <AvatarImage src={chat.avatar} />
-          {/* <AvatarFallback>{chat.name[0]}</AvatarFallback> */}
+          <AvatarFallback>{chat.name[0]}</AvatarFallback>
         </Avatar>
         {chat.isActive && (
           <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-emerald-500 dark:bg-emerald-400 border-2" />
