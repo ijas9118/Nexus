@@ -17,8 +17,12 @@ export class ConnectionsController implements IConnectionsController {
   getAllConnections = asyncHandler(
     async (req: CustomRequest, res: Response): Promise<void> => {
       const userId = req.user?._id as string;
+      const { search } = req.query;
 
-      const result = await this.connectionsService.getAllConnections(userId);
+      const result = await this.connectionsService.getAllConnections(
+        userId,
+        search as string
+      );
 
       res.status(StatusCodes.OK).json(result);
     }

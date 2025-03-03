@@ -50,7 +50,7 @@ router.post(
   connectionsController.hasSentConnectionRequest
 );
 
-router.post("/is-connected", connectionsController.isConnected);
+router.post("/is-connected", authenticate(["user"]), connectionsController.isConnected);
 
 router.post(
   "/withdraw",

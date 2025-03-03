@@ -1,4 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { AvatarFallback } from "@radix-ui/react-avatar";
 
 const ChatItem = ({ chat, selectedChat, setSelectedChat }: any) => {
   return (
@@ -21,13 +22,20 @@ const ChatItem = ({ chat, selectedChat, setSelectedChat }: any) => {
       <div className="flex-1">
         <div className="flex justify-between items-center">
           <h3 className="font-medium">{chat.name}</h3>
-          <p className="text-xs text-muted-foreground">{chat.lastMessageTime}</p>
+          <p className="text-xs text-muted-foreground">{chat?.lastMessageTime}</p>
         </div>
         <div className="flex justify-between">
-          <p className="text-sm text-muted-foreground">{chat.lastMessage}</p>
-          <div className=" h-5 w-5 rounded-full bg-emerald-500 dark:bg-emerald-400 flex items-center justify-center text-xs text-secondary font-semibold">
-            {chat.unreadMessages}
-          </div>
+          {chat.lastMessage ? (
+            <p className="text-sm text-muted-foreground">{chat?.lastMessage}</p>
+          ) : (
+            <p className="text-sm text-muted-foreground">{chat.username}</p>
+          )}
+
+          {chat.unreadMessages !== 0 && (
+            <div className=" h-5 w-5 rounded-full bg-emerald-500 dark:bg-emerald-400 flex items-center justify-center text-xs text-secondary font-semibold">
+              {chat.unreadMessages}
+            </div>
+          )}
         </div>
       </div>
     </div>

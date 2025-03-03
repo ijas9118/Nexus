@@ -5,6 +5,7 @@ import MessageModel, { IMessage } from "../models/message.model";
 import { IChatRepository } from "../core/interfaces/repositories/IChatRepository";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
+import { FormatTime } from "../utils/formatTime";
 
 @injectable()
 export class MessageRepository
@@ -42,6 +43,15 @@ export class MessageRepository
       .sort({ createdAt: 1 }) // Sort by createdAt in ascending order
       .populate("sender", "name profilePic"); // Populate sender details
 
-    return messages;
+    // console.log(messages)
+
+    const formattedMessages = messages.map((message: any) => {
+      return {
+        ...message.toObject(), 
+        sentTime: FormatTime.formatTime(message.updatedAt),
+      };
+    });
+
+    return formattedMessages;
   };
 }

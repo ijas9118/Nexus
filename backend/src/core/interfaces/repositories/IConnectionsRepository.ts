@@ -1,5 +1,5 @@
 export interface IConnectionsRepository {
-  getAllConnections(userId: string): any;
+  getAllConnections(userId: string, search?: string): any;
   getPendingRequests(userId: string): any;
   sendConnectionRequest(requesterId: string, recipientId: string): Promise<boolean>;
   acceptConnectionRequest(requesterId: string, recipientId: string): Promise<boolean>;

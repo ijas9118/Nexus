@@ -3,19 +3,12 @@ import { BaseRepository } from "../core/abstracts/base.repository";
 import { IChatRepository } from "../core/interfaces/repositories/IChatRepository";
 import ChatModel, { IChat } from "../models/chat.model";
 import { injectable } from "inversify";
+import { FormatTime } from "../utils/formatTime";
 
 @injectable()
 export class ChatRepository extends BaseRepository<IChat> implements IChatRepository {
   constructor() {
     super(ChatModel);
-  }
-
-  private formatTime(timestamp: string): string {
-    const date = new Date(timestamp);
-    const hours = date.getHours() % 12 || 12; // Convert to 12-hour format
-    const minutes = date.getMinutes().toString().padStart(2, "0"); // Ensure 2 digits
-    const ampm = date.getHours() >= 12 ? "PM" : "AM"; // Determine AM/PM
-    return `${hours}:${minutes} ${ampm}`;
   }
 
   createNewChat(members: string[]): Promise<IChat> {
@@ -73,6 +66,7 @@ export class ChatRepository extends BaseRepository<IChat> implements IChatReposi
       {
         $project: {
           _id: 1,
+          userId: "$member._id",
           name: "$member.name",
           username: "$member.username",
           avatar: "$member.profilePic",
@@ -85,7 +79,7 @@ export class ChatRepository extends BaseRepository<IChat> implements IChatReposi
 
     const formattedChats = chats.map((chat) => {
       if (chat.lastMessageTime) {
-        chat.lastMessageTime = this.formatTime(chat.lastMessageTime);
+        chat.lastMessageTime = FormatTime.formatTime(chat.lastMessageTime);
       }
       return chat;
     });

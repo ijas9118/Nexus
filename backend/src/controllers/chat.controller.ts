@@ -10,11 +10,14 @@ import { StatusCodes } from "http-status-codes";
 
 @injectable()
 export class ChatController implements IChatController {
-  constructor(@inject(TYPES.ChatService) private chatService: IChatService) {}
+  constructor(
+    @inject(TYPES.ChatService) private chatService: IChatService,
+  ) {}
 
   createChat = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
     const { member } = req.body;
     const userId = req.user?._id as string;
+
 
     if (!member) throw new CustomError("Member ID is required", StatusCodes.BAD_REQUEST);
 
@@ -29,11 +32,11 @@ export class ChatController implements IChatController {
   getAllChats = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
 
-    const allChats = await this.chatService.getAllChats(userId);
+    let result = await this.chatService.getAllChats(userId);
 
-    if (!allChats)
+    if (!result)
       throw new CustomError("Failed to fetch chats", StatusCodes.INTERNAL_SERVER_ERROR);
 
-    res.status(StatusCodes.OK).json(allChats);
+    res.status(StatusCodes.OK).json(result);
   });
 }

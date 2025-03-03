@@ -1,5 +1,5 @@
 export interface IConnectionService {
-  getAllConnections(userId: string): Promise<any>;
+  getAllConnections(userId: string, search?: string): Promise<any>;
   getPendingRequest(userId: string): Promise<any>;
   sendConnectionRequest(requesterId: string, recipientId: string): Promise<boolean>;
   acceptConnectionRequest(userId: string, requesterId: string): Promise<boolean>;
