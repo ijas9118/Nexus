@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const ChatItem = ({ chat, selectedChat, setSelectedChat }: any) => {
+  console.log(chat)
   return (
     <div
       key={chat._id}
@@ -12,7 +13,7 @@ const ChatItem = ({ chat, selectedChat, setSelectedChat }: any) => {
       <div className="relative">
         <Avatar className="h-12 w-12">
           <AvatarImage src={chat.avatar} />
-          <AvatarFallback>{chat.name[0]}</AvatarFallback>
+          {/* <AvatarFallback>{chat.name[0]}</AvatarFallback> */}
         </Avatar>
         {chat.isActive && (
           <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-emerald-500 dark:bg-emerald-400 border-2" />
@@ -21,16 +22,16 @@ const ChatItem = ({ chat, selectedChat, setSelectedChat }: any) => {
       <div className="flex-1">
         <div className="flex justify-between items-center">
           <h3 className="font-medium">{chat.name}</h3>
-          <p className="text-xs text-muted-foreground">{chat.lastMessageTime}</p>
+          <p className="text-xs text-muted-foreground">{chat?.lastMessageTime}</p>
         </div>
         <div className="flex justify-between">
           {chat.lastMessage ? (
-            <p className="text-sm text-muted-foreground">{chat.lastMessage}</p>
+            <p className="text-sm text-muted-foreground">{chat?.lastMessage}</p>
           ) : (
             <p className="text-sm text-muted-foreground">{chat.username}</p>
           )}
 
-          {chat.unreadMessages && (
+          {chat.unreadMessages !== 0 && (
             <div className=" h-5 w-5 rounded-full bg-emerald-500 dark:bg-emerald-400 flex items-center justify-center text-xs text-secondary font-semibold">
               {chat.unreadMessages}
             </div>

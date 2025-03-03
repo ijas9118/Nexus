@@ -96,9 +96,13 @@ export const checkConnected = async (userId2: string) => {
   }
 };
 
-export const getAllConnections = async () => {
+export const getAllConnections = async (searchTerm?: string) => {
   try {
-    const response = await api.get("/followers/connections");
+    const response = await api.get("/followers/connections", {
+      params: {
+        search: searchTerm,
+      },
+    });
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message || "An unexpected error occurred.";

@@ -52,6 +52,8 @@ export class ConnectionsRepository
       },
     ]);
 
+    console.log(connections)
+
     return connections;
   };
 

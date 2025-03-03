@@ -2,7 +2,6 @@ import ReceivedMessage from "./ReceivedMessage";
 import SentMessage from "./SentMessage";
 
 const Message = ({ messages, selectedChat }: { messages: any; selectedChat: any }) => {
-  console.log(messages);
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4">
       {messages.map((message: any, index: number) => (

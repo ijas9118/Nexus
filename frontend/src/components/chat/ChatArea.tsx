@@ -32,7 +32,6 @@ const ChatArea = ({ selectedChat }: { selectedChat: any }) => {
       try {
         const response = await MessageService.getMessages(selectedChat._id);
         setMessages(response.data);
-        console.log(response.data[0].sender._id, selectedChat.userId);
       } catch (error) {
         console.error("Failed to fetch messages:", error);
       }

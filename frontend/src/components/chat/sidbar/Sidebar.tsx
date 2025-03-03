@@ -5,6 +5,8 @@ import { PlusCircle, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import ChatItem from "./ChatItem";
 import { useDebounce } from "@/hooks/useDebounce";
+import { getAllConnections } from "@/services/user/followService";
+import SearchDropdown from "./SearchDropdown";
 
 interface SidebarProps {
   selectedChat: any;
@@ -12,63 +14,59 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ selectedChat, setSelectedChat }: SidebarProps) => {
-  const [chats, setChats] = useState([
-    {
-      _id: "1",
-      name: "Jane Doe",
-      status: "typing...",
-      lastMessage: "Hello world",
-      lastMessageTime: "09:12 AM",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jane",
-      unreadMessages: 4,
-      username: "janedoe123",
-      isActive: true,
-    },
-    {
-      _id: "2",
-      name: "John Doe",
-      status: "last seen 5m ago",
-      lastMessage: "Hello, how are you?",
-      lastMessageTime: "11:53 AM",
-      unreadMessages: 6,
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
-    },
-    {
-      _id: "3",
-      name: "Elizabeth Smith",
-      status: "online",
-      lastMessage: "This is cool",
-      lastMessageTime: "02:23 PM",
-      unreadMessages: 2,
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Elizabeth",
-    },
-    {
-      _id: "4",
-      name: "John Smith",
-      status: "last seen 1h ago",
-      lastMessage: "I love js",
-      lastMessageTime: "07:54 PM",
-      unreadMessages: 12,
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Smith",
-    },
-  ]);
+  const [chats, setChats] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   useEffect(() => {
     const fetchChats = async () => {
-      const response = await ChatService.getChats(debouncedSearchTerm);
+      const response = await ChatService.getChats();
       setChats(response);
-      console.log(response);
     };
 
     fetchChats();
+  }, []);
+
+  useEffect(() => {
+    const searchConnections = async () => {
+      if (debouncedSearchTerm) {
+        setIsSearching(true);
+        const response = await getAllConnections(debouncedSearchTerm);
+        setSearchResults(response);
+      } else {
+        setIsSearching(false);
+        setSearchResults([]);
+      }
+    };
+    searchConnections();
   }, [debouncedSearchTerm]);
 
+  const handleConnectionSelect = async (connection: any) => {
+    try {
+      const chat = await ChatService.createNewChat(connection._id);
+      const response = await ChatService.getChats();
+
+      console.log(response);
+      setChats(response);
+
+      const newChat = response.find((c: any) => c._id === chat._id);
+
+      setSelectedChat(newChat);
+
+      setSearchResults([]);
+      setSearchTerm("");
+      setIsSearching(false);
+    } catch (error) {
+      console.error("Failed to create chat:", error);
+    }
+  };
+
   return (
-    <div className="w-80 border-r flex flex-col">
+    <div className="w-80 border-r flex flex-col relative">
       <div className="px-4 h-16 border-b flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Chats (3)</h1>
+        <h1 className="text-xl font-semibold">Chats ({chats.length})</h1>
         <div className="flex gap-2">
           <Button variant="ghost" size="icon">
             <PlusCircle className="h-5 w-5" />
@@ -85,6 +83,10 @@ const Sidebar = ({ selectedChat, setSelectedChat }: SidebarProps) => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
+      {/* Search Results Dropdown */}
+      {isSearching && searchResults.length > 0 && (
+        <SearchDropdown searchResults={searchResults} onSelect={handleConnectionSelect} />
+      )}
 
       <div className="flex-1 overflow-y-auto">
         {chats.map((chat: any) => (
