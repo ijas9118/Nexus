@@ -1,33 +1,58 @@
-import { Schema, model, Document, Types } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
 
-interface IComment extends Document {
+export interface IComment extends Document {
+  _id: Types.ObjectId;
   contentId: Types.ObjectId;
   userId: Types.ObjectId;
-  comment: string;
-  timestamp: Date;
+  parentCommentId?: Types.ObjectId;
+  text: string;
+  likes: Types.ObjectId[];
+  replies: Types.ObjectId[];
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
 }
 
-const CommentSchema = new Schema<IComment>({
-  contentId: {
-    type: Schema.Types.ObjectId,
-    ref: "Content",
-    required: true,
+const CommentSchema: Schema = new Schema(
+  {
+    contentId: {
+      type: Schema.Types.ObjectId,
+      ref: "Content",
+      required: true,
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    parentCommentId: {
+      type: Schema.Types.ObjectId,
+      ref: "Comment",
+      default: null, // Null for top-level comments
+    },
+    text: {
+      type: String,
+      required: true,
+    },
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    replies: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  comment: {
-    type: String,
-    required: true,
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { timestamps: true }
+);
 
-const CommentModel = model<IComment>("Comment", CommentSchema);
-
-export { IComment, CommentModel };
+const CommentModel = mongoose.model<IComment>("Comment", CommentSchema);
+export default CommentModel;

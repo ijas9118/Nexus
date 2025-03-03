@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { bookmarkContent } from "@/services/user/bookmarkService";
 import { likeContent } from "@/services/user/likeService";
-import { Bookmark, Gem, MessageCircle, Share2 } from "lucide-react";
+import { Bookmark, Gem, Share2 } from "lucide-react";
 import React, { useState } from "react";
 import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import CommentModal from "../comment/CommentModal";
 
 interface ContentCardProps {
   id: string;
@@ -110,10 +111,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
             {isLiked ? <FaThumbsUp /> : <FaRegThumbsUp />}
             {likes}
           </Button>
-          <Button variant="ghost" size="sm" className="gap-2">
-            <MessageCircle className="h-4 w-4" />
-            {props.comments}
-          </Button>
+          <CommentModal contentId={props.id} />
           <Button variant="ghost" size="sm" onClick={() => handleBookmark(props.id)}>
             {isBookmarked ? <Bookmark fill="#007AFF" color="#007AFF" /> : <Bookmark />}
           </Button>
