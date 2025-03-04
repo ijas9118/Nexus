@@ -1,15 +1,21 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { CheckCircle, Flag, MoreHorizontal, RefreshCcw, Search, Trash2 } from "lucide-react";
+import {
+  CheckCircle,
+  Flag,
+  MoreHorizontal,
+  RefreshCcw,
+  Search,
+  Trash2,
+} from "lucide-react";
 
 interface CommentsListProps {
   comments: any;
-  getBlogTitle: (blogId: string) => string;
   getStatusBadge: (status: string) => React.ReactNode;
 }
 
-const CommentsList = ({ comments, getBlogTitle, getStatusBadge }: CommentsListProps) => {
+const CommentsList = ({ comments, getStatusBadge }: CommentsListProps) => {
   if (comments.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -27,16 +33,16 @@ const CommentsList = ({ comments, getBlogTitle, getStatusBadge }: CommentsListPr
   return (
     <div className="grid gap-4">
       {comments.map((comment: any) => (
-        <Card key={comment.id}>
+        <Card key={comment._id}>
           <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
             <div className="flex items-center gap-2">
               <Avatar className="h-8 w-8">
-                <AvatarImage src={comment.avatar} alt={comment.author} />
-                <AvatarFallback>{comment.author.charAt(0)}</AvatarFallback>
+                <AvatarImage src={comment.userId.profilePic} />
+                <AvatarFallback>{comment.userId.name[0]}</AvatarFallback>
               </Avatar>
               <div>
-                <div className="font-semibold">{comment.author}</div>
-                <div className="text-xs text-muted-foreground">{comment.date}</div>
+                <div className="font-semibold">{comment.userId.name}</div>
+                <div className="text-xs text-muted-foreground">{comment.updatedAt}</div>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -50,10 +56,10 @@ const CommentsList = ({ comments, getBlogTitle, getStatusBadge }: CommentsListPr
             <div className="text-sm text-muted-foreground mb-2">
               On:{" "}
               <span className="font-medium text-foreground">
-                {getBlogTitle(comment.blogId)}
+                {comment.contentId.title}
               </span>
             </div>
-            <p className="text-sm">{comment.content}</p>
+            <p className="text-sm">{comment.text}</p>
           </CardContent>
           <CardFooter className="flex justify-end gap-2 pt-0">
             {comment.status === "reported" && (

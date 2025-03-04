@@ -4,6 +4,7 @@ import { ICommentRepository } from "../core/interfaces/repositories/ICommentRepo
 import { AddCommentParams } from "../core/types/Contet";
 import CommentModel, { IComment } from "../models/comments.model";
 import { injectable } from "inversify";
+import { FormatTime } from "../utils/formatTime";
 
 @injectable()
 export class CommentRepository
@@ -39,5 +40,17 @@ export class CommentRepository
         populate: { path: "userId", select: "name profilePic" },
       })
       .exec();
+  };
+
+  getAllComments = async (): Promise<IComment[]> => {
+    const comments = await CommentModel.find({}).populate("userId", "name profilePic").populate("contentId", "title").sort({createdAt: -1});
+
+    const formattedComment = comments.map((comment: any) => {
+      return {
+        ...comment.toObject(),
+        updatedAt: FormatTime.formatTime(comment.updatedAt?.toISOString()),
+      };
+    });
+    return formattedComment;
   };
 }

@@ -26,7 +26,6 @@ const startServer = async () => {
       });
 
       socket.on("sendMessage", (message) => {
-        console.log(message);
         io.to(message.chatId).emit("receiveMessage", message);
       });
 

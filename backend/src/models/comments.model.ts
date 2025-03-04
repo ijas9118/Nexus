@@ -11,6 +11,7 @@ export interface IComment extends Document {
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
+  status: "active" | "reported" | "deleted";
 }
 
 const CommentSchema: Schema = new Schema(
@@ -49,6 +50,11 @@ const CommentSchema: Schema = new Schema(
     isDeleted: {
       type: Boolean,
       default: false,
+    },
+    status: {
+      type: String,
+      enum: ["active", "reported", "deleted"],
+      default: "active",
     },
   },
   { timestamps: true }

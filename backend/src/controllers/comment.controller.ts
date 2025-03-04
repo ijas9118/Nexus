@@ -32,7 +32,6 @@ export class CommentController implements ICommentController {
   getCommentsByContentId = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const { contentId } = req.query;
-      console.log(req.query);
 
       if (!contentId) {
         throw new CustomError("Content ID is required", StatusCodes.BAD_REQUEST);
@@ -44,4 +43,9 @@ export class CommentController implements ICommentController {
       res.status(StatusCodes.OK).json(comments);
     }
   );
+
+  getAllComments = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const comments = await this.commentService.getAllComments();
+    res.status(StatusCodes.OK).json(comments);
+  });
 }

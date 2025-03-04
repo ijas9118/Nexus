@@ -28,4 +28,8 @@ export class CommentService implements ICommentService {
     const comments = await this.commentRepository.findCommentsByContentId(contentId);
     return comments;
   };
+
+  getAllComments = async (): Promise<IComment[]> => {
+    return await this.commentRepository.getAllComments();
+  };
 }
