@@ -9,14 +9,13 @@ export interface IContent extends Document {
   title: string;
   date: string;
   likes: number;
-  comments: number;
-  squad: string;
+  squad: mongoose.Types.ObjectId;
   isPremium: boolean;
   thumbnailUrl: string;
   videoUrl: string;
   content: string;
   likeCount: number;
-  
+
   commentCount: number;
   bookmarkCount: number;
 }
@@ -53,12 +52,8 @@ const ContentSchema: Schema = new Schema(
       type: Number,
       default: 0,
     },
-    comments: {
-      type: Number,
-      default: 0,
-    },
     squad: {
-      type: String,
+      type: mongoose.Types.ObjectId,
       required: true,
     },
     isPremium: {

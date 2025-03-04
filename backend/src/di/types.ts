@@ -13,6 +13,7 @@ export const TYPES = {
   ChatRepository: Symbol.for("ChatRepository"),
   MessageRepository: Symbol.for("MessageRepository"),
   ConnectionsRepository: Symbol.for("ConnectionsRepository"),
+  CommentRepository: Symbol.for("CommentRepository"),
 
   // Services
   UserService: Symbol.for("UserService"),
@@ -32,6 +33,7 @@ export const TYPES = {
   EmailService: Symbol.for("IEmailService"),
   TokenService: Symbol.for("ITokenService"),
   ConnectionService: Symbol.for("IConnectionService"),
+  CommentService: Symbol.for("CommentService"),
 
   // Controllers
   UserController: Symbol.for("UserController"),
@@ -49,4 +51,5 @@ export const TYPES = {
   ChatController: Symbol.for("ChatController"),
   MessageController: Symbol.for("MessageController"),
   ConnectionsController: Symbol.for("ConnectionsController"),
+  CommentController: Symbol.for("CommentController"),
 };

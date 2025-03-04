@@ -2,10 +2,7 @@ import { Request, Response } from "express";
 import { IAdminAuthController } from "../../core/interfaces/controllers/admin/IAdminAuthController";
 import { LoginDto } from "../../dtos/requests/auth/login.dto";
 import { AdminAuthService } from "../../services/admin/admin.auth.service";
-import {
-  generateAccessToken,
-  verifyAccessToken,
-} from "../../utils/jwt.util";
+import { generateAccessToken, verifyAccessToken } from "../../utils/jwt.util";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../di/types";
 import { clearRefreshTokenCookie, setRefreshTokenCookie } from "../../utils/cookieUtils";
@@ -18,7 +15,7 @@ export class AdminAuthController implements IAdminAuthController {
     @inject(TYPES.AdminAuthService) private adminAuthService: AdminAuthService
   ) {}
 
-  async login(req: Request, res: Response): Promise<void> {
+  login = async (req: Request, res: Response): Promise<void> => {
     const loginDto: LoginDto = req.body;
     const user = await this.adminAuthService.login(loginDto);
 
@@ -36,7 +33,7 @@ export class AdminAuthController implements IAdminAuthController {
     });
 
     res.status(StatusCodes.OK).json({ message: "success", accessToken, user });
-  }
+  };
 
   logout = async (req: Request, res: Response): Promise<void> => {
     clearRefreshTokenCookie(res);

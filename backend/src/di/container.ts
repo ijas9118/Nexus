@@ -107,6 +107,13 @@ import { ConnectionService } from "../services/connections.service";
 import { IConnectionsController } from "../core/interfaces/controllers/IConnectionsController";
 import { ConnectionsController } from "../controllers/connections.controller";
 
+import { ICommentRepository } from "../core/interfaces/repositories/ICommentRepository";
+import { CommentRepository } from "../repositories/comment.repository";
+import { ICommentService } from "../core/interfaces/services/ICommentService";
+import { CommentService } from "../services/comment.service";
+import { ICommentController } from "../core/interfaces/controllers/ICommentController";
+import { CommentController } from "../controllers/comment.controller";
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -171,5 +178,9 @@ container.bind<IChatController>(TYPES.ChatController).to(ChatController);
 container.bind<IMessageRepository>(TYPES.MessageRepository).to(MessageRepository);
 container.bind<IMessageService>(TYPES.MessageService).to(MessageService);
 container.bind<IMessageController>(TYPES.MessageController).to(MessageController);
+
+container.bind<ICommentRepository>(TYPES.CommentRepository).to(CommentRepository);
+container.bind<ICommentService>(TYPES.CommentService).to(CommentService);
+container.bind<ICommentController>(TYPES.CommentController).to(CommentController);
 
 export { container };
