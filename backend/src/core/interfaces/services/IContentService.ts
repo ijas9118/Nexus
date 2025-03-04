@@ -6,4 +6,5 @@ export interface IContentService {
   getAllContent(userId: string): Promise<IContent[]>;
   getPosts(): Promise<IContent[]>;
   verifyContent(contentId: string): Promise<IContent | null>;
+  getFollowingUsersContents(userId: string): Promise<IContent[]>;
 }

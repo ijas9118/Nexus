@@ -1,9 +1,8 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { IUser } from "./user.model";
 
 export interface IContent extends Document {
   avatarFallback: string;
-  author: IUser["_id"];
+  author: mongoose.Types.ObjectId;
   userName: string;
   contentType: string;
   title: string;

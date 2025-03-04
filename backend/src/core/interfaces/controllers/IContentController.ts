@@ -6,4 +6,5 @@ export interface IContentController {
   getAllContent: RequestHandler;
   getPosts: RequestHandler;
   verifyContent: RequestHandler;
+  getFollowingUsersContents: RequestHandler;
 }

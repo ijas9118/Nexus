@@ -15,8 +15,6 @@ import { useQuery } from "@tanstack/react-query";
 import { CommentService } from "@/services/user/commentService";
 
 const CommentModal = ({ contentId }: { contentId: string }) => {
-  console.log("========");
-
   const {
     data: comments,
     isLoading,

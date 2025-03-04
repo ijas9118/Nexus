@@ -1,15 +1,20 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { BaseRepository } from "../core/abstracts/base.repository";
 import { IContentRepository } from "../core/interfaces/repositories/IContentRepository";
 import ContentModel, { IContent } from "../models/content.model";
 import mongoose, { Types } from "mongoose";
+import { TYPES } from "../di/types";
+import { IFollowersRepository } from "../core/interfaces/repositories/IFollowersRepository";
+import UserFollowModel from "../models/followers.model";
 
 @injectable()
 export class ContentRepository
   extends BaseRepository<IContent>
   implements IContentRepository
 {
-  constructor() {
+  constructor(
+    @inject(TYPES.FollowersRepository) private followersRepository: IFollowersRepository
+  ) {
     super(ContentModel);
   }
 
@@ -98,5 +103,26 @@ export class ContentRepository
   async verifyContent(contentId: string): Promise<IContent | null> {
     const contentIdObj = new mongoose.Types.ObjectId(contentId);
     return await this.findByIdAndUpdate(contentIdObj, { isVerified: true });
+  }
+
+  async getFollowingUsersContents(userId: string): Promise<IContent[]> {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const userFollow = await UserFollowModel.findOne({ userId: userObjectId }).exec();
+
+    if (!userFollow) {
+      throw new Error("User follow document not found");
+    }
+
+    const followingUserIds = userFollow.following.map(
+      (id) => new mongoose.Types.ObjectId(id)
+    );
+
+    const contents = await ContentModel.find({ author: { $in: followingUserIds } })
+      .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+      .populate("author", "name profilePic") // Populate author details
+      .populate("squad", "name") // Populate squad details
+      .exec();
+
+    return contents;
   }
 }

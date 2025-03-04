@@ -63,6 +63,18 @@ export const getContent = async (id: string) => {
   }
 };
 
+export const getFollowingUsersContents = async () => {
+  try {
+    const response = await api.get("/content/posts/following");
+    return response.data;
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.message ||
+      "An unexpected error occurred while fetching following users' contents.";
+    throw new Error(errorMessage);
+  }
+};
+
 export const getHistory = async () => {
   try {
     const response = await api.get("/content/history/");

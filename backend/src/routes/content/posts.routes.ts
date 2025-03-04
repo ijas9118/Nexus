@@ -21,6 +21,12 @@ router.post(
   contentController.verifyContent
 );
 
+router.get(
+  "/following",
+  authenticate(["user"]),
+  contentController.getFollowingUsersContents
+);
+
 router.get("/:id", authenticate(["user", "admin"]), contentController.getContent);
 
 router.post("/:id/like", authenticate(["user"]), likesController.toggleLike);

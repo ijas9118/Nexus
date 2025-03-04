@@ -80,4 +80,13 @@ export class ContentController implements IContentController {
       .status(StatusCodes.OK)
       .json({ message: "Content verified successfully", content: updatedContent });
   });
+
+  getFollowingUsersContents = asyncHandler(async (req: CustomRequest, res: Response) => {
+    const userId = req.user?._id as string;
+
+    const contents = await this.contentService.getFollowingUsersContents(userId);
+    console.log(contents);
+
+    res.status(200).json(contents);
+  });
 }

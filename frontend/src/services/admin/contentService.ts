@@ -21,10 +21,12 @@ export const ContentService = {
   verifyContent: async (contentId: string) => {
     try {
       const response = await api.post(`/content/posts/verify/${contentId}`);
-      
+
       return response.data;
     } catch (error: any) {
       throw error.response?.data || error.message;
     }
   },
+
+  
 };

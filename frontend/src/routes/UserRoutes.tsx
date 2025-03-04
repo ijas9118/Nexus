@@ -20,6 +20,7 @@ import ContentDetails from "@/pages/normal/ContentDetails";
 import ProfilePage from "@/pages/normal/Profile";
 import EditProfile from "@/pages/normal/EditProfileLayout";
 import Chat from "@/pages/normal/Chat";
+import Following from "@/pages/normal/Following";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -50,6 +51,7 @@ const UserRoutes: React.FC = () => {
           <Route path="connections" element={<Connections />} />
           <Route path="history" element={<History />} />
           <Route path="content/:id" element={<ContentDetails />} />
+          <Route path="following" element={<Following />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

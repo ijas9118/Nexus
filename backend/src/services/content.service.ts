@@ -40,4 +40,8 @@ export class ContentService extends BaseService<IContent> implements IContentSer
   async verifyContent(contentId: string): Promise<IContent | null> {
     return this.contentRepository.verifyContent(contentId);
   }
+
+  async getFollowingUsersContents(userId: string): Promise<IContent[]> {
+    return this.contentRepository.getFollowingUsersContents(userId);
+  }
 }
