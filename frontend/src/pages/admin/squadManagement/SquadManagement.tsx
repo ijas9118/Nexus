@@ -41,6 +41,8 @@ const SquadManagement: FC = () => {
     }
   };
 
+  console.log(data);
+
   return (
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-18 py-8">
       <DataTable columns={columns(toggleSquadStatus)} data={data} />

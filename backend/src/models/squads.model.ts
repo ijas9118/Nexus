@@ -9,6 +9,7 @@ interface ISquad extends Document {
   logo: string;
   category: string;
   isActive: boolean;
+  isPremium: boolean;
 }
 
 const SquadSchema: Schema = new Schema(
@@ -48,6 +49,10 @@ const SquadSchema: Schema = new Schema(
     isActive: {
       type: Boolean,
       default: true,
+    },
+    isPremium: {
+      type: Boolean,
+      default: false,
     },
   },
   {

@@ -40,6 +40,16 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
             ]}
           />
         )}
+        {table.getColumn("isPremium") && (
+          <FacetedFilter
+            column={table.getColumn("isPremium")}
+            title="Type"
+            options={[
+              { label: "Premium", value: "Premium" },
+              { label: "Free", value: "Free" },
+            ]}
+          />
+        )}
       </div>
       <div className="flex items-center space-x-2">
         <Button variant="secondary" onClick={() => setIsDialogOpen(true)}>

@@ -13,7 +13,6 @@ import { Squad } from "@/types/squad";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-
 export const columns = (toggleSquadStatus: (id: string) => void): ColumnDef<Squad>[] => [
   {
     id: "select",
@@ -70,9 +69,27 @@ export const columns = (toggleSquadStatus: (id: string) => void): ColumnDef<Squa
     cell: ({ row }) => <div className="text-center">{row.getValue("category")}</div>,
   },
   {
-    accessorKey: "membersCount",
+    accessorKey: "members",
     header: () => <div className="text-center w-full">Members</div>,
-    cell: ({ row }) => <div className="text-center">{row.getValue("membersCount")}</div>,
+    cell: ({ row }) => {
+      const members = row.getValue("members") as string[];
+      return <div className="text-center">{members?.length || 0}</div>;
+    },
+  },
+  {
+    accessorKey: "isPremium",
+    header: () => <div className="text-center w-full">Type</div>,
+    cell: ({ row }) => (
+      <div className="text-center">
+        <Badge variant={row.getValue("isPremium") ? "default" : "outline"}>
+          {row.getValue("isPremium") ? "Premium" : "Free"}
+        </Badge>
+      </div>
+    ),
+    filterFn: (row, id, value: string[]) => {
+      const isPremium = row.getValue(id) as boolean;
+      return value.includes(isPremium ? "Premium" : "Free");
+    },
   },
   {
     accessorKey: "isActive",

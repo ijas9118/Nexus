@@ -27,6 +27,7 @@ import CategoryService from "@/services/admin/categoryService";
 import { Category } from "@/types/category";
 import { Squad } from "@/types/squad";
 import { toast } from "sonner";
+import { Switch } from "@/components/ui/switch";
 
 const formSchema = z.object({
   name: z
@@ -48,6 +49,7 @@ const formSchema = z.object({
       }
       return true;
     }, "Max file size is 5MB."),
+  isPremium: z.boolean().default(false),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -77,6 +79,7 @@ export function CreateSquadDialog({
       description: "",
       handle: "",
       category: "",
+      isPremium: false,
     },
   });
 
@@ -115,6 +118,7 @@ export function CreateSquadDialog({
         handle: data.handle,
         category: data.category,
         logo,
+        isPremium: data.isPremium,
       };
 
       const result = await SquadService.createSquad(squadData);
@@ -272,6 +276,20 @@ export function CreateSquadDialog({
               </div>
             </div>
             <DialogFooter>
+              <div className="mr-auto flex items-center space-x-2">
+                <Controller
+                  name="isPremium"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch
+                      id="isPremium"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
+                />
+                <Label htmlFor="premium">Premium</Label>
+              </div>
               <Button type="submit">Save Squad</Button>
             </DialogFooter>
           </form>

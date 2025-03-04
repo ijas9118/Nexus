@@ -1,5 +1,15 @@
 import CategoryScroll from "@/components/normal/squads/CategoryScroll";
 import { CreateSquadDialog } from "@/components/normal/squads/CreateSquadDialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,19 +20,23 @@ import { addUserSquad } from "@/store/slices/userSquadsSlice";
 import { RootState } from "@/store/store";
 import { Category } from "@/types/category";
 import { Squad } from "@/types/squad";
-import { Plus } from "lucide-react";
+import { Plus, Terminal } from "lucide-react";
 import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const Squads: FC = () => {
   const dispatch = useDispatch();
   const { squadsByCategory } = useSelector((state: RootState) => state.squads);
+  const { user } = useSelector((state: RootState) => state.auth);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [squads, setSquads] = useState<Squad[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -99,11 +113,37 @@ const Squads: FC = () => {
             onCategorySelect={setSelectedCategory}
           />
           <div className="ml-auto flex items-center">
-            <Button onClick={() => setIsDialogOpen(true)}>
+            <Button
+              onClick={() => {
+                if (user?.isPremium) setIsDialogOpen(true);
+                else setShowAlert(true);
+              }}
+            >
               <Plus className="mr-2 h-4 w-4" />
               New Squad
             </Button>
           </div>
+          <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>🚀 Unlock Squad Creation</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Only premium members can create squads. Upgrade now and start building
+                  your own squad today!
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Close</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    navigate("/getPremium");
+                  }}
+                >
+                  Upgrade to Premium
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </header>
 

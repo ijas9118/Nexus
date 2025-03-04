@@ -27,6 +27,7 @@ import CategoryService from "@/services/admin/categoryService";
 import { Category } from "@/types/category";
 import { DialogProps } from "@/types/dialog";
 import { toast } from "sonner";
+import { Switch } from "@/components/ui/switch";
 
 const formSchema = z.object({
   name: z
@@ -48,6 +49,7 @@ const formSchema = z.object({
       }
       return true;
     }, "Max file size is 5MB."),
+  isPremium: z.boolean().default(false),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -67,6 +69,7 @@ export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
       description: "",
       handle: "",
       category: "",
+      isPremium: false,
     },
   });
 
@@ -105,6 +108,7 @@ export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
         handle: data.handle,
         category: data.category,
         logo,
+        isPremium: data.isPremium,
       };
 
       const result = await SquadService.createSquad(squadData);
@@ -144,7 +148,7 @@ export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid gap-4 py-4">
+            <div className="grid gap-4 mt-4 mb-6">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
                   Name
@@ -260,6 +264,20 @@ export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
               </div>
             </div>
             <DialogFooter>
+              <div className="mr-auto flex items-center space-x-2">
+                <Controller
+                  name="isPremium"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch
+                      id="isPremium"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
+                />
+                <Label htmlFor="premium">Premium</Label>
+              </div>
               <Button type="submit">Save Squad</Button>
             </DialogFooter>
           </form>
