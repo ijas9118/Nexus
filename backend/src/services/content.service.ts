@@ -32,4 +32,8 @@ export class ContentService extends BaseService<IContent> implements IContentSer
   async getAllContent(userId: string): Promise<IContent[]> {
     return this.contentRepository.getFeedContents(userId);
   }
+
+  async getPosts(): Promise<IContent[]> {
+    return this.contentRepository.getPosts();
+  }
 }

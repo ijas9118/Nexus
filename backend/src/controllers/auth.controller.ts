@@ -126,11 +126,24 @@ export class AuthController implements IAuthController {
   refreshToken = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const refreshToken = req.cookies.refreshToken;
 
+    console.log(refreshToken);
+
     if (!refreshToken)
       throw new CustomError("Refresh token not found", StatusCodes.UNAUTHORIZED);
 
     const decodedToken = verifyRefreshToken(refreshToken);
     if (!decodedToken) throw new CustomError("Invalid token", StatusCodes.FORBIDDEN);
+
+    if (decodedToken.user.role === "admin") {
+      const accessToken = generateAccessToken({
+        _id: decodedToken.user._id,
+        name: decodedToken.user.name,
+        email: decodedToken.user.email,
+        role: decodedToken.user.role,
+      });
+
+      res.status(StatusCodes.OK).json({ accessToken, decodedToken });
+    }
 
     const user = await this.authService.getUserByRoleAndId(
       decodedToken.user.role,

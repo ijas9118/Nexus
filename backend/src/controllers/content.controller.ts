@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../di/types";
 import { IContentController } from "../core/interfaces/controllers/IContentController";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { CustomRequest } from "../core/types/CustomRequest";
 import { IContentService } from "../core/interfaces/services/IContentService";
 import { IHistoryService } from "../core/interfaces/services/IHistoryService";
@@ -57,4 +57,9 @@ export class ContentController implements IContentController {
       res.status(StatusCodes.OK).json(contents);
     }
   );
+
+  getPosts = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const contents = await this.contentService.getPosts();
+    res.status(StatusCodes.OK).json(contents);
+  });
 }

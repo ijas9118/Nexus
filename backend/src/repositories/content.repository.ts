@@ -90,4 +90,8 @@ export class ContentRepository
 
     return contents;
   }
+
+  async getPosts(): Promise<IContent[]> {
+    return await ContentModel.find({}).populate('author', 'name profilePic');
+  }
 }

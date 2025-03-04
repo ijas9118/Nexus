@@ -43,7 +43,10 @@ export class CommentRepository
   };
 
   getAllComments = async (): Promise<IComment[]> => {
-    const comments = await CommentModel.find({}).populate("userId", "name profilePic").populate("contentId", "title").sort({createdAt: -1});
+    const comments = await CommentModel.find({})
+      .populate("userId", "name profilePic")
+      .populate("contentId", "title")
+      .sort({ createdAt: -1 });
 
     const formattedComment = comments.map((comment: any) => {
       return {
