@@ -12,6 +12,7 @@ import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import CommentManagement from "@/pages/admin/comment-management/CommentManagement";
 import ContentManagement from "@/pages/admin/content-management/ContentManagement";
+import ContentDetail from "@/pages/admin/content-management/components/ContentDetail";
 
 const AdminRoutes: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ const AdminRoutes: React.FC = () => {
           <Route path="mentors" element={<MentorManagement />} />
           <Route path="comments" element={<CommentManagement />} />
           <Route path="contents" element={<ContentManagement />} />
+          <Route path="contents/:contentId" element={<ContentDetail />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

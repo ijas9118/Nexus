@@ -5,4 +5,5 @@ export interface IContentService {
   getContentById(id: string): Promise<IContent | null>;
   getAllContent(userId: string): Promise<IContent[]>;
   getPosts(): Promise<IContent[]>;
+  verifyContent(contentId: string): Promise<IContent | null>;
 }

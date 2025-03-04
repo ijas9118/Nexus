@@ -15,9 +15,9 @@ export interface IContent extends Document {
   videoUrl: string;
   content: string;
   likeCount: number;
-
   commentCount: number;
   bookmarkCount: number;
+  isVerified: boolean;
 }
 
 const ContentSchema: Schema = new Schema(
@@ -54,6 +54,7 @@ const ContentSchema: Schema = new Schema(
     },
     squad: {
       type: mongoose.Types.ObjectId,
+      ref: "Squad",
       required: true,
     },
     isPremium: {
@@ -84,6 +85,10 @@ const ContentSchema: Schema = new Schema(
     bookmarkCount: {
       type: Number,
       default: 0,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
   },
   {

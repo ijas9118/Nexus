@@ -15,7 +15,6 @@ export const authenticate = (roles: Array<UserRole>) => {
       }
 
       const decoded = verifyAccessToken(token);
-
       req.user = decoded;
 
       if (roles.length && (!req.user || !roles.includes(req.user.role))) {

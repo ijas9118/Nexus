@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown  } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FacetedFilter } from "./faceted-filter";
 
@@ -15,7 +15,6 @@ interface DataTableToolbarProps<TData> {
 }
 
 export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
-
   return (
     <div className="flex items-center justify-between py-4">
       <div className="flex flex-1 items-center space-x-2">
@@ -34,6 +33,17 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
             options={[
               { label: "Premium", value: "Premium" },
               { label: "Free", value: "Free" },
+            ]}
+          />
+        )}
+
+        {table.getColumn("verified") && (
+          <FacetedFilter
+            column={table.getColumn("verified")}
+            title="Verified"
+            options={[
+              { label: "Verified", value: "Verified" },
+              { label: "Not Verified", value: "Not Verified" },
             ]}
           />
         )}

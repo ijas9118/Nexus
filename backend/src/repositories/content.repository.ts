@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 import { BaseRepository } from "../core/abstracts/base.repository";
 import { IContentRepository } from "../core/interfaces/repositories/IContentRepository";
 import ContentModel, { IContent } from "../models/content.model";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 @injectable()
 export class ContentRepository
@@ -15,7 +15,7 @@ export class ContentRepository
 
   async findContent(id: string): Promise<IContent | null> {
     const contentIdObj = new Types.ObjectId(id);
-    return await this.findById(contentIdObj);
+    return await ContentModel.findById(contentIdObj).populate("squad", "name");
   }
 
   async getFeedContents(userId: string): Promise<IContent[]> {
@@ -92,6 +92,11 @@ export class ContentRepository
   }
 
   async getPosts(): Promise<IContent[]> {
-    return await ContentModel.find({}).populate('author', 'name profilePic');
+    return await ContentModel.find({}).populate("author", "name profilePic");
+  }
+
+  async verifyContent(contentId: string): Promise<IContent | null> {
+    const contentIdObj = new mongoose.Types.ObjectId(contentId);
+    return await this.findByIdAndUpdate(contentIdObj, { isVerified: true });
   }
 }

@@ -106,6 +106,27 @@ export const columns = (): ColumnDef<any>[] => [
     },
   },
   {
+    id: "verified", // New column for isVerified
+    header: "Verified",
+    accessorFn: (row) => (row.isVerified ? "Verified" : "Not Verified"), // Explicitly derive verified status
+    cell: ({ row }) => (
+      <Badge
+        variant={row.original.isVerified ? "default" : "outline"}
+        className={
+          row.original.isVerified
+            ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100" // Verified
+            : "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100" // Not Verified
+        }
+      >
+        {row.original.isVerified ? "Verified" : "Not Verified"}
+      </Badge>
+    ),
+    filterFn: (row, id, value: string[]) => {
+      const verifiedStatus = row.getValue(id) as string;
+      return value.includes(verifiedStatus);
+    },
+  },
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {

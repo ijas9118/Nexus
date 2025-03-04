@@ -22,14 +22,14 @@ import {
 import React from "react";
 import { DataTableToolbar } from "./tableToolbar";
 import { DataTablePagination } from "./tablePagination";
+import { useNavigate } from "react-router-dom";
 
-
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { _id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { _id: string }, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -37,6 +37,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const navigate = useNavigate();
 
   const table = useReactTable({
     data,
@@ -80,7 +81,12 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  onClick={() => navigate(`/admin/contents/${row.original._id}`)}
+                  className="cursor-pointer"
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

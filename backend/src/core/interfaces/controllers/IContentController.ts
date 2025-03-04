@@ -5,4 +5,5 @@ export interface IContentController {
   getContent: RequestHandler;
   getAllContent: RequestHandler;
   getPosts: RequestHandler;
+  verifyContent: RequestHandler;
 }

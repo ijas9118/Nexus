@@ -19,8 +19,6 @@ export class AdminAuthController implements IAdminAuthController {
     const loginDto: LoginDto = req.body;
     const user = await this.adminAuthService.login(loginDto);
 
-    console.log(user);
-
     if (!user) {
       throw new CustomError("Invalid email or password", StatusCodes.UNAUTHORIZED);
     }

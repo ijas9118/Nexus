@@ -43,7 +43,11 @@ export class ContentController implements IContentController {
 
     if (!content) throw new CustomError("Content not found", StatusCodes.NOT_FOUND);
 
-    await this.historyService.addHistory(req.user?._id as string, content._id as string);
+    if (req.user?.role === "user")
+      await this.historyService.addHistory(
+        req.user?._id as string,
+        content._id as string
+      );
 
     res.status(StatusCodes.OK).json(content);
   });
@@ -61,5 +65,19 @@ export class ContentController implements IContentController {
   getPosts = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const contents = await this.contentService.getPosts();
     res.status(StatusCodes.OK).json(contents);
+  });
+
+  verifyContent = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { contentId } = req.params;
+
+    const updatedContent = await this.contentService.verifyContent(contentId);
+    if (!updatedContent) {
+      res.status(StatusCodes.NOT_FOUND).json({ message: "Content not found" });
+      return;
+    }
+
+    res
+      .status(StatusCodes.OK)
+      .json({ message: "Content verified successfully", content: updatedContent });
   });
 }

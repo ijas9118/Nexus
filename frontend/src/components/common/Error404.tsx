@@ -580,8 +580,8 @@ const Error404: React.FC = () => {
           y2="394.914"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_276_6629"
@@ -591,8 +591,8 @@ const Error404: React.FC = () => {
           y2="261.003"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_276_6629"
@@ -602,8 +602,8 @@ const Error404: React.FC = () => {
           y2="243.453"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint3_linear_276_6629"
@@ -613,8 +613,8 @@ const Error404: React.FC = () => {
           y2="228.562"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint4_linear_276_6629"
@@ -624,8 +624,8 @@ const Error404: React.FC = () => {
           y2="218.797"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint5_linear_276_6629"
@@ -635,8 +635,8 @@ const Error404: React.FC = () => {
           y2="207.456"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint6_linear_276_6629"
@@ -646,8 +646,8 @@ const Error404: React.FC = () => {
           y2="90.3954"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint7_linear_276_6629"
@@ -657,8 +657,8 @@ const Error404: React.FC = () => {
           y2="130.22"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint8_linear_276_6629"
@@ -668,8 +668,8 @@ const Error404: React.FC = () => {
           y2="57.0289"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint9_linear_276_6629"
@@ -679,8 +679,8 @@ const Error404: React.FC = () => {
           y2="151.977"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint10_linear_276_6629"
@@ -690,8 +690,8 @@ const Error404: React.FC = () => {
           y2="74.9031"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint11_linear_276_6629"
@@ -701,8 +701,8 @@ const Error404: React.FC = () => {
           y2="191.811"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint12_linear_276_6629"
@@ -712,8 +712,8 @@ const Error404: React.FC = () => {
           y2="57.4643"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint13_linear_276_6629"
@@ -723,8 +723,8 @@ const Error404: React.FC = () => {
           y2="63.729"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint14_linear_276_6629"
@@ -734,8 +734,8 @@ const Error404: React.FC = () => {
           y2="109.228"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint15_linear_276_6629"
@@ -745,8 +745,8 @@ const Error404: React.FC = () => {
           y2="207.013"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint16_linear_276_6629"
@@ -756,8 +756,8 @@ const Error404: React.FC = () => {
           y2="173.008"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint17_linear_276_6629"
@@ -767,8 +767,8 @@ const Error404: React.FC = () => {
           y2="223.117"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint18_linear_276_6629"
@@ -778,8 +778,8 @@ const Error404: React.FC = () => {
           y2="203.389"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint19_linear_276_6629"
@@ -789,8 +789,8 @@ const Error404: React.FC = () => {
           y2="203.333"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint20_linear_276_6629"
@@ -800,8 +800,8 @@ const Error404: React.FC = () => {
           y2="105.949"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint21_linear_276_6629"
@@ -811,8 +811,8 @@ const Error404: React.FC = () => {
           y2="281.215"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint22_linear_276_6629"
@@ -822,8 +822,8 @@ const Error404: React.FC = () => {
           y2="172.063"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint23_linear_276_6629"
@@ -833,8 +833,8 @@ const Error404: React.FC = () => {
           y2="192.613"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint24_linear_276_6629"
@@ -844,8 +844,8 @@ const Error404: React.FC = () => {
           y2="192.575"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint25_linear_276_6629"
@@ -855,8 +855,8 @@ const Error404: React.FC = () => {
           y2="28.5217"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint26_linear_276_6629"
@@ -866,8 +866,8 @@ const Error404: React.FC = () => {
           y2="78.6388"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint27_linear_276_6629"
@@ -877,8 +877,8 @@ const Error404: React.FC = () => {
           y2="149.39"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint28_linear_276_6629"
@@ -888,8 +888,8 @@ const Error404: React.FC = () => {
           y2="119.025"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint29_linear_276_6629"
@@ -899,8 +899,8 @@ const Error404: React.FC = () => {
           y2="172.038"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint30_linear_276_6629"
@@ -910,8 +910,8 @@ const Error404: React.FC = () => {
           y2="355.081"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint31_linear_276_6629"
@@ -921,8 +921,8 @@ const Error404: React.FC = () => {
           y2="355.081"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint32_linear_276_6629"
@@ -932,8 +932,8 @@ const Error404: React.FC = () => {
           y2="191.018"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint33_linear_276_6629"
@@ -943,8 +943,8 @@ const Error404: React.FC = () => {
           y2="241.136"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint34_linear_276_6629"
@@ -954,8 +954,8 @@ const Error404: React.FC = () => {
           y2="311.887"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint35_linear_276_6629"
@@ -965,8 +965,8 @@ const Error404: React.FC = () => {
           y2="281.532"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint36_linear_276_6629"
@@ -976,8 +976,8 @@ const Error404: React.FC = () => {
           y2="334.535"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint37_linear_276_6629"
@@ -987,8 +987,8 @@ const Error404: React.FC = () => {
           y2="197.505"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
         <linearGradient
           id="paint38_linear_276_6629"
@@ -998,8 +998,8 @@ const Error404: React.FC = () => {
           y2="271.717"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#044BB5" />
-          <stop offset="1" stop-color="#5000B5" />
+          <stop stopColor="#044BB5" />
+          <stop offset="1" stopColor="#5000B5" />
         </linearGradient>
       </defs>
     </svg>
