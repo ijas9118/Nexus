@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import useLogout from "@/hooks/useLogout";
 import { RootState } from "@/store/store";
 import { Bell } from "lucide-react";
 import React from "react";
@@ -19,6 +20,7 @@ import { Outlet } from "react-router-dom";
 
 const AdminLayout: React.FC = () => {
   const breadcrumbs = useSelector((state: RootState) => state.breadcrumb.breadcrumbs);
+  const logoutUser = useLogout();
 
   return (
     <SidebarProvider>
@@ -53,7 +55,9 @@ const AdminLayout: React.FC = () => {
             <div className="flex items-center gap-4">
               <ModeToggle />
               <Bell />
-              <Button variant="outline">Logout</Button>
+              <Button variant="outline" onClick={() => logoutUser()}>
+                Logout
+              </Button>
             </div>
           </div>
         </header>
