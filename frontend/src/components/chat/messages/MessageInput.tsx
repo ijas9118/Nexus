@@ -3,28 +3,25 @@ import { Input } from "@/components/ui/input";
 import { MessageService } from "@/services/user/messageService";
 import { Heart, Link, Send, Smile } from "lucide-react";
 import { useState } from "react";
+import io from "socket.io-client";
 
-interface MessageInputProps {
-  chatId: string;
-  onMessageSent: (message: any) => void;
-}
+const socket = io("http://localhost:3000");
 
-const MessageInput = ({ chatId, onMessageSent }: MessageInputProps) => {
+const MessageInput = ({ chatId }: { chatId: string }) => {
   const [messageText, setMessageText] = useState("");
 
   const handleSendMessage = async () => {
-    if (!messageText.trim()) return; 
+    if (!messageText.trim()) return;
 
     try {
       const response = await MessageService.sendMessage(chatId, messageText);
-
       setMessageText("");
-
-      onMessageSent(response.data);
+      socket.emit("sendMessage", response.data);
     } catch (error) {
       console.error("Failed to send message:", error);
     }
   };
+
   return (
     <div className="p-4 border-t">
       <div className="flex items-center gap-2">
