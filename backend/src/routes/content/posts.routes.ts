@@ -15,6 +15,12 @@ router.get("/", authenticate(["user", "admin"]), contentController.getAllContent
 
 router.post("/", authenticate(["user"]), contentController.createContent);
 
+router.post(
+  "/verify/:contentId",
+  authenticate(["premium", "mentor", "admin"]),
+  contentController.verifyContent
+);
+
 router.get("/:id", authenticate(["user", "admin"]), contentController.getContent);
 
 router.post("/:id/like", authenticate(["user"]), likesController.toggleLike);

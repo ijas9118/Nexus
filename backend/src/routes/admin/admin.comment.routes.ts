@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { container } from "../../di/container";
-import { CategoryController } from "../../controllers/category.controller";
 import { TYPES } from "../../di/types";
 import { ICommentController } from "../../core/interfaces/controllers/ICommentController";
 

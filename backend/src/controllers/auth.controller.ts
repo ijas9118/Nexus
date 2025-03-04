@@ -132,6 +132,17 @@ export class AuthController implements IAuthController {
     const decodedToken = verifyRefreshToken(refreshToken);
     if (!decodedToken) throw new CustomError("Invalid token", StatusCodes.FORBIDDEN);
 
+    if (decodedToken.user.role === "admin") {
+      const accessToken = generateAccessToken({
+        _id: decodedToken.user._id,
+        name: decodedToken.user.name,
+        email: decodedToken.user.email,
+        role: decodedToken.user.role,
+      });
+
+      res.status(StatusCodes.OK).json({ accessToken, decodedToken });
+    }
+
     const user = await this.authService.getUserByRoleAndId(
       decodedToken.user.role,
       decodedToken.user._id
