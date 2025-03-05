@@ -19,7 +19,7 @@ const History = () => {
       setBreadcrumbs([
         { title: "Home", url: "/" },
         { title: "History", url: "" },
-      ])
+      ]),
     );
 
     const fetchHistory = async () => {
@@ -54,9 +54,15 @@ const History = () => {
         <p className="text-center">No history available.</p>
       ) : (
         history
-          .filter((item) => item.title.toLowerCase().includes(searchTerm.toLowerCase()))
+          .filter((item) =>
+            item.title.toLowerCase().includes(searchTerm.toLowerCase()),
+          )
           .map((item) => (
-            <HistoryCard key={item.contentId} item={item} setHistory={setHistory} />
+            <HistoryCard
+              key={item.contentId}
+              item={item}
+              setHistory={setHistory}
+            />
           ))
       )}
     </div>

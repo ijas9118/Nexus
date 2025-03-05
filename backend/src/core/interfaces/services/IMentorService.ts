@@ -3,5 +3,4 @@ export interface IMentorService {
   getAllMentors(): unknown;
   acceptInvitation(token: any): unknown;
   sendInvitation(email: any, specialization: any, name: any): unknown;
-
 }

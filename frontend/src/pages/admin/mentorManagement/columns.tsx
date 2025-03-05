@@ -15,7 +15,7 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 export const columns = (
   resendInvite: (email: string) => void,
-  revokeMentor: (id: string) => void
+  revokeMentor: (id: string) => void,
 ): ColumnDef<Mentor>[] => [
   {
     id: "select",
@@ -77,7 +77,11 @@ export const columns = (
     header: () => <div className="text-center w-full">Status</div>,
     cell: ({ row }) => (
       <div className="text-center">
-        <Badge variant={row.getValue("status") === "accepted" ? "default" : "outline"}>
+        <Badge
+          variant={
+            row.getValue("status") === "accepted" ? "default" : "outline"
+          }
+        >
           {row.getValue("status") === "accepted" ? "Accepted" : "Pending"}
         </Badge>
       </div>

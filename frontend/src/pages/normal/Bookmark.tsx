@@ -31,7 +31,10 @@ export default function Bookmark() {
         selectedTopics={selectedTopics}
         setSelectedTopics={setSelectedTopics}
       />
-      <ContentTypeTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+      <ContentTypeTab
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
+      />
 
       {error && <p className="text-red-500">Error: {error}</p>}
 

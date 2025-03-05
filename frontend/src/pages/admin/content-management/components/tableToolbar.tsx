@@ -14,7 +14,9 @@ interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
+export function DataTableToolbar<TData>({
+  table,
+}: DataTableToolbarProps<TData>) {
   return (
     <div className="flex items-center justify-between py-4">
       <div className="flex flex-1 items-center space-x-2">
@@ -65,7 +67,9 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
                     key={column.id}
                     className="capitalize"
                     checked={column.getIsVisible()}
-                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>

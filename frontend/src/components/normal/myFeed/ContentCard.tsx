@@ -1,7 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { bookmarkContent } from "@/services/user/bookmarkService";
 import { likeContent } from "@/services/user/likeService";
 import { Bookmark, Gem, Share2 } from "lucide-react";
@@ -112,8 +117,16 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
             {likes}
           </Button>
           <CommentModal contentId={props.id} />
-          <Button variant="ghost" size="sm" onClick={() => handleBookmark(props.id)}>
-            {isBookmarked ? <Bookmark fill="#007AFF" color="#007AFF" /> : <Bookmark />}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => handleBookmark(props.id)}
+          >
+            {isBookmarked ? (
+              <Bookmark fill="#007AFF" color="#007AFF" />
+            ) : (
+              <Bookmark />
+            )}
           </Button>
           <Button variant="ghost" size="sm">
             <Share2 className="h-4 w-4" />

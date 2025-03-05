@@ -27,7 +27,7 @@ const HistoryCard: React.FC<IHistoryCardProps> = ({ item, setHistory }) => {
       await removeFromHistory(contentId);
 
       setHistory((prev) =>
-        prev.filter((historyItem) => historyItem.contentId !== contentId)
+        prev.filter((historyItem) => historyItem.contentId !== contentId),
       );
     } catch (error) {
       console.error("Error removing history:", error);
@@ -50,7 +50,9 @@ const HistoryCard: React.FC<IHistoryCardProps> = ({ item, setHistory }) => {
             <div className="flex gap-3">
               <Avatar>
                 <AvatarImage src="https://avatar.iran.liara.run/public" />
-                <AvatarFallback>{item.userName.slice(0, 2).toUpperCase()}</AvatarFallback>
+                <AvatarFallback>
+                  {item.userName.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
               </Avatar>
               <div className="w-full flex gap-4 items-center">
                 <h3 className="font-light">{item.userName}</h3>
@@ -74,15 +76,19 @@ const HistoryCard: React.FC<IHistoryCardProps> = ({ item, setHistory }) => {
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Remove from Reading History?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  Remove from Reading History?
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will remove <strong>{item.title}</strong> from your reading
-                  history. You can’t undo this action.
+                  This will remove <strong>{item.title}</strong> from your
+                  reading history. You can’t undo this action.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => handleRemoveHistory(item.contentId)}>
+                <AlertDialogAction
+                  onClick={() => handleRemoveHistory(item.contentId)}
+                >
                   Continue
                 </AlertDialogAction>
               </AlertDialogFooter>

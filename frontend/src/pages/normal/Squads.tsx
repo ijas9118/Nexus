@@ -70,9 +70,15 @@ const Squads: FC = () => {
         return;
       }
       try {
-        const squadsData = await SquadService.getSquadsByCategory(selectedCategory);
+        const squadsData =
+          await SquadService.getSquadsByCategory(selectedCategory);
         console.log(squadsData);
-        dispatch(setSquadsByCategory({ category: selectedCategory, squads: squadsData })); // Store squads in Redux
+        dispatch(
+          setSquadsByCategory({
+            category: selectedCategory,
+            squads: squadsData,
+          }),
+        ); // Store squads in Redux
         setSquads(squadsData);
       } catch (error) {
         console.error("Error fetching squads:", error);
@@ -90,7 +96,9 @@ const Squads: FC = () => {
       dispatch(addUserSquad(squad));
 
       setSquads((prevSquads) =>
-        prevSquads.map((s) => (s._id === squad._id ? { ...s, isJoined: true } : s))
+        prevSquads.map((s) =>
+          s._id === squad._id ? { ...s, isJoined: true } : s,
+        ),
       );
       toast.success("Successfully joined the squad!");
     } catch (error) {
@@ -128,8 +136,8 @@ const Squads: FC = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>🚀 Unlock Squad Creation</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Only premium members can create squads. Upgrade now and start building
-                  your own squad today!
+                  Only premium members can create squads. Upgrade now and start
+                  building your own squad today!
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -172,11 +180,17 @@ const Squads: FC = () => {
                   className="rounded-full h-14 w-14"
                 />
                 {squad.isJoined ? (
-                  <Button variant="outline" onClick={() => handleViewSquad(squad._id)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleViewSquad(squad._id)}
+                  >
                     View Squad
                   </Button>
                 ) : (
-                  <Button variant="outline" onClick={() => handleJoinSquad(squad)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleJoinSquad(squad)}
+                  >
                     Join Squad
                   </Button>
                 )}
@@ -195,7 +209,9 @@ const Squads: FC = () => {
         ) : (
           <div className="col-span-full flex flex-col items-center justify-center text-center py-10">
             <img src="/images/no-data.svg" alt="No squads" className="h-48" />
-            <p className="text-lg font-semibold mt-4">No squads found in this category</p>
+            <p className="text-lg font-semibold mt-4">
+              No squads found in this category
+            </p>
             <p className="text-sm">
               Be the first to create a squad and invite others to join!
             </p>
@@ -205,7 +221,9 @@ const Squads: FC = () => {
       <CreateSquadDialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
-        onSquadCreated={(newSquad: Squad) => setSquads((prev) => [newSquad, ...prev])}
+        onSquadCreated={(newSquad: Squad) =>
+          setSquads((prev) => [newSquad, ...prev])
+        }
       />
     </div>
   );

@@ -6,8 +6,8 @@ import {
   DeleteResult,
   Types,
   UpdateWriteOpResult,
-} from "mongoose";
-import { IBaseRepository } from "../interfaces/repositories/IBaseRepository";
+} from 'mongoose';
+import { IBaseRepository } from '../interfaces/repositories/IBaseRepository';
 
 export abstract class BaseRepository<T extends Document> implements IBaseRepository<T> {
   constructor(protected model: Model<T>) {}
@@ -33,10 +33,7 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
     return this.model.findByIdAndUpdate(id, data, { new: true });
   }
 
-  async updateOne(
-    filter: FilterQuery<T>,
-    update: UpdateQuery<T>
-  ): Promise<UpdateWriteOpResult> {
+  async updateOne(filter: FilterQuery<T>, update: UpdateQuery<T>): Promise<UpdateWriteOpResult> {
     return this.model.updateOne(filter, update);
   }
 

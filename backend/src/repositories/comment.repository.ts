@@ -1,16 +1,13 @@
-import mongoose from "mongoose";
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { ICommentRepository } from "../core/interfaces/repositories/ICommentRepository";
-import { AddCommentParams } from "../core/types/Contet";
-import CommentModel, { IComment } from "../models/comments.model";
-import { injectable } from "inversify";
-import { FormatTime } from "../utils/formatTime";
+import mongoose from 'mongoose';
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { ICommentRepository } from '../core/interfaces/repositories/ICommentRepository';
+import { AddCommentParams } from '../core/types/Contet';
+import CommentModel, { IComment } from '../models/comments.model';
+import { injectable } from 'inversify';
+import { FormatTime } from '../utils/formatTime';
 
 @injectable()
-export class CommentRepository
-  extends BaseRepository<IComment>
-  implements ICommentRepository
-{
+export class CommentRepository extends BaseRepository<IComment> implements ICommentRepository {
   constructor() {
     super(CommentModel);
   }
@@ -34,18 +31,18 @@ export class CommentRepository
 
   findCommentsByContentId = async (contentId: string): Promise<IComment[]> => {
     return await CommentModel.find({ contentId, parentCommentId: null })
-      .populate("userId", "name profilePic")
+      .populate('userId', 'name profilePic')
       .populate({
-        path: "replies",
-        populate: { path: "userId", select: "name profilePic" },
+        path: 'replies',
+        populate: { path: 'userId', select: 'name profilePic' },
       })
       .exec();
   };
 
   getAllComments = async (): Promise<IComment[]> => {
     const comments = await CommentModel.find({})
-      .populate("userId", "name profilePic")
-      .populate("contentId", "title")
+      .populate('userId', 'name profilePic')
+      .populate('contentId', 'title')
       .sort({ createdAt: -1 });
 
     const formattedComment = comments.map((comment: any) => {

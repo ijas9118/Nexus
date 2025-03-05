@@ -1,4 +1,4 @@
-import { ILike } from "../../../models/likes.model";
+import { ILike } from '../../../models/likes.model';
 
 export interface ILikeService {
   toggleLike(

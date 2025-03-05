@@ -1,4 +1,4 @@
-import { Schema, model, Document, Types } from "mongoose";
+import { Schema, model, Document, Types } from 'mongoose';
 
 interface IBookmark extends Document {
   contentIds: Types.ObjectId[];
@@ -9,12 +9,12 @@ interface IBookmark extends Document {
 const BookmarkSchema = new Schema<IBookmark>({
   contentIds: {
     type: [Schema.Types.ObjectId],
-    ref: "Content",
+    ref: 'Content',
     required: true,
   },
   userId: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   timestamp: {
@@ -23,6 +23,6 @@ const BookmarkSchema = new Schema<IBookmark>({
   },
 });
 
-const BookmarkModel = model<IBookmark>("Bookmark", BookmarkSchema);
+const BookmarkModel = model<IBookmark>('Bookmark', BookmarkSchema);
 
 export { IBookmark, BookmarkModel };

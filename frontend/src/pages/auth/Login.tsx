@@ -83,7 +83,8 @@ export default function LoginPage() {
       } else navigate("/myFeed");
     } catch (error: any) {
       toast.error("Authentication Failed", {
-        description: error?.message || "Something went wrong. Please try again.",
+        description:
+          error?.message || "Something went wrong. Please try again.",
       });
     } finally {
       setLoading(false);
@@ -92,7 +93,7 @@ export default function LoginPage() {
 
   const buttonText = useMemo(
     () => (loading ? "Please wait..." : signUp ? "Register" : "Login"),
-    [loading, signUp]
+    [loading, signUp],
   );
 
   const handleComplete = async (value: string) => {
@@ -113,7 +114,8 @@ export default function LoginPage() {
       startCountdown();
     } catch (error: any) {
       toast.error("Failed to Resend OTP", {
-        description: error?.message || "Something went wrong. Please try again.",
+        description:
+          error?.message || "Something went wrong. Please try again.",
       });
     }
   };
@@ -170,7 +172,11 @@ export default function LoginPage() {
                       <InputOTPSlot index={5} />
                     </InputOTPGroup>
                   </InputOTP>
-                  <Button onClick={onResend} className="w-full" disabled={!canResend}>
+                  <Button
+                    onClick={onResend}
+                    className="w-full"
+                    disabled={!canResend}
+                  >
                     {canResend ? "Resend OTP" : `Resend in ${timer}s`}
                   </Button>
                 </div>
@@ -194,7 +200,8 @@ export default function LoginPage() {
                       Welcome Back to Nexus
                     </h1>
                     <p className="text-muted-foreground">
-                      Log in to continue exploring and learning with professionals.
+                      Log in to continue exploring and learning with
+                      professionals.
                     </p>
                   </>
                 )}

@@ -49,8 +49,9 @@ export default function MentorInvitation() {
               </h1>
               <p className="text-muted-foreground">Hey there,</p>
               <p className="text-muted-foreground text-sm md:text-base">
-                We're excited to invite you to join our mentorship platform. Your
-                expertise and experience would be invaluable to our community of learners.
+                We're excited to invite you to join our mentorship platform.
+                Your expertise and experience would be invaluable to our
+                community of learners.
               </p>
             </div>
 
@@ -76,8 +77,8 @@ export default function MentorInvitation() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Set up your mentor profile with your expertise, experience, and
-                    availability.
+                    Set up your mentor profile with your expertise, experience,
+                    and availability.
                   </p>
                 </CardContent>
               </Card>
@@ -91,7 +92,8 @@ export default function MentorInvitation() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Post exclusive content for premium members in your custom Squads.
+                    Post exclusive content for premium members in your custom
+                    Squads.
                   </p>
                 </CardContent>
               </Card>
@@ -105,7 +107,8 @@ export default function MentorInvitation() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Set your availability and start scheduling mentoring sessions.
+                    Set your availability and start scheduling mentoring
+                    sessions.
                   </p>
                 </CardContent>
               </Card>
@@ -119,7 +122,8 @@ export default function MentorInvitation() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Your invitation is valid for 7 days. Accept it within this period.
+                    Your invitation is valid for 7 days. Accept it within this
+                    period.
                   </p>
                 </CardContent>
               </Card>
@@ -141,10 +145,16 @@ export default function MentorInvitation() {
             {/* Footer */}
             <footer className="border-t pt-6 text-center text-sm text-muted-foreground">
               <div className="flex flex-wrap justify-center space-x-4">
-                <Link to="/privacy" className="hover:underline underline-offset-4">
+                <Link
+                  to="/privacy"
+                  className="hover:underline underline-offset-4"
+                >
                   Privacy Policy
                 </Link>
-                <Link to="/terms" className="hover:underline underline-offset-4">
+                <Link
+                  to="/terms"
+                  className="hover:underline underline-offset-4"
+                >
                   Terms of Service
                 </Link>
               </div>

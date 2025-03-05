@@ -1,9 +1,9 @@
-import nodemailer from "nodemailer";
-import { APP_PASSWORD, USER_EMAIL } from "./constants";
+import nodemailer from 'nodemailer';
+import { APP_PASSWORD, USER_EMAIL } from './constants';
 
 export const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  host: "smtp.gmail.com",
+  service: 'Gmail',
+  host: 'smtp.gmail.com',
   port: 587,
   auth: {
     user: USER_EMAIL,

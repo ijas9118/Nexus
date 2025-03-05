@@ -1,10 +1,10 @@
-import { inject, injectable } from "inversify";
-import { BaseService } from "../core/abstracts/base.service";
-import { ISquadService } from "../core/interfaces/services/ISquadService";
-import { ISquad } from "../models/squads.model";
-import { TYPES } from "../di/types";
-import { ISquadRepository } from "../core/interfaces/repositories/ISquadRepository";
-import { ICategoryRepository } from "../core/interfaces/repositories/ICategoryRepository";
+import { inject, injectable } from 'inversify';
+import { BaseService } from '../core/abstracts/base.service';
+import { ISquadService } from '../core/interfaces/services/ISquadService';
+import { ISquad } from '../models/squads.model';
+import { TYPES } from '../di/types';
+import { ISquadRepository } from '../core/interfaces/repositories/ISquadRepository';
+import { ICategoryRepository } from '../core/interfaces/repositories/ICategoryRepository';
 
 @injectable()
 export class SquadService extends BaseService<ISquad> implements ISquadService {
@@ -17,13 +17,13 @@ export class SquadService extends BaseService<ISquad> implements ISquadService {
 
   createSquad = async (squadData: Partial<ISquad>): Promise<ISquad> => {
     const { category } = squadData;
-    if (!category || typeof category !== "string") {
-      throw new Error("Invalid category provided");
+    if (!category || typeof category !== 'string') {
+      throw new Error('Invalid category provided');
     }
 
     const categoryObj = await this.categoryRepository.findOne({ name: category });
     if (!categoryObj) {
-      throw new Error("Category not found");
+      throw new Error('Category not found');
     }
 
     const squad = await this.create(squadData);

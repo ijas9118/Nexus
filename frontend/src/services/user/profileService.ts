@@ -6,7 +6,8 @@ export const getUserProfile = async (username: string) => {
     return response.data;
   } catch (error: any) {
     const errorMessage =
-      error.response?.data?.message || "An unexpected error occurred during liking.";
+      error.response?.data?.message ||
+      "An unexpected error occurred during liking.";
     throw new Error(errorMessage);
   }
 };
@@ -21,7 +22,8 @@ export const updateProfile = async (data: {
     return response.data;
   } catch (error: any) {
     const errorMessage =
-      error.response?.data?.message || "An unexpected error occurred during liking.";
+      error.response?.data?.message ||
+      "An unexpected error occurred during liking.";
     throw new Error(errorMessage);
   }
 };
@@ -36,7 +38,8 @@ export const updatePassword = async (data: {
     return response.data;
   } catch (error: any) {
     const errorMessage =
-      error.response?.data?.message || "An unexpected error occurred during liking.";
+      error.response?.data?.message ||
+      "An unexpected error occurred during liking.";
     throw new Error(errorMessage);
   }
 };

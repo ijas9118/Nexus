@@ -19,7 +19,7 @@ export default function MyFeed() {
       setBreadcrumbs([
         { title: "Home", url: "/" },
         { title: "My Feed", url: "/myFeed" },
-      ])
+      ]),
     );
 
     const fetchContent = async () => {
@@ -40,7 +40,7 @@ export default function MyFeed() {
 
     if (selectedTab !== "all") {
       filteredContent = filteredContent.filter(
-        (item: any) => item.contentType === selectedTab
+        (item: any) => item.contentType === selectedTab,
       );
     }
 
@@ -48,8 +48,8 @@ export default function MyFeed() {
       console.log(selectedTopics);
       filteredContent = filteredContent.filter((item: any) =>
         selectedTopics.some((topic) =>
-          item.squad.toLowerCase().includes(topic.toLowerCase())
-        )
+          item.squad.toLowerCase().includes(topic.toLowerCase()),
+        ),
       );
     }
 
@@ -62,7 +62,10 @@ export default function MyFeed() {
         selectedTopics={selectedTopics}
         setSelectedTopics={setSelectedTopics}
       />
-      <ContentTypeTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+      <ContentTypeTab
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
+      />
 
       {error && <p className="text-red-500">Error: {error}</p>}
 

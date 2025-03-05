@@ -27,6 +27,4 @@ export const ContentService = {
       throw error.response?.data || error.message;
     }
   },
-
-  
 };

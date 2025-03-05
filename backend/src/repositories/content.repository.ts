@@ -1,17 +1,14 @@
-import { inject, injectable } from "inversify";
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { IContentRepository } from "../core/interfaces/repositories/IContentRepository";
-import ContentModel, { IContent } from "../models/content.model";
-import mongoose, { Types } from "mongoose";
-import { TYPES } from "../di/types";
-import { IFollowersRepository } from "../core/interfaces/repositories/IFollowersRepository";
-import UserFollowModel from "../models/followers.model";
+import { inject, injectable } from 'inversify';
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { IContentRepository } from '../core/interfaces/repositories/IContentRepository';
+import ContentModel, { IContent } from '../models/content.model';
+import mongoose, { Types } from 'mongoose';
+import { TYPES } from '../di/types';
+import { IFollowersRepository } from '../core/interfaces/repositories/IFollowersRepository';
+import UserFollowModel from '../models/followers.model';
 
 @injectable()
-export class ContentRepository
-  extends BaseRepository<IContent>
-  implements IContentRepository
-{
+export class ContentRepository extends BaseRepository<IContent> implements IContentRepository {
   constructor(
     @inject(TYPES.FollowersRepository) private followersRepository: IFollowersRepository
   ) {
@@ -20,7 +17,7 @@ export class ContentRepository
 
   async findContent(id: string): Promise<IContent | null> {
     const contentIdObj = new Types.ObjectId(id);
-    return await ContentModel.findById(contentIdObj).populate("squad", "name");
+    return await ContentModel.findById(contentIdObj).populate('squad', 'name');
   }
 
   async getFeedContents(userId: string): Promise<IContent[]> {
@@ -29,58 +26,58 @@ export class ContentRepository
     const contents = await this.model.aggregate([
       {
         $lookup: {
-          from: "users", // Users collection
-          localField: "author", // Content author field
-          foreignField: "_id", // User _id field
-          as: "authorInfo",
+          from: 'users', // Users collection
+          localField: 'author', // Content author field
+          foreignField: '_id', // User _id field
+          as: 'authorInfo',
         },
       },
       {
-        $unwind: "$authorInfo", // Convert array to object
+        $unwind: '$authorInfo', // Convert array to object
       },
       {
         $lookup: {
-          from: "likes",
-          let: { contentId: "$_id" },
+          from: 'likes',
+          let: { contentId: '$_id' },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$contentId", "$$contentId"] },
-                    { $eq: ["$userId", userObjectId] },
+                    { $eq: ['$contentId', '$$contentId'] },
+                    { $eq: ['$userId', userObjectId] },
                   ],
                 },
               },
             },
           ],
-          as: "userLike",
+          as: 'userLike',
         },
       },
       {
         $lookup: {
-          from: "bookmarks",
-          let: { contentId: "$_id" },
+          from: 'bookmarks',
+          let: { contentId: '$_id' },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $in: ["$$contentId", "$contentIds"] },
-                    { $eq: ["$userId", userObjectId] },
+                    { $in: ['$$contentId', '$contentIds'] },
+                    { $eq: ['$userId', userObjectId] },
                   ],
                 },
               },
             },
           ],
-          as: "userBookmark",
+          as: 'userBookmark',
         },
       },
       {
         $addFields: {
-          isLiked: { $gt: [{ $size: "$userLike" }, 0] },
-          isBookmarked: { $gt: [{ $size: "$userBookmark" }, 0] },
-          username: "$authorInfo.username",
+          isLiked: { $gt: [{ $size: '$userLike' }, 0] },
+          isBookmarked: { $gt: [{ $size: '$userBookmark' }, 0] },
+          username: '$authorInfo.username',
         },
       },
       {
@@ -97,7 +94,7 @@ export class ContentRepository
   }
 
   async getPosts(): Promise<IContent[]> {
-    return await ContentModel.find({}).populate("author", "name profilePic");
+    return await ContentModel.find({}).populate('author', 'name profilePic');
   }
 
   async verifyContent(contentId: string): Promise<IContent | null> {
@@ -110,17 +107,15 @@ export class ContentRepository
     const userFollow = await UserFollowModel.findOne({ userId: userObjectId }).exec();
 
     if (!userFollow) {
-      throw new Error("User follow document not found");
+      throw new Error('User follow document not found');
     }
 
-    const followingUserIds = userFollow.following.map(
-      (id) => new mongoose.Types.ObjectId(id)
-    );
+    const followingUserIds = userFollow.following.map((id) => new mongoose.Types.ObjectId(id));
 
     const contents = await ContentModel.find({ author: { $in: followingUserIds } })
       .sort({ createdAt: -1 }) // Sort by createdAt in descending order
-      .populate("author", "name profilePic") // Populate author details
-      .populate("squad", "name") // Populate squad details
+      .populate('author', 'name profilePic') // Populate author details
+      .populate('squad', 'name') // Populate squad details
       .exec();
 
     return contents;

@@ -1,0 +1,13 @@
+node_modules
+dist
+package-lock.json
+.env
+.env.example
+tsconfig.json
+components.json
+eslint.config.js
+postcss.config.js
+tailwind.config.js
+tsconfig.app.json
+tsconfig.node.json
+vite.config.ts

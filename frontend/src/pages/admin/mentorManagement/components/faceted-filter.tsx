@@ -12,7 +12,11 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { CheckIcon, PlusCircleIcon } from "lucide-react";
 
@@ -51,7 +55,10 @@ export function FacetedFilter<TData, TValue>({
               </Badge>
               <div className="hidden space-x-1 lg:flex">
                 {selectedValues.size > 2 ? (
-                  <Badge variant="secondary" className="rounded-sm px-1 font-normal">
+                  <Badge
+                    variant="secondary"
+                    className="rounded-sm px-1 font-normal"
+                  >
                     {selectedValues.size} selected
                   </Badge>
                 ) : (
@@ -91,7 +98,7 @@ export function FacetedFilter<TData, TValue>({
                       }
                       const filterValues = Array.from(selectedValues);
                       column?.setFilterValue(
-                        filterValues.length ? filterValues : undefined
+                        filterValues.length ? filterValues : undefined,
                       );
                     }}
                   >
@@ -100,7 +107,7 @@ export function FacetedFilter<TData, TValue>({
                         "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
                         isSelected
                           ? "bg-primary text-primary-foreground"
-                          : "opacity-50 [&_svg]:invisible"
+                          : "opacity-50 [&_svg]:invisible",
                       )}
                     >
                       <CheckIcon className={cn("h-4 w-4")} />

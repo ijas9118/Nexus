@@ -1,17 +1,14 @@
-import mongoose from "mongoose";
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { IMessageRepository } from "../core/interfaces/repositories/IMessageRepository";
-import MessageModel, { IMessage } from "../models/message.model";
-import { IChatRepository } from "../core/interfaces/repositories/IChatRepository";
-import { inject, injectable } from "inversify";
-import { TYPES } from "../di/types";
-import { FormatTime } from "../utils/formatTime";
+import mongoose from 'mongoose';
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { IMessageRepository } from '../core/interfaces/repositories/IMessageRepository';
+import MessageModel, { IMessage } from '../models/message.model';
+import { IChatRepository } from '../core/interfaces/repositories/IChatRepository';
+import { inject, injectable } from 'inversify';
+import { TYPES } from '../di/types';
+import { FormatTime } from '../utils/formatTime';
 
 @injectable()
-export class MessageRepository
-  extends BaseRepository<IMessage>
-  implements IMessageRepository
-{
+export class MessageRepository extends BaseRepository<IMessage> implements IMessageRepository {
   constructor(@inject(TYPES.ChatRepository) private chatRepository: IChatRepository) {
     super(MessageModel);
   }
@@ -41,13 +38,13 @@ export class MessageRepository
       chatId: new mongoose.Types.ObjectId(chatId),
     })
       .sort({ createdAt: 1 }) // Sort by createdAt in ascending order
-      .populate("sender", "name profilePic"); // Populate sender details
+      .populate('sender', 'name profilePic'); // Populate sender details
 
     // console.log(messages)
 
     const formattedMessages = messages.map((message: any) => {
       return {
-        ...message.toObject(), 
+        ...message.toObject(),
         sentTime: FormatTime.formatTime(message.updatedAt),
       };
     });

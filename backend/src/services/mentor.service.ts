@@ -1,17 +1,17 @@
-import { BaseService } from "../core/abstracts/base.service";
-import { IMentorService } from "../core/interfaces/services/IMentorService";
-import { IMentor } from "../models/mentor.model";
-import jwt from "jsonwebtoken";
-import { ACCESS_TOKEN, CLIENT_URL, USER_EMAIL } from "../utils/constants";
-import redisClient from "../config/redisClient.config";
-import { transporter } from "../utils/nodemailerTransporter";
-import { inject, injectable } from "inversify";
-import { TYPES } from "../di/types";
-import { hash } from "bcrypt";
-import { IMentorRepository } from "../core/interfaces/repositories/IMentorRepository";
-import { IUserRepository } from "../core/interfaces/repositories/IUserRepository";
+import { BaseService } from '../core/abstracts/base.service';
+import { IMentorService } from '../core/interfaces/services/IMentorService';
+import { IMentor } from '../models/mentor.model';
+import jwt from 'jsonwebtoken';
+import { ACCESS_TOKEN, CLIENT_URL, USER_EMAIL } from '../utils/constants';
+import redisClient from '../config/redisClient.config';
+import { transporter } from '../utils/nodemailerTransporter';
+import { inject, injectable } from 'inversify';
+import { TYPES } from '../di/types';
+import { hash } from 'bcrypt';
+import { IMentorRepository } from '../core/interfaces/repositories/IMentorRepository';
+import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
 
-const ACCESS_TOKEN_SECRET = ACCESS_TOKEN || "access_secret";
+const ACCESS_TOKEN_SECRET = ACCESS_TOKEN || 'access_secret';
 
 @injectable()
 export class MentorService extends BaseService<IMentor> implements IMentorService {
@@ -22,13 +22,9 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
     super(mentorRepository);
   }
 
-  sendInvitation = async (
-    email: string,
-    specialization: string,
-    name: string
-  ): Promise<void> => {
+  sendInvitation = async (email: string, specialization: string, name: string): Promise<void> => {
     const token = jwt.sign({ email, specialization, name }, ACCESS_TOKEN_SECRET, {
-      expiresIn: "1d",
+      expiresIn: '1d',
     });
 
     await redisClient.setex(`mentorInvite:${email}`, 86400, token);
@@ -36,7 +32,7 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
     const mailOptions = {
       from: USER_EMAIL,
       to: email,
-      subject: "Invitation to Join as Mentor - Nexus",
+      subject: 'Invitation to Join as Mentor - Nexus',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
           <div style="background-color: #007bff; color: #ffffff; text-align: center; padding: 20px; border-radius: 8px 8px 0 0;">
@@ -87,8 +83,8 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
     const user = await this.userRepository.create({
       name,
       email,
-      password: "$2b$10$gRSI2udnXon1m6BxycA/OOdbOMWjxDtKfPMM4md9I53HoBoyTnSxu",
-      role: "mentor",
+      password: '$2b$10$gRSI2udnXon1m6BxycA/OOdbOMWjxDtKfPMM4md9I53HoBoyTnSxu',
+      role: 'mentor',
     });
 
     await this.mentorRepository.create({ userId: user._id, specialization });
@@ -103,7 +99,7 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
 
     const storedToken = await redisClient.get(`mentorInvite:${decoded.email}`);
     if (!storedToken || storedToken !== token) {
-      throw new Error("Invalid or expired token");
+      throw new Error('Invalid or expired token');
     }
 
     return decoded.email;
@@ -116,9 +112,6 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
   completeProfile = async (email: string, name: string, password: string) => {
     const hashedPassword = await hash(password, 10);
 
-    return this.userRepository.updateOne(
-      { email },
-      { $set: { name, password: hashedPassword } }
-    );
+    return this.userRepository.updateOne({ email }, { $set: { name, password: hashedPassword } });
   };
 }

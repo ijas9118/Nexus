@@ -1,8 +1,8 @@
-import { Types } from "mongoose";
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { IFollowersRepository } from "../core/interfaces/repositories/IFollowersRepository";
-import UserFollowModel, { IUserFollow } from "../models/followers.model";
-import { injectable } from "inversify";
+import { Types } from 'mongoose';
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { IFollowersRepository } from '../core/interfaces/repositories/IFollowersRepository';
+import UserFollowModel, { IUserFollow } from '../models/followers.model';
+import { injectable } from 'inversify';
 
 @injectable()
 export class FollowersRepository
@@ -59,14 +59,14 @@ export class FollowersRepository
 
   getFollowers = async (userId: string): Promise<any[]> => {
     const userFollow = await UserFollowModel.findOne({ userId })
-      .populate("followers", "name profilePic")
+      .populate('followers', 'name profilePic')
       .lean();
     return userFollow?.followers || [];
   };
 
   getFollowing = async (userId: string): Promise<any[]> => {
     const userFollow = await UserFollowModel.findOne({ userId })
-      .populate("following", "name profilePic")
+      .populate('following', 'name profilePic')
       .lean();
     return userFollow?.following || [];
   };
@@ -79,6 +79,4 @@ export class FollowersRepository
 
     return !!userFollow;
   };
-
-  
 }

@@ -1,7 +1,11 @@
 import api from "../api";
 
 const MentorService = {
-  sendInvite: async (data: { email: string; name: string; specialization: string }) => {
+  sendInvite: async (data: {
+    email: string;
+    name: string;
+    specialization: string;
+  }) => {
     try {
       const response = await api.post("admin/mentor/invite", data);
       return response.data;
@@ -19,7 +23,11 @@ const MentorService = {
     }
   },
 
-  completeProfile: async (data: { email: string; name: string; password: string }) => {
+  completeProfile: async (data: {
+    email: string;
+    name: string;
+    password: string;
+  }) => {
     try {
       const response = await api.post("/mentor/register", data);
       return response.data;

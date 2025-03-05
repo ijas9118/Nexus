@@ -6,7 +6,8 @@ export const likeContent = async (contentId: string) => {
     return response.data;
   } catch (error: any) {
     const errorMessage =
-      error.response?.data?.message || "An unexpected error occurred during liking.";
+      error.response?.data?.message ||
+      "An unexpected error occurred during liking.";
     throw new Error(errorMessage);
   }
 };

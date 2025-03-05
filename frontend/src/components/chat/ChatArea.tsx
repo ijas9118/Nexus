@@ -37,7 +37,7 @@ const ChatArea = ({ selectedChat }: { selectedChat: any }) => {
       setMessages((prevMessages) =>
         prevMessages.some((msg) => msg._id === message._id)
           ? prevMessages
-          : [...prevMessages, message]
+          : [...prevMessages, message],
       );
     });
 

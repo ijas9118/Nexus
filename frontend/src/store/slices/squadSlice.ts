@@ -15,7 +15,7 @@ const squadSlice = createSlice({
   reducers: {
     setSquadsByCategory: (
       state,
-      action: PayloadAction<{ category: string; squads: Squad[] }>
+      action: PayloadAction<{ category: string; squads: Squad[] }>,
     ) => {
       const { category, squads } = action.payload;
       state.squadsByCategory[category] = squads;

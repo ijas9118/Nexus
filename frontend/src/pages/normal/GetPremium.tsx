@@ -5,7 +5,6 @@ import { BookOpen, Star, Users } from "lucide-react";
 import { FC } from "react";
 import { plans } from "./Home";
 
-
 const features = [
   {
     icon: BookOpen,
@@ -16,7 +15,8 @@ const features = [
   {
     icon: Users,
     title: "Premium Squads",
-    description: "Join exclusive squads for advanced discussions and collaboration",
+    description:
+      "Join exclusive squads for advanced discussions and collaboration",
     iconColor: "text-blue-500",
   },
   {
@@ -35,8 +35,8 @@ const GetPremium: FC = () => {
           Unlock Your Full Potential with Premium Access
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl">
-          Exclusive content, advanced features, and more—tailored for professionals who
-          want to stay ahead.
+          Exclusive content, advanced features, and more—tailored for
+          professionals who want to stay ahead.
         </p>
         <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-4 text-md rounded-md">
           Choose Your Plan
@@ -54,11 +54,15 @@ const GetPremium: FC = () => {
               className="border shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
               <CardContent className="flex flex-col items-center text-center p-8">
-                <feature.icon className={`w-12 h-12 ${feature.iconColor} mb-6`} />
+                <feature.icon
+                  className={`w-12 h-12 ${feature.iconColor} mb-6`}
+                />
                 <h3 className="text-xl font-medium mb-4 text-foreground">
                   {feature.title}
                 </h3>
-                <p className="text-muted-foreground text-sm">{feature.description}</p>
+                <p className="text-muted-foreground text-sm">
+                  {feature.description}
+                </p>
               </CardContent>
             </Card>
           ))}

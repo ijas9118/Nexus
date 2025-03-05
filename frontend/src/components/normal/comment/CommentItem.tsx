@@ -1,6 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Check, MoreHorizontal, Reply, ThumbsDown, ThumbsUp } from "lucide-react";
+import {
+  Check,
+  MoreHorizontal,
+  Reply,
+  ThumbsDown,
+  ThumbsUp,
+} from "lucide-react";
 
 const CommentItem = ({ comment }: { comment: any }) => {
   return (

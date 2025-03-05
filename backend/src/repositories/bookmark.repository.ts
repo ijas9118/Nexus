@@ -1,14 +1,11 @@
-import { injectable } from "inversify";
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { IBookmarkRepository } from "../core/interfaces/repositories/IBookmarnRepository";
-import { IBookmark, BookmarkModel } from "../models/bookmarks.model";
-import mongoose from "mongoose";
+import { injectable } from 'inversify';
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { IBookmarkRepository } from '../core/interfaces/repositories/IBookmarnRepository';
+import { IBookmark, BookmarkModel } from '../models/bookmarks.model';
+import mongoose from 'mongoose';
 
 @injectable()
-export class BookmarkRepository
-  extends BaseRepository<IBookmark>
-  implements IBookmarkRepository
-{
+export class BookmarkRepository extends BaseRepository<IBookmark> implements IBookmarkRepository {
   constructor() {
     super(BookmarkModel);
   }
@@ -32,18 +29,18 @@ export class BookmarkRepository
         },
       },
       {
-        $unwind: "$contentIds",
+        $unwind: '$contentIds',
       },
       {
         $lookup: {
-          from: "contents",
-          localField: "contentIds",
-          foreignField: "_id",
-          as: "content",
+          from: 'contents',
+          localField: 'contentIds',
+          foreignField: '_id',
+          as: 'content',
         },
       },
       {
-        $unwind: "$content",
+        $unwind: '$content',
       },
     ]);
 

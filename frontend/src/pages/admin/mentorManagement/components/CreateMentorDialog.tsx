@@ -66,7 +66,8 @@ export function CreateMentorDialog({ open, onOpenChange }: DialogProps) {
           <DialogHeader>
             <DialogTitle>Create Mentor</DialogTitle>
             <DialogDescription>
-              Enter mentor details below. A magic link will be sent for confirmation.
+              Enter mentor details below. A magic link will be sent for
+              confirmation.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -81,11 +82,17 @@ export function CreateMentorDialog({ open, onOpenChange }: DialogProps) {
                     name="name"
                     control={control}
                     render={({ field }) => (
-                      <Input id="name" placeholder="Enter mentor's name" {...field} />
+                      <Input
+                        id="name"
+                        placeholder="Enter mentor's name"
+                        {...field}
+                      />
                     )}
                   />
                   {errors.name && (
-                    <p className="text-sm text-red-600">{errors.name.message}</p>
+                    <p className="text-sm text-red-600">
+                      {errors.name.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -100,11 +107,17 @@ export function CreateMentorDialog({ open, onOpenChange }: DialogProps) {
                     name="email"
                     control={control}
                     render={({ field }) => (
-                      <Input id="email" placeholder="Enter mentor's email" {...field} />
+                      <Input
+                        id="email"
+                        placeholder="Enter mentor's email"
+                        {...field}
+                      />
                     )}
                   />
                   {errors.email && (
-                    <p className="text-sm text-red-600">{errors.email.message}</p>
+                    <p className="text-sm text-red-600">
+                      {errors.email.message}
+                    </p>
                   )}
                 </div>
               </div>

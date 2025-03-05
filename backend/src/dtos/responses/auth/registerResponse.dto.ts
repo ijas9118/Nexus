@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import { ObjectId } from 'mongoose';
 
 export interface RegisterResponseDto {
   _id: ObjectId;

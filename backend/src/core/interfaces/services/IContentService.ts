@@ -1,4 +1,4 @@
-import { IContent } from "../../../models/content.model";
+import { IContent } from '../../../models/content.model';
 
 export interface IContentService {
   createContent(contentData: Partial<IContent>): Promise<IContent>;

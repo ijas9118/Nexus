@@ -21,7 +21,9 @@ const SearchDropdown = ({
             />
             <div>
               <p className="font-medium">{connection.name}</p>
-              <p className="text-sm text-muted-foreground">@{connection.username}</p>
+              <p className="text-sm text-muted-foreground">
+                @{connection.username}
+              </p>
             </div>
           </div>
         </div>

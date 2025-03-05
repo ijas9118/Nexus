@@ -6,12 +6,16 @@ export const followUser = async (followedId: string) => {
     return response.data;
   } catch (error: any) {
     const errorMessage =
-      error.response?.data?.message || "An unexpected error occurred during following.";
+      error.response?.data?.message ||
+      "An unexpected error occurred during following.";
     throw new Error(errorMessage);
   }
 };
 
-export const checkIsFollowing = async (followerId: string, followedId: string) => {
+export const checkIsFollowing = async (
+  followerId: string,
+  followedId: string,
+) => {
   try {
     const response = await api.post("/followers/is-following", {
       followerId,
@@ -20,7 +24,8 @@ export const checkIsFollowing = async (followerId: string, followedId: string) =
     return response.data;
   } catch (error: any) {
     const errorMessage =
-      error.response?.data?.message || "An unexpected error occurred during checking.";
+      error.response?.data?.message ||
+      "An unexpected error occurred during checking.";
     throw new Error(errorMessage);
   }
 };
@@ -31,7 +36,8 @@ export const unfollowUser = async (followedId: string) => {
     return response.data;
   } catch (error: any) {
     const errorMessage =
-      error.response?.data?.message || "An unexpected error occurred during unfollowing.";
+      error.response?.data?.message ||
+      "An unexpected error occurred during unfollowing.";
     throw new Error(errorMessage);
   }
 };
@@ -74,7 +80,9 @@ export const acceptConnectionRequest = async (requesterId: string) => {
 
 export const hasSentConnectionRequest = async (recipientId: string) => {
   try {
-    const response = await api.post("/followers/has-requested", { recipientId });
+    const response = await api.post("/followers/has-requested", {
+      recipientId,
+    });
     return response.data;
   } catch (error: any) {
     const errorMessage =
@@ -105,7 +113,8 @@ export const getAllConnections = async (searchTerm?: string) => {
     });
     return response.data;
   } catch (error: any) {
-    const errorMessage = error.response?.data?.message || "An unexpected error occurred.";
+    const errorMessage =
+      error.response?.data?.message || "An unexpected error occurred.";
     throw new Error(errorMessage);
   }
 };
@@ -115,7 +124,8 @@ export const getPendingRequests = async () => {
     const response = await api.get("/followers/pending");
     return response.data;
   } catch (error: any) {
-    const errorMessage = error.response?.data?.message || "An unexpected error occurred.";
+    const errorMessage =
+      error.response?.data?.message || "An unexpected error occurred.";
     throw new Error(errorMessage);
   }
 };

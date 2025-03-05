@@ -1,17 +1,17 @@
-import { injectable, inject } from "inversify";
-import { TYPES } from "../../di/types";
-import { IUserRepository } from "../../core/interfaces/repositories/IUserRepository";
-import { LoginDto } from "../../dtos/requests/auth/login.dto";
-import { RegisterDto } from "../../dtos/requests/auth/register.dto";
-import { compare, hash } from "bcrypt";
-import { RegisterResponseDto } from "../../dtos/responses/auth/registerResponse.dto";
-import { LoginResponseDto } from "../../dtos/responses/auth/loginResponse.dto";
-import { generateRefreshToken } from "../../utils/jwt.util";
-import redisClient from "../../config/redisClient.config";
-import { IAuthService } from "../../core/interfaces/services/IAuthService";
-import CustomError from "../../utils/CustomError";
-import { StatusCodes } from "http-status-codes";
-import { UsernameGenerator } from "../../utils/usernameGenerator.util";
+import { injectable, inject } from 'inversify';
+import { TYPES } from '../../di/types';
+import { IUserRepository } from '../../core/interfaces/repositories/IUserRepository';
+import { LoginDto } from '../../dtos/requests/auth/login.dto';
+import { RegisterDto } from '../../dtos/requests/auth/register.dto';
+import { compare, hash } from 'bcrypt';
+import { RegisterResponseDto } from '../../dtos/responses/auth/registerResponse.dto';
+import { LoginResponseDto } from '../../dtos/responses/auth/loginResponse.dto';
+import { generateRefreshToken } from '../../utils/jwt.util';
+import redisClient from '../../config/redisClient.config';
+import { IAuthService } from '../../core/interfaces/services/IAuthService';
+import CustomError from '../../utils/CustomError';
+import { StatusCodes } from 'http-status-codes';
+import { UsernameGenerator } from '../../utils/usernameGenerator.util';
 
 @injectable()
 export class AuthService implements IAuthService {
@@ -50,12 +50,10 @@ export class AuthService implements IAuthService {
     const { email, password } = loginDto;
     const user = await this.userRepository.findByEmail(email);
 
-    if (!user)
-      throw new CustomError("Invalid email or password", StatusCodes.BAD_REQUEST);
+    if (!user) throw new CustomError('Invalid email or password', StatusCodes.BAD_REQUEST);
 
     const isPasswordValid = await compare(password, user.password);
-    if (!isPasswordValid)
-      throw new CustomError("Invalid password", StatusCodes.BAD_REQUEST);
+    if (!isPasswordValid) throw new CustomError('Invalid password', StatusCodes.BAD_REQUEST);
 
     return {
       _id: user._id,
@@ -70,7 +68,7 @@ export class AuthService implements IAuthService {
   // Update the password of the user with the given email
   async updatePassword(email: string, newPassword: string): Promise<void> {
     const user = await this.userRepository.findOne({ email });
-    if (!user) throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+    if (!user) throw new CustomError('User not found', StatusCodes.NOT_FOUND);
 
     const hashedPassword = await hash(newPassword, 10);
 
@@ -95,7 +93,7 @@ export class AuthService implements IAuthService {
     let user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      user = await this.userRepository.create({ name, email, password: "123456789" });
+      user = await this.userRepository.create({ name, email, password: '123456789' });
     }
 
     const data = {
@@ -107,13 +105,13 @@ export class AuthService implements IAuthService {
     const refreshToken = generateRefreshToken(data);
 
     const key = `refreshToken:${user._id}`;
-    await redisClient.set(key, refreshToken, "EX", 7 * 24 * 60 * 60);
+    await redisClient.set(key, refreshToken, 'EX', 7 * 24 * 60 * 60);
 
     return {
       _id: user._id,
       name: user.name,
       email: user.email,
-      role: "user",
+      role: 'user',
       username: user.username,
     };
   }

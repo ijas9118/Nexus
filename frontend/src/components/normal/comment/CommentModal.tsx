@@ -36,10 +36,14 @@ const CommentModal = ({ contentId }: { contentId: string }) => {
         <DialogTitle>
           <div className="flex justify-start gap-4 items-center">
             <h2 className="text-xl font-bold">Comments</h2>
-            <Badge className="rounded-full px-2 py-0.5 text-xs">{comments?.length}</Badge>
+            <Badge className="rounded-full px-2 py-0.5 text-xs">
+              {comments?.length}
+            </Badge>
           </div>
         </DialogTitle>
-        <DialogDescription>View and add comments for this content.</DialogDescription>
+        <DialogDescription>
+          View and add comments for this content.
+        </DialogDescription>
         <div className="space-y-4 pt-3">
           <CommentInput contentId={contentId} />
           <Separator />

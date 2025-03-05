@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, ObjectId } from "mongoose";
+import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 interface IMentor extends Document {
   userId: ObjectId;
@@ -16,7 +16,7 @@ const MentorSchema: Schema = new Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
       unique: true,
     },
@@ -42,7 +42,7 @@ const MentorSchema: Schema = new Schema(
     squadsCreated: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Squad",
+        ref: 'Squad',
       },
     ],
     rating: {
@@ -55,5 +55,5 @@ const MentorSchema: Schema = new Schema(
   }
 );
 
-const MentorModel = mongoose.model<IMentor>("Mentor", MentorSchema);
+const MentorModel = mongoose.model<IMentor>('Mentor', MentorSchema);
 export { IMentor, MentorModel };

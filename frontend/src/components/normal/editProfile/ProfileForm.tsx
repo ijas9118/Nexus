@@ -41,8 +41,8 @@ const ProfileForm = () => {
         acc[platform] = true;
         return acc;
       },
-      {}
-    ) || {}
+      {},
+    ) || {},
   );
   const dispatch = useDispatch();
 
@@ -55,12 +55,12 @@ const ProfileForm = () => {
         user.socials?.reduce(
           (
             acc: Record<string, string>,
-            { platform, url }: { platform: string; url: string }
+            { platform, url }: { platform: string; url: string },
           ) => {
             acc[platform] = url;
             return acc;
           },
-          {}
+          {},
         ) || {},
     },
   });
@@ -114,7 +114,10 @@ const ProfileForm = () => {
           />
         </div>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-y-auto p-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex-1 overflow-y-auto p-6"
+      >
         <div className="space-y-4">
           <div>
             <Label htmlFor="username">Username</Label>
@@ -175,12 +178,16 @@ const ProfileForm = () => {
                       className="pl-10 w-full"
                     />
                   </div>
-                ) : null
+                ) : null,
               )}
             </div>
           </div>
 
-          <Button type="submit" className="w-full" disabled={!isDirty || loading}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={!isDirty || loading}
+          >
             {loading ? <Loader2 className="animate-spin" /> : ""} Update Profile
           </Button>
         </div>

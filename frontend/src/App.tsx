@@ -13,7 +13,7 @@ const App: React.FC = () => {
   useEffect(() => {
     (async () => {
       if (localStorage.getItem("sessionActive"))
-      await store.dispatch(refreshAccessToken());
+        await store.dispatch(refreshAccessToken());
       setIsLoading(false);
     })();
   }, []);

@@ -27,7 +27,13 @@ const mentors = [
     role: "Sr. UX Designer",
     experience: "8 years",
     image: "https://avatar.iran.liara.run/public",
-    skills: ["UI/UX", "Figma", "User Research", "Prototyping", "Design Systems"],
+    skills: [
+      "UI/UX",
+      "Figma",
+      "User Research",
+      "Prototyping",
+      "Design Systems",
+    ],
   },
   {
     name: "ATLAS KINGSLEY",
@@ -41,7 +47,13 @@ const mentors = [
     role: "AI & ML Researcher",
     experience: "7 years",
     image: "https://avatar.iran.liara.run/public",
-    skills: ["Machine Learning", "Deep Learning", "TensorFlow", "NLP", "AI Ethics"],
+    skills: [
+      "Machine Learning",
+      "Deep Learning",
+      "TensorFlow",
+      "NLP",
+      "AI Ethics",
+    ],
   },
   {
     name: "ZEUS CALLISTO",
@@ -113,8 +125,8 @@ const Experts: React.FC = () => {
                 <DialogHeader>
                   <DialogTitle>Premium Membership Required</DialogTitle>
                   <DialogDescription>
-                    Only premium users can access mentorship sessions. Upgrade to premium
-                    now to unlock this feature.
+                    Only premium users can access mentorship sessions. Upgrade
+                    to premium now to unlock this feature.
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="flex justify-center">

@@ -42,14 +42,17 @@ const GoogleButton: FC = () => {
       }
     } catch (error: any) {
       toast.error("Authentication Failed", {
-        description: error?.message || "Something went wrong. Please try again.",
+        description:
+          error?.message || "Something went wrong. Please try again.",
       });
     }
   };
   const handleError = () => {
     console.error("Google authentication failed");
   };
-  return <GoogleLogin onSuccess={handleSuccess} onError={handleError}></GoogleLogin>;
+  return (
+    <GoogleLogin onSuccess={handleSuccess} onError={handleError}></GoogleLogin>
+  );
 };
 
 export default GoogleButton;

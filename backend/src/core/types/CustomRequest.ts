@@ -1,5 +1,5 @@
-import { Request } from "express";
-import { UserRole } from "./UserTypes";
+import { Request } from 'express';
+import { UserRole } from './UserTypes';
 
 export interface CustomRequest extends Request {
   user?: {

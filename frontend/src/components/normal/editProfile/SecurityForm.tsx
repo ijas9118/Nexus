@@ -45,7 +45,10 @@ const SecurityForm: FC = () => {
       <div className="flex-shrink-0 p-6">
         <h2 className="text-2xl font-semibold">Security</h2>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-y-auto p-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex-1 overflow-y-auto p-6"
+      >
         <div className="space-y-6">
           <div>
             <Label htmlFor="email">Account email</Label>
@@ -101,7 +104,11 @@ const SecurityForm: FC = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full mt-6" disabled={loading || !isDirty}>
+            <Button
+              type="submit"
+              className="w-full mt-6"
+              disabled={loading || !isDirty}
+            >
               {loading ? "Updating..." : "Update Password"}
             </Button>
           </div>
@@ -112,17 +119,18 @@ const SecurityForm: FC = () => {
               Deleting your account will:
               <div className="ml-5 my-3">
                 <p>
-                  1. Permanently delete your profile, along with your authentication
-                  associations.
+                  1. Permanently delete your profile, along with your
+                  authentication associations.
                 </p>
                 <p>
-                  2. Permanently delete all your content, including your posts, bookmarks,
-                  comments, upvotes, etc.
+                  2. Permanently delete all your content, including your posts,
+                  bookmarks, comments, upvotes, etc.
                 </p>
                 <p>3. Allow your username to become available to anyone.</p>
               </div>
-              Important: Deleting your account is unrecoverable and cannot be undone. Feel
-              free to contact nexus.app.connect@gmail.com with any questions.
+              Important: Deleting your account is unrecoverable and cannot be
+              undone. Feel free to contact nexus.app.connect@gmail.com with any
+              questions.
             </p>
             <Button
               variant="destructive"

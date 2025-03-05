@@ -39,7 +39,9 @@ const CommentStats = () => {
         <Card key={label}>
           <CardContent className="p-6 flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">{label}</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                {label}
+              </p>
               <h3 className="text-3xl font-bold">{count}</h3>
             </div>
             <div className={`p-3 ${bg} rounded-full`}>

@@ -16,7 +16,9 @@ interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
+export function DataTableToolbar<TData>({
+  table,
+}: DataTableToolbarProps<TData>) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -45,7 +47,10 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
         <Button variant="secondary" onClick={() => setIsDialogOpen(true)}>
           <Plus className="mr-2 h-4 w-4" /> Invite Mentor
         </Button>
-        <CreateMentorDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+        <CreateMentorDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+        />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -63,7 +68,9 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
                     key={column.id}
                     className="capitalize"
                     checked={column.getIsVisible()}
-                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>

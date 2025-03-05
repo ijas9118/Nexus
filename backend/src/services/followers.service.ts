@@ -1,7 +1,7 @@
-import { inject, injectable } from "inversify";
-import { IFollowersService } from "../core/interfaces/services/IFollowersService";
-import { TYPES } from "../di/types";
-import { IFollowersRepository } from "../core/interfaces/repositories/IFollowersRepository";
+import { inject, injectable } from 'inversify';
+import { IFollowersService } from '../core/interfaces/services/IFollowersService';
+import { TYPES } from '../di/types';
+import { IFollowersRepository } from '../core/interfaces/repositories/IFollowersRepository';
 
 @injectable()
 export class FollowersService implements IFollowersService {

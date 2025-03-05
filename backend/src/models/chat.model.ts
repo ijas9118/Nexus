@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 export interface IChat extends mongoose.Document {
   members: mongoose.Types.ObjectId[];
@@ -12,13 +12,13 @@ const ChatSchema = new mongoose.Schema(
       type: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
+          ref: 'User',
         },
       ],
     },
     lastMessage: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Message",
+      ref: 'Message',
     },
     unreadMessages: {
       type: Number,
@@ -28,5 +28,5 @@ const ChatSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const ChatModel = mongoose.model<IChat>("Chat", ChatSchema);
+const ChatModel = mongoose.model<IChat>('Chat', ChatSchema);
 export default ChatModel;

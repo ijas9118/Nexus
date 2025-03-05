@@ -1,11 +1,11 @@
-import { injectable, inject } from "inversify";
-import { TYPES } from "../di/types";
-import { IUserRepository } from "../core/interfaces/repositories/IUserRepository";
-import { IUserService } from "../core/interfaces/services/IUserService";
-import { IUser } from "../models/user.model";
-import { BaseService } from "../core/abstracts/base.service";
-import { UsersDTO } from "../dtos/responses/admin/users.dto";
-import bcrypt from "bcrypt";
+import { injectable, inject } from 'inversify';
+import { TYPES } from '../di/types';
+import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
+import { IUserService } from '../core/interfaces/services/IUserService';
+import { IUser } from '../models/user.model';
+import { BaseService } from '../core/abstracts/base.service';
+import { UsersDTO } from '../dtos/responses/admin/users.dto';
+import bcrypt from 'bcrypt';
 
 @injectable()
 export class UserService extends BaseService<IUser> implements IUserService {
@@ -49,19 +49,19 @@ export class UserService extends BaseService<IUser> implements IUserService {
 
     // Check if new password matches confirm password
     if (newPassword !== confirmPassword) {
-      throw new Error("New password and confirm password do not match");
+      throw new Error('New password and confirm password do not match');
     }
 
     // Fetch the user from the database
     const user = await this.userRepository.findOne({ _id: userId });
     if (!user) {
-      throw new Error("User not found");
+      throw new Error('User not found');
     }
 
     // Validate current password
     const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
     if (!isPasswordValid) {
-      throw new Error("Current password is incorrect");
+      throw new Error('Current password is incorrect');
     }
 
     // Hash the new password
@@ -69,10 +69,7 @@ export class UserService extends BaseService<IUser> implements IUserService {
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
     // Update the user's password
-    await this.userRepository.updateOne(
-      { _id: userId },
-      { $set: { password: hashedPassword } }
-    );
+    await this.userRepository.updateOne({ _id: userId }, { $set: { password: hashedPassword } });
 
     return true;
   }

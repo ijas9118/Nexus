@@ -3,7 +3,7 @@ import api from "../api";
 
 export const uploadFiles = async (
   uploadUrl: string,
-  formData: FormData
+  formData: FormData,
 ): Promise<string | undefined> => {
   try {
     const response = await axios.post(uploadUrl, formData, {
@@ -32,9 +32,13 @@ export const addContent = async (requestData: {
     const response = await api.post("/content/posts", requestData);
     return response.data;
   } catch (error: any) {
-    console.error("Failed to add content:", error.response?.data || error.message);
+    console.error(
+      "Failed to add content:",
+      error.response?.data || error.message,
+    );
     throw new Error(
-      error.response?.data?.message || "An error occurred while adding the content"
+      error.response?.data?.message ||
+        "An error occurred while adding the content",
     );
   }
 };

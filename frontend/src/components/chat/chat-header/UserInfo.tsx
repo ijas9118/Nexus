@@ -26,7 +26,9 @@ const UserInfor = ({ selectedChat }: { selectedChat: any }) => {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>User Profile</AlertDialogTitle>
-          <AlertDialogDescription>View details about this user.</AlertDialogDescription>
+          <AlertDialogDescription>
+            View details about this user.
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="flex flex-col items-center gap-3 ">
           <Avatar className="h-16 w-16">
@@ -34,7 +36,9 @@ const UserInfor = ({ selectedChat }: { selectedChat: any }) => {
             <AvatarFallback>{selectedChat.name[0]}</AvatarFallback>
           </Avatar>
           <h2 className="text-lg font-semibold">{selectedChat.name}</h2>
-          <p className="text-sm text-muted-foreground">@{selectedChat.username}</p>
+          <p className="text-sm text-muted-foreground">
+            @{selectedChat.username}
+          </p>
         </div>
         <AlertDialogFooter>
           <AlertDialogCancel>Close</AlertDialogCancel>

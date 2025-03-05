@@ -16,7 +16,9 @@ interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
+export function DataTableToolbar<TData>({
+  table,
+}: DataTableToolbarProps<TData>) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -73,7 +75,9 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
                     key={column.id}
                     className="capitalize"
                     checked={column.getIsVisible()}
-                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>

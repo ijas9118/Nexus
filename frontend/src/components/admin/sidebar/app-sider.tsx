@@ -279,7 +279,10 @@ const AdminAppSidebar = () => {
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
+              <DropdownMenuContent
+                side="top"
+                className="w-[--radix-popper-anchor-width]"
+              >
                 <DropdownMenuItem>
                   <span>Profile</span>
                 </DropdownMenuItem>

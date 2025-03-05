@@ -4,5 +4,4 @@ export interface IFollowersRepository {
   getFollowers(userId: string): Promise<any[]>;
   getFollowing(userId: string): Promise<any[]>;
   isFollowing(followerId: string, followedId: string): Promise<boolean>;
-  
 }

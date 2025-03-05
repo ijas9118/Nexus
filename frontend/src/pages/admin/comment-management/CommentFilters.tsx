@@ -61,7 +61,9 @@ const CommentFilters = ({
         <Select onValueChange={setSelectedBlog} disabled={!selectedSquad}>
           <SelectTrigger>
             <SelectValue
-              placeholder={selectedSquad ? "Select a blog" : "Select a squad first"}
+              placeholder={
+                selectedSquad ? "Select a blog" : "Select a squad first"
+              }
             />
           </SelectTrigger>
           <SelectContent>

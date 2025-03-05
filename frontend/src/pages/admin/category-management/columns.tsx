@@ -52,7 +52,9 @@ export const columns: ColumnDef<Category>[] = [
   {
     accessorKey: "squadCount",
     header: () => <div className="text-center w-full">Squad Count</div>,
-    cell: ({ row }) => <div className="text-center">{row.getValue("squadCount")}</div>,
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("squadCount")}</div>
+    ),
   },
   {
     accessorKey: "isActive",

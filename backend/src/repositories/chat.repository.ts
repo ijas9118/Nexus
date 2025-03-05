@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { IChatRepository } from "../core/interfaces/repositories/IChatRepository";
-import ChatModel, { IChat } from "../models/chat.model";
-import { injectable } from "inversify";
-import { FormatTime } from "../utils/formatTime";
+import mongoose from 'mongoose';
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { IChatRepository } from '../core/interfaces/repositories/IChatRepository';
+import ChatModel, { IChat } from '../models/chat.model';
+import { injectable } from 'inversify';
+import { FormatTime } from '../utils/formatTime';
 
 @injectable()
 export class ChatRepository extends BaseRepository<IChat> implements IChatRepository {
@@ -27,23 +27,23 @@ export class ChatRepository extends BaseRepository<IChat> implements IChatReposi
       },
       {
         $lookup: {
-          from: "users",
-          localField: "members",
-          foreignField: "_id",
-          as: "members",
+          from: 'users',
+          localField: 'members',
+          foreignField: '_id',
+          as: 'members',
         },
       },
       {
         $lookup: {
-          from: "messages",
-          localField: "lastMessage",
-          foreignField: "_id",
-          as: "lastMessageDetails",
+          from: 'messages',
+          localField: 'lastMessage',
+          foreignField: '_id',
+          as: 'lastMessageDetails',
         },
       },
       {
         $unwind: {
-          path: "$lastMessageDetails",
+          path: '$lastMessageDetails',
           preserveNullAndEmptyArrays: true,
         },
       },
@@ -53,9 +53,9 @@ export class ChatRepository extends BaseRepository<IChat> implements IChatReposi
             $arrayElemAt: [
               {
                 $filter: {
-                  input: "$members",
-                  as: "member",
-                  cond: { $ne: ["$$member._id", objectIdUserId] },
+                  input: '$members',
+                  as: 'member',
+                  cond: { $ne: ['$$member._id', objectIdUserId] },
                 },
               },
               0,
@@ -66,12 +66,12 @@ export class ChatRepository extends BaseRepository<IChat> implements IChatReposi
       {
         $project: {
           _id: 1,
-          userId: "$member._id",
-          name: "$member.name",
-          username: "$member.username",
-          avatar: "$member.profilePic",
-          lastMessage: "$lastMessageDetails.text",
-          lastMessageTime: "$lastMessageDetails.updatedAt",
+          userId: '$member._id',
+          name: '$member.name',
+          username: '$member.username',
+          avatar: '$member.profilePic',
+          lastMessage: '$lastMessageDetails.text',
+          lastMessageTime: '$lastMessageDetails.updatedAt',
           unreadMessages: 1,
         },
       },

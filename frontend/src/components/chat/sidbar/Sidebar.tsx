@@ -82,7 +82,10 @@ const Sidebar = ({ selectedChat, setSelectedChat }: SidebarProps) => {
       </div>
       {/* Search Results Dropdown */}
       {isSearching && searchResults.length > 0 && (
-        <SearchDropdown searchResults={searchResults} onSelect={handleConnectionSelect} />
+        <SearchDropdown
+          searchResults={searchResults}
+          onSelect={handleConnectionSelect}
+        />
       )}
 
       <div className="flex-1 overflow-y-auto">

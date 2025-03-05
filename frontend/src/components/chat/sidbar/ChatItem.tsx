@@ -7,7 +7,9 @@ const ChatItem = ({ chat, selectedChat, setSelectedChat }: any) => {
       key={chat._id}
       onClick={() => setSelectedChat(chat)}
       className={`flex items-center gap-3 p-4 cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-900 ${
-        selectedChat?._id === chat._id ? "bg-neutral-50 dark:bg-neutral-900" : ""
+        selectedChat?._id === chat._id
+          ? "bg-neutral-50 dark:bg-neutral-900"
+          : ""
       }`}
     >
       <div className="relative">
@@ -22,7 +24,9 @@ const ChatItem = ({ chat, selectedChat, setSelectedChat }: any) => {
       <div className="flex-1">
         <div className="flex justify-between items-center">
           <h3 className="font-medium">{chat.name}</h3>
-          <p className="text-xs text-muted-foreground">{chat?.lastMessageTime}</p>
+          <p className="text-xs text-muted-foreground">
+            {chat?.lastMessageTime}
+          </p>
         </div>
         <div className="flex justify-between">
           {chat.lastMessage ? (

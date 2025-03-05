@@ -13,13 +13,17 @@ interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
+export function DataTableToolbar<TData>({
+  table,
+}: DataTableToolbarProps<TData>) {
   return (
     <div className="flex items-center py-4">
       <Input
         placeholder="Filter Category..."
         value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-        onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
+        onChange={(event) =>
+          table.getColumn("name")?.setFilterValue(event.target.value)
+        }
         className="max-w-sm"
       />
       <DropdownMenu>

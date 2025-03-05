@@ -1,7 +1,7 @@
-import { inject, injectable } from "inversify";
-import { TYPES } from "../di/types";
-import { IConnectionService } from "../core/interfaces/services/IConnectionService";
-import { IConnectionsRepository } from "../core/interfaces/repositories/IConnectionsRepository";
+import { inject, injectable } from 'inversify';
+import { TYPES } from '../di/types';
+import { IConnectionService } from '../core/interfaces/services/IConnectionService';
+import { IConnectionsRepository } from '../core/interfaces/repositories/IConnectionsRepository';
 
 @injectable()
 export class ConnectionService implements IConnectionService {
@@ -18,24 +18,15 @@ export class ConnectionService implements IConnectionService {
     return this.connectionsRepository.getPendingRequests(userId);
   };
 
-  sendConnectionRequest = async (
-    requesterId: string,
-    recipientId: string
-  ): Promise<boolean> => {
+  sendConnectionRequest = async (requesterId: string, recipientId: string): Promise<boolean> => {
     return this.connectionsRepository.sendConnectionRequest(requesterId, recipientId);
   };
 
-  acceptConnectionRequest = async (
-    userId: string,
-    requesterId: string
-  ): Promise<boolean> => {
+  acceptConnectionRequest = async (userId: string, requesterId: string): Promise<boolean> => {
     return this.connectionsRepository.acceptConnectionRequest(userId, requesterId);
   };
 
-  hasSentConnectionRequest = async (
-    requesterId: string,
-    recipientId: string
-  ): Promise<boolean> => {
+  hasSentConnectionRequest = async (requesterId: string, recipientId: string): Promise<boolean> => {
     return this.connectionsRepository.hasSentConnectionRequest(requesterId, recipientId);
   };
 
