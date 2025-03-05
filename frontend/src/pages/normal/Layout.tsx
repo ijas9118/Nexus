@@ -10,7 +10,11 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import useLogout from "@/hooks/useLogout";
 import { RootState } from "@/store/store";
 import { Bell, Gem } from "lucide-react";
@@ -21,7 +25,9 @@ import { Outlet, useNavigate } from "react-router-dom";
 export default function Layout() {
   const navigate = useNavigate();
   const logoutUser = useLogout();
-  const breadcrumbs = useSelector((state: RootState) => state.breadcrumb.breadcrumbs);
+  const breadcrumbs = useSelector(
+    (state: RootState) => state.breadcrumb.breadcrumbs,
+  );
   const user = useSelector((state: RootState) => state.auth.user);
 
   return (
@@ -52,7 +58,7 @@ export default function Layout() {
                         </BreadcrumbItem>
                         <BreadcrumbSeparator className="hidden md:block" />
                       </React.Fragment>
-                    )
+                    ),
                   )}
                 </BreadcrumbList>
               </Breadcrumb>

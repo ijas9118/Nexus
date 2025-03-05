@@ -13,7 +13,9 @@ import { Squad } from "@/types/squad";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-export const columns = (toggleSquadStatus: (id: string) => void): ColumnDef<Squad>[] => [
+export const columns = (
+  toggleSquadStatus: (id: string) => void,
+): ColumnDef<Squad>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -66,7 +68,9 @@ export const columns = (toggleSquadStatus: (id: string) => void): ColumnDef<Squa
   {
     accessorKey: "category",
     header: () => <div className="text-center w-full">Category</div>,
-    cell: ({ row }) => <div className="text-center">{row.getValue("category")}</div>,
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("category")}</div>
+    ),
   },
   {
     accessorKey: "members",

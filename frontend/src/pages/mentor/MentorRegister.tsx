@@ -52,9 +52,12 @@ const MentorRegister: FC<MentorRegisterProps> = ({ email }) => {
   return (
     <Card className="w-full max-w-md shadow-lg rounded-lg">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Complete Your Profile</CardTitle>
+        <CardTitle className="text-2xl font-bold">
+          Complete Your Profile
+        </CardTitle>
         <CardDescription>
-          Fill in your details to create your mentor account and start making an impact.
+          Fill in your details to create your mentor account and start making an
+          impact.
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
@@ -64,7 +67,11 @@ const MentorRegister: FC<MentorRegisterProps> = ({ email }) => {
         </div>
         <div className="grid gap-2">
           <Label>Name</Label>
-          <Input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <Input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
         <div className="grid gap-2">
           <Label>Password</Label>

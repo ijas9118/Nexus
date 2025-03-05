@@ -6,7 +6,8 @@ export const bookmarkContent = async (contentId: string) => {
     return result.data;
   } catch (error: any) {
     const errorMessage =
-      error.response?.data?.message || "An unexpected error occurred while bookmarking.";
+      error.response?.data?.message ||
+      "An unexpected error occurred while bookmarking.";
     throw new Error(errorMessage);
   }
 };

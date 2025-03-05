@@ -15,7 +15,7 @@ const EditProfileLayout = () => {
         { title: "Home", url: "/" },
         { title: "Profile", url: "/profile" },
         { title: "Edit", url: "/profile/edit" },
-      ])
+      ]),
     );
   }, [dispatch]);
 

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
 
 interface ISquad extends Document {
   _id: mongoose.Types.ObjectId;
@@ -35,7 +35,7 @@ const SquadSchema: Schema = new Schema(
     members: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
     logo: {
@@ -60,5 +60,5 @@ const SquadSchema: Schema = new Schema(
   }
 );
 
-const SquadModel = mongoose.model<ISquad>("Squad", SquadSchema);
+const SquadModel = mongoose.model<ISquad>('Squad', SquadSchema);
 export { ISquad, SquadModel };

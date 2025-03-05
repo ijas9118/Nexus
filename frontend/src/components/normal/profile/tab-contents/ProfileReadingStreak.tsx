@@ -21,11 +21,15 @@ export default function ProfileReadingStreak() {
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div>
             <div className="text-2xl font-bold">5</div>
-            <div className="text-sm text-muted-foreground">Longest streak 🏆</div>
+            <div className="text-sm text-muted-foreground">
+              Longest streak 🏆
+            </div>
           </div>
           <div>
             <div className="text-2xl font-bold">17</div>
-            <div className="text-sm text-muted-foreground">Total reading days</div>
+            <div className="text-sm text-muted-foreground">
+              Total reading days
+            </div>
           </div>
         </div>
       </Card>

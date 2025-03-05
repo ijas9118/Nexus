@@ -1,4 +1,7 @@
-import { CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -18,7 +21,10 @@ interface SidebarCollapsibleSectionProps {
   items: { title: string; url: string; icon: React.ComponentType }[];
 }
 
-const CollapsibleComponent: FC<SidebarCollapsibleSectionProps> = ({ title, items }) => {
+const CollapsibleComponent: FC<SidebarCollapsibleSectionProps> = ({
+  title,
+  items,
+}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -27,7 +33,7 @@ const CollapsibleComponent: FC<SidebarCollapsibleSectionProps> = ({ title, items
       setBreadcrumbs([
         { title: "Home", url: "/" },
         { title: item.title, url: item.url },
-      ])
+      ]),
     );
     navigate(`${item.url}`);
   };
@@ -45,7 +51,10 @@ const CollapsibleComponent: FC<SidebarCollapsibleSectionProps> = ({ title, items
           <SidebarMenu>
             {items.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild onClick={() => handleMenuClick(item)}>
+                <SidebarMenuButton
+                  asChild
+                  onClick={() => handleMenuClick(item)}
+                >
                   <div className="cursor-pointer">
                     <item.icon />
                     <span>{item.title}</span>

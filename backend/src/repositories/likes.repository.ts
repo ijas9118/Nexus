@@ -1,8 +1,8 @@
-import { DeleteResult, Types } from "mongoose";
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { ILikesRepository } from "../core/interfaces/repositories/ILikesRepository";
-import { ILike, LikeModel } from "../models/likes.model";
-import { injectable } from "inversify";
+import { DeleteResult, Types } from 'mongoose';
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { ILikesRepository } from '../core/interfaces/repositories/ILikesRepository';
+import { ILike, LikeModel } from '../models/likes.model';
+import { injectable } from 'inversify';
 
 @injectable()
 export class LikesRepository extends BaseRepository<ILike> implements ILikesRepository {

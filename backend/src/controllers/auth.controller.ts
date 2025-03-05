@@ -1,18 +1,18 @@
-import { injectable, inject } from "inversify";
-import { Request, Response } from "express";
-import { TYPES } from "../di/types";
-import { LoginDto } from "../dtos/requests/auth/login.dto";
-import { RegisterDto } from "../dtos/requests/auth/register.dto";
-import { IAuthController } from "../core/interfaces/controllers/IAuthController";
-import { generateAccessToken, verifyRefreshToken } from "../utils/jwt.util";
-import { clearRefreshTokenCookie, setRefreshTokenCookie } from "../utils/cookieUtils";
-import { IAuthService } from "../core/interfaces/services/IAuthService";
-import asyncHandler from "express-async-handler";
-import CustomError from "../utils/CustomError";
-import { StatusCodes } from "http-status-codes";
-import { IOTPService } from "../core/interfaces/services/IOTPService";
-import { IEmailService } from "../core/interfaces/services/IEmailService";
-import { ITokenService } from "../core/interfaces/services/ITokenService";
+import { injectable, inject } from 'inversify';
+import { Request, Response } from 'express';
+import { TYPES } from '../di/types';
+import { LoginDto } from '../dtos/requests/auth/login.dto';
+import { RegisterDto } from '../dtos/requests/auth/register.dto';
+import { IAuthController } from '../core/interfaces/controllers/IAuthController';
+import { generateAccessToken, verifyRefreshToken } from '../utils/jwt.util';
+import { clearRefreshTokenCookie, setRefreshTokenCookie } from '../utils/cookieUtils';
+import { IAuthService } from '../core/interfaces/services/IAuthService';
+import asyncHandler from 'express-async-handler';
+import CustomError from '../utils/CustomError';
+import { StatusCodes } from 'http-status-codes';
+import { IOTPService } from '../core/interfaces/services/IOTPService';
+import { IEmailService } from '../core/interfaces/services/IEmailService';
+import { ITokenService } from '../core/interfaces/services/ITokenService';
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -28,8 +28,7 @@ export class AuthController implements IAuthController {
     const userData: RegisterDto = req.body;
 
     const existingUser = await this.authService.findUserByEmail(userData.email);
-    if (existingUser)
-      throw new CustomError("User already exists", StatusCodes.BAD_REQUEST);
+    if (existingUser) throw new CustomError('User already exists', StatusCodes.BAD_REQUEST);
 
     const otp = this.otpService.generateOTP();
 
@@ -37,7 +36,7 @@ export class AuthController implements IAuthController {
 
     res
       .status(StatusCodes.OK)
-      .json({ message: "OTP sent to email. Please verify within 15 minutes" });
+      .json({ message: 'OTP sent to email. Please verify within 15 minutes' });
   });
 
   // Verify OTP and register user if OTP is correct and not expired
@@ -48,19 +47,19 @@ export class AuthController implements IAuthController {
 
     const result = await this.authService.register(userData);
 
-    setRefreshTokenCookie(res, { _id: result._id.toString(), role: "user" });
+    setRefreshTokenCookie(res, { _id: result._id.toString(), role: 'user' });
 
     const accessToken = generateAccessToken({
       _id: result._id,
       name: result.name,
       email: result.email,
-      role: "user",
+      role: 'user',
     });
     const user = {
       _id: result._id,
       name: result.name,
       email: result.email,
-      role: "user",
+      role: 'user',
     };
 
     res.status(StatusCodes.CREATED).json({ user, accessToken });
@@ -72,7 +71,7 @@ export class AuthController implements IAuthController {
 
     await this.otpService.resendOtp(email);
 
-    res.status(StatusCodes.OK).json({ message: "New OTP sent to your email." });
+    res.status(StatusCodes.OK).json({ message: 'New OTP sent to your email.' });
   });
 
   // Login user and set refresh token cookie
@@ -80,22 +79,22 @@ export class AuthController implements IAuthController {
     const loginDto: LoginDto = req.body;
     const user = await this.authService.login(loginDto);
 
-    setRefreshTokenCookie(res, { _id: user._id.toString(), role: "user" });
+    setRefreshTokenCookie(res, { _id: user._id.toString(), role: 'user' });
 
     const accessToken = generateAccessToken({
       _id: user._id,
       name: user.name,
       email: user.email,
-      role: "user",
+      role: 'user',
     });
 
-    res.status(StatusCodes.OK).json({ message: "success", accessToken, user });
+    res.status(StatusCodes.OK).json({ message: 'success', accessToken, user });
   });
 
   // Logout user and clear refresh token cookie
   logout = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     clearRefreshTokenCookie(res);
-    res.status(StatusCodes.OK).json({ message: "Logged out successfully." });
+    res.status(StatusCodes.OK).json({ message: 'Logged out successfully.' });
   });
 
   // Send password reset link to email with token
@@ -104,9 +103,7 @@ export class AuthController implements IAuthController {
 
     await this.emailService.sendResetEmailWithToken(email);
 
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "Password reset link sent to your email." });
+    res.status(StatusCodes.OK).json({ message: 'Password reset link sent to your email.' });
   });
 
   // Verify token and update password if token is valid
@@ -114,25 +111,23 @@ export class AuthController implements IAuthController {
     const { email, token, password } = req.body;
 
     const isValid = await this.tokenService.validateToken(email, token);
-    if (!isValid)
-      throw new CustomError("Invalid or expired token.", StatusCodes.BAD_REQUEST);
+    if (!isValid) throw new CustomError('Invalid or expired token.', StatusCodes.BAD_REQUEST);
 
     await this.authService.updatePassword(email, password);
 
-    res.status(StatusCodes.OK).json({ message: "Password updated successfully." });
+    res.status(StatusCodes.OK).json({ message: 'Password updated successfully.' });
   });
 
   // Refresh access token using refresh token
   refreshToken = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const refreshToken = req.cookies.refreshToken;
 
-    if (!refreshToken)
-      throw new CustomError("Refresh token not found", StatusCodes.UNAUTHORIZED);
+    if (!refreshToken) throw new CustomError('Refresh token not found', StatusCodes.UNAUTHORIZED);
 
     const decodedToken = verifyRefreshToken(refreshToken);
-    if (!decodedToken) throw new CustomError("Invalid token", StatusCodes.FORBIDDEN);
+    if (!decodedToken) throw new CustomError('Invalid token', StatusCodes.FORBIDDEN);
 
-    if (decodedToken.user.role === "admin") {
+    if (decodedToken.user.role === 'admin') {
       const accessToken = generateAccessToken({
         _id: decodedToken.user._id,
         name: decodedToken.user.name,
@@ -150,12 +145,12 @@ export class AuthController implements IAuthController {
 
     if (!user) {
       clearRefreshTokenCookie(res);
-      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      throw new CustomError('User not found', StatusCodes.NOT_FOUND);
     }
 
-    if (user.status === "Blocked") {
+    if (user.status === 'Blocked') {
       clearRefreshTokenCookie(res);
-      throw new CustomError("User is blocked", StatusCodes.FORBIDDEN);
+      throw new CustomError('User is blocked', StatusCodes.FORBIDDEN);
     }
 
     const accessToken = generateAccessToken({

@@ -46,7 +46,7 @@ const AddPost: React.FC = () => {
       setBreadcrumbs([
         { title: "Home", url: "/" },
         { title: "New Post", url: "" },
-      ])
+      ]),
     );
   }, [dispatch]);
 
@@ -127,7 +127,9 @@ const AddPost: React.FC = () => {
       }
     } catch (error) {
       console.error("Error submitting form", error);
-      setSubmitError("An error occurred while submitting the form. Please try again.");
+      setSubmitError(
+        "An error occurred while submitting the form. Please try again.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -159,8 +161,14 @@ const AddPost: React.FC = () => {
   return (
     <div className="flex justify-center min-h-screen px-4 pt-4 pb-8">
       <div className="container max-w-2xl p-8 shadow-lg border-[0.5px]  rounded-2xl">
-        <h1 className="text-4xl text-center font-bold mb-6">Post New Content</h1>
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <h1 className="text-4xl text-center font-bold mb-6">
+          Post New Content
+        </h1>
+        <form
+          className="space-y-6"
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+        >
           <div>
             <Label>Content Type</Label>
             <Controller
@@ -210,7 +218,9 @@ const AddPost: React.FC = () => {
               )}
             />
             {errors.squad && (
-              <p className="text-rose-500 text-sm mt-1">{errors.squad.message}</p>
+              <p className="text-rose-500 text-sm mt-1">
+                {errors.squad.message}
+              </p>
             )}
           </div>
 
@@ -225,7 +235,9 @@ const AddPost: React.FC = () => {
               onChange={handleThumbnailChange}
             />
             {errors.thumbnail && (
-              <p className="text-rose-500 text-sm mt-1">{errors.thumbnail.message}</p>
+              <p className="text-rose-500 text-sm mt-1">
+                {errors.thumbnail.message}
+              </p>
             )}
             {thumbnailPreview && (
               <div className="mt-2">
@@ -248,7 +260,9 @@ const AddPost: React.FC = () => {
               })}
             />
             {errors.title && (
-              <p className="text-rose-500 text-sm mt-1">{errors.title.message}</p>
+              <p className="text-rose-500 text-sm mt-1">
+                {errors.title.message}
+              </p>
             )}
           </div>
 
@@ -269,7 +283,9 @@ const AddPost: React.FC = () => {
                     })}
                   />
                   {errors.content && (
-                    <p className="text-rose-500 text-sm mt-1">{errors.content.message}</p>
+                    <p className="text-rose-500 text-sm mt-1">
+                      {errors.content.message}
+                    </p>
                   )}
                 </TabsContent>
                 <TabsContent
@@ -293,7 +309,9 @@ const AddPost: React.FC = () => {
                 onChange={handleVideoChange}
               />
               {errors.video && (
-                <p className="text-rose-500 text-sm mt-1">{errors.video.message}</p>
+                <p className="text-rose-500 text-sm mt-1">
+                  {errors.video.message}
+                </p>
               )}
               {videoPreview && (
                 <div className="mt-2">
@@ -324,7 +342,9 @@ const AddPost: React.FC = () => {
             <Label htmlFor="premium">Upload as premium?</Label>
           </div>
 
-          {submitError && <p className="text-rose-500 text-sm mt-1">{submitError}</p>}
+          {submitError && (
+            <p className="text-rose-500 text-sm mt-1">{submitError}</p>
+          )}
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? "Posting..." : "Post Content"}

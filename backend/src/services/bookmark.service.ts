@@ -1,13 +1,13 @@
-import { inject, injectable } from "inversify";
-import { IBookmarkService } from "../core/interfaces/services/IBookmarkService";
-import { TYPES } from "../di/types";
-import mongoose from "mongoose";
-import { IBookmarkRepository } from "../core/interfaces/repositories/IBookmarnRepository";
-import { IContentRepository } from "../core/interfaces/repositories/IContentRepository";
-import CustomError from "../utils/CustomError";
-import { IBookmark } from "../models/bookmarks.model";
-import { BaseService } from "../core/abstracts/base.service";
-import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from 'inversify';
+import { IBookmarkService } from '../core/interfaces/services/IBookmarkService';
+import { TYPES } from '../di/types';
+import mongoose from 'mongoose';
+import { IBookmarkRepository } from '../core/interfaces/repositories/IBookmarnRepository';
+import { IContentRepository } from '../core/interfaces/repositories/IContentRepository';
+import CustomError from '../utils/CustomError';
+import { IBookmark } from '../models/bookmarks.model';
+import { BaseService } from '../core/abstracts/base.service';
+import { StatusCodes } from 'http-status-codes';
 
 @injectable()
 export class BookmarkService extends BaseService<IBookmark> implements IBookmarkService {
@@ -21,7 +21,7 @@ export class BookmarkService extends BaseService<IBookmark> implements IBookmark
   // Toggle bookmark for a content
   async toggleBookmark(contentId: string, userId: string): Promise<{ status: boolean }> {
     const content = await this.contentRepository.findContent(contentId);
-    if (!content) throw new CustomError("Content not found", StatusCodes.NOT_FOUND);
+    if (!content) throw new CustomError('Content not found', StatusCodes.NOT_FOUND);
 
     const contentIdObject = new mongoose.Types.ObjectId(contentId);
     const userIdObject = new mongoose.Types.ObjectId(userId);
@@ -39,9 +39,7 @@ export class BookmarkService extends BaseService<IBookmark> implements IBookmark
     const isBookmarked = bookmark.contentIds.includes(contentIdObject);
 
     if (isBookmarked) {
-      bookmark.contentIds = bookmark.contentIds.filter(
-        (id) => !id.equals(contentIdObject)
-      );
+      bookmark.contentIds = bookmark.contentIds.filter((id) => !id.equals(contentIdObject));
       await this.bookmarkRepository.updateBookmark(userIdObject, bookmark.contentIds);
       return { status: false };
     } else {

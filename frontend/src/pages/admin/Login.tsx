@@ -43,7 +43,9 @@ export default function AdminLogin() {
       }
       if (result) navigate("/admin/dashboard");
     } catch (error: any) {
-      setErrorMessage(error.message || "An error occurred. Please try again later.");
+      setErrorMessage(
+        error.message || "An error occurred. Please try again later.",
+      );
     }
   };
 
@@ -71,7 +73,9 @@ export default function AdminLogin() {
               })}
             />
             {errors.email && (
-              <p className="text-sm text-rose-500 mt-1">{errors.email.message}</p>
+              <p className="text-sm text-rose-500 mt-1">
+                {errors.email.message}
+              </p>
             )}
           </div>
           <Label htmlFor="password">Password</Label>
@@ -102,10 +106,14 @@ export default function AdminLogin() {
               )}
             </Button>
             {errors.password && (
-              <p className="text-sm text-rose-500 mt-1">{errors.password.message}</p>
+              <p className="text-sm text-rose-500 mt-1">
+                {errors.password.message}
+              </p>
             )}
           </div>
-          {errorMessage && <p className="text-sm text-rose-500 mt-2">{errorMessage}</p>}
+          {errorMessage && (
+            <p className="text-sm text-rose-500 mt-2">{errorMessage}</p>
+          )}
           <Button type="submit" className="w-full mt-6">
             Sign in
           </Button>

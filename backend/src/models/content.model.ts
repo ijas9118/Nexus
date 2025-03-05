@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IContent extends Document {
   avatarFallback: string;
@@ -27,7 +27,7 @@ const ContentSchema: Schema = new Schema(
     },
     author: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     userName: {
@@ -36,7 +36,7 @@ const ContentSchema: Schema = new Schema(
     },
     contentType: {
       type: String,
-      enum: ["Blog", "Video"],
+      enum: ['Blog', 'Video'],
       required: true,
     },
     title: {
@@ -53,7 +53,7 @@ const ContentSchema: Schema = new Schema(
     },
     squad: {
       type: mongoose.Types.ObjectId,
-      ref: "Squad",
+      ref: 'Squad',
       required: true,
     },
     isPremium: {
@@ -70,7 +70,7 @@ const ContentSchema: Schema = new Schema(
     content: {
       type: String,
       required: function (this: any) {
-        return this.contentType === "blog";
+        return this.contentType === 'blog';
       },
     },
     likeCount: {
@@ -95,5 +95,5 @@ const ContentSchema: Schema = new Schema(
   }
 );
 
-const ContentModel = mongoose.model<IContent>("Content", ContentSchema);
+const ContentModel = mongoose.model<IContent>('Content', ContentSchema);
 export default ContentModel;

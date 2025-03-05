@@ -25,7 +25,9 @@ export default function ProfileHeader({
   onFollowToggle,
   onConnectionToggle,
 }: ProfileHeaderProps) {
-  const currentUser = useSelector((state: any) => state.auth.user?.username || "");
+  const currentUser = useSelector(
+    (state: any) => state.auth.user?.username || "",
+  );
   const navigate = useNavigate();
 
   if (!profileUser) return <p>Loading profile...</p>;
@@ -41,7 +43,10 @@ export default function ProfileHeader({
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-medium">Profile</h2>
         {isCurrentUser && (
-          <Button className="text-sm font-medium" onClick={() => handleEditClick()}>
+          <Button
+            className="text-sm font-medium"
+            onClick={() => handleEditClick()}
+          >
             Edit profile
           </Button>
         )}
@@ -51,13 +56,16 @@ export default function ProfileHeader({
           <img
             alt="Profile picture"
             src={
-              profileUser.profilePic || "https://randomuser.me/api/portraits/men/4.jpg"
+              profileUser.profilePic ||
+              "https://randomuser.me/api/portraits/men/4.jpg"
             }
             className="rounded-lg outline outline-4 outline-white bg-white dark:outline-black"
             width="80"
           />
         </div>
-        <h1 className="text-start text-2xl font-semibold">{profileUser.name}</h1>
+        <h1 className="text-start text-2xl font-semibold">
+          {profileUser.name}
+        </h1>
         <p className="text-start text-sm text-muted-foreground">
           @{profileUser.username} · Joined{" "}
           {/* {new Date(profileUser.joinedAt).toLocaleDateString("en-US", {
@@ -67,13 +75,16 @@ export default function ProfileHeader({
         </p>
         <div className="flex text-center justify-start gap-4 text-sm text-muted-foreground py-4">
           <div>
-            <span className="font-semibold text-foreground text-lg">10</span> Followers
+            <span className="font-semibold text-foreground text-lg">10</span>{" "}
+            Followers
           </div>
           <div>
-            <span className="font-semibold text-foreground text-lg">0</span> Following
+            <span className="font-semibold text-foreground text-lg">0</span>{" "}
+            Following
           </div>
           <div>
-            <span className="font-semibold text-foreground text-lg">12</span> Connections
+            <span className="font-semibold text-foreground text-lg">12</span>{" "}
+            Connections
           </div>
         </div>
         {profileUser.bio && (
@@ -92,10 +103,18 @@ export default function ProfileHeader({
         )}
         {!isCurrentUser && (
           <div className="mt-4 flex gap-2">
-            <Button className="w-1/2" variant="outline" onClick={onFollowToggle}>
+            <Button
+              className="w-1/2"
+              variant="outline"
+              onClick={onFollowToggle}
+            >
               {isFollowing ? "Unfollow" : "Follow"}
             </Button>
-            <Button className="w-1/2" variant="outline" onClick={onConnectionToggle}>
+            <Button
+              className="w-1/2"
+              variant="outline"
+              onClick={onConnectionToggle}
+            >
               {isConnected ? "Withdraw" : "Connect"}
             </Button>
           </div>

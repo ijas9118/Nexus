@@ -43,7 +43,8 @@ export default function ContentDetails() {
         <div>
           <h2 className="text-2xl font-semibold">{content.title}</h2>
           <p className="text-gray-500 text-sm">
-            By <span className="font-medium">{content.userName}</span> • {content.date}
+            By <span className="font-medium">{content.userName}</span> •{" "}
+            {content.date}
           </p>
         </div>
         <Badge variant="secondary" className="ml-auto">
@@ -63,7 +64,9 @@ export default function ContentDetails() {
       )}
 
       {/* Content Body */}
-      <div className="prose max-w-none mb-6 text-gray-800">{content.content}</div>
+      <div className="prose max-w-none mb-6 text-gray-800">
+        {content.content}
+      </div>
 
       {/* Tags */}
       <div className="flex flex-wrap gap-2 mb-4">
@@ -93,7 +96,11 @@ export default function ContentDetails() {
           size="sm"
           onClick={() => setIsBookmarked((prev) => !prev)}
         >
-          {isBookmarked ? <Bookmark fill="#007AFF" color="#007AFF" /> : <Bookmark />}
+          {isBookmarked ? (
+            <Bookmark fill="#007AFF" color="#007AFF" />
+          ) : (
+            <Bookmark />
+          )}
         </Button>
         <Button variant="ghost" size="sm">
           <Share2 className="h-4 w-4" />

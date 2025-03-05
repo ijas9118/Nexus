@@ -24,8 +24,8 @@ const SquadManagement: FC = () => {
   const toggleSquadStatus = async (id: string) => {
     setData((prevData) =>
       prevData.map((squad) =>
-        squad._id === id ? { ...squad, isActive: !squad.isActive } : squad
-      )
+        squad._id === id ? { ...squad, isActive: !squad.isActive } : squad,
+      ),
     );
 
     try {
@@ -35,8 +35,8 @@ const SquadManagement: FC = () => {
 
       setData((prevData) =>
         prevData.map((squad) =>
-          squad._id === id ? { ...squad, isActive: !squad.isActive } : squad
-        )
+          squad._id === id ? { ...squad, isActive: !squad.isActive } : squad,
+        ),
       );
     }
   };

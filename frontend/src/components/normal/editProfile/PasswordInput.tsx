@@ -22,7 +22,11 @@ const PasswordInput = ({ label, id, registerOptions, watchValue }: any) => {
           className="absolute right-3 top-2.5 text-muted-foreground"
           onClick={() => setVisible((prev) => !prev)}
         >
-          {visible ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+          {visible ? (
+            <EyeOff className="h-5 w-5" />
+          ) : (
+            <Eye className="h-5 w-5" />
+          )}
         </button>
       </div>
       {watchValue && <p className="text-sm text-pink-600">{watchValue}</p>}

@@ -69,7 +69,9 @@ const Connections = () => {
                     </Avatar>
                     <div>
                       <p className="font-medium">{user.name}</p>
-                      <p className="text-sm text-muted-foreground">{user.username}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {user.username}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -93,7 +95,9 @@ const Connections = () => {
                     </Avatar>
                     <div className="flex-1">
                       <p className="font-medium">{request.name}</p>
-                      <p className="text-sm text-muted-foreground">{request.username}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {request.username}
+                      </p>
                     </div>
                     <div className="space-x-2">
                       <Button

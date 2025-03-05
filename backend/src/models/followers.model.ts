@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
+import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export interface IUserFollow extends Document {
   userId: Types.ObjectId;
@@ -10,32 +10,32 @@ const UserFollowSchema: Schema = new Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
       unique: true,
     },
     followers: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
     following: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
     connections: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
     pendingConnectionRequests: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
   },
@@ -44,5 +44,5 @@ const UserFollowSchema: Schema = new Schema(
   }
 );
 
-const UserFollowModel = mongoose.model<IUserFollow>("UserFollow", UserFollowSchema);
+const UserFollowModel = mongoose.model<IUserFollow>('UserFollow', UserFollowSchema);
 export default UserFollowModel;

@@ -53,7 +53,7 @@ export default function ProfilePage() {
       setBreadcrumbs([
         { title: "Home", url: "/" },
         { title: "Profile", url: "/profile" },
-      ])
+      ]),
     );
   }, [username, currentUser, dispatch]);
 

@@ -44,18 +44,18 @@ const Navbar = () => {
 
           {/* Desktop Login Button */}
           <div className="hidden md:block">
-          <Button
-            variant="ghost"
-            onClick={() => {
-              if (isActive) {
-                logoutUser();
-              } else {
-                navigate("/login");
-              }
-            }}
-          >
-            {isActive ? "Logout" : "Login"}
-          </Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                if (isActive) {
+                  logoutUser();
+                } else {
+                  navigate("/login");
+                }
+              }}
+            >
+              {isActive ? "Logout" : "Login"}
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}

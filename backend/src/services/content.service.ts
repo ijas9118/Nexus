@@ -1,10 +1,10 @@
-import { inject, injectable } from "inversify";
-import { IContentService } from "../core/interfaces/services/IContentService";
-import { TYPES } from "../di/types";
-import { IContent } from "../models/content.model";
-import { BaseService } from "../core/abstracts/base.service";
-import { IContentRepository } from "../core/interfaces/repositories/IContentRepository";
-import { IUserRepository } from "../core/interfaces/repositories/IUserRepository";
+import { inject, injectable } from 'inversify';
+import { IContentService } from '../core/interfaces/services/IContentService';
+import { TYPES } from '../di/types';
+import { IContent } from '../models/content.model';
+import { BaseService } from '../core/abstracts/base.service';
+import { IContentRepository } from '../core/interfaces/repositories/IContentRepository';
+import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
 
 @injectable()
 export class ContentService extends BaseService<IContent> implements IContentService {

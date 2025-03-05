@@ -73,7 +73,9 @@ export const columns = (): ColumnDef<any>[] => [
     accessorKey: "type",
     header: "Type",
     cell: ({ row }) => (
-      <Badge variant={row.original.contentType === "Blog" ? "default" : "outline"}>
+      <Badge
+        variant={row.original.contentType === "Blog" ? "default" : "outline"}
+      >
         {row.original.contentType}
       </Badge>
     ),

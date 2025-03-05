@@ -27,14 +27,14 @@ export const refreshAccessToken = createAsyncThunk(
       const response = await api.post(
         "/auth/refresh-token",
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
       return response.data;
     } catch (error: any) {
       dispatch(clearUser()); // Logout user if refresh fails
       return rejectWithValue("Session expired, please log in again.");
     }
-  }
+  },
 );
 
 const authSlice = createSlice({
@@ -43,7 +43,7 @@ const authSlice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      action: PayloadAction<{ user: UserInterface; accessToken: string }>
+      action: PayloadAction<{ user: UserInterface; accessToken: string }>,
     ) => {
       state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
@@ -60,7 +60,10 @@ const authSlice = createSlice({
       state.accessToken = null;
       localStorage.setItem("sessionActive", "false");
     },
-    updateUserProfile: (state, action: PayloadAction<Partial<UserInterface>>) => {
+    updateUserProfile: (
+      state,
+      action: PayloadAction<Partial<UserInterface>>,
+    ) => {
       if (state.user) {
         state.user = { ...state.user, ...action.payload };
       }

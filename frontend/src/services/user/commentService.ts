@@ -1,7 +1,11 @@
 import api from "../api";
 
 export const CommentService = {
-  addComment: async (contentId: string, text: string, parentCommentId?: string) => {
+  addComment: async (
+    contentId: string,
+    text: string,
+    parentCommentId?: string,
+  ) => {
     try {
       const response = await api.post("/content/comment", {
         contentId,

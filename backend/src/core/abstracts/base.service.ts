@@ -1,5 +1,5 @@
-import { Document, FilterQuery, Types } from "mongoose";
-import { BaseRepository } from "./base.repository";
+import { Document, FilterQuery, Types } from 'mongoose';
+import { BaseRepository } from './base.repository';
 
 export abstract class BaseService<T extends Document> {
   constructor(protected repository: BaseRepository<T>) {}

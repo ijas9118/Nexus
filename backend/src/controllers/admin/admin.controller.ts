@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
-import { IAdminController } from "../../core/interfaces/controllers/admin/IAdminController";
-import { inject, injectable } from "inversify";
-import { TYPES } from "../../di/types";
-import { IUserService } from "../../core/interfaces/services/IUserService";
-import { StatusCodes } from "http-status-codes";
-import CustomError from "../../utils/CustomError";
+import { Request, Response } from 'express';
+import { IAdminController } from '../../core/interfaces/controllers/admin/IAdminController';
+import { inject, injectable } from 'inversify';
+import { TYPES } from '../../di/types';
+import { IUserService } from '../../core/interfaces/services/IUserService';
+import { StatusCodes } from 'http-status-codes';
+import CustomError from '../../utils/CustomError';
 
 @injectable()
 export class AdminController implements IAdminController {
@@ -18,7 +18,7 @@ export class AdminController implements IAdminController {
   async getUserById(req: Request, res: Response): Promise<void> {
     const user = await this.userService.getUserById(req.params.id);
     if (!user) {
-      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      throw new CustomError('User not found', StatusCodes.NOT_FOUND);
     }
     res.status(StatusCodes.OK).json(user);
   }
@@ -26,7 +26,7 @@ export class AdminController implements IAdminController {
   async updateUser(req: Request, res: Response): Promise<void> {
     const updatedUser = await this.userService.updateUser(req.params.id, req.body);
     if (!updatedUser) {
-      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      throw new CustomError('User not found', StatusCodes.NOT_FOUND);
     }
     res.status(StatusCodes.OK).json(updatedUser);
   }

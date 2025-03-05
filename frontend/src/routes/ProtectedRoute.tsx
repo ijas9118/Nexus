@@ -18,7 +18,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
     );
   }
 
-  if (!accessToken && requiredRole === "admin") return <Navigate to="/admin/login" />;
+  if (!accessToken && requiredRole === "admin")
+    return <Navigate to="/admin/login" />;
   if (!accessToken) {
     return <Navigate to="/login" />;
   }

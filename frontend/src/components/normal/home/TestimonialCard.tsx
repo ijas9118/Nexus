@@ -8,7 +8,12 @@ interface TestimonialProps {
   text: string;
 }
 
-const TestimonialCard: React.FC<TestimonialProps> = ({ name, username, image, text }) => {
+const TestimonialCard: React.FC<TestimonialProps> = ({
+  name,
+  username,
+  image,
+  text,
+}) => {
   return (
     <Card className="p-6  h-full">
       <div className="flex items-start gap-4">

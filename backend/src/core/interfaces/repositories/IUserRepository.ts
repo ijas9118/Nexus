@@ -1,5 +1,5 @@
-import { IUser } from "../../../models/user.model";
-import { BaseRepository } from "../../abstracts/base.repository";
+import { IUser } from '../../../models/user.model';
+import { BaseRepository } from '../../abstracts/base.repository';
 
 export interface IUserRepository extends BaseRepository<IUser> {
   getUserJoinedSquads(userId: string): Promise<string[]>;

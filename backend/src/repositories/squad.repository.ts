@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { ISquadRepository } from "../core/interfaces/repositories/ISquadRepository";
-import { ISquad, SquadModel } from "../models/squads.model";
-import { inject, injectable } from "inversify";
-import { TYPES } from "../di/types";
-import { IUserRepository } from "../core/interfaces/repositories/IUserRepository";
+import mongoose from 'mongoose';
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { ISquadRepository } from '../core/interfaces/repositories/ISquadRepository';
+import { ISquad, SquadModel } from '../models/squads.model';
+import { inject, injectable } from 'inversify';
+import { TYPES } from '../di/types';
+import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
 
 @injectable()
 export class SquadRepository extends BaseRepository<ISquad> implements ISquadRepository {
@@ -28,10 +28,10 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
       { $match: { category } },
       {
         $lookup: {
-          from: "users",
-          localField: "_id",
-          foreignField: "joinedSquads",
-          as: "joinedUsers",
+          from: 'users',
+          localField: '_id',
+          foreignField: 'joinedSquads',
+          as: 'joinedUsers',
         },
       },
       {
@@ -43,9 +43,9 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
                   {
                     $size: {
                       $filter: {
-                        input: "$joinedUsers",
-                        as: "user",
-                        cond: { $eq: ["$$user._id", userObjectId] },
+                        input: '$joinedUsers',
+                        as: 'user',
+                        cond: { $eq: ['$$user._id', userObjectId] },
                       },
                     },
                   },

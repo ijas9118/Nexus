@@ -134,7 +134,9 @@ const Dashboard: FC = () => {
         {stats.map((stat, index) => (
           <Card key={index} className="flex-1 min-w-[150px] md:min-w-[200px]">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-normal">{stat.title}</CardTitle>
+              <CardTitle className="text-sm font-normal">
+                {stat.title}
+              </CardTitle>
               {stat.icon}
             </CardHeader>
             <CardContent>
@@ -149,7 +151,9 @@ const Dashboard: FC = () => {
         <div>
           <Card className="w-full">
             <CardHeader>
-              <CardTitle className="text-2xl font-normal">Recent Activity</CardTitle>
+              <CardTitle className="text-2xl font-normal">
+                Recent Activity
+              </CardTitle>
             </CardHeader>
             <CardContent className="divide-y">
               {activities.map((activity) => (

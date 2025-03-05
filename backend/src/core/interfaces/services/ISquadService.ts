@@ -1,4 +1,4 @@
-import { ISquad } from "../../../models/squads.model";
+import { ISquad } from '../../../models/squads.model';
 
 export interface ISquadService {
   joinSquad(userId: string, squadId: string): unknown;

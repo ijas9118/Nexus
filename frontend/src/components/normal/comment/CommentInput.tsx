@@ -10,7 +10,8 @@ const CommentInput = ({ contentId }: { contentId: string }) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (newComment: string) => CommentService.addComment(contentId, newComment),
+    mutationFn: (newComment: string) =>
+      CommentService.addComment(contentId, newComment),
     onSuccess: () => {
       setCommentText("");
       queryClient.invalidateQueries({ queryKey: ["comments", contentId] });

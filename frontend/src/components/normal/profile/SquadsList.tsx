@@ -18,7 +18,9 @@ export default function SquadsList() {
 
       {squads.length === 0 ? (
         <div className="flex flex-col items-center justify-center text-center space-y-4 p-4 border rounded-lg">
-          <p className="text-muted-foreground">You're not part of any squads yet!</p>
+          <p className="text-muted-foreground">
+            You're not part of any squads yet!
+          </p>
           <Button variant="outline" asChild>
             <Link to="/squads">Discover Squads</Link>
           </Button>
@@ -44,7 +46,9 @@ export default function SquadsList() {
                       </Link>
                       {squad.isAdmin && <Badge>Admin</Badge>}
                     </div>
-                    <div className="text-sm text-muted-foreground">@{squad.handle}</div>
+                    <div className="text-sm text-muted-foreground">
+                      @{squad.handle}
+                    </div>
                     <div className="mt-1 text-sm text-muted-foreground">
                       {squad.members.length} members
                     </div>

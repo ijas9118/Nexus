@@ -1,4 +1,4 @@
-import { FilterQuery, Types } from "mongoose";
+import { FilterQuery, Types } from 'mongoose';
 
 export interface IBaseRepository<T> {
   findAll(): Promise<T[]>;

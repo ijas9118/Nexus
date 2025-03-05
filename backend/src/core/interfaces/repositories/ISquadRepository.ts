@@ -1,5 +1,5 @@
-import { ISquad } from "../../../models/squads.model";
-import { BaseRepository } from "../../abstracts/base.repository";
+import { ISquad } from '../../../models/squads.model';
+import { BaseRepository } from '../../abstracts/base.repository';
 
 export interface ISquadRepository extends BaseRepository<ISquad> {
   addMemberToSquad(userId: string, squadId: string): unknown;

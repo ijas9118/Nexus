@@ -47,7 +47,9 @@ const SquadSubmenu: React.FC = () => {
         <SidebarMenuSub>
           {squads.map((squad: any) => (
             <SidebarMenuSubItem key={squad._id}>
-              <SidebarMenuSubButton onClick={() => navigate(`/squads/${squad.id}`)}>
+              <SidebarMenuSubButton
+                onClick={() => navigate(`/squads/${squad.id}`)}
+              >
                 <img src={squad.logo} alt="" className="w-6 rounded-full" />
                 <span>{squad.name}</span>
               </SidebarMenuSubButton>

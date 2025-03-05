@@ -1,8 +1,8 @@
-import { ILikeService } from "../core/interfaces/services/ILikeService";
-import { inject, injectable } from "inversify";
-import { TYPES } from "../di/types";
-import { ILikesRepository } from "../core/interfaces/repositories/ILikesRepository";
-import { IContentRepository } from "../core/interfaces/repositories/IContentRepository";
+import { ILikeService } from '../core/interfaces/services/ILikeService';
+import { inject, injectable } from 'inversify';
+import { TYPES } from '../di/types';
+import { ILikesRepository } from '../core/interfaces/repositories/ILikesRepository';
+import { IContentRepository } from '../core/interfaces/repositories/IContentRepository';
 
 @injectable()
 export class LikeService implements ILikeService {
@@ -16,7 +16,7 @@ export class LikeService implements ILikeService {
     userId: string
   ): Promise<{ status: boolean; likeCount: number | undefined }> {
     const content = await this.contentRepository.findContent(contentId);
-    if (!content) throw new Error("Content not found");
+    if (!content) throw new Error('Content not found');
 
     const existingLike = await this.likesRepository.findOne({ contentId, userId });
 
@@ -38,9 +38,7 @@ export class LikeService implements ILikeService {
 
   async getLikedContentsId(userId: string): Promise<Set<string>> {
     const likedContents = await this.likesRepository.getLikedContentByUser(userId);
-    const likedContentIds = new Set(
-      likedContents.map((like) => like.contentId.toString())
-    );
+    const likedContentIds = new Set(likedContents.map((like) => like.contentId.toString()));
     return likedContentIds;
   }
 }

@@ -32,7 +32,7 @@ const PricingCardsSection: React.FC<PricingCardsSectionProps> = ({ plans }) => {
       setBreadcrumbs([
         { title: "Home", url: "/" },
         { title: "Get Premium", url: "" },
-      ])
+      ]),
     );
   }, [dispatch]);
 
@@ -42,7 +42,9 @@ const PricingCardsSection: React.FC<PricingCardsSectionProps> = ({ plans }) => {
         <Card
           key={index}
           className={`relative ${
-            plan.popular ? "border-2 border-blue-700 shadow-lg" : "border-gray-200"
+            plan.popular
+              ? "border-2 border-blue-700 shadow-lg"
+              : "border-gray-200"
           }`}
         >
           {plan.popular && (
@@ -57,7 +59,9 @@ const PricingCardsSection: React.FC<PricingCardsSectionProps> = ({ plans }) => {
                 <span className="text-4xl font-bold">₹{plan.price}</span>
                 <span className="text-gray-500 ml-1">{plan.period}</span>
                 {plan.saving && (
-                  <span className="block text-sm text-green-600 dark:text-green-300 mt-1">{plan.saving}</span>
+                  <span className="block text-sm text-green-600 dark:text-green-300 mt-1">
+                    {plan.saving}
+                  </span>
                 )}
               </div>
             </CardHeader>
@@ -66,17 +70,15 @@ const PricingCardsSection: React.FC<PricingCardsSectionProps> = ({ plans }) => {
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <Check className="w-5 h-5 text-green-500 dark:text-green-700 shrink-0 mt-0.5" />
-                    <span className="text-neutral-700 dark:text-neutral-300">{feature}</span>
+                    <span className="text-neutral-700 dark:text-neutral-300">
+                      {feature}
+                    </span>
                   </li>
                 ))}
               </ul>
             </CardContent>
             <CardFooter>
-              <Button
-                className={`w-full `}
-              >
-                Get Started
-              </Button>
+              <Button className={`w-full `}>Get Started</Button>
             </CardFooter>
           </div>
         </Card>

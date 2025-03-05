@@ -1,9 +1,9 @@
-import { inject, injectable } from "inversify";
-import { BaseService } from "../core/abstracts/base.service";
-import { IChatRepository } from "../core/interfaces/repositories/IChatRepository";
-import { IChatService } from "../core/interfaces/services/IChatService";
-import { IChat } from "../models/chat.model";
-import { TYPES } from "../di/types";
+import { inject, injectable } from 'inversify';
+import { BaseService } from '../core/abstracts/base.service';
+import { IChatRepository } from '../core/interfaces/repositories/IChatRepository';
+import { IChatService } from '../core/interfaces/services/IChatService';
+import { IChat } from '../models/chat.model';
+import { TYPES } from '../di/types';
 
 @injectable()
 export class ChatService extends BaseService<IChat> implements IChatService {

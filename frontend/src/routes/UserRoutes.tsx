@@ -29,7 +29,9 @@ const UserRoutes: React.FC = () => {
       <Route
         path="/login"
         element={
-          <GoogleOAuthProvider clientId={import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID}>
+          <GoogleOAuthProvider
+            clientId={import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID}
+          >
             <LoginPage />
           </GoogleOAuthProvider>
         }

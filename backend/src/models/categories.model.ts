@@ -1,4 +1,4 @@
-import { Schema, model, Document, Types } from "mongoose";
+import { Schema, model, Document, Types } from 'mongoose';
 
 interface ICategory extends Document {
   name: string;
@@ -19,7 +19,7 @@ const CategorySchema = new Schema<ICategory>(
     },
     squads: {
       type: [Schema.Types.ObjectId],
-      ref: "Squads",
+      ref: 'Squads',
     },
     isActive: {
       type: Boolean,
@@ -31,6 +31,6 @@ const CategorySchema = new Schema<ICategory>(
   }
 );
 
-const CategoryModel = model<ICategory>("Category", CategorySchema);
+const CategoryModel = model<ICategory>('Category', CategorySchema);
 
 export { ICategory, CategoryModel };

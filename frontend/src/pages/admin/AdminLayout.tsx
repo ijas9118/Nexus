@@ -10,7 +10,11 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import useLogout from "@/hooks/useLogout";
 import { RootState } from "@/store/store";
 import { Bell } from "lucide-react";
@@ -19,7 +23,9 @@ import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 
 const AdminLayout: React.FC = () => {
-  const breadcrumbs = useSelector((state: RootState) => state.breadcrumb.breadcrumbs);
+  const breadcrumbs = useSelector(
+    (state: RootState) => state.breadcrumb.breadcrumbs,
+  );
   const logoutUser = useLogout();
 
   return (
@@ -47,7 +53,7 @@ const AdminLayout: React.FC = () => {
                         </BreadcrumbItem>
                         <BreadcrumbSeparator className="hidden md:block" />
                       </React.Fragment>
-                    )
+                    ),
                   )}
                 </BreadcrumbList>
               </Breadcrumb>

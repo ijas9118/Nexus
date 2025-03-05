@@ -88,7 +88,9 @@ export const columns: ColumnDef<AdminUser>[] = [
   {
     accessorKey: "postsCount",
     header: "Posts",
-    cell: ({ row }) => <div className="text-center">{row.getValue("postsCount")}</div>,
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("postsCount")}</div>
+    ),
   },
   {
     accessorKey: "joinedSquadsCount",
@@ -113,7 +115,9 @@ export const columns: ColumnDef<AdminUser>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(payment.id)}
+            >
               Copy payment ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />

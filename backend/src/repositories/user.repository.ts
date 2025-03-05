@@ -1,9 +1,9 @@
-import { injectable } from "inversify";
-import { IUser } from "../models/user.model";
-import User from "../models/user.model";
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { IUserRepository } from "../core/interfaces/repositories/IUserRepository";
-import { Types, UpdateQuery } from "mongoose";
+import { injectable } from 'inversify';
+import { IUser } from '../models/user.model';
+import User from '../models/user.model';
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
+import { Types, UpdateQuery } from 'mongoose';
 
 @injectable()
 export class UserRepository extends BaseRepository<IUser> implements IUserRepository {
@@ -34,7 +34,7 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   async updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null> {
     const userObjectId = new Types.ObjectId(userId);
     let user = await this.findOne({ username: userData.username });
-    if (user) throw new Error("Username already exists");
+    if (user) throw new Error('Username already exists');
     return this.model.findByIdAndUpdate(userObjectId, userData, { new: true });
   }
 
@@ -59,9 +59,9 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   }
 
   async getUserJoinedSquads(userId: string): Promise<any[]> {
-    const user = await User.findById(userId).populate("joinedSquads");
+    const user = await User.findById(userId).populate('joinedSquads');
     if (!user) {
-      throw new Error("User not found");
+      throw new Error('User not found');
     }
     return user.joinedSquads;
   }

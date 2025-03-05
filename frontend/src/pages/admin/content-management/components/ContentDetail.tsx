@@ -49,7 +49,11 @@ const ContentDetail = () => {
   });
 
   if (isLoading)
-    return <div className="container mx-auto px-4 py-8">Loading content details...</div>;
+    return (
+      <div className="container mx-auto px-4 py-8">
+        Loading content details...
+      </div>
+    );
   if (error)
     return (
       <div className="container mx-auto px-4 py-8">
@@ -165,7 +169,8 @@ const ContentDetail = () => {
               <div className="flex items-center space-x-4 mb-4">
                 <img
                   src={
-                    content.author.profilePic || "https://avatar.iran.liara.run/public"
+                    content.author.profilePic ||
+                    "https://avatar.iran.liara.run/public"
                   }
                   alt="Author"
                   className="w-12 h-12 rounded-full object-cover"
@@ -180,8 +185,12 @@ const ContentDetail = () => {
               <Separator className="my-4" />
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Username</span>
-                  <span className="text-sm font-medium">{content.userName}</span>
+                  <span className="text-sm text-muted-foreground">
+                    Username
+                  </span>
+                  <span className="text-sm font-medium">
+                    {content.userName}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Squad</span>
@@ -216,7 +225,9 @@ const ContentDetail = () => {
                     ) : (
                       <>
                         <XCircle className="h-4 w-4 text-red-500 mr-1" />
-                        <span className="text-sm font-medium">Not Verified</span>
+                        <span className="text-sm font-medium">
+                          Not Verified
+                        </span>
                       </>
                     )}
                   </div>
@@ -242,13 +253,21 @@ const ContentDetail = () => {
                 </div>
                 <div className="flex flex-col items-center p-3 bg-muted rounded-md">
                   <MessageSquare className="h-5 w-5 text-blue-500 mb-1" />
-                  <span className="text-xl font-bold">{content.commentCount}</span>
-                  <span className="text-xs text-muted-foreground">Comments</span>
+                  <span className="text-xl font-bold">
+                    {content.commentCount}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    Comments
+                  </span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-muted rounded-md">
                   <Bookmark className="h-5 w-5 text-purple-500 mb-1" />
-                  <span className="text-xl font-bold">{content.bookmarkCount}</span>
-                  <span className="text-xs text-muted-foreground">Bookmarks</span>
+                  <span className="text-xl font-bold">
+                    {content.bookmarkCount}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    Bookmarks
+                  </span>
                 </div>
               </div>
             </CardContent>

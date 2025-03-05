@@ -53,7 +53,9 @@ const FilterComponent: React.FC<FilterProps> = ({
           key={topic}
           variant="default"
           className="gap-1 px-3 py-1"
-          onClick={() => setSelectedTopics(selectedTopics.filter((t) => t !== topic))}
+          onClick={() =>
+            setSelectedTopics(selectedTopics.filter((t) => t !== topic))
+          }
         >
           {topic}
           <span className="cursor-pointer">&times;</span>

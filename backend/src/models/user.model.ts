@@ -1,5 +1,5 @@
-import mongoose, { Schema, Document, ObjectId } from "mongoose";
-import { UserRole } from "../core/types/UserTypes";
+import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import { UserRole } from '../core/types/UserTypes';
 
 export interface IUser extends Document {
   _id: ObjectId;
@@ -44,7 +44,7 @@ const UserSchema: Schema = new Schema(
     profilePic: {
       type: String,
       default:
-        "https://res.cloudinary.com/dhvlhpg55/image/upload/v1740028408/nexus/images/oamn3bzchpmixago65yf.jpg",
+        'https://res.cloudinary.com/dhvlhpg55/image/upload/v1740028408/nexus/images/oamn3bzchpmixago65yf.jpg',
     },
     gender: {
       type: String,
@@ -70,7 +70,7 @@ const UserSchema: Schema = new Schema(
     joinedSquads: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Squad",
+        ref: 'Squad',
       },
     ],
     streak: {
@@ -99,7 +99,7 @@ const UserSchema: Schema = new Schema(
     role: {
       type: String,
       required: true,
-      default: "user",
+      default: 'user',
     },
     username: {
       type: String,
@@ -112,4 +112,4 @@ const UserSchema: Schema = new Schema(
   }
 );
 
-export default mongoose.model<IUser>("User", UserSchema);
+export default mongoose.model<IUser>('User', UserSchema);

@@ -24,7 +24,9 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
         {heading}
       </h2>
       {description && (
-        <p className="dark:text-neutral-300 max-w-2xl mx-auto text-lg">{description}</p>
+        <p className="dark:text-neutral-300 max-w-2xl mx-auto text-lg">
+          {description}
+        </p>
       )}
     </div>
   );

@@ -34,7 +34,9 @@ const formSchema = z.object({
     .string()
     .min(2, "Name must be at least 2 characters")
     .max(50, "Name must be less than 50 characters"),
-  description: z.string().max(200, "Description must be less than 200 characters"),
+  description: z
+    .string()
+    .max(200, "Description must be less than 200 characters"),
   handle: z
     .string()
     .min(3, "Handle must be at least 3 characters")
@@ -158,11 +160,17 @@ export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
                     name="name"
                     control={control}
                     render={({ field }) => (
-                      <Input id="name" placeholder="Enter squad name" {...field} />
+                      <Input
+                        id="name"
+                        placeholder="Enter squad name"
+                        {...field}
+                      />
                     )}
                   />
                   {errors.name && (
-                    <p className="text-sm text-pink-600">{errors.name.message}</p>
+                    <p className="text-sm text-pink-600">
+                      {errors.name.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -175,11 +183,17 @@ export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
                     name="description"
                     control={control}
                     render={({ field }) => (
-                      <Input id="description" placeholder="About squad" {...field} />
+                      <Input
+                        id="description"
+                        placeholder="About squad"
+                        {...field}
+                      />
                     )}
                   />
                   {errors.description && (
-                    <p className="text-sm text-pink-600">{errors.description.message}</p>
+                    <p className="text-sm text-pink-600">
+                      {errors.description.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -192,11 +206,17 @@ export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
                     name="handle"
                     control={control}
                     render={({ field }) => (
-                      <Input id="handle" placeholder="Enter unique handle" {...field} />
+                      <Input
+                        id="handle"
+                        placeholder="Enter unique handle"
+                        {...field}
+                      />
                     )}
                   />
                   {errors.handle && (
-                    <p className="text-sm text-pink-600">{errors.handle.message}</p>
+                    <p className="text-sm text-pink-600">
+                      {errors.handle.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -209,13 +229,19 @@ export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
                     name="category"
                     control={control}
                     render={({ field }) => (
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <SelectTrigger id="category">
                           <SelectValue placeholder="Select a category" />
                         </SelectTrigger>
                         <SelectContent>
                           {categories.map((category) => (
-                            <SelectItem key={category._id} value={category.name}>
+                            <SelectItem
+                              key={category._id}
+                              value={category.name}
+                            >
                               {category.name}
                             </SelectItem>
                           ))}
@@ -224,7 +250,9 @@ export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
                     )}
                   />
                   {errors.category && (
-                    <p className="text-sm text-pink-600">{errors.category.message}</p>
+                    <p className="text-sm text-pink-600">
+                      {errors.category.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -252,13 +280,18 @@ export function CreateSquadDialog({ open, onOpenChange }: DialogProps) {
                     />
                     {logoPreview && (
                       <Avatar className="h-16 w-16">
-                        <AvatarImage src={logoPreview} alt="Squad Logo Preview" />
+                        <AvatarImage
+                          src={logoPreview}
+                          alt="Squad Logo Preview"
+                        />
                         <AvatarFallback>Logo</AvatarFallback>
                       </Avatar>
                     )}
                   </div>
                   {errors.logo && (
-                    <p className="text-sm text-pink-600">{errors.logo.message}</p>
+                    <p className="text-sm text-pink-600">
+                      {errors.logo.message}
+                    </p>
                   )}
                 </div>
               </div>

@@ -1,14 +1,11 @@
-import { Types } from "mongoose";
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { ICategoryRepository } from "../core/interfaces/repositories/ICategoryRepository";
-import { CategoryModel, ICategory } from "../models/categories.model";
-import { injectable } from "inversify";
+import { Types } from 'mongoose';
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { ICategoryRepository } from '../core/interfaces/repositories/ICategoryRepository';
+import { CategoryModel, ICategory } from '../models/categories.model';
+import { injectable } from 'inversify';
 
 @injectable()
-export class CategoryRepository
-  extends BaseRepository<ICategory>
-  implements ICategoryRepository
-{
+export class CategoryRepository extends BaseRepository<ICategory> implements ICategoryRepository {
   constructor() {
     super(CategoryModel);
   }

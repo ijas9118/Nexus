@@ -1,14 +1,11 @@
-import mongoose from "mongoose";
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { HistoryModel, IHistory } from "../models/history.model";
-import { IHistoryRepository } from "../core/interfaces/repositories/IHistoryRepository";
-import { injectable } from "inversify";
+import mongoose from 'mongoose';
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { HistoryModel, IHistory } from '../models/history.model';
+import { IHistoryRepository } from '../core/interfaces/repositories/IHistoryRepository';
+import { injectable } from 'inversify';
 
 @injectable()
-export class HistoryRepository
-  extends BaseRepository<IHistory>
-  implements IHistoryRepository
-{
+export class HistoryRepository extends BaseRepository<IHistory> implements IHistoryRepository {
   constructor() {
     super(HistoryModel);
   }
@@ -39,26 +36,26 @@ export class HistoryRepository
       },
       {
         $lookup: {
-          from: "contents",
-          localField: "readHistory",
-          foreignField: "_id",
-          as: "contentDetails",
+          from: 'contents',
+          localField: 'readHistory',
+          foreignField: '_id',
+          as: 'contentDetails',
         },
       },
       {
-        $unwind: "$contentDetails",
+        $unwind: '$contentDetails',
       },
       {
         $project: {
           _id: 0,
-          contentId: "$contentDetails._id",
-          userName: "$contentDetails.userName",
-          contentType: "$contentDetails.contentType",
-          title: "$contentDetails.title",
-          date: "$contentDetails.date",
-          squad: "$contentDetails.squad",
-          isPremium: "$contentDetails.isPremium",
-          thumbnailUrl: "$contentDetails.thumbnailUrl",
+          contentId: '$contentDetails._id',
+          userName: '$contentDetails.userName',
+          contentType: '$contentDetails.contentType',
+          title: '$contentDetails.title',
+          date: '$contentDetails.date',
+          squad: '$contentDetails.squad',
+          isPremium: '$contentDetails.isPremium',
+          thumbnailUrl: '$contentDetails.thumbnailUrl',
         },
       },
     ]);

@@ -49,7 +49,7 @@ const CommentManagement = () => {
 
     if (!selectedBlog && selectedSquad) {
       const blogBelongsToSquad = blogs.find(
-        (blog) => blog.id === comment.blogId && blog.squadId === selectedSquad
+        (blog) => blog.id === comment.blogId && blog.squadId === selectedSquad,
       );
       if (!blogBelongsToSquad) return false;
     }
@@ -83,7 +83,6 @@ const CommentManagement = () => {
     setSelectedBlog(value);
   };
 
-
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
@@ -106,7 +105,10 @@ const CommentManagement = () => {
         );
       case "deleted":
         return (
-          <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+          <Badge
+            variant="outline"
+            className="bg-red-50 text-red-700 border-red-200"
+          >
             <Trash2 className="w-3 h-3 mr-1" /> Deleted
           </Badge>
         );
@@ -161,7 +163,7 @@ const CommentManagement = () => {
             <TabsContent value="active" className="mt-4">
               <CommentsList
                 comments={filteredComments.filter(
-                  (comment: any) => comment.status === "active"
+                  (comment: any) => comment.status === "active",
                 )}
                 getStatusBadge={getStatusBadge}
               />
@@ -169,7 +171,7 @@ const CommentManagement = () => {
             <TabsContent value="reported" className="mt-4">
               <CommentsList
                 comments={filteredComments.filter(
-                  (comment: any) => comment.status === "reported"
+                  (comment: any) => comment.status === "reported",
                 )}
                 getStatusBadge={getStatusBadge}
               />
@@ -177,7 +179,7 @@ const CommentManagement = () => {
             <TabsContent value="deleted" className="mt-4">
               <CommentsList
                 comments={filteredComments.filter(
-                  (comment: any) => comment.status === "deleted"
+                  (comment: any) => comment.status === "deleted",
                 )}
                 getStatusBadge={getStatusBadge}
               />

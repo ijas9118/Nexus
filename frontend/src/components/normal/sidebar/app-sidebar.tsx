@@ -40,7 +40,7 @@ export function AppSidebar() {
       setBreadcrumbs([
         { title: "Home", url: "/" },
         { title, url },
-      ])
+      ]),
     );
     navigate(url);
   };
@@ -103,9 +103,14 @@ export function AppSidebar() {
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
+              <DropdownMenuContent
+                side="top"
+                className="w-[--radix-popper-anchor-width]"
+              >
                 <DropdownMenuItem
-                  onClick={() => handleMenuClick(`/profile/${user?.username}`, "Profile")}
+                  onClick={() =>
+                    handleMenuClick(`/profile/${user?.username}`, "Profile")
+                  }
                 >
                   <span>Profile</span>
                 </DropdownMenuItem>
