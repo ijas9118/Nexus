@@ -22,6 +22,7 @@ import Chat from "@/pages/normal/Chat";
 import Following from "@/pages/normal/contents/Following";
 import Mentors from "@/pages/normal/mentors/Mentors";
 import MentorApply from "@/pages/normal/mentors/MentorApply";
+import MentorProfilePage from "@/pages/normal/mentors/MentorProfilePage";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -50,6 +51,7 @@ const UserRoutes: React.FC = () => {
           <Route path="getPremium" element={<GetPremium />} />
           <Route path="mentors" element={<Mentors />} />
           <Route path="mentors/apply" element={<MentorApply />} />
+          <Route path="mentors/:mentorId" element={<MentorProfilePage />} />
           <Route path="squads" element={<Squads />} />
           <Route path="chat" element={<Chat />} />
           <Route path="connections" element={<Connections />} />
