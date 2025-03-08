@@ -24,7 +24,7 @@ interface ContentCardProps {
   date: string;
   likes: number;
   comments: number;
-  tags: string[];
+  squad: { name: string; _id: string };
   isPremium: boolean;
   image: string;
   isLiked: boolean;
@@ -97,11 +97,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
         </div>
         <h2 className="mb-2 text-xl font-bold">{props.heading}</h2>
         <div className="flex flex-wrap gap-2">
-          {props.tags.map((tag, index) => (
-            <Badge key={index} variant="outline">
-              # {tag}
-            </Badge>
-          ))}
+          <Badge variant="outline" className="cursor">@{props.squad.name}</Badge>
         </div>
         <p className="mt-2 text-sm text-muted-foreground">{props.date}</p>
       </CardContent>

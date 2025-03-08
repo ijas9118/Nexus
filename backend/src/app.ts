@@ -21,7 +21,7 @@ const app = express();
 setupSwagger(app);
 
 const corsOptions = {
-  origin: CLIENT_URL || '*',
+  origin: CLIENT_URL,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,

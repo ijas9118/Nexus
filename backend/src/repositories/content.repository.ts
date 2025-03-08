@@ -74,10 +74,28 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
         },
       },
       {
+        $lookup: {
+          from: 'squads', // Squads collection
+          localField: 'squad', // Content's squad field
+          foreignField: '_id', // Squad _id field
+          as: 'squadInfo',
+        },
+      },
+      {
+        $unwind: {
+          path: '$squadInfo',
+          preserveNullAndEmptyArrays: true, // If content has no squad, keep it null
+        },
+      },
+      {
         $addFields: {
           isLiked: { $gt: [{ $size: '$userLike' }, 0] },
           isBookmarked: { $gt: [{ $size: '$userBookmark' }, 0] },
           username: '$authorInfo.username',
+          squad: {
+            _id: '$squadInfo._id',
+            name: '$squadInfo.name',
+          },
         },
       },
       {
@@ -85,10 +103,13 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
           userLike: 0,
           userBookmark: 0,
           authorInfo: 0,
+          squadInfo: 0,
           __v: 0,
         },
       },
     ]);
+
+    console.log(contents);
 
     return contents;
   }

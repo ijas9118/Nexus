@@ -10,6 +10,7 @@ import { TYPES } from '../di/types';
 import { hash } from 'bcrypt';
 import { IMentorRepository } from '../core/interfaces/repositories/IMentorRepository';
 import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
+import { UsernameGenerator } from '../utils/usernameGenerator.util';
 
 const ACCESS_TOKEN_SECRET = ACCESS_TOKEN || 'access_secret';
 
@@ -80,10 +81,13 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
 
     await transporter.sendMail(mailOptions);
 
+    const username = UsernameGenerator.generateUsername();
+
     const user = await this.userRepository.create({
       name,
       email,
       password: '$2b$10$gRSI2udnXon1m6BxycA/OOdbOMWjxDtKfPMM4md9I53HoBoyTnSxu',
+      username,
       role: 'mentor',
     });
 
