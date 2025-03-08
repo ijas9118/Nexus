@@ -1,0 +1,273 @@
+export const EXPERIENCE_LEVELS = [
+  { value: "2-5", label: "2-5 years" },
+  { value: "5-10", label: "5-10 years" },
+  { value: "10+", label: "10+ years" },
+];
+
+export const EXPERTISE_AREAS = [
+  { value: "frontend", label: "Frontend Development" },
+  { value: "backend", label: "Backend Development" },
+  { value: "fullstack", label: "Full Stack Development" },
+  { value: "mobile", label: "Mobile Development" },
+  { value: "devops", label: "DevOps" },
+  { value: "cloud", label: "Cloud Architecture" },
+  { value: "ml", label: "Machine Learning" },
+  { value: "ui", label: "UI/UX Design" },
+  { value: "security", label: "Security" },
+  { value: "career", label: "Career Guidance" },
+  { value: "leadership", label: "Leadership" },
+];
+
+export const TECHNOLOGIES = [
+  { value: "javascript", label: "JavaScript" },
+  { value: "typescript", label: "TypeScript" },
+  { value: "react", label: "React" },
+  { value: "vue", label: "Vue.js" },
+  { value: "angular", label: "Angular" },
+  { value: "node", label: "Node.js" },
+  { value: "python", label: "Python" },
+  { value: "java", label: "Java" },
+  { value: "csharp", label: "C#" },
+  { value: "php", label: "PHP" },
+  { value: "go", label: "Go" },
+  { value: "ruby", label: "Ruby" },
+  { value: "aws", label: "AWS" },
+  { value: "azure", label: "Azure" },
+  { value: "gcp", label: "Google Cloud" },
+  { value: "docker", label: "Docker" },
+  { value: "kubernetes", label: "Kubernetes" },
+];
+
+export const MENTORSHIP_TYPES = [
+  { value: "one-on-one", label: "1-on-1 Mentoring Sessions" },
+  { value: "code-reviews", label: "Code Reviews" },
+  { value: "career-guidance", label: "Career Guidance" },
+  { value: "interview-prep", label: "Technical Interview Preparation" },
+  { value: "project-feedback", label: "Project Feedback" },
+];
+
+export const TARGET_AUDIENCES = [
+  { value: "new-developers", label: "New Developers" },
+  { value: "junior-developers", label: "Junior Developers" },
+  { value: "mid-level-developers", label: "Mid-level Developers" },
+  { value: "senior-developers", label: "Senior Developers" },
+  { value: "career-switchers", label: "Career Switchers" },
+  { value: "students", label: "Students" },
+];
+
+export const AVAILABILITY_OPTIONS = [
+  { value: "weekday-mornings", label: "Weekday Mornings" },
+  { value: "weekday-afternoons", label: "Weekday Afternoons" },
+  { value: "weekday-evenings", label: "Weekday Evenings" },
+  { value: "weekends", label: "Weekends" },
+];
+
+export const MENTORS = [
+  {
+    name: "John Smith",
+    role: "Senior Frontend Developer at TechCorp",
+    bio: "I'm a frontend developer with 10+ years of experience, specializing in React and modern JavaScript. I've worked with companies ranging from startups to Fortune 500s, helping them build scalable and maintainable web applications. My passion is helping other developers level up their skills and advance in their careers.",
+    rating: 4.5,
+    reviews: 120,
+    mentees: 150,
+    sessions: 80,
+    location: "San Francisco, CA",
+    languages: "English, Spanish",
+    pricing: [
+      { type: "1-on-1 Session (45 min)", price: 85 },
+      { type: "Code Review (30 min)", price: 60 },
+      { type: "Career Guidance (60 min)", price: 120 },
+    ],
+    expertise: [
+      "React",
+      "TypeScript",
+      "Next.js",
+      "Redux",
+      "JavaScript",
+      "Frontend Architecture",
+      "Performance Optimization",
+    ],
+    availability: "Weekdays evenings, Weekends",
+    testimonials: [
+      {
+        name: "Alex Johnson",
+        role: "Frontend Developer",
+        comment:
+          "John's guidance helped me refactor our component structure, resulting in a 40% performance improvement. His practical advice was exactly what I needed.",
+      },
+    ],
+    blogs: [
+      {
+        title: "Mastering React Performance",
+        description: "Learn techniques to optimize your React applications",
+        isPremium: true,
+      },
+    ],
+  },
+  {
+    name: "Emily Johnson",
+    role: "Backend Architect at CloudSystems",
+    bio: "With 8+ years in backend development, I've architected systems that handle millions of requests daily. I specialize in Python, Django, and cloud infrastructure. My mentoring approach focuses on practical, real-world solutions to complex problems.",
+    rating: 4.0,
+    reviews: 90,
+    mentees: 130,
+    sessions: 70,
+    location: "New York, NY",
+    languages: "English, French",
+    pricing: [
+      { type: "1-on-1 Session (45 min)", price: 95 },
+      { type: "Code Review (30 min)", price: 70 },
+      { type: "Career Guidance (60 min)", price: 130 },
+    ],
+    expertise: [
+      "Python",
+      "Django",
+      "AWS",
+      "Database Design",
+      "API Development",
+      "Microservices",
+      "System Architecture",
+    ],
+    availability: "Weekdays, limited weekends",
+    testimonials: [
+      {
+        name: "Priya Sharma",
+        role: "Software Engineer",
+        comment:
+          "The mentorship sessions were incredibly valuable. I gained insights that would have taken me months to learn on my own. Highly recommended!",
+      },
+    ],
+    blogs: [
+      {
+        title: "Building Scalable APIs",
+        description: "Best practices for API design and implementation",
+        isPremium: false,
+      },
+    ],
+  },
+  {
+    name: "Michael Chen",
+    role: "Full Stack Engineer at StartupX",
+    bio: "I'm a full stack developer who loves building complete applications from scratch. My expertise spans JavaScript, React, Node.js, and various databases. I believe in teaching through building, helping mentees create real projects they can be proud of.",
+    rating: 4.5,
+    reviews: 110,
+    mentees: 140,
+    sessions: 75,
+    location: "Seattle, WA",
+    languages: "English, Mandarin",
+    pricing: [
+      { type: "1-on-1 Session (45 min)", price: 80 },
+      { type: "Code Review (30 min)", price: 50 },
+      { type: "Career Guidance (60 min)", price: 110 },
+    ],
+    expertise: [
+      "JavaScript",
+      "React",
+      "Node.js",
+      "GraphQL",
+      "MongoDB",
+      "Express",
+      "Full Stack Development",
+    ],
+    availability: "Flexible, primarily weekends",
+    testimonials: [
+      {
+        name: "Marcus Williams",
+        role: "Junior Developer",
+        comment:
+          "After six weeks of mentorship, I was able to lead my first project at work. The real-world examples and code reviews were game-changing for me.",
+      },
+    ],
+    blogs: [
+      {
+        title: "Career Growth in Tech",
+        description: "Strategies for advancing your developer career",
+        isPremium: true,
+      },
+    ],
+  },
+  {
+    name: "Sarah Rodriguez",
+    role: "Mobile Developer & UX Specialist",
+    bio: "As a mobile developer who's published dozens of apps with millions of downloads, I help developers navigate the mobile ecosystem. I specialize in cross-platform development and creating beautiful user experiences.",
+    rating: 4.0,
+    reviews: 85,
+    mentees: 110,
+    sessions: 60,
+    location: "Austin, TX",
+    languages: "English, Spanish",
+    pricing: [
+      { type: "1-on-1 Session (45 min)", price: 90 },
+      { type: "Code Review (30 min)", price: 65 },
+      { type: "Career Guidance (60 min)", price: 125 },
+    ],
+    expertise: [
+      "React Native",
+      "iOS",
+      "Android",
+      "UI/UX Design",
+      "Figma",
+      "Mobile Architecture",
+      "App Deployment",
+    ],
+    availability: "Weekdays only",
+    testimonials: [],
+    blogs: [],
+  },
+  {
+    name: "David Kim",
+    role: "Engineering Manager at BigTech",
+    bio: "With 12+ years in the industry and having led teams of 20+ engineers, I help developers grow not just technically but also in their leadership and communication skills. I focus on career growth and making strategic technical decisions.",
+    rating: 4.5,
+    reviews: 140,
+    mentees: 160,
+    sessions: 90,
+    location: "Chicago, IL",
+    languages: "English, Korean",
+    pricing: [
+      { type: "1-on-1 Session (45 min)", price: 100 },
+      { type: "Code Review (30 min)", price: 75 },
+      { type: "Career Guidance (60 min)", price: 140 },
+    ],
+    expertise: [
+      "System Design",
+      "Team Leadership",
+      "Agile",
+      "Scaling",
+      "Career Development",
+      "Technical Interviews",
+      "Project Management",
+    ],
+    availability: "Evenings and weekends",
+    testimonials: [],
+    blogs: [],
+  },
+  {
+    name: "Lisa Patel",
+    role: "DevOps Engineer at InfraTeam",
+    bio: "I'm a DevOps specialist who's helped companies of all sizes streamline their development workflows. I focus on containerization, CI/CD, and infrastructure as code. My goal is to help developers automate the boring stuff so they can focus on building.",
+    rating: 4.0,
+    reviews: 95,
+    mentees: 120,
+    sessions: 70,
+    location: "Boston, MA",
+    languages: "English, Hindi",
+    pricing: [
+      { type: "1-on-1 Session (45 min)", price: 85 },
+      { type: "Code Review (30 min)", price: 60 },
+      { type: "Career Guidance (60 min)", price: 120 },
+    ],
+    expertise: [
+      "Kubernetes",
+      "Docker",
+      "CI/CD",
+      "Cloud Architecture",
+      "AWS",
+      "Azure",
+      "Infrastructure as Code",
+    ],
+    availability: "Weekdays, some evenings",
+    testimonials: [],
+    blogs: [],
+  },
+];

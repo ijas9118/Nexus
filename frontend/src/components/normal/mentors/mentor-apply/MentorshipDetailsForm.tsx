@@ -17,7 +17,7 @@ import {
   AVAILABILITY_OPTIONS,
   MENTORSHIP_TYPES,
   TARGET_AUDIENCES,
-} from "./constants";
+} from "../constants";
 import CheckboxGroup from "./CheckboxGroup";
 
 interface MentorshipDetailsFormProps {
