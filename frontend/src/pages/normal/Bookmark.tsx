@@ -50,7 +50,7 @@ export default function Bookmark() {
             date={item.date}
             likes={item.likes}
             comments={item.comments}
-            tags={[item.squad]}
+            squad={item.squad}
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
             isLiked={item.isLiked}

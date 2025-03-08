@@ -50,8 +50,8 @@ export const networkItems = [
     icon: Star,
   },
   {
-    title: "Experts",
-    url: "/experts",
+    title: "Mentors",
+    url: "/mentors",
     icon: CircleCheckBig,
   },
 
