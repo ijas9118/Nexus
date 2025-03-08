@@ -77,7 +77,6 @@ export class ContentController implements IContentController {
     const userId = req.user?._id as string;
 
     const contents = await this.contentService.getFollowingUsersContents(userId);
-    console.log(contents);
 
     res.status(200).json(contents);
   });
