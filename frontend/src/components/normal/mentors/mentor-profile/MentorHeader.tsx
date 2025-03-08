@@ -1,7 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Globe, LinkedinIcon, Mail, MapPin, Star, Twitter, Users } from "lucide-react";
+import { Calendar, Globe, Mail, MapPin, Star, Users } from "lucide-react";
+import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
 
 interface Mentor {
   name: string;
@@ -66,26 +67,39 @@ const MentorHeader = ({ mentor }: { mentor: Mentor }) => {
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="flex flex-wrap gap-2 my-6">
               {mentor.expertise.map((skill) => (
-                <Badge key={skill} variant="secondary">
+                <Badge key={skill} variant="default">
                   {skill}
                 </Badge>
               ))}
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm">
-                <Mail className="h-4 w-4 mr-2" />
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-teal-600 bg-transparent border border-teal-300 hover:bg-teal-50 hover:text-teal-700 dark:text-teal-400 dark:border-teal-600 dark:hover:bg-teal-800 dark:hover:text-teal-200 transition-colors duration-200"
+              >
+                <Mail />
                 Contact
               </Button>
-              <Button variant="outline" size="sm">
-                <LinkedinIcon className="h-4 w-4 mr-2" />
+
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-blue-600 bg-transparent border border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:text-blue-400 dark:border-blue-600 dark:hover:bg-blue-800 dark:hover:text-blue-200 transition-colors duration-200"
+              >
+                <FaLinkedin />
                 LinkedIn
               </Button>
-              <Button variant="outline" size="sm">
-                <Twitter className="h-4 w-4 mr-2" />
-                Twitter
+
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-black bg-transparent border border-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-100 transition-colors duration-200"
+              >
+                <FaXTwitter />X
               </Button>
             </div>
           </div>
