@@ -109,8 +109,6 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       },
     ]);
 
-    console.log(contents);
-
     return contents;
   }
 
