@@ -35,6 +35,8 @@ export default function MyFeed() {
     fetchContent();
   }, []);
 
+  console.log(feedContent);
+
   useEffect(() => {
     let filteredContent = feedContent;
 
@@ -81,7 +83,7 @@ export default function MyFeed() {
             date={item.date}
             likes={item.likes}
             comments={item.comments}
-            tags={[item.squad]}
+            squad={item.squad}
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
             isLiked={item.isLiked}
