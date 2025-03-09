@@ -17,7 +17,7 @@ export class CommentController implements ICommentController {
     const userId = req.user?._id as string;
 
     if (!contentId || !text)
-      throw new CustomError('Content ID and text are required', StatusCodes.BAD_REQUEST);
+      {throw new CustomError('Content ID and text are required', StatusCodes.BAD_REQUEST);}
 
     const comment = await this.commentService.addComment({
       userId,

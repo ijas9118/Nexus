@@ -16,12 +16,12 @@ export class HistoryController implements IHistoryController {
     const userId = req.user?._id as string;
     const { contentId } = req.body;
 
-    if (!contentId) throw new CustomError('Content ID is required', StatusCodes.BAD_REQUEST);
+    if (!contentId) {throw new CustomError('Content ID is required', StatusCodes.BAD_REQUEST);}
 
     const result = await this.historyService.removeFromHistory(userId, contentId);
 
     if (!result)
-      throw new CustomError('Failed to remove from history', StatusCodes.INTERNAL_SERVER_ERROR);
+      {throw new CustomError('Failed to remove from history', StatusCodes.INTERNAL_SERVER_ERROR);}
 
     res.status(StatusCodes.OK).json({ message: 'Removed from history' });
   });
@@ -32,7 +32,7 @@ export class HistoryController implements IHistoryController {
     const history = await this.historyService.getAllHistory(userId);
 
     if (!history)
-      throw new CustomError('Failed to fetch history', StatusCodes.INTERNAL_SERVER_ERROR);
+      {throw new CustomError('Failed to fetch history', StatusCodes.INTERNAL_SERVER_ERROR);}
 
     res.status(StatusCodes.OK).json(history);
   });

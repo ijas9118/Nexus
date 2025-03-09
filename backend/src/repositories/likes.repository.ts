@@ -11,15 +11,15 @@ export class LikesRepository extends BaseRepository<ILike> implements ILikesRepo
   }
 
   async createLike(contentId: string, userId: string): Promise<ILike> {
-    let userIdObj = new Types.ObjectId(userId);
-    let contentIdObj = new Types.ObjectId(contentId);
+    const userIdObj = new Types.ObjectId(userId);
+    const contentIdObj = new Types.ObjectId(contentId);
 
     return await this.create({ contentId: contentIdObj, userId: userIdObj });
   }
 
   async deleteLike(contentId: string, userId: string): Promise<DeleteResult> {
-    let userIdObj = new Types.ObjectId(userId);
-    let contentIdObj = new Types.ObjectId(contentId);
+    const userIdObj = new Types.ObjectId(userId);
+    const contentIdObj = new Types.ObjectId(contentId);
 
     return await this.deleteOne({ contentId: contentIdObj, userId: userIdObj });
   }

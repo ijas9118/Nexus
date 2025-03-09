@@ -15,7 +15,7 @@ export class SquadController implements ISquadController {
   createSquad = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const existingSquad = await this.squadService.getSquadByName(req.body.name);
     if (existingSquad)
-      throw new CustomError('Squad with this name already exists', StatusCodes.BAD_REQUEST);
+      {throw new CustomError('Squad with this name already exists', StatusCodes.BAD_REQUEST);}
 
     const squad = await this.squadService.createSquad(req.body);
     res.status(StatusCodes.CREATED).json(squad);
