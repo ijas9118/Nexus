@@ -21,7 +21,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
     return await this.find({});
   };
 
-  getSquadsByCategory = async (category: string, userId: string): Promise<any[]> => {
+  getSquadsByCategory = async (category: string, userId: string): Promise<ISquad[]> => {
     const userObjectId = new mongoose.Types.ObjectId(userId);
 
     return await this.model.aggregate([

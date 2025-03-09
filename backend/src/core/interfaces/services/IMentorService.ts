@@ -1,6 +1,6 @@
 export interface IMentorService {
-  completeProfile(email: any, name: any, password: any): unknown;
+  completeProfile(email: string, name: string, password: string): unknown;
   getAllMentors(): unknown;
-  acceptInvitation(token: any): unknown;
-  sendInvitation(email: any, specialization: any, name: any): unknown;
+  acceptInvitation(token: string): unknown;
+  sendInvitation(email: string, specialization: string, name: string): unknown;
 }

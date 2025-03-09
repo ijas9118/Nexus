@@ -92,9 +92,8 @@ export class AuthService implements IAuthService {
   async googleLoginOrRegister(userData: {
     name: string;
     email: string;
-    picture: string;
   }): Promise<LoginResponseDto | null> {
-    const { name, email, picture } = userData;
+    const { name, email } = userData;
 
     let user = await this.userRepository.findByEmail(email);
 

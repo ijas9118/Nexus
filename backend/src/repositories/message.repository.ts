@@ -42,10 +42,10 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
 
     // console.log(messages)
 
-    const formattedMessages = messages.map((message: any) => {
+    const formattedMessages = messages.map((message: IMessage) => {
       return {
         ...message.toObject(),
-        sentTime: FormatTime.formatTime(message.updatedAt),
+        sentTime: FormatTime.formatTime(message.updatedAt.toString()),
       };
     });
 

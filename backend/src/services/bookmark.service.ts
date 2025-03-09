@@ -52,7 +52,7 @@ export class BookmarkService extends BaseService<IBookmark> implements IBookmark
   }
 
   // Get all bookmarks of a user
-  async getBookmarks(userId: string): Promise<any[]> {
+  async getBookmarks(userId: string): Promise<IBookmark[]> {
     const bookmarks = await this.bookmarkRepository.getBookmarks(userId);
     return bookmarks;
   }

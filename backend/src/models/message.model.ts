@@ -6,6 +6,7 @@ export interface IMessage extends mongoose.Document {
   text: string;
   read: boolean;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 const MessageSchema = new mongoose.Schema(

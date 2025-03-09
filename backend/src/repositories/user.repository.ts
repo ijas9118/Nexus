@@ -4,6 +4,7 @@ import User from '../models/user.model';
 import { BaseRepository } from '../core/abstracts/base.repository';
 import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
 import { Types } from 'mongoose';
+import { ISquad } from '../models/squads.model';
 
 @injectable()
 export class UserRepository extends BaseRepository<IUser> implements IUserRepository {
@@ -60,12 +61,12 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     return result !== null;
   }
 
-  async getUserJoinedSquads(userId: string): Promise<any[]> {
+  async getUserJoinedSquads(userId: string): Promise<ISquad[]> {
     const user = await User.findById(userId).populate('joinedSquads');
     if (!user) {
       throw new Error('User not found');
     }
-    return user.joinedSquads;
+    return user.joinedSquads as unknown as ISquad[];
   }
 
   async getUserByRoleAndId(role: string, id: string): Promise<IUser | null> {

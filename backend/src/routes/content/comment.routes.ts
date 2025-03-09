@@ -1,4 +1,4 @@
-import { Request, Router } from 'express';
+import { Router } from 'express';
 import { container } from '../../di/container';
 import { ICommentController } from '../../core/interfaces/controllers/ICommentController';
 import { TYPES } from '../../di/types';
