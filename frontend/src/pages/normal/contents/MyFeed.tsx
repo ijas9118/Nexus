@@ -33,7 +33,7 @@ export default function MyFeed() {
     };
 
     fetchContent();
-  }, []);
+  }, [dispatch]);
 
   console.log(feedContent);
 

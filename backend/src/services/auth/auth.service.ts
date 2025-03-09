@@ -50,10 +50,14 @@ export class AuthService implements IAuthService {
     const { email, password } = loginDto;
     const user = await this.userRepository.findByEmail(email);
 
-    if (!user) {throw new CustomError('Invalid email or password', StatusCodes.BAD_REQUEST);}
+    if (!user) {
+      throw new CustomError('Invalid email or password', StatusCodes.BAD_REQUEST);
+    }
 
     const isPasswordValid = await compare(password, user.password);
-    if (!isPasswordValid) {throw new CustomError('Invalid password', StatusCodes.BAD_REQUEST);}
+    if (!isPasswordValid) {
+      throw new CustomError('Invalid password', StatusCodes.BAD_REQUEST);
+    }
 
     return {
       _id: user._id,
@@ -68,7 +72,9 @@ export class AuthService implements IAuthService {
   // Update the password of the user with the given email
   async updatePassword(email: string, newPassword: string): Promise<void> {
     const user = await this.userRepository.findOne({ email });
-    if (!user) {throw new CustomError('User not found', StatusCodes.NOT_FOUND);}
+    if (!user) {
+      throw new CustomError('User not found', StatusCodes.NOT_FOUND);
+    }
 
     const hashedPassword = await hash(newPassword, 10);
 

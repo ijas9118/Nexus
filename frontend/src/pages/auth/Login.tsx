@@ -9,7 +9,7 @@ import {
 } from "@/services/user/authService";
 import { isValidEmail } from "@/utils/validation";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -143,7 +143,7 @@ export default function LoginPage() {
     if (isAuthenticated) {
       navigate("/myFeed");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">

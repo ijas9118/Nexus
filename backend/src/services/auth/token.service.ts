@@ -14,7 +14,9 @@ export class TokenService implements ITokenService {
   validateToken(email: string, token: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       redisClient.get(`forgotPassword:${email}`, (err, storedToken) => {
-        if (err) {reject(err);}
+        if (err) {
+          reject(err);
+        }
         resolve(storedToken === token);
       });
     });

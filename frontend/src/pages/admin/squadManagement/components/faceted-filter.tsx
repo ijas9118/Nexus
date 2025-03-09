@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { CheckIcon, PlusCircleIcon } from "lucide-react";
+import React from "react";
 
 interface FacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;

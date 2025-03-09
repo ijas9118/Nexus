@@ -17,17 +17,18 @@ import { Link, useParams } from "react-router-dom";
 
 const BookSession = () => {
   const { mentorId } = useParams<{ mentorId: string }>();
-  const id = Number.parseInt(mentorId || "");
-
-  if (isNaN(id)) {
-    return <p>Invalid Mentor ID</p>;
-  }
   const [date, setDate] = useState<Date>();
   const [timeSlot, setTimeSlot] = useState<string>();
   const [sessionType, setSessionType] = useState<string>(
     "1-on-1 Session (45 min)",
   );
   const [step, setStep] = useState(1);
+
+  const id = Number.parseInt(mentorId || "");
+
+  if (isNaN(id)) {
+    return <p>Invalid Mentor ID</p>;
+  }
 
   const mentor = MENTORS[id - 1];
 

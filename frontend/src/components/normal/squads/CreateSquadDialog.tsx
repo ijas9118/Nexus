@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -277,7 +277,9 @@ export function CreateSquadDialog({
                     <Controller
                       name="logo"
                       control={control}
-                      render={({ field: { value, onChange, ...field } }) => (
+                      render={({
+                        field: { value: _value, onChange, ...field },
+                      }) => (
                         <Input
                           id="logo"
                           type="file"

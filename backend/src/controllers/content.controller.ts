@@ -39,16 +39,21 @@ export class ContentController implements IContentController {
   getContent = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
     const content = await this.contentService.getContentById(req.params.id);
 
-    if (!content) {throw new CustomError('Content not found', StatusCodes.NOT_FOUND);}
+    if (!content) {
+      throw new CustomError('Content not found', StatusCodes.NOT_FOUND);
+    }
 
-    if (req.user?.role === 'user')
-      {await this.historyService.addHistory(req.user?._id as string, content._id as string);}
+    if (req.user?.role === 'user') {
+      await this.historyService.addHistory(req.user?._id as string, content._id as string);
+    }
 
     res.status(StatusCodes.OK).json(content);
   });
 
   getAllContent = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
-    if (!req.user) {throw new CustomError('User is not authenticated', StatusCodes.UNAUTHORIZED);}
+    if (!req.user) {
+      throw new CustomError('User is not authenticated', StatusCodes.UNAUTHORIZED);
+    }
 
     const contents = await this.contentService.getAllContent(req.user._id);
     res.status(StatusCodes.OK).json(contents);

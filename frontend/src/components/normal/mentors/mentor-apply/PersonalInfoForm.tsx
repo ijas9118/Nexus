@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowRight, Github, Linkedin } from "lucide-react";
 import FileUpload from "./FileUpload";
+import React from "react";
 
 interface PersonalInfoFormProps {
   onContinue: () => void;

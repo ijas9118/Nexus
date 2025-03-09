@@ -2,7 +2,6 @@ import { FC } from "react";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { googleAuth } from "@/services/user/authService";
-import { useDispatch } from "react-redux";
 // import { login } from "@/store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -14,12 +13,11 @@ interface CustomJwtPayload extends JwtPayload {
 }
 
 const GoogleButton: FC = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSuccess = async (credentialResponse: CredentialResponse) => {
     try {
-      let credentialToken = credentialResponse.credential as string;
+      const credentialToken = credentialResponse.credential as string;
       const credentials = jwtDecode<CustomJwtPayload>(credentialToken);
 
       const userDetails = {

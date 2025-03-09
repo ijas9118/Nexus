@@ -15,7 +15,9 @@ export class CategoryController implements ICategoryController {
   createCategory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { name } = req.body;
 
-    if (!name) {throw new CustomError('Category name is required', StatusCodes.BAD_REQUEST);}
+    if (!name) {
+      throw new CustomError('Category name is required', StatusCodes.BAD_REQUEST);
+    }
 
     const category = await this.categoryService.addCategory(name);
     res.status(StatusCodes.CREATED).json(category);
@@ -25,8 +27,9 @@ export class CategoryController implements ICategoryController {
   updateCategory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { id, newName } = req.body;
 
-    if (!id || !newName)
-      {throw new CustomError('Category ID and new name are required', StatusCodes.BAD_REQUEST);}
+    if (!id || !newName) {
+      throw new CustomError('Category ID and new name are required', StatusCodes.BAD_REQUEST);
+    }
 
     const updatedCategory = await this.categoryService.updateCategory(id, newName);
 
@@ -41,11 +44,15 @@ export class CategoryController implements ICategoryController {
   toggleCategory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
-    if (!id) {throw new CustomError('Category ID is required', StatusCodes.BAD_REQUEST);}
+    if (!id) {
+      throw new CustomError('Category ID is required', StatusCodes.BAD_REQUEST);
+    }
 
     const toggledCategory = await this.categoryService.toggleCategory(id);
 
-    if (!toggledCategory) {throw new CustomError('Category not found', StatusCodes.NOT_FOUND);}
+    if (!toggledCategory) {
+      throw new CustomError('Category not found', StatusCodes.NOT_FOUND);
+    }
 
     res.status(StatusCodes.OK).json(toggledCategory);
   });
@@ -54,8 +61,9 @@ export class CategoryController implements ICategoryController {
   getAllCategories = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const categories = await this.categoryService.getAllCategories();
 
-    if (!categories || categories.length === 0)
-      {throw new CustomError('No categories found', StatusCodes.NOT_FOUND);}
+    if (!categories || categories.length === 0) {
+      throw new CustomError('No categories found', StatusCodes.NOT_FOUND);
+    }
 
     res.status(StatusCodes.OK).json(categories);
   });

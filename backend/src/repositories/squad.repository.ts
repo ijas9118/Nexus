@@ -66,7 +66,9 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
     const objId = new mongoose.Types.ObjectId(id);
 
     const squad = await this.findById(objId);
-    if (!squad) {return null;}
+    if (!squad) {
+      return null;
+    }
 
     return await this.update(objId, { isActive: !squad.isActive });
   };

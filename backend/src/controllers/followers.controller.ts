@@ -16,11 +16,15 @@ export class FollowersController implements IFollowersController {
     const { followedId } = req.body;
     const followerId = req.user?._id as string;
 
-    if (!followedId) {throw new CustomError('Followed user ID is required', StatusCodes.BAD_REQUEST);}
+    if (!followedId) {
+      throw new CustomError('Followed user ID is required', StatusCodes.BAD_REQUEST);
+    }
 
     const result = await this.followersService.followUser(followerId, followedId);
 
-    if (!result) {throw new CustomError('Already following this user', StatusCodes.BAD_REQUEST);}
+    if (!result) {
+      throw new CustomError('Already following this user', StatusCodes.BAD_REQUEST);
+    }
 
     res.status(StatusCodes.CREATED).json({ message: 'Followed successfully' });
   });
@@ -29,11 +33,15 @@ export class FollowersController implements IFollowersController {
     const { followedId } = req.body;
     const followerId = req.user?._id as string;
 
-    if (!followedId) {throw new CustomError('Followed user ID is required', StatusCodes.BAD_REQUEST);}
+    if (!followedId) {
+      throw new CustomError('Followed user ID is required', StatusCodes.BAD_REQUEST);
+    }
 
     const result = await this.followersService.unfollowUser(followerId, followedId);
 
-    if (!result) {throw new CustomError('Not following this user', StatusCodes.BAD_REQUEST);}
+    if (!result) {
+      throw new CustomError('Not following this user', StatusCodes.BAD_REQUEST);
+    }
 
     res.status(StatusCodes.OK).json({ message: 'Unfollowed successfully' });
   });
@@ -41,7 +49,9 @@ export class FollowersController implements IFollowersController {
   getFollowers = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId } = req.params;
 
-    if (!userId) {throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);}
+    if (!userId) {
+      throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);
+    }
 
     const followers = await this.followersService.getFollowers(userId);
 
@@ -51,7 +61,9 @@ export class FollowersController implements IFollowersController {
   getFollowing = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId } = req.params;
 
-    if (!userId) {throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);}
+    if (!userId) {
+      throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);
+    }
 
     const following = await this.followersService.getFollowing(userId);
 
@@ -63,8 +75,9 @@ export class FollowersController implements IFollowersController {
   isFollowing = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { followerId, followedId } = req.body;
 
-    if (!followerId || !followedId)
-      {throw new CustomError('Missing required query parameters', StatusCodes.BAD_REQUEST);}
+    if (!followerId || !followedId) {
+      throw new CustomError('Missing required query parameters', StatusCodes.BAD_REQUEST);
+    }
 
     const result = await this.followersService.isFollowing(
       followerId as string,

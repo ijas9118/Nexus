@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowRight } from "lucide-react";
 import { EXPERIENCE_LEVELS, EXPERTISE_AREAS, TECHNOLOGIES } from "../constants";
 import FileUpload from "./FileUpload";
+import React from "react";
 
 interface ExperienceFormProps {
   onBack: () => void;

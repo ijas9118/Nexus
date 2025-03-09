@@ -30,7 +30,7 @@ export const refreshAccessToken = createAsyncThunk(
         { withCredentials: true },
       );
       return response.data;
-    } catch (error: any) {
+    } catch {
       dispatch(clearUser()); // Logout user if refresh fails
       return rejectWithValue("Session expired, please log in again.");
     }

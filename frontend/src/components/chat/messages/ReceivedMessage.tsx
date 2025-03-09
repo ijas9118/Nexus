@@ -1,12 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-const ReceivedMessage = ({
-  message,
-  selectedChat,
-}: {
-  message: any;
-  selectedChat: any;
-}) => {
+const ReceivedMessage = ({ message }: { message: any }) => {
   return (
     <div className="flex justify-start">
       {/* <Avatar className="h-8 w-8 mt-2 mr-2">
