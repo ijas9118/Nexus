@@ -1,4 +1,3 @@
-
 # **Nexus**
 
 Welcome to **Nexus**, a blog application where users can read, write, and share tech-related blogs. Join squads specific to tech genres like JavaScript, Python, DevOps, and more. Collaborate with like-minded individuals, access premium content, and even book mentorship sessions with industry experts.
@@ -72,8 +71,8 @@ The project is divided into two main folders:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/ijas9118/nexus.git
-   cd techsquad-blog-app
+   git clone https://github.com/ijas9118/Nexus.git
+   cd Nexus
    ```
 
 2. **Set Up the Backend**
@@ -85,12 +84,32 @@ The project is divided into two main folders:
      ```bash
      npm install
      ```
-   - Create a `.env` file in the `backend` folder and add the following environment variables:
+   - Use the `.env.example` file to create your `.env` file:
+   
      ```env
+     # Server Configuration
      PORT=5000
-     MONGODB_URI=mongodb://localhost:27017/techsquad
-     JWT_SECRET=your_jwt_secret
-     REDIS_URL=redis://localhost:6379
+     CLIENT_URL=http://localhost:5173
+      
+     # Database Configuration
+     MONGO_URI=mongodb://localhost:27017/nexus
+      
+     # Authentication Secrets
+     ACCESS_TOKEN_SECRET=your_access_token_secret
+     REFRESH_TOKEN_SECRET=your_refresh_token_secret
+      
+     # Environment Mode
+     NODE_ENV=development
+      
+     # Google OAuth Credentials
+     GOOGLE_CLIENT_ID=your_google_client_id
+     GOOGLE_CLIENT_SECRET=your_google_client_secret
+      
+     # Email Configuration
+     USER_EMAIL=your_email@example.com
+     APP_PASSWORD=your_email_app_password
+      
+     # Stripe Configuration
      STRIPE_SECRET_KEY=your_stripe_secret_key
      ```
    - Run the backend server:
@@ -107,9 +126,10 @@ The project is divided into two main folders:
      ```bash
      npm install
      ```
-   - Create a `.env` file in the `frontend` folder and add the following environment variables:
+   - Use the `.env.example` file to create your `.env` file:
      ```env
-     VITE_API_BASE_URL=http://localhost:5000
+     VITE_CLOUD_NAME=your_cloudinary_name
+     VITE_API_BASE_URL=http://localhost:3000/api
      ```
    - Run the frontend application:
      ```bash
@@ -117,15 +137,15 @@ The project is divided into two main folders:
      ```
 
 4. **Access the Application**
-   - Open your browser and go to `http://localhost:3000` to access the frontend.
-   - The backend API will be running on `http://localhost:5000`.
+   - Open your browser and go to `http://localhost:5173` to access the frontend.
+   - The backend API will be running on `http://localhost:3000/api`.
 
 ---
 
 ## **API Documentation**
 The API is documented using **Swagger**. After starting the backend server, you can access the API documentation at:
 ```
-http://localhost:5000/api-docs
+http://localhost:3000/api/docs
 ```
 
 ---
