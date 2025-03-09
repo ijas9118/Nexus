@@ -34,6 +34,8 @@ export default tseslint.config(
         "warn",
         { argsIgnorePattern: "^_" }, // Ignore unused variables starting with `_`
       ],
+      "@typescript-eslint/ban-ts-comment": "warn", // Warns about using `@ts-ignore` comments
+      "@typescript-eslint/no-empty-function": "warn", // Warns about empty functions
 
       // "no-console": "warn", // Warn about `console.log`
       "no-undef": "error", // Prevent using undeclared variables

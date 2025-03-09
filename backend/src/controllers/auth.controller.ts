@@ -52,7 +52,7 @@ export class AuthController implements IAuthController {
     setRefreshTokenCookie(res, { _id: result._id.toString(), role: 'user' });
 
     const accessToken = generateAccessToken({
-      _id: result._id,
+      _id: result._id.toString(),
       name: result.name,
       email: result.email,
       role: 'user',
@@ -84,7 +84,7 @@ export class AuthController implements IAuthController {
     setRefreshTokenCookie(res, { _id: user._id.toString(), role: 'user' });
 
     const accessToken = generateAccessToken({
-      _id: user._id,
+      _id: user._id.toString(),
       name: user.name,
       email: user.email,
       role: 'user',

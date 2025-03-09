@@ -24,7 +24,7 @@ export class AdminAuthController implements IAdminAuthController {
     setRefreshTokenCookie(res, { _id: user._id.toString(), role: 'admin' });
 
     const accessToken = generateAccessToken({
-      _id: user._id,
+      _id: user._id.toString(),
       name: user.name,
       email: user.email,
       role: 'admin',

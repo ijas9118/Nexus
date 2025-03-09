@@ -1,11 +1,6 @@
 import { Request } from 'express';
-import { UserRole } from './UserTypes';
+import { JwtPayloadWithUser } from './jwt';
 
 export interface CustomRequest extends Request {
-  user?: {
-    _id: string;
-    email: string;
-    name: string;
-    role: UserRole;
-  };
+  user?: JwtPayloadWithUser;
 }
