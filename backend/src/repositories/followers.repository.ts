@@ -3,6 +3,7 @@ import { BaseRepository } from '../core/abstracts/base.repository';
 import { IFollowersRepository } from '../core/interfaces/repositories/IFollowersRepository';
 import UserFollowModel, { IUserFollow } from '../models/followers.model';
 import { injectable } from 'inversify';
+import { IUserWhoFollow } from '../core/types/UserTypes';
 
 @injectable()
 export class FollowersRepository
@@ -57,16 +58,16 @@ export class FollowersRepository
     return true;
   };
 
-  getFollowers = async (userId: string): Promise<any[]> => {
+  getFollowers = async (userId: string): Promise<IUserWhoFollow[]> => {
     const userFollow = await UserFollowModel.findOne({ userId })
-      .populate('followers', 'name profilePic')
+      .populate<{ followers: IUserWhoFollow[] }>('followers', 'name profilePic')
       .lean();
     return userFollow?.followers || [];
   };
 
-  getFollowing = async (userId: string): Promise<any[]> => {
+  getFollowing = async (userId: string): Promise<IUserWhoFollow[]> => {
     const userFollow = await UserFollowModel.findOne({ userId })
-      .populate('following', 'name profilePic')
+      .populate<{ following: IUserWhoFollow[] }>('following', 'name profilePic')
       .lean();
     return userFollow?.following || [];
   };

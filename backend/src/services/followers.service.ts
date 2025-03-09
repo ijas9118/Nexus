@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import { IFollowersService } from '../core/interfaces/services/IFollowersService';
 import { TYPES } from '../di/types';
 import { IFollowersRepository } from '../core/interfaces/repositories/IFollowersRepository';
+import { IUserWhoFollow } from '../core/types/UserTypes';
 
 @injectable()
 export class FollowersService implements IFollowersService {
@@ -17,11 +18,11 @@ export class FollowersService implements IFollowersService {
     return this.followersRepository.unfollowUser(followerId, followedId);
   };
 
-  getFollowers = async (userId: string): Promise<any[]> => {
+  getFollowers = async (userId: string): Promise<IUserWhoFollow[]> => {
     return this.followersRepository.getFollowers(userId);
   };
 
-  getFollowing = async (userId: string): Promise<any[]> => {
+  getFollowing = async (userId: string): Promise<IUserWhoFollow[]> => {
     return this.followersRepository.getFollowing(userId);
   };
 
