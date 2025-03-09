@@ -1,5 +1,3 @@
-import { ILike } from '../../../models/likes.model';
-
 export interface ILikeService {
   toggleLike(
     contentId: string,

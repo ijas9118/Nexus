@@ -15,15 +15,15 @@ export class MentorController implements IMentorController {
     const { email, specialization, name } = req.body;
 
     if (!email || !specialization || !name)
-      throw new CustomError(
+      {throw new CustomError(
         'All fields (email, specialization, name) are required',
         StatusCodes.BAD_REQUEST
-      );
+      );}
 
     const result = await this.mentorService.sendInvitation(email, specialization, name);
 
     if (!result)
-      throw new CustomError('Failed to send invitation', StatusCodes.INTERNAL_SERVER_ERROR);
+      {throw new CustomError('Failed to send invitation', StatusCodes.INTERNAL_SERVER_ERROR);}
 
     res.status(StatusCodes.OK).json({ message: 'Invitation sent successfully' });
   });
@@ -31,12 +31,12 @@ export class MentorController implements IMentorController {
   acceptInvitation = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { token } = req.body;
 
-    if (!token) throw new CustomError('Token is required', StatusCodes.BAD_REQUEST);
+    if (!token) {throw new CustomError('Token is required', StatusCodes.BAD_REQUEST);}
 
     const email = await this.mentorService.acceptInvitation(token);
 
     if (!email)
-      throw new CustomError('Invalid or expired invitation token', StatusCodes.UNAUTHORIZED);
+      {throw new CustomError('Invalid or expired invitation token', StatusCodes.UNAUTHORIZED);}
 
     res.status(StatusCodes.OK).json({ message: 'Invitation accepted', email });
   });
@@ -45,7 +45,7 @@ export class MentorController implements IMentorController {
     const mentors = await this.mentorService.getAllMentors();
 
     if (!mentors)
-      throw new CustomError('Failed to fetch mentors', StatusCodes.INTERNAL_SERVER_ERROR);
+      {throw new CustomError('Failed to fetch mentors', StatusCodes.INTERNAL_SERVER_ERROR);}
 
     res.status(StatusCodes.OK).json(mentors);
   });
@@ -54,15 +54,15 @@ export class MentorController implements IMentorController {
     const { email, name, password } = req.body;
 
     if (!email || !name || !password)
-      throw new CustomError(
+      {throw new CustomError(
         'All fields (email, name, password) are required',
         StatusCodes.BAD_REQUEST
-      );
+      );}
 
     const result = await this.mentorService.completeProfile(email, name, password);
 
     if (!result)
-      throw new CustomError('Failed to update profile', StatusCodes.INTERNAL_SERVER_ERROR);
+      {throw new CustomError('Failed to update profile', StatusCodes.INTERNAL_SERVER_ERROR);}
 
     res.status(StatusCodes.OK).json({
       success: true,

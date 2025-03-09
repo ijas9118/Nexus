@@ -3,7 +3,7 @@ import { IUser } from '../models/user.model';
 import User from '../models/user.model';
 import { BaseRepository } from '../core/abstracts/base.repository';
 import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
-import { Types, UpdateQuery } from 'mongoose';
+import { Types } from 'mongoose';
 
 @injectable()
 export class UserRepository extends BaseRepository<IUser> implements IUserRepository {
@@ -33,8 +33,8 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
 
   async updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null> {
     const userObjectId = new Types.ObjectId(userId);
-    let user = await this.findOne({ username: userData.username });
-    if (user) throw new Error('Username already exists');
+    const user = await this.findOne({ username: userData.username });
+    if (user) {throw new Error('Username already exists');}
     return this.model.findByIdAndUpdate(userObjectId, userData, { new: true });
   }
 

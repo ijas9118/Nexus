@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { IChatController } from '../core/interfaces/controllers/IChatController';
 import { IChatService } from '../core/interfaces/services/IChatService';
 import { inject, injectable } from 'inversify';
@@ -16,11 +16,15 @@ export class ChatController implements IChatController {
     const { member } = req.body;
     const userId = req.user?._id as string;
 
-    if (!member) throw new CustomError('Member ID is required', StatusCodes.BAD_REQUEST);
+    if (!member) {
+      throw new CustomError('Member ID is required', StatusCodes.BAD_REQUEST);
+    }
 
     const chat = await this.chatService.createNewChat([userId, member]);
 
-    if (!chat) throw new CustomError('Failed to create chat', StatusCodes.INTERNAL_SERVER_ERROR);
+    if (!chat) {
+      throw new CustomError('Failed to create chat', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
 
     res.status(StatusCodes.CREATED).json(chat);
   });
@@ -28,9 +32,11 @@ export class ChatController implements IChatController {
   getAllChats = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
 
-    let result = await this.chatService.getAllChats(userId);
+    const result = await this.chatService.getAllChats(userId);
 
-    if (!result) throw new CustomError('Failed to fetch chats', StatusCodes.INTERNAL_SERVER_ERROR);
+    if (!result) {
+      throw new CustomError('Failed to fetch chats', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
 
     res.status(StatusCodes.OK).json(result);
   });

@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import { IUser } from '../models/user.model';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from './constants';
 
 const ACCESS_TOKEN_SECRET = ACCESS_TOKEN || 'access_secret';

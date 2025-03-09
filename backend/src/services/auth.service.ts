@@ -39,7 +39,9 @@ export class AuthService implements IAuthService {
   validateToken(email: string, token: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       redisClient.get(`forgotPassword:${email}`, (err, storedToken) => {
-        if (err) reject(err);
+        if (err) {
+          reject(err);
+        }
         resolve(storedToken === token);
       });
     });
@@ -54,10 +56,10 @@ export class AuthService implements IAuthService {
   async resendOtp(email: string): Promise<void> {
     const existingData = await redisClient.get(`otp:${email}`);
     if (!existingData)
-      throw new CustomError(
+      {throw new CustomError(
         'OTP expired or not found. Please register again.',
         StatusCodes.BAD_REQUEST
-      );
+      );}
 
     const newOtp = this.generateOTP();
 
@@ -175,11 +177,11 @@ export class AuthService implements IAuthService {
   async verifyAndRetrieveUser(email: string, otp: string): Promise<RegisterDto> {
     const storedData = await redisClient.get(`otp:${email}`);
 
-    if (!storedData) throw new CustomError('OTP expired or invalid.', StatusCodes.BAD_REQUEST);
+    if (!storedData) {throw new CustomError('OTP expired or invalid.', StatusCodes.BAD_REQUEST);}
 
     const { userData, otp: storedOTP } = JSON.parse(storedData);
 
-    if (otp !== storedOTP) throw new CustomError('Invalid OTP.', StatusCodes.BAD_REQUEST);
+    if (otp !== storedOTP) {throw new CustomError('Invalid OTP.', StatusCodes.BAD_REQUEST);}
 
     return userData;
   }
@@ -188,7 +190,7 @@ export class AuthService implements IAuthService {
   async register(registerDto: RegisterDto): Promise<RegisterResponseDto> {
     const { name, email, password } = registerDto;
     const hashedPassword = await hash(password, 10);
-    let username = this.generateUsername();
+    const username = this.generateUsername();
     const user = await this.userRepository.create({
       name,
       email,
@@ -211,10 +213,10 @@ export class AuthService implements IAuthService {
     const { email, password } = loginDto;
     const user = await this.userRepository.findByEmail(email);
 
-    if (!user) throw new CustomError('Invalid email or password', StatusCodes.BAD_REQUEST);
+    if (!user) {throw new CustomError('Invalid email or password', StatusCodes.BAD_REQUEST);}
 
     const isPasswordValid = await compare(password, user.password);
-    if (!isPasswordValid) throw new CustomError('Invalid password', StatusCodes.BAD_REQUEST);
+    if (!isPasswordValid) {throw new CustomError('Invalid password', StatusCodes.BAD_REQUEST);}
 
     return {
       _id: user._id,
@@ -229,7 +231,7 @@ export class AuthService implements IAuthService {
   // Update the password of the user with the given email
   async updatePassword(email: string, newPassword: string): Promise<void> {
     const user = await this.userRepository.findOne({ email });
-    if (!user) throw new CustomError('User not found', StatusCodes.NOT_FOUND);
+    if (!user) {throw new CustomError('User not found', StatusCodes.NOT_FOUND);}
 
     const hashedPassword = await hash(newPassword, 10);
 

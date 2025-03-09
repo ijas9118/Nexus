@@ -14,9 +14,9 @@ export class BookmarkController implements IBookmarkController {
 
   // Toggle a bookmark by content ID
   toggleBookmark = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
-    let { id: contentId } = req.params;
+    const { id: contentId } = req.params;
     const userId = req.user?._id;
-    if (!userId) throw new CustomError('User is not authenticated', StatusCodes.UNAUTHORIZED);
+    if (!userId) {throw new CustomError('User is not authenticated', StatusCodes.UNAUTHORIZED);}
 
     const result = await this.bookmarkService.toggleBookmark(contentId, userId);
     res.status(StatusCodes.OK).json({ ...result });
@@ -24,7 +24,7 @@ export class BookmarkController implements IBookmarkController {
 
   // Get all bookmarks for a user
   getAllBookmarks = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
-    if (!req.user) throw new CustomError('User is not authenticated', StatusCodes.UNAUTHORIZED);
+    if (!req.user) {throw new CustomError('User is not authenticated', StatusCodes.UNAUTHORIZED);}
 
     const bookmarkedContents = await this.bookmarkService.getBookmarks(req.user._id);
     res.status(StatusCodes.OK).json(bookmarkedContents);

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { verifyAccessToken, verifyRefreshToken } from '../utils/jwt.util';
 import { CustomRequest } from '../core/types/CustomRequest';
 import { UserRole } from '../core/types/UserTypes';

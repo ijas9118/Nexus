@@ -17,10 +17,10 @@ export class AdminAuthService {
   async login(loginDto: LoginDto): Promise<LoginResponseDto | null> {
     const { email, password } = loginDto;
     const user = await this.adminRepository.findByEmail(email);
-    if (!user) return null;
+    if (!user) {return null;}
 
     const isPasswordValid = await compare(password, user.password);
-    if (!isPasswordValid) return null;
+    if (!isPasswordValid) {return null;}
 
     return {
       _id: user._id,

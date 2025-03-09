@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
-import { CLIENT_URL, PORT } from './utils/constants';
+import { CLIENT_URL } from './utils/constants';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 

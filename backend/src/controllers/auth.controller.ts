@@ -28,7 +28,7 @@ export class AuthController implements IAuthController {
     const userData: RegisterDto = req.body;
 
     const existingUser = await this.authService.findUserByEmail(userData.email);
-    if (existingUser) throw new CustomError('User already exists', StatusCodes.BAD_REQUEST);
+    if (existingUser) {throw new CustomError('User already exists', StatusCodes.BAD_REQUEST);}
 
     const otp = this.otpService.generateOTP();
 
@@ -111,7 +111,7 @@ export class AuthController implements IAuthController {
     const { email, token, password } = req.body;
 
     const isValid = await this.tokenService.validateToken(email, token);
-    if (!isValid) throw new CustomError('Invalid or expired token.', StatusCodes.BAD_REQUEST);
+    if (!isValid) {throw new CustomError('Invalid or expired token.', StatusCodes.BAD_REQUEST);}
 
     await this.authService.updatePassword(email, password);
 
@@ -122,10 +122,10 @@ export class AuthController implements IAuthController {
   refreshToken = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const refreshToken = req.cookies.refreshToken;
 
-    if (!refreshToken) throw new CustomError('Refresh token not found', StatusCodes.UNAUTHORIZED);
+    if (!refreshToken) {throw new CustomError('Refresh token not found', StatusCodes.UNAUTHORIZED);}
 
     const decodedToken = verifyRefreshToken(refreshToken);
-    if (!decodedToken) throw new CustomError('Invalid token', StatusCodes.FORBIDDEN);
+    if (!decodedToken) {throw new CustomError('Invalid token', StatusCodes.FORBIDDEN);}
 
     if (decodedToken.user.role === 'admin') {
       const accessToken = generateAccessToken({
