@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import TestimonialCard from "./TestimonialCard";
+import React from "react";
 
 interface Testimonial {
   name: string;

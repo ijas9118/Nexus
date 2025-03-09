@@ -1,6 +1,7 @@
 // CheckboxGroup.jsx
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import React from "react";
 
 interface CheckboxGroupProps {
   items: { value: string; label: string }[];

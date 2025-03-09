@@ -16,7 +16,9 @@ export class LikeService implements ILikeService {
     userId: string
   ): Promise<{ status: boolean; likeCount: number | undefined }> {
     const content = await this.contentRepository.findContent(contentId);
-    if (!content) {throw new Error('Content not found');}
+    if (!content) {
+      throw new Error('Content not found');
+    }
 
     const existingLike = await this.likesRepository.findOne({ contentId, userId });
 

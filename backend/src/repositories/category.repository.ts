@@ -23,7 +23,9 @@ export class CategoryRepository extends BaseRepository<ICategory> implements ICa
     const objId = new Types.ObjectId(id);
 
     const category = await this.findById(objId);
-    if (!category) {return null;}
+    if (!category) {
+      return null;
+    }
 
     return await this.update(objId, { isActive: !category.isActive });
   }

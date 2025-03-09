@@ -33,7 +33,7 @@ export default function Following() {
     };
 
     fetchContent();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     let filteredContent = feedContent;

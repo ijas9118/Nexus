@@ -49,7 +49,7 @@ const MentorApply = () => {
         { title: "Apply", url: "" },
       ]),
     );
-  }, []);
+  }, [dispatch]);
 
   const renderStepForm = () => {
     switch (step) {

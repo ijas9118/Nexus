@@ -21,7 +21,9 @@ export class BookmarkService extends BaseService<IBookmark> implements IBookmark
   // Toggle bookmark for a content
   async toggleBookmark(contentId: string, userId: string): Promise<{ status: boolean }> {
     const content = await this.contentRepository.findContent(contentId);
-    if (!content) {throw new CustomError('Content not found', StatusCodes.NOT_FOUND);}
+    if (!content) {
+      throw new CustomError('Content not found', StatusCodes.NOT_FOUND);
+    }
 
     const contentIdObject = new mongoose.Types.ObjectId(contentId);
     const userIdObject = new mongoose.Types.ObjectId(userId);

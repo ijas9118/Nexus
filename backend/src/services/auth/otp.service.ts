@@ -20,11 +20,12 @@ export class OTPService implements IOTPService {
   // Resend OTP to the user's email
   async resendOtp(email: string): Promise<void> {
     const existingData = await redisClient.get(`otp:${email}`);
-    if (!existingData)
-      {throw new CustomError(
+    if (!existingData) {
+      throw new CustomError(
         'OTP expired or not found. Please register again.',
         StatusCodes.BAD_REQUEST
-      );}
+      );
+    }
 
     const newOtp = this.generateOTP();
 
@@ -35,11 +36,15 @@ export class OTPService implements IOTPService {
   async verifyAndRetrieveUser(email: string, otp: string): Promise<RegisterDto> {
     const storedData = await redisClient.get(`otp:${email}`);
 
-    if (!storedData) {throw new CustomError('OTP expired or invalid.', StatusCodes.BAD_REQUEST);}
+    if (!storedData) {
+      throw new CustomError('OTP expired or invalid.', StatusCodes.BAD_REQUEST);
+    }
 
     const { userData, otp: storedOTP } = JSON.parse(storedData);
 
-    if (otp !== storedOTP) {throw new CustomError('Invalid OTP.', StatusCodes.BAD_REQUEST);}
+    if (otp !== storedOTP) {
+      throw new CustomError('Invalid OTP.', StatusCodes.BAD_REQUEST);
+    }
 
     return userData;
   }

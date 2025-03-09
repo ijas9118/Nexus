@@ -19,6 +19,7 @@ import {
   TARGET_AUDIENCES,
 } from "../constants";
 import CheckboxGroup from "./CheckboxGroup";
+import React from "react";
 
 interface MentorshipDetailsFormProps {
   onBack: () => void;

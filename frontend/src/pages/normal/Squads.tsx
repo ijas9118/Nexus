@@ -20,7 +20,7 @@ import { addUserSquad } from "@/store/slices/userSquadsSlice";
 import { RootState } from "@/store/store";
 import { Category } from "@/types/category";
 import { Squad } from "@/types/squad";
-import { Plus, Terminal } from "lucide-react";
+import { Plus } from "lucide-react";
 import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -42,7 +42,7 @@ const Squads: FC = () => {
     const fetchCategory = async () => {
       try {
         const data = await CategoryService.getAllCategory();
-        let categoryList = data.map((category: Category) => category.name);
+        const categoryList = data.map((category: Category) => category.name);
         if (categoryList.length > 0) {
           setSelectedCategory(categoryList[0]);
         } else {
@@ -87,7 +87,7 @@ const Squads: FC = () => {
     };
 
     fetchSquads();
-  }, [selectedCategory]);
+  }, [dispatch, selectedCategory, squadsByCategory]);
 
   const handleJoinSquad = async (squad: Squad) => {
     try {
