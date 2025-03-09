@@ -3,7 +3,6 @@ import AddPost from "@/pages/normal/contents/AddPost";
 import Home from "@/pages/normal/Home";
 import Layout from "@/pages/normal/Layout";
 import MyFeed from "@/pages/normal/contents/MyFeed";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
@@ -29,16 +28,7 @@ const UserRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route
-        path="/login"
-        element={
-          <GoogleOAuthProvider
-            clientId={import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID}
-          >
-            <LoginPage />
-          </GoogleOAuthProvider>
-        }
-      />
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/login/forgot-password" element={<ForgotPassword />} />
       <Route path="/login/reset-password" element={<ResetPassword />} />
 
