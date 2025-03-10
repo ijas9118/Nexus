@@ -49,7 +49,7 @@ export default function ResetPassword() {
       });
 
       setTimeout(() => navigate("/login"), 3000);
-    } catch (error) {
+    } catch {
       toast.error("Failed to Reset Password", {
         description: "The link may be invalid or expired. Please try again.",
       });

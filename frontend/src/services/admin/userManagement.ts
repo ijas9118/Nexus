@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import api from "../api";
 
 const AdminUserService = {
@@ -5,8 +6,14 @@ const AdminUserService = {
     try {
       const response = await api.get("admin/user", { params });
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
 
@@ -14,8 +21,14 @@ const AdminUserService = {
     try {
       const response = await api.get(`admin/user/${userId}`);
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
 
@@ -23,8 +36,14 @@ const AdminUserService = {
     try {
       const response = await api.put(`admin/user/${userId}`, userData);
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
 
@@ -33,8 +52,14 @@ const AdminUserService = {
     try {
       const response = await api.delete(`admin/user/${userId}`);
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
 };

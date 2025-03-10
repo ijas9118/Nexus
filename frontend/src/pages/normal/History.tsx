@@ -27,9 +27,12 @@ const History = () => {
         const data = await getHistory();
         console.log(data);
         setHistory(data);
-      } catch (err: any) {
-        setError(err.message);
-        console.error("Error fetching content:", err);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unknown error occurred.");
+        }
       }
     };
 
@@ -50,7 +53,9 @@ const History = () => {
           />
         </div>
       </div>
-      {history.length === 0 ? (
+      {error ? (
+        <p className="text-center text-red-500">{error}</p>
+      ) : history.length === 0 ? (
         <p className="text-center">No history available.</p>
       ) : (
         history

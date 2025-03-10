@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import api from "../api";
 
 const MentorService = {
@@ -9,8 +10,14 @@ const MentorService = {
     try {
       const response = await api.post("admin/mentor/invite", data);
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
 
@@ -18,8 +25,14 @@ const MentorService = {
     try {
       const response = await api.post("admin/mentor/acceptInvite", { token });
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
 
@@ -31,8 +44,14 @@ const MentorService = {
     try {
       const response = await api.post("/mentor/register", data);
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
 
@@ -40,8 +59,14 @@ const MentorService = {
     try {
       const response = await api.get("/mentor");
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
 };
