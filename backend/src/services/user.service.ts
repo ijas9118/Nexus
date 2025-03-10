@@ -6,6 +6,7 @@ import { IUser } from '../models/user.model';
 import { BaseService } from '../core/abstracts/base.service';
 import { UsersDTO } from '../dtos/responses/admin/users.dto';
 import bcrypt from 'bcrypt';
+import { ISquad } from '../models/squads.model';
 
 @injectable()
 export class UserService extends BaseService<IUser> implements IUserService {
@@ -78,7 +79,7 @@ export class UserService extends BaseService<IUser> implements IUserService {
     return this.userRepository.deleteUser(userId);
   }
 
-  async getUserJoinedSquads(userId: string): Promise<string[]> {
+  async getUserJoinedSquads(userId: string): Promise<ISquad[]> {
     return this.userRepository.getUserJoinedSquads(userId);
   }
 

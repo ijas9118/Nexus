@@ -2,6 +2,8 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
 import { IConnectionService } from '../core/interfaces/services/IConnectionService';
 import { IConnectionsRepository } from '../core/interfaces/repositories/IConnectionsRepository';
+import { IUserFollow } from '../models/followers.model';
+import { IPendingRequestUser } from '../core/types/UserTypes';
 
 @injectable()
 export class ConnectionService implements IConnectionService {
@@ -10,11 +12,11 @@ export class ConnectionService implements IConnectionService {
     private connectionsRepository: IConnectionsRepository
   ) {}
 
-  getAllConnections = async (userId: string, search?: string): Promise<any> => {
+  getAllConnections = async (userId: string, search?: string): Promise<IUserFollow[]> => {
     return this.connectionsRepository.getAllConnections(userId, search);
   };
 
-  getPendingRequest = async (userId: string): Promise<any> => {
+  getPendingRequest = async (userId: string): Promise<IPendingRequestUser[]> => {
     return this.connectionsRepository.getPendingRequests(userId);
   };
 

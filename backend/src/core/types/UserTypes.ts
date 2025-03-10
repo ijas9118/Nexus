@@ -5,3 +5,10 @@ export interface IUserWhoFollow {
   name: string;
   profilePic: string;
 }
+
+export interface IPendingRequestUser {
+  _id: string;
+  name: string;
+  username: string;
+  profilePic: string;
+}

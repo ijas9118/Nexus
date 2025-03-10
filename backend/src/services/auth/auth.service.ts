@@ -12,6 +12,7 @@ import { IAuthService } from '../../core/interfaces/services/IAuthService';
 import CustomError from '../../utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
 import { UsernameGenerator } from '../../utils/usernameGenerator.util';
+import { IUser } from '../../models/user.model';
 
 @injectable()
 export class AuthService implements IAuthService {
@@ -85,7 +86,7 @@ export class AuthService implements IAuthService {
   }
 
   // Get a user by role and id from the database (used for token verification)
-  async getUserByRoleAndId(role: string, id: string) {
+  async getUserByRoleAndId(role: string, id: string): Promise<IUser | null> {
     return this.userRepository.getUserByRoleAndId(role, id);
   }
 
