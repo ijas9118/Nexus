@@ -156,13 +156,13 @@ export class AuthController implements IAuthController {
       throw new CustomError('User not found', StatusCodes.NOT_FOUND);
     }
 
-    if (user.status === 'Blocked') {
-      clearRefreshTokenCookie(res);
-      throw new CustomError('User is blocked', StatusCodes.FORBIDDEN);
-    }
+    // if (user.status === 'Blocked') {
+    //   clearRefreshTokenCookie(res);
+    //   throw new CustomError('User is blocked', StatusCodes.FORBIDDEN);
+    // }
 
     const accessToken = generateAccessToken({
-      _id: user._id,
+      _id: user._id.toString(),
       name: user.name,
       email: user.email,
       role: decodedToken.user.role,
