@@ -3,6 +3,7 @@ import { BaseRepository } from '../core/abstracts/base.repository';
 import UserFollowModel, { IUserFollow } from '../models/followers.model';
 import { Types } from 'mongoose';
 import { IConnectionsRepository } from '../core/interfaces/repositories/IConnectionsRepository';
+import { IPendingRequestUser } from '../core/types/UserTypes';
 
 @injectable()
 export class ConnectionsRepository
@@ -13,7 +14,7 @@ export class ConnectionsRepository
     super(UserFollowModel);
   }
 
-  getAllConnections = async (userId: string, search?: string) => {
+  getAllConnections = async (userId: string, search?: string): Promise<IUserFollow[]> => {
     const userObjId = new Types.ObjectId(userId);
 
     const connections = await UserFollowModel.aggregate([
@@ -55,9 +56,7 @@ export class ConnectionsRepository
     return connections;
   };
 
-  getPendingRequests = async (
-    userId: string
-  ): Promise<{ _id: Types.ObjectId; name: string; username: string; profilePic: string }[]> => {
+  getPendingRequests = async (userId: string): Promise<IPendingRequestUser[]> => {
     const userObjId = new Types.ObjectId(userId);
 
     const pendingRequests = await UserFollowModel.aggregate([

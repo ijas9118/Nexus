@@ -69,7 +69,7 @@ const ContentSchema: Schema = new Schema(
     },
     content: {
       type: String,
-      required: function (this: any) {
+      required: function (this: { contentType: string }) {
         return this.contentType === 'blog';
       },
     },

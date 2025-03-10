@@ -1,7 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import CustomError from '../utils/CustomError';
 
-const errorMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
+const errorMiddleware = (
+  err: CustomError | Error,
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
   console.error('Error:', err);
 
   const statusCode = err instanceof CustomError ? err.statusCode : 500;

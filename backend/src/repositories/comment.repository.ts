@@ -17,7 +17,7 @@ export class CommentRepository extends BaseRepository<IComment> implements IComm
     const userId = new mongoose.Types.ObjectId(commentData.userId);
     const contentId = new mongoose.Types.ObjectId(commentData.contentId);
 
-    const commentObj: any = {
+    const commentObj: Partial<IComment> = {
       userId,
       contentId,
       text: commentData.text,
@@ -45,7 +45,7 @@ export class CommentRepository extends BaseRepository<IComment> implements IComm
       .populate('contentId', 'title')
       .sort({ createdAt: -1 });
 
-    const formattedComment = comments.map((comment: any) => {
+    const formattedComment = comments.map((comment: IComment) => {
       return {
         ...comment.toObject(),
         updatedAt: FormatTime.formatTime(comment.updatedAt?.toISOString()),

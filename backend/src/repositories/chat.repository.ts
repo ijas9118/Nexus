@@ -16,7 +16,7 @@ export class ChatRepository extends BaseRepository<IChat> implements IChatReposi
     return this.create({ members: objectIdMembers });
   }
 
-  async getAllChats(userId: string): Promise<any[]> {
+  async getAllChats(userId: string): Promise<IChat[]> {
     const objectIdUserId = new mongoose.Types.ObjectId(userId);
 
     const chats = await ChatModel.aggregate([
