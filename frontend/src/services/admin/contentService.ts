@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import api from "../api";
 
 export const ContentService = {
@@ -5,8 +6,14 @@ export const ContentService = {
     try {
       const response = await api.get("admin/content");
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
 
@@ -14,8 +21,14 @@ export const ContentService = {
     try {
       const response = await api.get(`/content/posts/${contentId}`);
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
   verifyContent: async (contentId: string) => {
@@ -23,8 +36,14 @@ export const ContentService = {
       const response = await api.post(`/content/posts/verify/${contentId}`);
 
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
 };

@@ -1,14 +1,19 @@
+import { AxiosError } from "axios";
 import api from "../api";
 
 export const getUserProfile = async (username: string) => {
   try {
     const response = await api.post(`/user/${username}`);
     return response.data;
-  } catch (error: any) {
-    const errorMessage =
-      error.response?.data?.message ||
-      "An unexpected error occurred during liking.";
-    throw new Error(errorMessage);
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      console.log(error);
+      throw error.response?.data || error.message;
+    } else if (error instanceof Error) {
+      throw error.message;
+    } else {
+      throw "An unknown error occurred";
+    }
   }
 };
 
@@ -20,11 +25,15 @@ export const updateProfile = async (data: {
   try {
     const response = await api.post("/user/update", data);
     return response.data;
-  } catch (error: any) {
-    const errorMessage =
-      error.response?.data?.message ||
-      "An unexpected error occurred during liking.";
-    throw new Error(errorMessage);
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      console.log(error);
+      throw error.response?.data || error.message;
+    } else if (error instanceof Error) {
+      throw error.message;
+    } else {
+      throw "An unknown error occurred";
+    }
   }
 };
 
@@ -36,10 +45,14 @@ export const updatePassword = async (data: {
   try {
     const response = await api.post("/user/update/password", data);
     return response.data;
-  } catch (error: any) {
-    const errorMessage =
-      error.response?.data?.message ||
-      "An unexpected error occurred during liking.";
-    throw new Error(errorMessage);
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      console.log(error);
+      throw error.response?.data || error.message;
+    } else if (error instanceof Error) {
+      throw error.message;
+    } else {
+      throw "An unknown error occurred";
+    }
   }
 };

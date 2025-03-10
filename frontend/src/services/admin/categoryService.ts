@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import api from "../api";
 
 const CategoryService = {
@@ -5,8 +6,14 @@ const CategoryService = {
     try {
       const response = await api.get("admin/category");
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
 
@@ -14,8 +21,14 @@ const CategoryService = {
     try {
       const response = await api.post(`admin/category/${id}/toggle`);
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
 };

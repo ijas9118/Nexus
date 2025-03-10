@@ -15,7 +15,6 @@ interface CommentFiltersProps {
   blogs: { id: string; title: string; squadId: string }[];
   selectedSquad: string | null;
   setSelectedSquad: (value: string) => void;
-  selectedBlog: string | null;
   setSelectedBlog: (value: string) => void;
   searchQuery: string;
   setSearchQuery: (value: string) => void;
@@ -26,7 +25,6 @@ const CommentFilters = ({
   blogs,
   selectedSquad,
   setSelectedSquad,
-  selectedBlog,
   setSelectedBlog,
   searchQuery,
   setSearchQuery,

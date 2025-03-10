@@ -42,7 +42,7 @@ export default function ProfilePage() {
           const connected = await checkConnected(data._id);
           setIsConnected(connected.result);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Error fetching profile:", err);
       }
     };

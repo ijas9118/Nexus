@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import api from "../api";
 
 export const CommentService = {
@@ -13,8 +14,14 @@ export const CommentService = {
         parentCommentId,
       });
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
   getCommentsByContentId: async (contentId: string) => {
@@ -25,8 +32,14 @@ export const CommentService = {
         },
       });
       return response.data;
-    } catch (error: any) {
-      throw error.response?.data || error.message;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
     }
   },
 };
