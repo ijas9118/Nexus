@@ -1,82 +1,48 @@
-import PricingCardsSection from "@/components/normal/home/PricingCardsSection";
+import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, Star, Users } from "lucide-react";
-import { FC } from "react";
-import { plans } from "./Home";
+import { Link } from "react-router-dom";
+import Hero from "@/components/normal/get-premium/Hero";
+import Benifits from "@/components/normal/get-premium/Benifits";
+import PricingPlanCards from "@/components/normal/get-premium/PricingPlanCards";
+import Testimonials from "@/components/normal/get-premium/Testimonials";
+import FAQ from "@/components/normal/get-premium/FAQ";
 
-const features = [
-  {
-    icon: BookOpen,
-    title: "Exclusive Content",
-    description: "Access premium blogs, videos, and insights from top mentors",
-    iconColor: "text-purple-500",
-  },
-  {
-    icon: Users,
-    title: "Premium Squads",
-    description:
-      "Join exclusive squads for advanced discussions and collaboration",
-    iconColor: "text-blue-500",
-  },
-  {
-    icon: Star,
-    title: "Mentor Sessions",
-    description: "Book time with industry experts for one-on-one guidance",
-    iconColor: "text-purple-500",
-  },
-];
-
-const GetPremium: FC = () => {
+export default function PremiumPage() {
   return (
-    <>
-      <section className="flex flex-col items-center justify-center py-20 px-4 text-center">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-medium mb-6 max-w-3xl text-foreground">
-          Unlock Your Full Potential with Premium Access
-        </h1>
-        <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl">
-          Exclusive content, advanced features, and more—tailored for
-          professionals who want to stay ahead.
+    <div className="container mx-auto px-4 py-12 max-w-6xl space-y-20">
+      <Hero />
+
+      <Benifits />
+
+      <PricingPlanCards />
+
+      <Testimonials />
+
+      <FAQ />
+
+      <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl p-8 md:p-12 text-center">
+        <h2 className="text-3xl font-bold mb-4">
+          Ready to Elevate Your Tech Journey?
+        </h2>
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+          Join thousands of developers who have accelerated their careers with
+          Nexus Premium.
         </p>
-        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-4 text-md rounded-md">
-          Choose Your Plan
-        </Button>
-      </section>
-
-      <section className="py-20 px-4 bg-neutral-50 dark:bg-neutral-900">
-        <h2 className="text-3xl md:text-4xl text-center mb-16 text-foreground">
-          Why Go Premium?
-        </h2>
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
-          {features.map((feature, index) => (
-            <Card
-              key={index}
-              className="border shadow-lg hover:shadow-xl transition-shadow duration-300"
-            >
-              <CardContent className="flex flex-col items-center text-center p-8">
-                <feature.icon
-                  className={`w-12 h-12 ${feature.iconColor} mb-6`}
-                />
-                <h3 className="text-xl font-medium mb-4 text-foreground">
-                  {feature.title}
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {feature.description}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="flex flex-wrap justify-center gap-4">
+          <Button size="lg" className="gap-2">
+            <Sparkles className="h-4 w-4" />
+            Get Premium Now
+          </Button>
+          <Link to="/mentors">
+            <Button size="lg" variant="outline">
+              Browse Mentors
+            </Button>
+          </Link>
         </div>
-      </section>
-
-      <section className="py-20 px-4">
-        <h2 className="text-3xl md:text-4xl text-center mb-16 text-foreground">
-          Choose a Plan That Works for You
-        </h2>
-        <PricingCardsSection plans={plans} />
-      </section>
-    </>
+        <p className="text-sm text-muted-foreground mt-6">
+          No long-term commitment. Cancel anytime.
+        </p>
+      </div>
+    </div>
   );
-};
-
-export default GetPremium;
+}
