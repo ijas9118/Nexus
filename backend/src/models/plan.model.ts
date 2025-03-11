@@ -5,6 +5,7 @@ export interface IPlan extends Document {
   price: number;
   interval: 'monthly' | 'yearly';
   features: string[];
+  description: string;
   activeSubscribers: number;
   revenue: number;
   conversionRate: number;
@@ -23,6 +24,10 @@ const PlanSchema: Schema = new Schema(
     interval: {
       type: String,
       enum: ['monthly', 'yearly'],
+      required: true,
+    },
+    description: {
+      type: String,
       required: true,
     },
     features: {

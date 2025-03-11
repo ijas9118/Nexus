@@ -15,6 +15,6 @@ export class PlanService extends BaseService<IPlan> implements IPlanService {
     if ((planData.price as number) <= 0) {
       throw new Error('Price must be greater than 0');
     }
-    return await this.planRepository.create(planData);
+    return await this.planRepository.createPlan(planData);
   };
 }

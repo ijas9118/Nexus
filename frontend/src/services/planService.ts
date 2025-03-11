@@ -1,18 +1,11 @@
 import { AxiosError } from "axios";
-import api from "../api";
+import api from "./api";
+import { IPlan } from "@/types/plans";
 
-export const CommentService = {
-  addComment: async (
-    contentId: string,
-    text: string,
-    parentCommentId?: string,
-  ) => {
+const PlanService = {
+  createPlan: async (planData: IPlan) => {
     try {
-      const response = await api.post("/content/comment", {
-        contentId,
-        text,
-        parentCommentId,
-      });
+      const response = await api.post("plans/", planData);
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -25,13 +18,9 @@ export const CommentService = {
     }
   },
 
-  getCommentsByContentId: async (contentId: string) => {
+  getAllPlans: async () => {
     try {
-      const response = await api.get("/content/comment", {
-        params: {
-          contentId,
-        },
-      });
+      const response = await api.get("plans/");
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -44,3 +33,5 @@ export const CommentService = {
     }
   },
 };
+
+export default PlanService;

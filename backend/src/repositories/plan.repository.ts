@@ -8,4 +8,8 @@ export class PlanRepository extends BaseRepository<IPlan> implements IPlanReposi
   constructor() {
     super(PlanModel);
   }
+
+  createPlan = async (planData: Partial<IPlan>): Promise<IPlan> => {
+    return await this.create(planData);
+  };
 }

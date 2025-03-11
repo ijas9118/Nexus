@@ -13,7 +13,12 @@ export class PlanController implements IPlanController {
 
   createPlan = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const planData: Partial<IPlan> = req.body;
-    const newPlan = await this.planService.create(planData);
+    const newPlan = await this.planService.createPlan(planData);
     res.status(StatusCodes.CREATED).json({ newPlan });
+  });
+
+  getPlans = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const plans = await this.planService.find({});
+    res.status(StatusCodes.OK).json(plans);
   });
 }
