@@ -114,6 +114,13 @@ import { CommentService } from '../services/comment.service';
 import { ICommentController } from '../core/interfaces/controllers/ICommentController';
 import { CommentController } from '../controllers/comment.controller';
 
+import { IPlanService } from '../core/interfaces/services/IPlanService';
+import { PlanService } from '../services/plan.service';
+import { IPlanController } from '../core/interfaces/controllers/IPlanController';
+import { PlanController } from '../controllers/plan.controller';
+import { IPlanRepository } from '../core/interfaces/repositories/IPlanRepository';
+import { PlanRepository } from '../repositories/plan.repository';
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -178,5 +185,9 @@ container.bind<IMessageController>(TYPES.MessageController).to(MessageController
 container.bind<ICommentRepository>(TYPES.CommentRepository).to(CommentRepository);
 container.bind<ICommentService>(TYPES.CommentService).to(CommentService);
 container.bind<ICommentController>(TYPES.CommentController).to(CommentController);
+
+container.bind<IPlanRepository>(TYPES.PlanRepository).to(PlanRepository);
+container.bind<IPlanService>(TYPES.PlanService).to(PlanService);
+container.bind<IPlanController>(TYPES.PlanController).to(PlanController);
 
 export { container };

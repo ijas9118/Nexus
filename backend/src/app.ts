@@ -5,6 +5,9 @@ import { CLIENT_URL } from './utils/constants';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 
+import errorMiddleware from './middlewares/errorMiddleware';
+import { setupSwagger } from './utils/swaggerConfig';
+
 import authRoutes from './routes/auth.routes';
 import contentRoutes from './routes/content.routes';
 import adminRoutes from './routes/admin.routes';
@@ -14,8 +17,7 @@ import mentorRoutes from './routes/mentor.routes';
 import followerRoutes from './routes/followers.routes';
 import chatRoutes from './routes/chat.routes';
 import messageRoutes from './routes/message.routes';
-import errorMiddleware from './middlewares/errorMiddleware';
-import { setupSwagger } from './utils/swaggerConfig';
+import planRoutes from './routes/plan.routes';
 
 const app = express();
 setupSwagger(app);
@@ -43,6 +45,7 @@ app.use('/api/mentor', mentorRoutes);
 app.use('/api/followers', followerRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/message', messageRoutes);
+app.use('/api/plans', planRoutes);
 
 app.use(errorMiddleware);
 

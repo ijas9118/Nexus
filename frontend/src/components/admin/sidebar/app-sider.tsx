@@ -94,8 +94,8 @@ const revenueItems = [
     icon: CreditCard,
   },
   {
-    title: "Pricing",
-    url: "pricing",
+    title: "Payment",
+    url: "payment",
     icon: IndianRupee,
   },
 ];
