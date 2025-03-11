@@ -20,6 +20,8 @@ const ContentManagement: FC = () => {
 
   return (
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-18 py-8">
+      <h1 className="text-3xl font-semibold mb-6">Content Management</h1>
+
       <ContentStats />
       <DataTable columns={columns()} data={contents || []} />
     </div>

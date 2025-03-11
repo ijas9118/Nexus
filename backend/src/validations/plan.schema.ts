@@ -7,4 +7,5 @@ export const createPlanSchema = z.object({
     errorMap: () => ({ message: 'Interval must be either monthly or yearly' }),
   }),
   features: z.array(z.string()).min(1, 'Features must be an array with at least one item'),
+  description: z.string().min(1, 'Description is required'),
 });

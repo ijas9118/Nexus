@@ -90,10 +90,6 @@ export function DataTable<TData extends { _id: string }, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() =>
-                    navigate(`/admin/contents/${row.original._id}`)
-                  }
-                  className="cursor-pointer"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

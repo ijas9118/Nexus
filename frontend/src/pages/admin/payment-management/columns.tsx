@@ -36,103 +36,46 @@ export const columns = (): ColumnDef<any>[] => [
     enableHiding: false,
   },
   {
-    accessorKey: "title",
+    accessorKey: "name",
     header: "Title",
-    cell: ({ row }) => {
-      const { thumbnailUrl, title } = row.original;
-      return (
-        <div className="flex items-center space-x-2">
-          <img
-            src={thumbnailUrl}
-            alt="Thumbnail"
-            className="w-10 h-10 rounded-md object-cover"
-          />
-          <span>{title}</span>
-        </div>
-      );
-    },
+    cell: ({ row }) => <div>{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "author",
-    header: "Author",
-    cell: ({ row }) => {
-      const { name, profilePic } = row.original.author;
-      return (
-        <div className="flex items-center space-x-2">
-          <img
-            src={profilePic || "https://avatar.iran.liara.run/public"}
-            alt="Profile"
-            className="w-8 h-8 rounded-full object-cover"
-          />
-          <span>{name}</span>
-        </div>
-      );
-    },
+    accessorKey: "price",
+    header: "Price",
+    cell: ({ row }) => <div>₹{row.getValue("price")}</div>,
   },
   {
-    accessorKey: "type",
-    header: "Type",
+    accessorKey: "interval",
+    header: "Interval",
+    cell: ({ row }) => <div>{row.getValue("interval")}</div>,
+  },
+  {
+    accessorKey: "activeSubscribers",
+    header: () => <div className="text-center w-full">Active Subscribers</div>,
     cell: ({ row }) => (
-      <Badge
-        variant={row.original.contentType === "Blog" ? "default" : "outline"}
-      >
-        {row.original.contentType}
-      </Badge>
+      <div className="text-center">{row.getValue("activeSubscribers")}</div>
     ),
   },
   {
-    accessorKey: "createdAt",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Date
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
-  },
-  {
-    id: "status", // Change from accessorKey to id
-    header: "Status",
-    accessorFn: (row) => (row.isPremium ? "Premium" : "Free"), // Explicitly derive status
+    accessorKey: "revenue",
+    header: () => <div className="text-center w-full">Revenue</div>,
     cell: ({ row }) => (
-      <Badge variant={row.original.isPremium ? "default" : "outline"}>
-        {row.original.isPremium ? "Premium" : "Free"}
-      </Badge>
+      <div className="text-center">₹{row.getValue("revenue")}</div>
     ),
-    filterFn: (row, id, value: string[]) => {
-      const status = row.getValue(id) as string;
-      return value.includes(status);
-    },
   },
   {
-    id: "verified", // New column for isVerified
-    header: "Verified",
-    accessorFn: (row) => (row.isVerified ? "Verified" : "Not Verified"), // Explicitly derive verified status
+    accessorKey: "conversionRate",
+    header: () => <div className="text-center w-full">Conversion Rate</div>,
     cell: ({ row }) => (
-      <Badge
-        variant={row.original.isVerified ? "default" : "outline"}
-        className={
-          row.original.isVerified
-            ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100" // Verified
-            : "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100" // Not Verified
-        }
-      >
-        {row.original.isVerified ? "Verified" : "Not Verified"}
-      </Badge>
+      <div className="text-center">{row.getValue("conversionRate")}%</div>
     ),
-    filterFn: (row, id, value: string[]) => {
-      const verifiedStatus = row.getValue(id) as string;
-      return value.includes(verifiedStatus);
-    },
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const category = row.original;
+      const plan = row.original;
 
       return (
         <DropdownMenu>
@@ -144,7 +87,7 @@ export const columns = (): ColumnDef<any>[] => [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => console.log(category._id)}>
+            <DropdownMenuItem onClick={() => console.log(plan._id)}>
               Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />

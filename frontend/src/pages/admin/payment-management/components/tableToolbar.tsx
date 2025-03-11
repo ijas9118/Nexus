@@ -6,9 +6,10 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FacetedFilter } from "./faceted-filter";
+import { CreatePlan } from "./CreatePlan";
+import { useState } from "react";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -17,40 +18,25 @@ interface DataTableToolbarProps<TData> {
 export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   return (
     <div className="flex items-center justify-between py-4">
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Search Content..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-xs"
         />
-        {table.getColumn("status") && (
-          <FacetedFilter
-            column={table.getColumn("status")}
-            title="Status"
-            options={[
-              { label: "Premium", value: "Premium" },
-              { label: "Free", value: "Free" },
-            ]}
-          />
-        )}
-
-        {table.getColumn("verified") && (
-          <FacetedFilter
-            column={table.getColumn("verified")}
-            title="Verified"
-            options={[
-              { label: "Verified", value: "Verified" },
-              { label: "Not Verified", value: "Not Verified" },
-            ]}
-          />
-        )}
       </div>
       <div className="flex items-center space-x-2">
+        <Button variant="secondary" onClick={() => setIsDialogOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" /> Create Plan
+        </Button>
+        <CreatePlan open={isDialogOpen} onOpenChange={setIsDialogOpen} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

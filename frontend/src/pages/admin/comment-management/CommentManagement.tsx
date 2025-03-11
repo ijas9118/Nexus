@@ -132,7 +132,6 @@ const CommentManagement = () => {
         blogs={blogs}
         selectedSquad={selectedSquad}
         setSelectedSquad={handleSquadChange}
-        selectedBlog={selectedBlog}
         setSelectedBlog={handleBlogChange}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
