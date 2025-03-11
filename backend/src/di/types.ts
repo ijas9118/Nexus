@@ -14,6 +14,7 @@ export const TYPES = {
   MessageRepository: Symbol.for('MessageRepository'),
   ConnectionsRepository: Symbol.for('ConnectionsRepository'),
   CommentRepository: Symbol.for('CommentRepository'),
+  PlanRepository: Symbol.for('PlanRepository'),
 
   // Services
   UserService: Symbol.for('UserService'),
@@ -34,6 +35,7 @@ export const TYPES = {
   TokenService: Symbol.for('ITokenService'),
   ConnectionService: Symbol.for('IConnectionService'),
   CommentService: Symbol.for('CommentService'),
+  PlanService: Symbol.for('PlanService'),
 
   // Controllers
   UserController: Symbol.for('UserController'),
@@ -52,4 +54,5 @@ export const TYPES = {
   MessageController: Symbol.for('MessageController'),
   ConnectionsController: Symbol.for('ConnectionsController'),
   CommentController: Symbol.for('CommentController'),
+  PlanController: Symbol.for('PlanController'),
 };
