@@ -18,6 +18,7 @@ import followerRoutes from './routes/followers.routes';
 import chatRoutes from './routes/chat.routes';
 import messageRoutes from './routes/message.routes';
 import planRoutes from './routes/plan.routes';
+import paymentRoutes from './routes/payment.routes';
 
 const app = express();
 setupSwagger(app);
@@ -46,6 +47,7 @@ app.use('/api/followers', followerRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/message', messageRoutes);
 app.use('/api/plans', planRoutes);
+app.use('/api/payment', paymentRoutes);
 
 app.use(errorMiddleware);
 

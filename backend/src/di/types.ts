@@ -36,6 +36,7 @@ export const TYPES = {
   ConnectionService: Symbol.for('IConnectionService'),
   CommentService: Symbol.for('CommentService'),
   PlanService: Symbol.for('PlanService'),
+  PaymentService: Symbol.for('PaymentService'),
 
   // Controllers
   UserController: Symbol.for('UserController'),
@@ -55,4 +56,5 @@ export const TYPES = {
   ConnectionsController: Symbol.for('ConnectionsController'),
   CommentController: Symbol.for('CommentController'),
   PlanController: Symbol.for('PlanController'),
+  PaymentController: Symbol.for('PaymentController'),
 };

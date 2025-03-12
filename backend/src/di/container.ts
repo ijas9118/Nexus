@@ -121,6 +121,11 @@ import { PlanController } from '../controllers/plan.controller';
 import { IPlanRepository } from '../core/interfaces/repositories/IPlanRepository';
 import { PlanRepository } from '../repositories/plan.repository';
 
+import { IPaymentService } from '../core/interfaces/services/IPaymentService';
+import { PaymentServce } from '../services/payment.service';
+import { IPaymentController } from '../core/interfaces/controllers/IPaymentController';
+import { PaymentController } from '../controllers/payment.controller';
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -189,5 +194,8 @@ container.bind<ICommentController>(TYPES.CommentController).to(CommentController
 container.bind<IPlanRepository>(TYPES.PlanRepository).to(PlanRepository);
 container.bind<IPlanService>(TYPES.PlanService).to(PlanService);
 container.bind<IPlanController>(TYPES.PlanController).to(PlanController);
+
+container.bind<IPaymentService>(TYPES.PaymentService).to(PaymentServce);
+container.bind<IPaymentController>(TYPES.PaymentController).to(PaymentController);
 
 export { container };
