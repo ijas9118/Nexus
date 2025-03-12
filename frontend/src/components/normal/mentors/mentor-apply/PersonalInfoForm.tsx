@@ -12,12 +12,26 @@ import { Label } from "@/components/ui/label";
 import { ArrowRight, Github, Linkedin } from "lucide-react";
 import FileUpload from "./FileUpload";
 import React from "react";
+import { useMentorForm } from "@/context/MentorFormContext";
 
 interface PersonalInfoFormProps {
   onContinue: () => void;
 }
 
 const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
+  const { formData, setFormData } = useMentorForm();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      personalInfo: {
+        ...prev.personalInfo,
+        [id]: value,
+      },
+    }));
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -28,11 +42,21 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
             <Label htmlFor="firstName">First Name</Label>
-            <Input id="firstName" placeholder="Enter your first name" />
+            <Input
+              id="firstName"
+              placeholder="Enter your first name"
+              value={formData.personalInfo.firstName}
+              onChange={handleChange}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="lastName">Last Name</Label>
-            <Input id="lastName" placeholder="Enter your last name" />
+            <Input
+              id="lastName"
+              placeholder="Enter your last name"
+              value={formData.personalInfo.lastName}
+              onChange={handleChange}
+            />
           </div>
         </div>
 
@@ -42,17 +66,29 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
             id="email"
             type="email"
             placeholder="Enter your email address"
+            value={formData.personalInfo.email}
+            onChange={handleChange}
           />
         </div>
 
         <div className="grid gap-2">
           <Label htmlFor="phone">Phone Number (optional)</Label>
-          <Input id="phone" placeholder="Enter your phone number" />
+          <Input
+            id="phone"
+            placeholder="Enter your phone number"
+            value={formData.personalInfo.phone}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="grid gap-2">
           <Label htmlFor="location">Location</Label>
-          <Input id="location" placeholder="City, Country" />
+          <Input
+            id="location"
+            placeholder="City, Country"
+            value={formData.personalInfo.location}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="grid gap-2">
@@ -65,6 +101,8 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
               id="linkedin"
               placeholder="linkedin.com/in/yourprofile"
               className="rounded-l-none"
+              value={formData.personalInfo.linkedin}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -79,6 +117,8 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
               id="github"
               placeholder="github.com/yourusername"
               className="rounded-l-none"
+              value={formData.personalInfo.github}
+              onChange={handleChange}
             />
           </div>
         </div>

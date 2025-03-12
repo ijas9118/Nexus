@@ -38,6 +38,20 @@ export const TECHNOLOGIES = [
   { value: "kubernetes", label: "Kubernetes" },
 ];
 
+export const TIME_SLOTS = [
+  "9:00 AM - 10:00 AM",
+  "10:00 AM - 11:00 AM",
+  "11:00 AM - 12:00 PM",
+  "12:00 PM - 1:00 PM",
+  "1:00 PM - 2:00 PM",
+  "2:00 PM - 3:00 PM",
+  "3:00 PM - 4:00 PM",
+  "4:00 PM - 5:00 PM",
+  "5:00 PM - 6:00 PM",
+  "6:00 PM - 7:00 PM",
+  "7:00 PM - 8:00 PM",
+];
+
 export const MENTORSHIP_TYPES = [
   { value: "one-on-one", label: "1-on-1 Mentoring Sessions" },
   { value: "code-reviews", label: "Code Reviews" },
@@ -53,13 +67,6 @@ export const TARGET_AUDIENCES = [
   { value: "senior-developers", label: "Senior Developers" },
   { value: "career-switchers", label: "Career Switchers" },
   { value: "students", label: "Students" },
-];
-
-export const AVAILABILITY_OPTIONS = [
-  { value: "weekday-mornings", label: "Weekday Mornings" },
-  { value: "weekday-afternoons", label: "Weekday Afternoons" },
-  { value: "weekday-evenings", label: "Weekday Evenings" },
-  { value: "weekends", label: "Weekends" },
 ];
 
 export const MENTORS = [
