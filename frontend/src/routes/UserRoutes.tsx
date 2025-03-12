@@ -23,37 +23,40 @@ import Mentors from "@/pages/normal/mentors/Mentors";
 import MentorApply from "@/pages/normal/mentors/MentorApply";
 import MentorProfilePage from "@/pages/normal/mentors/MentorProfilePage";
 import BookSession from "@/pages/normal/mentors/BookSession";
+import { MentorFormProvider } from "@/context/MentorFormContext";
 
 const UserRoutes: React.FC = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/login/forgot-password" element={<ForgotPassword />} />
-      <Route path="/login/reset-password" element={<ResetPassword />} />
+    <MentorFormProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login/forgot-password" element={<ForgotPassword />} />
+        <Route path="/login/reset-password" element={<ResetPassword />} />
 
-      <Route path="/" element={<Layout />}>
-        <Route element={<ProtectedRoute requiredRole="user" />}>
-          <Route path="myFeed" element={<MyFeed />} />
-          <Route path="profile/:username" element={<ProfilePage />} />
-          <Route path="profile/edit" element={<EditProfile />} />
-          <Route path="addPost" element={<AddPost />} />
-          <Route path="bookmark" element={<Bookmark />} />
-          <Route path="getPremium" element={<GetPremium />} />
-          <Route path="mentors" element={<Mentors />} />
-          <Route path="mentors/apply" element={<MentorApply />} />
-          <Route path="mentors/:mentorId" element={<MentorProfilePage />} />
-          <Route path="mentors/:mentorId/book" element={<BookSession />} />
-          <Route path="squads" element={<Squads />} />
-          <Route path="chat" element={<Chat />} />
-          <Route path="connections" element={<Connections />} />
-          <Route path="history" element={<History />} />
-          <Route path="content/:id" element={<ContentDetails />} />
-          <Route path="following" element={<Following />} />
+        <Route path="/" element={<Layout />}>
+          <Route element={<ProtectedRoute requiredRole="user" />}>
+            <Route path="myFeed" element={<MyFeed />} />
+            <Route path="profile/:username" element={<ProfilePage />} />
+            <Route path="profile/edit" element={<EditProfile />} />
+            <Route path="addPost" element={<AddPost />} />
+            <Route path="bookmark" element={<Bookmark />} />
+            <Route path="getPremium" element={<GetPremium />} />
+            <Route path="mentors" element={<Mentors />} />
+            <Route path="mentors/apply" element={<MentorApply />} />
+            <Route path="mentors/:mentorId" element={<MentorProfilePage />} />
+            <Route path="mentors/:mentorId/book" element={<BookSession />} />
+            <Route path="squads" element={<Squads />} />
+            <Route path="chat" element={<Chat />} />
+            <Route path="connections" element={<Connections />} />
+            <Route path="history" element={<History />} />
+            <Route path="content/:id" element={<ContentDetails />} />
+            <Route path="following" element={<Following />} />
+          </Route>
         </Route>
-      </Route>
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </MentorFormProvider>
   );
 };
 

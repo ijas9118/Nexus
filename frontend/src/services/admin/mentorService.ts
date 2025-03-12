@@ -69,6 +69,22 @@ const MentorService = {
       }
     }
   },
+
+  createMentorApplication: async (data: any) => {
+    try {
+      console.log(data);
+      // const response = await api.post("/mentor/register", data);
+      // return response.data;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
+    }
+  },
 };
 
 export default MentorService;

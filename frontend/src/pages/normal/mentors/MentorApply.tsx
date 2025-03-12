@@ -7,11 +7,9 @@ import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { toast } from "sonner";
 
 const MentorApply = () => {
   const [step, setStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
 
   const handleContinue = () => {
@@ -26,19 +24,6 @@ const MentorApply = () => {
       setStep(step - 1);
       window.scrollTo(0, 0);
     }
-  };
-
-  const handleSubmit = () => {
-    setIsSubmitting(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast("Application submitted", {
-        description:
-          "We've received your mentor application. We'll review it and get back to you soon.",
-      });
-    }, 2000);
   };
 
   useEffect(() => {
@@ -60,13 +45,7 @@ const MentorApply = () => {
           <ExperienceForm onBack={handleBack} onContinue={handleContinue} />
         );
       case 3:
-        return (
-          <MentorshipDetailsForm
-            onBack={handleBack}
-            onSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
-          />
-        );
+        return <MentorshipDetailsForm onBack={handleBack} />;
       default:
         return <PersonalInfoForm onContinue={handleContinue} />;
     }
