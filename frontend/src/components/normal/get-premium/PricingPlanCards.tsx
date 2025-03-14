@@ -8,10 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import PaymentService from "@/services/paymentService";
 import PlanService from "@/services/planService";
 import { IPlan } from "@/types/plans";
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle2, Sparkles } from "lucide-react";
+import { toast } from "sonner";
 
 const PricingPlanCards = () => {
   const {
@@ -31,7 +33,22 @@ const PricingPlanCards = () => {
     return <p className="text-center text-red-500">Failed to load plans.</p>;
   }
 
-  console.log(plans);
+  const checkout = async (plan: IPlan) => {
+    try {
+      const sessionUrl = await PaymentService.createSession(plan);
+
+      if (sessionUrl) {
+        window.location.href = sessionUrl;
+      } else {
+        throw new Error("Failed to retrieve checkout session URL.");
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Oops!", {
+        description: error.message || "An error occurred during checkout.",
+      });
+    }
+  };
 
   return (
     <div>
@@ -42,8 +59,11 @@ const PricingPlanCards = () => {
       </p>
 
       <div className="flex flex-col md:flex-row gap-8 justify-center">
-        {plans.map((plan) => (
-          <Card className="border-primary/20 max-w-sm flex flex-col">
+        {plans.map((plan, index) => (
+          <Card
+            className="border-primary/20 max-w-sm flex flex-col"
+            key={index}
+          >
             <CardHeader>
               <CardTitle>
                 <div className="flex justify-between items-center">
@@ -73,6 +93,7 @@ const PricingPlanCards = () => {
               <Button
                 variant={plan.interval === "yearly" ? "default" : "secondary"}
                 className="w-full"
+                onClick={() => checkout(plan)}
               >
                 {plan.interval === "yearly" && <Sparkles />}
                 {plan.interval === "monthly"

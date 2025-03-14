@@ -18,6 +18,8 @@ import followerRoutes from './routes/followers.routes';
 import chatRoutes from './routes/chat.routes';
 import messageRoutes from './routes/message.routes';
 import planRoutes from './routes/plan.routes';
+import paymentRoutes from './routes/payment.routes';
+import webhookRouter from './routes/webhook.routes';
 
 const app = express();
 setupSwagger(app);
@@ -28,6 +30,8 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
+
+app.use('/api/webhook', express.raw({ type: 'application/json' }), webhookRouter);
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -46,6 +50,7 @@ app.use('/api/followers', followerRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/message', messageRoutes);
 app.use('/api/plans', planRoutes);
+app.use('/api/payment', paymentRoutes);
 
 app.use(errorMiddleware);
 
