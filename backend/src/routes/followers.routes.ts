@@ -1,9 +1,9 @@
+import { IConnectionsController } from '@/core/interfaces/controllers/IConnectionsController';
+import { IFollowersController } from '@/core/interfaces/controllers/IFollowersController';
+import { container } from '@/di/container';
+import { TYPES } from '@/di/types';
+import { authenticate } from '@/middlewares/auth.middleware';
 import { Router } from 'express';
-import { container } from '../di/container';
-import { TYPES } from '../di/types';
-import { authenticate } from '../middlewares/auth.middleware';
-import { IFollowersController } from '../core/interfaces/controllers/IFollowersController';
-import { IConnectionsController } from '../core/interfaces/controllers/IConnectionsController';
 
 const followersController = container.get<IFollowersController>(TYPES.FollowersController);
 const connectionsController = container.get<IConnectionsController>(TYPES.ConnectionsController);

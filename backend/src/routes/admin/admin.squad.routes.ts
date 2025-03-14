@@ -1,9 +1,9 @@
+import { ISquadController } from '@/core/interfaces/controllers/ISquadController';
+import { container } from '@/di/container';
+import { TYPES } from '@/di/types';
 import { Router } from 'express';
-import { container } from '../../di/container';
-import { SquadController } from '../../controllers/squad.controller';
-import { TYPES } from '../../di/types';
 
-const squadController = container.get<SquadController>(TYPES.SquadController);
+const squadController = container.get<ISquadController>(TYPES.SquadController);
 
 const router = Router();
 

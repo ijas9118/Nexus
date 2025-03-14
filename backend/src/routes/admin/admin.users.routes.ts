@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { AdminController } from '../../controllers/admin/admin.controller';
-import { container } from '../../di/container';
-import { TYPES } from '../../di/types';
-import { authenticate } from '../../middlewares/auth.middleware';
+import { IAdminController } from '@/core/interfaces/controllers/admin/IAdminController';
+import { container } from '@/di/container';
+import { TYPES } from '@/di/types';
+import { authenticate } from '@/middlewares/auth.middleware';
 
-const adminController = container.get<AdminController>(TYPES.AdminController);
+const adminController = container.get<IAdminController>(TYPES.AdminController);
 
 const router = Router();
 

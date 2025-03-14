@@ -1,7 +1,7 @@
+import { IContentController } from '@/core/interfaces/controllers/IContentController';
+import { container } from '@/di/container';
+import { TYPES } from '@/di/types';
 import { Router } from 'express';
-import { container } from '../../di/container';
-import { TYPES } from '../../di/types';
-import { IContentController } from '../../core/interfaces/controllers/IContentController';
 
 const contentController = container.get<IContentController>(TYPES.ContentController);
 
