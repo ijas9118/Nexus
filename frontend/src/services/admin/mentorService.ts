@@ -23,7 +23,7 @@ const MentorService = {
 
   acceptInvite: async (token: string) => {
     try {
-      const response = await api.post("admin/mentor/acceptInvite", { token });
+      const response = await api.post("admin/mentor/accept-invite", { token });
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {

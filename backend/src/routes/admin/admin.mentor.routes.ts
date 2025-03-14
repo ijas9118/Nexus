@@ -12,7 +12,7 @@ const router = Router();
 router.post('/invite', validateRequest(sendInvitationSchema), mentorController.sendInvitation);
 
 router.post(
-  '/acceptInvite',
+  '/accept-invite',
   validateRequest(acceptInvitationSchema),
   mentorController.acceptInvitation
 );

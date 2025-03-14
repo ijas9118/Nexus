@@ -3,7 +3,7 @@ import { idSchema } from './common.schema';
 
 export const verifyContentSchema = {
   params: z.object({
-    id: idSchema.shape.id,
+    contentId: idSchema.shape.id,
   }),
 };
 
