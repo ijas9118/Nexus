@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { emailSchema, nameSchema } from './common.schema';
+import { emailSchema, nameSchema, passwordSchema } from './common.schema';
 
 export const sendInvitationSchema = {
   body: z.object({
@@ -24,5 +24,13 @@ export const acceptInvitationSchema = {
         invalid_type_error: 'Token must be a string',
       })
       .min(1, { message: 'Token cannot be empty' }),
+  }),
+};
+
+export const completeProfileSchema = {
+  body: z.object({
+    email: emailSchema.shape.email,
+    name: nameSchema.shape.name,
+    password: passwordSchema.shape.password,
   }),
 };

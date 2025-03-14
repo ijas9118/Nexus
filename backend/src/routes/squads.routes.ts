@@ -1,15 +1,22 @@
 import { Router } from 'express';
-import { container } from '../di/container';
-import { SquadController } from '../controllers/squad.controller';
-import { TYPES } from '../di/types';
-import { authenticate } from '../middlewares/auth.middleware';
+import { validateRequest } from '@/middlewares/validate.middleware';
+import { container } from '@/di/container';
+import { ISquadController } from '@/core/interfaces/controllers/ISquadController';
+import { TYPES } from '@/di/types';
+import { authenticate } from '@/middlewares/auth.middleware';
+import { joinSquadSchema } from '@/validations/squad.schema';
 
 const router = Router();
 
-const squadController = container.get<SquadController>(TYPES.SquadController);
+const squadController = container.get<ISquadController>(TYPES.SquadController);
 
 router.get('/', authenticate(['user']), squadController.getSquadsByCategory);
 router.post('/', authenticate(['user']), squadController.createSquad);
-router.post('/:squadId/join', authenticate(['user']), squadController.joinSquad);
+router.post(
+  '/:squadId/join',
+  authenticate(['user']),
+  validateRequest(joinSquadSchema),
+  squadController.joinSquad
+);
 
 export default router;
