@@ -11,3 +11,4 @@ export const NODE_ENV = process.env.NODE_ENV;
 export const USER_EMAIL = process.env.USER_EMAIL;
 export const APP_PASSWORD = process.env.APP_PASSWORD;
 export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY as string;
+export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET as string;
