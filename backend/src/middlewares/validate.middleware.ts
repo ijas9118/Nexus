@@ -2,12 +2,19 @@ import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { z, ZodError } from 'zod';
 
-export const validate = (schema: z.ZodSchema) => {
+export const validateRequest = (schema: {
+  body?: z.ZodSchema;
+  params?: z.ZodSchema;
+  query?: z.ZodSchema;
+}) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse(req.body); // Validate request body using Zod
+      if (schema.body) schema.body.parse(req.body); // Validate body
+      if (schema.params) schema.params.parse(req.params); // Validate params
+      if (schema.query) schema.query.parse(req.query); // Validate query
       next();
     } catch (error) {
+      console.log(error);
       if (error instanceof ZodError) {
         res.status(StatusCodes.BAD_REQUEST).json({
           errors: error.errors.map((err) => ({

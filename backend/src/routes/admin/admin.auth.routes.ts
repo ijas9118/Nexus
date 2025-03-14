@@ -1,14 +1,16 @@
+import { IAdminAuthController } from '@/core/interfaces/controllers/admin/IAdminAuthController';
+import { container } from '@/di/container';
+import { TYPES } from '@/di/types';
+import { validateRequest } from '@/middlewares/validate.middleware';
+import { loginSchema } from '@/validations/auth.schema';
 import { Router } from 'express';
-import { container } from '../../di/container';
-import { AdminAuthController } from '../../controllers/admin/admin.auth.controller';
-import { TYPES } from '../../di/types';
 
-const adminAuthController = container.get<AdminAuthController>(TYPES.AdminAuthController);
+const adminAuthController = container.get<IAdminAuthController>(TYPES.AdminAuthController);
 
 const router = Router();
 
-router.post('/login', (req, res) => adminAuthController.login(req, res));
+router.post('/login', validateRequest(loginSchema), adminAuthController.login);
 
-router.get('/logout', (req, res) => adminAuthController.logout(req, res));
+router.get('/logout', adminAuthController.logout);
 
 export default router;

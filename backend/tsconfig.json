@@ -21,7 +21,26 @@
     /* Node.js Specific Options */
     "moduleResolution": "node",              // Use Node.js module resolution
     "allowSyntheticDefaultImports": true,    // Allow default imports from modules with no default export
-    "types": ["node"]                        // Include Node.js type definitions
+    "types": ["node"],                        // Include Node.js type definitions
+
+    "baseUrl": ".", // Base directory for resolving paths
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+    // "paths": {
+    //   "@middleware/*": ["src/middlewares/*"],
+    //   "@validations/*": ["src/validations/*"],
+    //   "@core/*": ["src/core/*"],
+    //   "@di/*": ["src/di/*"],
+    //   "@dtos/*": ["src/dtos/*"],
+    //   "@models/*": ["src/models/*"],
+    //   "@config/*": ["src/config/*"],
+    //   "@controllers/*": ["src/controllers/*"],
+    //   "@repositories/*": ["src/repositories/*"],
+    //   "@routes/*": ["src/routes/*"],
+    //   "@services/*": ["src/services/*"],
+    //   "@utils/*": ["src/utils/*"],
+    // }
   },
   "include": ["src/**/*"],                    // Include all TypeScript files in the src directory
   "exclude": ["node_modules", "dist"]         // Exclude unnecessary folders

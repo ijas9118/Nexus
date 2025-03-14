@@ -1,19 +1,22 @@
 import { Router } from 'express';
-import { authenticate } from '../middlewares/auth.middleware';
-import { container } from '../di/container';
-import { TYPES } from '../di/types';
-import { ChatController } from '../controllers/chat.controller';
-import { MessageController } from '../controllers/message.controller';
+import { validateRequest } from '@/middlewares/validate.middleware';
+import { createChatSchema } from '@/validations/chat.schema';
+import { IChatController } from '@/core/interfaces/controllers/IChatController';
+import { container } from '@/di/container';
+import { TYPES } from '@/di/types';
+import { authenticate } from '@/middlewares/auth.middleware';
 
-const chatController = container.get<ChatController>(TYPES.ChatController);
-const messageController = container.get<MessageController>(TYPES.MessageController);
+const chatController = container.get<IChatController>(TYPES.ChatController);
 
 const router = Router();
 
-router.post('/create-new-chat', authenticate(['user']), chatController.createChat);
+router.post(
+  '/create-new-chat',
+  authenticate(['user']),
+  validateRequest(createChatSchema),
+  chatController.createChat
+);
 
 router.get('/get-all-chats', authenticate(['user']), chatController.getAllChats);
-
-router.post('/new-message', authenticate(['user']), messageController.createNewMessage);
 
 export default router;

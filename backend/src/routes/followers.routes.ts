@@ -1,28 +1,57 @@
+import { IConnectionsController } from '@/core/interfaces/controllers/IConnectionsController';
+import { IFollowersController } from '@/core/interfaces/controllers/IFollowersController';
+import { container } from '@/di/container';
+import { TYPES } from '@/di/types';
+import { authenticate } from '@/middlewares/auth.middleware';
+import { validateRequest } from '@/middlewares/validate.middleware';
+import {
+  acceptConnectionSchema,
+  followUserSchema,
+  isConnectedSchema,
+  isFollowingSchema,
+  sendConnectionSchema,
+  withdrawConnectionSchema,
+} from '@/validations/followers.schema';
 import { Router } from 'express';
-import { container } from '../di/container';
-import { TYPES } from '../di/types';
-import { authenticate } from '../middlewares/auth.middleware';
-import { IFollowersController } from '../core/interfaces/controllers/IFollowersController';
-import { IConnectionsController } from '../core/interfaces/controllers/IConnectionsController';
 
 const followersController = container.get<IFollowersController>(TYPES.FollowersController);
 const connectionsController = container.get<IConnectionsController>(TYPES.ConnectionsController);
 
 const router = Router();
 
-router.post('/follow', authenticate(['user']), followersController.followUser);
+router.post(
+  '/follow',
+  authenticate(['user']),
+  validateRequest(followUserSchema),
+  followersController.followUser
+);
 
-router.post('/unfollow', authenticate(['user']), followersController.unfollowUser);
+router.post(
+  '/unfollow',
+  authenticate(['user']),
+  validateRequest(followUserSchema),
+  followersController.unfollowUser
+);
 
 router.get('/:userId/followers', authenticate(['user']), followersController.getFollowers);
 
 router.get('/:userId/following', authenticate(['user']), followersController.getFollowing);
 
-router.post('/is-following', followersController.isFollowing);
+router.post('/is-following', validateRequest(isFollowingSchema), followersController.isFollowing);
 
-router.post('/connect', authenticate(['user']), connectionsController.sendConnectionRequest);
+router.post(
+  '/connect',
+  authenticate(['user']),
+  validateRequest(sendConnectionSchema),
+  connectionsController.sendConnectionRequest
+);
 
-router.post('/accept', authenticate(['user']), connectionsController.acceptConnectionRequest);
+router.post(
+  '/accept',
+  authenticate(['user']),
+  validateRequest(acceptConnectionSchema),
+  connectionsController.acceptConnectionRequest
+);
 
 router.post(
   '/has-requested',
@@ -30,9 +59,19 @@ router.post(
   connectionsController.hasSentConnectionRequest
 );
 
-router.post('/is-connected', authenticate(['user']), connectionsController.isConnected);
+router.post(
+  '/is-connected',
+  authenticate(['user']),
+  validateRequest(isConnectedSchema),
+  connectionsController.isConnected
+);
 
-router.post('/withdraw', authenticate(['user']), connectionsController.withdrawConnectionRequest);
+router.post(
+  '/withdraw',
+  authenticate(['user']),
+  validateRequest(withdrawConnectionSchema),
+  connectionsController.withdrawConnectionRequest
+);
 
 router.get('/connections', authenticate(['user']), connectionsController.getAllConnections);
 

@@ -1,15 +1,22 @@
 import { Router } from 'express';
-import { authenticate } from '../../middlewares/auth.middleware';
-import { container } from '../../di/container';
-import { HistoryController } from '../../controllers/history.controller';
-import { TYPES } from '../../di/types';
+import { validateRequest } from '@/middlewares/validate.middleware';
+import { removeFromHistorySchema } from '@/validations/content.schema';
+import { IHistoryController } from '@/core/interfaces/controllers/IHistoryController';
+import { container } from '@/di/container';
+import { TYPES } from '@/di/types';
+import { authenticate } from '@/middlewares/auth.middleware';
 
-const historyController = container.get<HistoryController>(TYPES.HistoryController);
+const historyController = container.get<IHistoryController>(TYPES.HistoryController);
 
 const router = Router();
 
 router.get('/', authenticate(['user']), historyController.getAllHistory);
 
-router.post('/remove/', authenticate(['user']), historyController.removeFromHistory);
+router.post(
+  '/remove/',
+  authenticate(['user']),
+  validateRequest(removeFromHistorySchema),
+  historyController.removeFromHistory
+);
 
 export default router;

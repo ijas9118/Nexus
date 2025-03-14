@@ -4,4 +4,5 @@ export interface ICategoryController {
   createCategory: RequestHandler;
   updateCategory: RequestHandler;
   toggleCategory: RequestHandler;
+  getAllCategories: RequestHandler;
 }

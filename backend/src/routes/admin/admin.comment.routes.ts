@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { container } from '../../di/container';
-import { TYPES } from '../../di/types';
-import { ICommentController } from '../../core/interfaces/controllers/ICommentController';
+import { ICommentController } from '@/core/interfaces/controllers/ICommentController';
+import { container } from '@/di/container';
+import { TYPES } from '@/di/types';
 
 const commentController = container.get<ICommentController>(TYPES.CommentController);
 
