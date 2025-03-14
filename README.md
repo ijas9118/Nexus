@@ -189,7 +189,7 @@ Contributions are welcome! If you'd like to contribute, please follow these step
 ## **Contact**
 For any questions or feedback, feel free to reach out:
 - **Email**: ahammedijas.official@gmail.com
-- **GitHub**: [your-username](https://github.com/ijas9118)
+- **GitHub**: [ijas9118](https://github.com/ijas9118)
 
 ---
 
