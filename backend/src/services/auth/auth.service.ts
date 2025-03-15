@@ -6,7 +6,6 @@ import { RegisterDto } from '../../dtos/requests/auth/register.dto';
 import { compare, hash } from 'bcrypt';
 import { RegisterResponseDto } from '../../dtos/responses/auth/registerResponse.dto';
 import { LoginResponseDto } from '../../dtos/responses/auth/loginResponse.dto';
-import { generateRefreshToken } from '../../utils/jwt.util';
 import redisClient from '../../config/redisClient.config';
 import { IAuthService } from '../../core/interfaces/services/IAuthService';
 import CustomError from '../../utils/CustomError';
@@ -17,6 +16,10 @@ import { IUser } from '../../models/user.model';
 @injectable()
 export class AuthService implements IAuthService {
   constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
+
+  private generateDummyPassword(): string {
+    return Math.random().toString(36).slice(-8); // Simple random string; enhance as needed
+  }
 
   // Check if a user with the given email exists
   async findUserByEmail(email: string): Promise<boolean> {
@@ -90,35 +93,41 @@ export class AuthService implements IAuthService {
     return this.userRepository.getUserByRoleAndId(role, id);
   }
 
-  async googleLoginOrRegister(userData: {
-    name: string;
-    email: string;
-  }): Promise<LoginResponseDto | null> {
-    const { name, email } = userData;
+  // =========== Google Authentication =====================
 
-    let user = await this.userRepository.findByEmail(email);
+  async handleGoogleUser(googleData: {
+    googleId: string;
+    email: string;
+    name: string;
+  }): Promise<IUser> {
+    let user = await this.userRepository.findByGoogleId(googleData.googleId);
 
     if (!user) {
-      user = await this.userRepository.create({ name, email, password: '123456789' });
+      // Check if user exists by email (to avoid duplicates)
+      user = await this.userRepository.findByEmail(googleData.email);
+
+      if (!user) {
+        // Create a new user with a dummy password
+        const dummyPassword = Math.random().toString(36).slice(-8); // Simple random string
+        const hashedPassword = await hash(dummyPassword, 10);
+
+        const username = UsernameGenerator.generateUsername();
+
+        user = await this.userRepository.create({
+          googleId: googleData.googleId,
+          name: googleData.name,
+          email: googleData.email,
+          password: hashedPassword,
+          username: username,
+          role: 'user', // Add role if your model supports it
+        });
+      } else {
+        // If user exists by email but not Google ID, link the Google ID
+        user.googleId = googleData.googleId;
+        await user.save();
+      }
     }
 
-    const data = {
-      _id: user._id,
-      email: user.email,
-      name: user.name,
-    };
-
-    const refreshToken = generateRefreshToken(data);
-
-    const key = `refreshToken:${user._id}`;
-    await redisClient.set(key, refreshToken, 'EX', 7 * 24 * 60 * 60);
-
-    return {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: 'user',
-      username: user.username,
-    };
+    return user;
   }
 }

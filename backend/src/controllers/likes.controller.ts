@@ -1,6 +1,6 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { ILikesController } from '../core/interfaces/controllers/ILikesController';
-import { CustomRequest } from '../core/types/CustomRequest';
+
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
 import { ILikeService } from '../core/interfaces/services/ILikeService';
@@ -12,7 +12,7 @@ import { StatusCodes } from 'http-status-codes';
 export class LikesController implements ILikesController {
   constructor(@inject(TYPES.LikesService) private likeService: ILikeService) {}
 
-  toggleLike = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  toggleLike = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { id: contentId } = req.params;
     const userId = req.user?._id;
 

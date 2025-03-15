@@ -13,6 +13,8 @@ import { StatusCodes } from 'http-status-codes';
 import { IOTPService } from '../core/interfaces/services/IOTPService';
 import { IEmailService } from '../core/interfaces/services/IEmailService';
 import { ITokenService } from '../core/interfaces/services/ITokenService';
+import { CLIENT_URL } from '@/utils/constants';
+import { Profile } from 'passport-google-oauth20';
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -169,5 +171,27 @@ export class AuthController implements IAuthController {
     });
 
     res.status(StatusCodes.OK).json({ accessToken, user });
+  });
+
+  handleGoogleUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    if (!req.user) {
+      return res.redirect('http://localhost:3000/login');
+    }
+
+    const googleProfile = req.user as unknown as Profile;
+
+    if (!googleProfile.emails || googleProfile.emails.length === 0) {
+      throw new CustomError('No email provided by Google', StatusCodes.BAD_REQUEST);
+    }
+
+    const user = await this.authService.handleGoogleUser({
+      googleId: googleProfile.id,
+      email: googleProfile.emails[0].value,
+      name: googleProfile.displayName,
+    });
+
+    setRefreshTokenCookie(res, { _id: user._id.toString(), role: 'user' });
+
+    res.redirect(`${CLIENT_URL}/myFeed`);
   });
 }

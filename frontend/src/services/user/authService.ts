@@ -110,28 +110,8 @@ export const resetPassword = async (
   }
 };
 
-export const googleAuth = async (userData: {
-  name?: string;
-  email?: string;
-  picture?: string;
-}) => {
-  try {
-    const { name, email, picture } = userData;
-    const response = await api.post("/auth/google", {
-      name,
-      email,
-      picture,
-    });
-    return response.data;
-  } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      throw error.response?.data || error.message;
-    } else if (error instanceof Error) {
-      throw error.message;
-    } else {
-      throw "An unknown error occurred";
-    }
-  }
+export const googleAuth = async () => {
+  window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`;
 };
 
 export const logout = async () => {

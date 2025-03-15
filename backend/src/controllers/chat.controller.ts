@@ -1,9 +1,9 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { IChatController } from '../core/interfaces/controllers/IChatController';
 import { IChatService } from '../core/interfaces/services/IChatService';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
-import { CustomRequest } from '../core/types/CustomRequest';
+
 import asyncHandler from 'express-async-handler';
 import CustomError from '../utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
@@ -12,7 +12,7 @@ import { StatusCodes } from 'http-status-codes';
 export class ChatController implements IChatController {
   constructor(@inject(TYPES.ChatService) private chatService: IChatService) {}
 
-  createChat = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  createChat = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { member } = req.body;
     const userId = req.user?._id as string;
 
@@ -29,7 +29,7 @@ export class ChatController implements IChatController {
     res.status(StatusCodes.CREATED).json(chat);
   });
 
-  getAllChats = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  getAllChats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
 
     const result = await this.chatService.getAllChats(userId);

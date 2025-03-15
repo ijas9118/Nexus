@@ -6,13 +6,12 @@ import { TYPES } from '../di/types';
 import asyncHandler from 'express-async-handler';
 import CustomError from '../utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
-import { CustomRequest } from '../core/types/CustomRequest';
 
 @injectable()
 export class MessageController implements IMessageController {
   constructor(@inject(TYPES.MessageService) private messageService: IMessageService) {}
 
-  createNewMessage = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  createNewMessage = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { chatId, text } = req.body;
 
     const sender = req.user?._id;

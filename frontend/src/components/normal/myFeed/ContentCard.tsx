@@ -24,7 +24,7 @@ interface ContentCardProps {
   date: string;
   likes: number;
   comments: number;
-  squad: { name: string; _id: string };
+  // squad: { name: string; _id: string };
   isPremium: boolean;
   image: string;
   isLiked: boolean;
@@ -37,6 +37,8 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
   const [isLiked, setIsLiked] = useState<boolean>(props.isLiked);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(props.isBookmarked);
   const navigate = useNavigate();
+
+  console.log(props);
 
   const handleLike = async (id: string) => {
     try {
@@ -98,7 +100,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
         <h2 className="mb-2 text-xl font-bold">{props.heading}</h2>
         <div className="flex flex-wrap gap-2">
           <Badge variant="outline" className="cursor">
-            @{props.squad.name}
+            @{}
           </Badge>
         </div>
         <p className="mt-2 text-sm text-muted-foreground">{props.date}</p>

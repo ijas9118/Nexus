@@ -1,5 +1,5 @@
-import { Response } from 'express';
-import { CustomRequest } from '../core/types/CustomRequest';
+import { Request, Response } from 'express';
+
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
 import asyncHandler from 'express-async-handler';
@@ -12,7 +12,7 @@ import { IConnectionsController } from '../core/interfaces/controllers/IConnecti
 export class ConnectionsController implements IConnectionsController {
   constructor(@inject(TYPES.ConnectionService) private connectionsService: IConnectionService) {}
 
-  getAllConnections = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  getAllConnections = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
     const { search } = req.query;
 
@@ -21,7 +21,7 @@ export class ConnectionsController implements IConnectionsController {
     res.status(StatusCodes.OK).json(result);
   });
 
-  getPendingRequests = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  getPendingRequests = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
 
     const result = await this.connectionsService.getPendingRequest(userId);
@@ -29,7 +29,7 @@ export class ConnectionsController implements IConnectionsController {
     res.status(StatusCodes.OK).json(result);
   });
 
-  sendConnectionRequest = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  sendConnectionRequest = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const requesterId = req.user?._id as string;
     const { recipientId } = req.body;
 
@@ -42,66 +42,57 @@ export class ConnectionsController implements IConnectionsController {
     res.status(StatusCodes.OK).json({ success: true });
   });
 
-  acceptConnectionRequest = asyncHandler(
-    async (req: CustomRequest, res: Response): Promise<void> => {
-      const userId = req.user?._id as string;
-      const { requesterId } = req.body;
+  acceptConnectionRequest = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
+    const { requesterId } = req.body;
 
-      if (!requesterId) {
-        throw new CustomError('Requester ID is required', StatusCodes.BAD_REQUEST);
-      }
-
-      const result = await this.connectionsService.acceptConnectionRequest(userId, requesterId);
-
-      if (!result) {
-        throw new CustomError('Failed to accept connection request', StatusCodes.BAD_REQUEST);
-      }
-
-      res.status(StatusCodes.OK).json({ success: true });
+    if (!requesterId) {
+      throw new CustomError('Requester ID is required', StatusCodes.BAD_REQUEST);
     }
-  );
 
-  hasSentConnectionRequest = asyncHandler(
-    async (req: CustomRequest, res: Response): Promise<void> => {
-      const requesterId = req.user?._id as string;
-      const { recipientId } = req.body;
+    const result = await this.connectionsService.acceptConnectionRequest(userId, requesterId);
 
-      if (!recipientId) {
-        throw new CustomError('Recipient ID is required', StatusCodes.BAD_REQUEST);
-      }
-
-      const result = await this.connectionsService.hasSentConnectionRequest(
-        requesterId,
-        recipientId
-      );
-
-      res.status(StatusCodes.OK).json({ result });
+    if (!result) {
+      throw new CustomError('Failed to accept connection request', StatusCodes.BAD_REQUEST);
     }
-  );
 
-  withdrawConnectionRequest = asyncHandler(
-    async (req: CustomRequest, res: Response): Promise<void> => {
-      const requesterId = req.user?._id as string;
-      const { recipientId } = req.body;
+    res.status(StatusCodes.OK).json({ success: true });
+  });
 
-      if (!recipientId) {
-        throw new CustomError('Recipient ID is required', StatusCodes.BAD_REQUEST);
-      }
+  hasSentConnectionRequest = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const requesterId = req.user?._id as string;
+    const { recipientId } = req.body;
 
-      const result = await this.connectionsService.withdrawConnectionRequest(
-        requesterId,
-        recipientId
-      );
-
-      if (!result) {
-        throw new CustomError('Failed to withdraw connection request', StatusCodes.BAD_REQUEST);
-      }
-
-      res.status(StatusCodes.OK).json({ result });
+    if (!recipientId) {
+      throw new CustomError('Recipient ID is required', StatusCodes.BAD_REQUEST);
     }
-  );
 
-  isConnected = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+    const result = await this.connectionsService.hasSentConnectionRequest(requesterId, recipientId);
+
+    res.status(StatusCodes.OK).json({ result });
+  });
+
+  withdrawConnectionRequest = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const requesterId = req.user?._id as string;
+    const { recipientId } = req.body;
+
+    if (!recipientId) {
+      throw new CustomError('Recipient ID is required', StatusCodes.BAD_REQUEST);
+    }
+
+    const result = await this.connectionsService.withdrawConnectionRequest(
+      requesterId,
+      recipientId
+    );
+
+    if (!result) {
+      throw new CustomError('Failed to withdraw connection request', StatusCodes.BAD_REQUEST);
+    }
+
+    res.status(StatusCodes.OK).json({ result });
+  });
+
+  isConnected = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId1 = req.user?._id as string;
     const { userId2 } = req.body;
 

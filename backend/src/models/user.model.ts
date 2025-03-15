@@ -24,6 +24,7 @@ export interface IUser extends Document {
   role: UserRole;
   username?: string;
   isPremium: boolean;
+  googleId?: string;
 }
 
 const UserSchema: Schema = new Schema(
@@ -106,6 +107,11 @@ const UserSchema: Schema = new Schema(
       required: true,
     },
     isPremium: { type: Boolean, default: false },
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
   },
   {
     timestamps: true,

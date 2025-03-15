@@ -3,6 +3,7 @@ import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
 import { validateRefreshToken } from '@/middlewares/auth.middleware';
 import { validateRequest } from '@/middlewares/validate.middleware';
+import { CLIENT_URL } from '@/utils/constants';
 import {
   forgotPasswordSchema,
   loginSchema,
@@ -12,6 +13,7 @@ import {
   verifyOTPSchema,
 } from '@/validations/auth.schema';
 import { Router } from 'express';
+import passport from 'passport';
 
 const router = Router();
 const authController = container.get<IAuthController>(TYPES.AuthController);
@@ -34,7 +36,21 @@ router.post('/login', validateRequest(loginSchema), authController.login);
 
 router.post('/refresh-token', validateRefreshToken, authController.refreshToken);
 
-// router.post("/google", authController.googleAuth);
+router.get(
+  '/google',
+  passport.authenticate('google', {
+    scope: ['email', 'profile'],
+  })
+);
+
+router.get(
+  '/google/callback',
+  passport.authenticate('google', {
+    failureRedirect: CLIENT_URL + '/login', // Redirect on failure
+    session: false,
+  }),
+  authController.handleGoogleUser
+);
 
 router.get('/logout', authController.logout);
 

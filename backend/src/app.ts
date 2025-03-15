@@ -20,6 +20,7 @@ import messageRoutes from './routes/message.routes';
 import planRoutes from './routes/plan.routes';
 import paymentRoutes from './routes/payment.routes';
 import webhookRouter from './routes/webhook.routes';
+import passport from './config/passport';
 
 const app = express();
 setupSwagger(app);
@@ -38,6 +39,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan('dev'));
+
+app.use(passport.initialize());
 
 app.use('/api/admin', adminRoutes);
 

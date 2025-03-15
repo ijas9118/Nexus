@@ -21,6 +21,10 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     return this.findOne({ email });
   }
 
+  async findByGoogleId(googleId: string): Promise<IUser | null> {
+    return await User.findOne({ googleId });
+  }
+
   async getAllUsers(): Promise<IUser[]> {
     return this.find({});
   }

@@ -1,6 +1,6 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { IHistoryController } from '../core/interfaces/controllers/IHistoryController';
-import { CustomRequest } from '../core/types/CustomRequest';
+
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
 import { IHistoryService } from '../core/interfaces/services/IHistoryService';
@@ -12,7 +12,7 @@ import { StatusCodes } from 'http-status-codes';
 export class HistoryController implements IHistoryController {
   constructor(@inject(TYPES.HistoryService) private historyService: IHistoryService) {}
 
-  removeFromHistory = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  removeFromHistory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
     const { contentId } = req.body;
 
@@ -29,7 +29,7 @@ export class HistoryController implements IHistoryController {
     res.status(StatusCodes.OK).json({ message: 'Removed from history' });
   });
 
-  getAllHistory = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  getAllHistory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
 
     const history = await this.historyService.getAllHistory(userId);

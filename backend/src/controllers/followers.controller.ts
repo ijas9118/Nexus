@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { IFollowersController } from '../core/interfaces/controllers/IFollowersController';
-import { CustomRequest } from '../core/types/CustomRequest';
+
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
 import { IFollowersService } from '../core/interfaces/services/IFollowersService';
@@ -12,7 +12,7 @@ import { StatusCodes } from 'http-status-codes';
 export class FollowersController implements IFollowersController {
   constructor(@inject(TYPES.FollowersService) private followersService: IFollowersService) {}
 
-  followUser = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  followUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { followedId } = req.body;
     const followerId = req.user?._id as string;
 
@@ -29,7 +29,7 @@ export class FollowersController implements IFollowersController {
     res.status(StatusCodes.CREATED).json({ message: 'Followed successfully' });
   });
 
-  unfollowUser = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  unfollowUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { followedId } = req.body;
     const followerId = req.user?._id as string;
 

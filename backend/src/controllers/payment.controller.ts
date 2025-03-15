@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { IPaymentController } from '../core/interfaces/controllers/IPaymentController';
 import { Request, Response } from 'express';
-import { CustomRequest } from '../core/types/CustomRequest';
+
 import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 import { IPaymentService } from '../core/interfaces/services/IPaymentService';
@@ -11,7 +11,7 @@ import { TYPES } from '../di/types';
 export class PaymentController implements IPaymentController {
   constructor(@inject(TYPES.PaymentService) private paymentService: IPaymentService) {}
 
-  checkoutSession = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  checkoutSession = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { plan, priceId } = req.body;
     const customerId = req.user?._id as string;
     const sessionUrl = await this.paymentService.checkoutSession(plan, priceId, customerId);
