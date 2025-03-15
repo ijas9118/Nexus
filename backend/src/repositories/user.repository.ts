@@ -25,6 +25,10 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     return await User.findOne({ googleId });
   }
 
+  async findByGithubId(githubId: string): Promise<IUser | null> {
+    return await User.findOne({ githubId });
+  }
+
   async getAllUsers(): Promise<IUser[]> {
     return this.find({});
   }

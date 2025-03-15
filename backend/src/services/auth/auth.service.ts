@@ -93,22 +93,19 @@ export class AuthService implements IAuthService {
     return this.userRepository.getUserByRoleAndId(role, id);
   }
 
-  // =========== Google Authentication =====================
-
   async handleGoogleUser(googleData: {
     googleId: string;
     email: string;
     name: string;
+    profile: string;
   }): Promise<IUser> {
     let user = await this.userRepository.findByGoogleId(googleData.googleId);
 
     if (!user) {
-      // Check if user exists by email (to avoid duplicates)
       user = await this.userRepository.findByEmail(googleData.email);
 
       if (!user) {
-        // Create a new user with a dummy password
-        const dummyPassword = Math.random().toString(36).slice(-8); // Simple random string
+        const dummyPassword = Math.random().toString(36).slice(-8);
         const hashedPassword = await hash(dummyPassword, 10);
 
         const username = UsernameGenerator.generateUsername();
@@ -119,11 +116,46 @@ export class AuthService implements IAuthService {
           email: googleData.email,
           password: hashedPassword,
           username: username,
-          role: 'user', // Add role if your model supports it
+          profilePic: googleData.profile,
+          role: 'user',
         });
       } else {
-        // If user exists by email but not Google ID, link the Google ID
         user.googleId = googleData.googleId;
+        await user.save();
+      }
+    }
+
+    return user;
+  }
+
+  async handleGithubUser(githubData: {
+    githubId: string;
+    email: string;
+    name: string;
+    profile: string;
+  }): Promise<IUser> {
+    let user = await this.userRepository.findByGithubId(githubData.githubId);
+
+    if (!user) {
+      user = await this.userRepository.findByEmail(githubData.email);
+
+      if (!user) {
+        const dummyPassword = Math.random().toString(36).slice(-8);
+        const hashedPassword = await hash(dummyPassword, 10);
+
+        const username = UsernameGenerator.generateUsername();
+
+        user = await this.userRepository.create({
+          githubId: githubData.githubId,
+          name: githubData.name,
+          email: githubData.email,
+          password: hashedPassword,
+          username: username,
+          profilePic: githubData.profile,
+          role: 'user',
+        });
+      } else {
+        user.githubId = githubData.githubId;
         await user.save();
       }
     }

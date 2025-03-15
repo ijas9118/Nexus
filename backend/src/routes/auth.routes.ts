@@ -54,4 +54,12 @@ router.get(
 
 router.get('/logout', authController.logout);
 
+router.get('/github', passport.authenticate('github', { scope: ['user:email'], session: false }));
+
+router.get(
+  '/github/callback',
+  passport.authenticate('github', { session: false, failureRedirect: `${CLIENT_URL}/login` }),
+  authController.handleGithubUser
+);
+
 export default router;

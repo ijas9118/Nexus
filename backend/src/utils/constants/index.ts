@@ -14,3 +14,5 @@ export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY as string;
 export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET as string;
 export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID as string;
 export const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET as string;
+export const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || '';
+export const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || '';

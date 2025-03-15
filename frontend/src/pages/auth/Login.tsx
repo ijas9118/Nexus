@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
+  githubAuth,
   googleAuth,
   loginUser,
   registerUser,
@@ -147,17 +148,6 @@ export default function LoginPage() {
       navigate("/myFeed");
     }
   }, [isAuthenticated, navigate]);
-
-  const handleGoogleLogin = async () => {
-    try {
-      await googleAuth();
-    } catch (error: any) {
-      toast.error("Failed to Login with Google", {
-        description:
-          error?.message || "Something went wrong. Please try again.",
-      });
-    }
-  };
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
@@ -315,7 +305,7 @@ export default function LoginPage() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     className="border p-2 rounded shadow-md"
-                    onClick={() => handleGoogleLogin()}
+                    onClick={() => googleAuth()}
                   >
                     <FaGoogle size={28} />
                   </motion.button>
@@ -323,6 +313,7 @@ export default function LoginPage() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     className="border p-2 rounded shadow-md"
+                    onClick={() => githubAuth()}
                   >
                     <FaGithub size={28} />
                   </motion.button>
