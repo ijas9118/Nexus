@@ -1,11 +1,23 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { verifyAccessToken, verifyRefreshToken } from '../utils/jwt.util';
-import { CustomRequest } from '../core/types/CustomRequest';
 import { UserRole } from '../core/types/UserTypes';
 import { StatusCodes } from 'http-status-codes';
 
+interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+}
+
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: IUser;
+  }
+}
+
 export const authenticate = (roles: Array<UserRole>) => {
-  return (req: CustomRequest, res: Response, next: NextFunction): void => {
+  return (req: Request, res: Response, next: NextFunction): void => {
     try {
       const token = req.headers.authorization?.split(' ')[1];
 
@@ -30,11 +42,7 @@ export const authenticate = (roles: Array<UserRole>) => {
   };
 };
 
-export const validateRefreshToken = (
-  req: CustomRequest,
-  res: Response,
-  next: NextFunction
-): void => {
+export const validateRefreshToken = (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.cookies.refreshToken;
 

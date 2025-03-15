@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import { ICommentController } from '../core/interfaces/controllers/ICommentController';
-import { CustomRequest } from '../core/types/CustomRequest';
+
 import { Request, Response } from 'express';
 import CustomError from '../utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
@@ -12,7 +12,7 @@ import { TYPES } from '../di/types';
 export class CommentController implements ICommentController {
   constructor(@inject(TYPES.CommentService) private commentService: ICommentService) {}
 
-  addComment = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  addComment = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { contentId, text, parentCommentId } = req.body;
     const userId = req.user?._id as string;
 

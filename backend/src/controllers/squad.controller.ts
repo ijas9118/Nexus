@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ISquadController } from '../core/interfaces/controllers/ISquadController';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
-import { CustomRequest } from '../core/types/CustomRequest';
+
 import { ISquadService } from '../core/interfaces/services/ISquadService';
 import asyncHandler from 'express-async-handler';
 import CustomError from '../utils/CustomError';
@@ -37,7 +37,7 @@ export class SquadController implements ISquadController {
     }
   });
 
-  getSquadsByCategory = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  getSquadsByCategory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
     const category = req.query.category as string;
     if (!category) {
@@ -48,7 +48,7 @@ export class SquadController implements ISquadController {
     res.status(StatusCodes.OK).json(squads);
   });
 
-  joinSquad = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  joinSquad = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
     const { squadId } = req.params;
 

@@ -18,6 +18,15 @@ router.get('/', authenticate(['user', 'admin']), contentController.getAllContent
 router.post('/', authenticate(['user']), contentController.createContent);
 
 router.post(
+  '/:id/bookmark',
+  authenticate(['user']),
+  validateRequest(toggleSchema),
+  bookmarkController.toggleBookmark
+);
+
+router.get('/bookmarks', authenticate(['user']), bookmarkController.getAllBookmarks);
+
+router.post(
   '/verify/:contentId',
   authenticate(['premium', 'mentor', 'admin']),
   validateRequest(verifyContentSchema),
@@ -35,12 +44,4 @@ router.post(
   likesController.toggleLike
 );
 
-router.post(
-  '/:id/bookmark',
-  authenticate(['user']),
-  validateRequest(toggleSchema),
-  bookmarkController.toggleBookmark
-);
-
-router.get('/bookmarks', bookmarkController.getAllBookmarks);
 export default router;

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
+  googleAuth,
   loginUser,
   registerUser,
   resendOtp,
@@ -18,10 +19,12 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import GoogleButton from "@/components/auth/GoogleButton";
 import { setCredentials } from "@/store/slices/authSlice";
 import { RootState } from "@/store/store";
 import { toast } from "sonner";
+import { FaGithub, FaGoogle, FaLinkedin } from "react-icons/fa";
+import { motion } from "motion/react";
+import { FaXTwitter } from "react-icons/fa6";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -145,6 +148,17 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, navigate]);
 
+  const handleGoogleLogin = async () => {
+    try {
+      await googleAuth();
+    } catch (error: any) {
+      toast.error("Failed to Login with Google", {
+        description:
+          error?.message || "Something went wrong. Please try again.",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
       <Card className="p-8 md:p-12 flex flex-col justify-center">
@@ -206,7 +220,7 @@ export default function LoginPage() {
                   </>
                 )}
               </div>
-              <div className="space-y-4">
+              <div className="space-y-8">
                 <div className="space-y-6">
                   {signUp && (
                     <div className="space-y-2">
@@ -296,11 +310,36 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col items-center gap-2">
-                  <GoogleButton />
-                  {/* <Button variant="outline">
-                    <FaGithub /> Sign in with Github
-                  </Button> */}
+                <div className="flex justify-center items-center gap-6">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="border p-2 rounded shadow-md"
+                    onClick={() => handleGoogleLogin()}
+                  >
+                    <FaGoogle size={28} />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="border p-2 rounded shadow-md"
+                  >
+                    <FaGithub size={28} />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="border p-2 rounded shadow-md"
+                  >
+                    <FaLinkedin size={28} />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="border p-2 rounded shadow-md"
+                  >
+                    <FaXTwitter size={28} />
+                  </motion.button>
                 </div>
               </div>
             </>

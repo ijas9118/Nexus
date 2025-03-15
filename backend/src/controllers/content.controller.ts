@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
 import { IContentController } from '../core/interfaces/controllers/IContentController';
 import { Request, Response } from 'express';
-import { CustomRequest } from '../core/types/CustomRequest';
+
 import { IContentService } from '../core/interfaces/services/IContentService';
 import { IHistoryService } from '../core/interfaces/services/IHistoryService';
 import asyncHandler from 'express-async-handler';
@@ -16,7 +16,7 @@ export class ContentController implements IContentController {
     @inject(TYPES.HistoryService) private historyService: IHistoryService
   ) {}
 
-  createContent = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  createContent = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const contentData = {
       ...req.body,
       author: req.user?._id,
@@ -36,7 +36,7 @@ export class ContentController implements IContentController {
     });
   });
 
-  getContent = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  getContent = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const content = await this.contentService.getContentById(req.params.id);
 
     if (!content) {
@@ -50,7 +50,7 @@ export class ContentController implements IContentController {
     res.status(StatusCodes.OK).json(content);
   });
 
-  getAllContent = asyncHandler(async (req: CustomRequest, res: Response): Promise<void> => {
+  getAllContent = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     if (!req.user) {
       throw new CustomError('User is not authenticated', StatusCodes.UNAUTHORIZED);
     }
@@ -78,7 +78,7 @@ export class ContentController implements IContentController {
       .json({ message: 'Content verified successfully', content: updatedContent });
   });
 
-  getFollowingUsersContents = asyncHandler(async (req: CustomRequest, res: Response) => {
+  getFollowingUsersContents = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?._id as string;
 
     const contents = await this.contentService.getFollowingUsersContents(userId);

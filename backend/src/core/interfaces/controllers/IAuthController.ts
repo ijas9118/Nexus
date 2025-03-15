@@ -9,4 +9,5 @@ export interface IAuthController {
   forgotPassword: RequestHandler;
   resetPassword: RequestHandler;
   refreshToken: RequestHandler;
+  handleGoogleUser: RequestHandler;
 }

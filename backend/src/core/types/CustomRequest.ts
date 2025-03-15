@@ -1,6 +1,7 @@
+// types/googleRequest.ts
 import { Request } from 'express';
-import { JwtPayloadWithUser } from './jwt';
+import { Profile } from 'passport-google-oauth20';
 
-export interface CustomRequest extends Request {
-  user?: JwtPayloadWithUser;
-}
+export type GoogleRequest = Request & {
+  user?: Profile; // Override user to be Profile | undefined
+};
