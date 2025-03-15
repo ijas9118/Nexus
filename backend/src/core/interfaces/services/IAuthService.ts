@@ -10,5 +10,16 @@ export interface IAuthService {
   login(loginDto: LoginDto): Promise<LoginResponseDto>;
   updatePassword(email: string, newPassword: string): Promise<void>;
   getUserByRoleAndId(role: string, id: string): Promise<IUser | null>;
-  handleGoogleUser(googleData: { googleId: string; email: string; name: string }): Promise<IUser>;
+  handleGoogleUser(googleData: {
+    googleId: string;
+    email: string;
+    name: string;
+    profile: string;
+  }): Promise<IUser>;
+  handleGithubUser(githubData: {
+    githubId: string;
+    email: string;
+    name: string;
+    profile: string;
+  }): Promise<IUser>;
 }

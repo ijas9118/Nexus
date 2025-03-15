@@ -15,6 +15,7 @@ import { IEmailService } from '../core/interfaces/services/IEmailService';
 import { ITokenService } from '../core/interfaces/services/ITokenService';
 import { CLIENT_URL } from '@/utils/constants';
 import { Profile } from 'passport-google-oauth20';
+import { Profile as GitHubProfile } from 'passport-github2';
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -188,10 +189,35 @@ export class AuthController implements IAuthController {
       googleId: googleProfile.id,
       email: googleProfile.emails[0].value,
       name: googleProfile.displayName,
+      profile: googleProfile._json.picture as string,
     });
 
     setRefreshTokenCookie(res, { _id: user._id.toString(), role: 'user' });
 
+    res.redirect(`${CLIENT_URL}/myFeed`);
+  });
+
+  handleGithubUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    if (!req.user) {
+      return res.redirect('http://localhost:3000/login');
+    }
+
+    const githubProfile = req.user as unknown as GitHubProfile;
+
+    if (!githubProfile.emails || githubProfile.emails.length === 0) {
+      throw new CustomError('No email provided by GitHub', StatusCodes.BAD_REQUEST);
+    }
+
+    console.log(githubProfile);
+
+    const user = await this.authService.handleGithubUser({
+      githubId: githubProfile.id,
+      email: githubProfile.emails[0].value,
+      name: githubProfile.displayName || githubProfile.username || 'Unknown',
+      profile: githubProfile.photos ? githubProfile.photos[0].value : '',
+    });
+
+    setRefreshTokenCookie(res, { _id: user._id.toString(), role: 'user' });
     res.redirect(`${CLIENT_URL}/myFeed`);
   });
 }

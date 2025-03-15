@@ -114,6 +114,10 @@ export const googleAuth = async () => {
   window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`;
 };
 
+export const githubAuth = async () => {
+  window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/github`;
+};
+
 export const logout = async () => {
   try {
     await api.get("/auth/logout");

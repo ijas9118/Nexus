@@ -12,4 +12,5 @@ export interface IUserRepository extends BaseRepository<IUser> {
   updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null>;
   getUserByRoleAndId(role: string, id: string): Promise<IUser | null>;
   findByGoogleId(googleId: string): Promise<IUser | null>;
+  findByGithubId(githubId: string): Promise<IUser | null>;
 }

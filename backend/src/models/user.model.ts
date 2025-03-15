@@ -25,6 +25,7 @@ export interface IUser extends Document {
   username?: string;
   isPremium: boolean;
   googleId?: string;
+  githubId?: string;
 }
 
 const UserSchema: Schema = new Schema(
@@ -108,6 +109,11 @@ const UserSchema: Schema = new Schema(
     },
     isPremium: { type: Boolean, default: false },
     googleId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    githubId: {
       type: String,
       unique: true,
       sparse: true,
