@@ -35,7 +35,7 @@ export default function MyFeed() {
     fetchContent();
   }, [dispatch]);
 
-  console.log(feedContent);
+  // console.log(feedContent);
 
   useEffect(() => {
     let filteredContent = feedContent;
