@@ -9,11 +9,24 @@ import {
 } from "@/components/ui/card";
 import { bookmarkContent } from "@/services/user/bookmarkService";
 import { likeContent } from "@/services/user/likeService";
-import { Bookmark, Gem, Share2 } from "lucide-react";
+import { Bookmark, Share2 } from "lucide-react";
 import React, { useState } from "react";
 import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import CommentModal from "../comment/CommentModal";
+import Premium from "@/components/ui/icons/Premium";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ContentCardProps {
   id: string;
@@ -36,6 +49,10 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
   const [likes, setLikes] = useState<number>(props.likes);
   const [isLiked, setIsLiked] = useState<boolean>(props.isLiked);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(props.isBookmarked);
+  const isPremium = useSelector(
+    (state: RootState) => state.auth.user?.isPremium,
+  );
+  const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
 
   const handleLike = async (id: string) => {
@@ -62,7 +79,11 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
   };
 
   const handleCardClick = (id: string) => {
-    navigate(`/content/${id}`);
+    if (props.isPremium && !isPremium) {
+      setShowAlert(true);
+    } else {
+      navigate(`/content/${id}`);
+    }
   };
 
   const handleUserClick = (username: string) => {
@@ -85,7 +106,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
             {props.contentType}
           </Badge>
         </div>
-        <div className="ml-auto">{props.isPremium && <Gem />}</div>
+        <div className="ml-auto">{props.isPremium && <Premium />}</div>
       </CardHeader>
       <CardContent className="flex-1" onClick={() => handleCardClick(props.id)}>
         <div className="relative mb-5 h-40 overflow-hidden rounded-lg">
@@ -131,6 +152,25 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
           </Button>
         </div>
       </CardFooter>
+      <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>🔒 Premium Content</AlertDialogTitle>
+            <AlertDialogDescription>
+              This content is exclusive to premium members. Upgrade now to get
+              full access!
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowAlert(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={() => navigate("/pricing")}>
+              Upgrade Now
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 };

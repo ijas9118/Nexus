@@ -16,6 +16,7 @@ import { ITokenService } from '../core/interfaces/services/ITokenService';
 import { CLIENT_URL } from '@/utils/constants';
 import { Profile } from 'passport-google-oauth20';
 import { Profile as GitHubProfile } from 'passport-github2';
+import { UserRole } from '@/core/types/UserTypes';
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -83,14 +84,15 @@ export class AuthController implements IAuthController {
   login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const loginDto: LoginDto = req.body;
     const user = await this.authService.login(loginDto);
+    console.log(user);
 
-    setRefreshTokenCookie(res, { _id: user._id.toString(), role: 'user' });
+    setRefreshTokenCookie(res, { _id: user._id.toString(), role: user.role as UserRole });
 
     const accessToken = generateAccessToken({
       _id: user._id.toString(),
       name: user.name,
       email: user.email,
-      role: 'user',
+      role: user.role as UserRole,
     });
 
     res.status(StatusCodes.OK).json({ message: 'success', accessToken, user });

@@ -13,18 +13,18 @@ const contentController = container.get<IContentController>(TYPES.ContentControl
 const likesController = container.get<ILikesController>(TYPES.LikesController);
 const bookmarkController = container.get<IBookmarkController>(TYPES.BookmarkController);
 
-router.get('/', authenticate(['user', 'admin']), contentController.getAllContent);
+router.get('/', authenticate(['user', 'admin', 'premium']), contentController.getAllContent);
 
-router.post('/', authenticate(['user']), contentController.createContent);
+router.post('/', authenticate(['user', 'premium']), contentController.createContent);
 
 router.post(
   '/:id/bookmark',
-  authenticate(['user']),
+  authenticate(['user', 'premium']),
   validateRequest(toggleSchema),
   bookmarkController.toggleBookmark
 );
 
-router.get('/bookmarks', authenticate(['user']), bookmarkController.getAllBookmarks);
+router.get('/bookmarks', authenticate(['user', 'premium']), bookmarkController.getAllBookmarks);
 
 router.post(
   '/verify/:contentId',
@@ -33,13 +33,17 @@ router.post(
   contentController.verifyContent
 );
 
-router.get('/following', authenticate(['user']), contentController.getFollowingUsersContents);
+router.get(
+  '/following',
+  authenticate(['user', 'premium']),
+  contentController.getFollowingUsersContents
+);
 
-router.get('/:id', authenticate(['user', 'admin']), contentController.getContent);
+router.get('/:id', authenticate(['user', 'admin', 'premium']), contentController.getContent);
 
 router.post(
   '/:id/like',
-  authenticate(['user']),
+  authenticate(['user', 'premium']),
   validateRequest(toggleSchema),
   likesController.toggleLike
 );

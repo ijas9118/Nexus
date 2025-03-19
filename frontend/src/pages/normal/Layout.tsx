@@ -17,10 +17,17 @@ import {
 } from "@/components/ui/sidebar";
 import useLogout from "@/hooks/useLogout";
 import { RootState } from "@/store/store";
-import { Bell, Gem } from "lucide-react";
+import { Bell } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
+import Premium from "@/components/ui/icons/Premium";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function Layout() {
   const navigate = useNavigate();
@@ -65,8 +72,18 @@ export default function Layout() {
             </div>
             <div className="flex items-center gap-4">
               <ModeToggle />
-              {}
-              {user?.isPremium && <Gem />}
+              {user?.isPremium && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Premium />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Premium member</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
               <Bell />
               <Button variant="outline" onClick={() => logoutUser()}>
                 Logout
