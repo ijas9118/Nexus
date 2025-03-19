@@ -10,7 +10,7 @@ const planController = container.get<PlanController>(TYPES.PlanController);
 
 const router = Router();
 
-router.get('/', authenticate(['admin', 'user']), planController.getPlans);
+router.get('/', authenticate(['admin', 'user', 'premium']), planController.getPlans);
 router.post(
   '/',
   authenticate(['admin']),
