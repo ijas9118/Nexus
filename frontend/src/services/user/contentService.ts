@@ -47,9 +47,9 @@ export const addContent = async (requestData: {
   }
 };
 
-export const getAllContent = async () => {
+export const getAllContent = async ({ pageParam = 1 }) => {
   try {
-    const response = await api.get("/content/posts");
+    const response = await api.get(`/content/posts?page=${pageParam}&limit=4`);
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {

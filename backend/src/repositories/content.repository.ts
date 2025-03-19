@@ -20,10 +20,17 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
     return await ContentModel.findById(contentIdObj).populate('squad', 'name');
   }
 
-  async getFeedContents(userId: string): Promise<IContent[]> {
+  async getContentCount(): Promise<number> {
+    return this.model.countDocuments({});
+  }
+
+  async getFeedContents(userId: string, page: number, limit: number): Promise<IContent[]> {
     const userObjectId = new Types.ObjectId(userId);
 
     const contents = await this.model.aggregate([
+      { $sort: { createdAt: -1 } }, // Sort by latest
+      { $skip: (page - 1) * limit }, // Skip items based on page
+      { $limit: limit },
       {
         $lookup: {
           from: 'users', // Users collection

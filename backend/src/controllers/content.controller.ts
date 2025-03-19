@@ -55,8 +55,20 @@ export class ContentController implements IContentController {
       throw new CustomError('User is not authenticated', StatusCodes.UNAUTHORIZED);
     }
 
-    const contents = await this.contentService.getAllContent(req.user._id);
-    res.status(StatusCodes.OK).json(contents);
+    const { page = 1, limit = 10 } = req.query;
+    const pageNum = Number(page);
+    const limitNum = Number(limit);
+
+    const contents = await this.contentService.getAllContent(req.user._id, pageNum, limitNum);
+
+    // Calculate if there's a next page
+    const totalContents = await this.contentService.getContentCount();
+    const nextPage = pageNum * limitNum < totalContents ? pageNum + 1 : null;
+
+    res.status(StatusCodes.OK).json({
+      contents,
+      nextPage,
+    });
   });
 
   getPosts = asyncHandler(async (req: Request, res: Response): Promise<void> => {
