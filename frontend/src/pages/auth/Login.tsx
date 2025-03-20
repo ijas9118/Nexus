@@ -23,9 +23,10 @@ import {
 import { setCredentials } from "@/store/slices/authSlice";
 import { RootState } from "@/store/store";
 import { toast } from "sonner";
-import { FaGithub, FaGoogle, FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { motion } from "motion/react";
 import { FaXTwitter } from "react-icons/fa6";
+import { FcGoogle } from "react-icons/fc";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -307,7 +308,7 @@ export default function LoginPage() {
                     className="border p-2 rounded shadow-md"
                     onClick={() => googleAuth()}
                   >
-                    <FaGoogle size={28} />
+                    <FcGoogle size={28} />
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.1 }}

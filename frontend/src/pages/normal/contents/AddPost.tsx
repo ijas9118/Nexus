@@ -126,7 +126,7 @@ const AddPost: React.FC = () => {
         toast("Wohoo!", {
           description: result.message,
         });
-        setTimeout(() => navigate("/myFeed"), 3000);
+        navigate("/myFeed");
       }
     } catch (error) {
       console.error("Error submitting form", error);

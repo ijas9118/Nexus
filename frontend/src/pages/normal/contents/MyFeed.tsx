@@ -84,7 +84,7 @@ export default function MyFeed() {
         </p>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-6">
+      <div className="flex flex-col space-y-8">
         {filteredContent.map((item: any, index) => (
           <ContentCard
             id={item._id}

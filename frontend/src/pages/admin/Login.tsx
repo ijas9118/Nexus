@@ -35,6 +35,7 @@ export default function AdminLogin() {
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
+      console.log(data);
       setErrorMessage(null);
       const result = await loginAdmin(data.email, data.password);
       if (result.user) {
