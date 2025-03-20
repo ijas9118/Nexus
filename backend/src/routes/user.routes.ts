@@ -7,11 +7,11 @@ import { Router } from 'express';
 const userController = container.get<UserController>(TYPES.UserController);
 const router = Router();
 
-router.get('/squads', authenticate(['user']), userController.getUserJoinedSquads);
+router.get('/squads', authenticate(['user', 'premium']), userController.getUserJoinedSquads);
 
-router.post('/update', authenticate(['user']), userController.updateUser);
+router.post('/update', authenticate(['user', 'premium']), userController.updateUser);
 
-router.post('/update/password', authenticate(['user']), userController.updatePassword);
+router.post('/update/password', authenticate(['user', 'premium']), userController.updatePassword);
 
 router.post('/:username', userController.getUserData);
 

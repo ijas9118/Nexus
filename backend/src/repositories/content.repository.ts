@@ -6,6 +6,8 @@ import mongoose, { Types } from 'mongoose';
 import { TYPES } from '../di/types';
 import { IFollowersRepository } from '../core/interfaces/repositories/IFollowersRepository';
 import UserFollowModel from '../models/followers.model';
+import CustomError from '@/utils/CustomError';
+import { StatusCodes } from 'http-status-codes';
 
 @injectable()
 export class ContentRepository extends BaseRepository<IContent> implements IContentRepository {
@@ -15,9 +17,19 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
     super(ContentModel);
   }
 
-  async findContent(id: string): Promise<IContent | null> {
+  async findContent(id: string, role: string): Promise<IContent | null> {
     const contentIdObj = new Types.ObjectId(id);
-    return await ContentModel.findById(contentIdObj).populate('squad', 'name');
+    console.log(role);
+
+    const result = await ContentModel.findById(contentIdObj).populate('squad', 'name');
+
+    if (result?.isPremium && role !== 'premium') {
+      throw new CustomError(
+        'This content is available for premium members only',
+        StatusCodes.PAYMENT_REQUIRED
+      );
+    }
+    return result;
   }
 
   async getContentCount(): Promise<number> {

@@ -10,11 +10,11 @@ const router = Router();
 
 const squadController = container.get<ISquadController>(TYPES.SquadController);
 
-router.get('/', authenticate(['user']), squadController.getSquadsByCategory);
-router.post('/', authenticate(['user']), squadController.createSquad);
+router.get('/', authenticate(['user', 'premium']), squadController.getSquadsByCategory);
+router.post('/', authenticate(['user', 'premium']), squadController.createSquad);
 router.post(
   '/:squadId/join',
-  authenticate(['user']),
+  authenticate(['user', 'premium']),
   validateRequest(joinSquadSchema),
   squadController.joinSquad
 );

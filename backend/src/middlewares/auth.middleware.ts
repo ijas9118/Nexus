@@ -30,6 +30,7 @@ export const authenticate = (roles: Array<UserRole>) => {
       req.user = decoded;
 
       if (roles.length && (!req.user || !roles.includes(req.user.role))) {
+        console.log(req.user.role, roles);
         res.status(StatusCodes.FORBIDDEN).json({ message: 'Permission denied' });
         return;
       }

@@ -12,11 +12,11 @@ const router = Router();
 
 router.post(
   '/create-new-chat',
-  authenticate(['user']),
+  authenticate(['user', 'premium']),
   validateRequest(createChatSchema),
   chatController.createChat
 );
 
-router.get('/get-all-chats', authenticate(['user']), chatController.getAllChats);
+router.get('/get-all-chats', authenticate(['user', 'premium']), chatController.getAllChats);
 
 export default router;

@@ -12,11 +12,15 @@ const router = Router();
 
 router.post(
   '/new-message',
-  authenticate(['user']),
+  authenticate(['user', 'premium']),
   validateRequest(createNewMessageSchema),
   messageController.createNewMessage
 );
 
-router.get('/get-all-messages/:chatId', authenticate(['user']), messageController.getAllMessages);
+router.get(
+  '/get-all-messages/:chatId',
+  authenticate(['user', 'premium']),
+  messageController.getAllMessages
+);
 
 export default router;

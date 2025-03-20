@@ -17,6 +17,6 @@ router.post(
   commentController.addComment
 );
 
-router.get('/', authenticate(['user']), commentController.getCommentsByContentId);
+router.get('/', authenticate(['user', 'premium']), commentController.getCommentsByContentId);
 
 export default router;
