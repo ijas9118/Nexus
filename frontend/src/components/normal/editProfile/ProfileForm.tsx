@@ -33,7 +33,6 @@ const socialLinks = [
 
 const ProfileForm = () => {
   const user = useSelector((state: any) => state.auth.user);
-  console.log(user);
   const [loading, setLoading] = useState(false);
   const [visibleInputs, setVisibleInputs] = useState<Record<string, boolean>>(
     user.socials?.reduce(
@@ -97,6 +96,8 @@ const ProfileForm = () => {
     }
   };
 
+  console.log(user.profilePic);
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="flex-shrink-0 p-6">
@@ -108,7 +109,7 @@ const ProfileForm = () => {
             </p>
           </div>
           <img
-            src={user.profilePic || "/placeholder.svg"}
+            src={user.profilePic}
             alt="Profile"
             className="w-20 rounded-full border"
           />

@@ -63,14 +63,10 @@ export class AuthService implements IAuthService {
       throw new CustomError('Invalid password', StatusCodes.BAD_REQUEST);
     }
 
-    return {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      username: user.username,
-      profilePic: user.profilePic,
-    };
+    const userObj = user.toObject();
+    delete userObj.password;
+
+    return userObj as LoginResponseDto;
   }
 
   // Update the password of the user with the given email
