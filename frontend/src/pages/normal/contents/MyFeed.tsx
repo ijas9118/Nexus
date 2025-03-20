@@ -102,6 +102,7 @@ export default function MyFeed() {
             isLiked={item.isLiked}
             isBookmarked={item.isBookmarked}
             username={item.username}
+            profilePic={item.profilePic}
           />
         ))}
       </div>

@@ -111,6 +111,7 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
           isLiked: { $gt: [{ $size: '$userLike' }, 0] },
           isBookmarked: { $gt: [{ $size: '$userBookmark' }, 0] },
           username: '$authorInfo.username',
+          profilePic: '$authorInfo.profilePic',
           squad: {
             _id: '$squadInfo._id',
             name: '$squadInfo.name',

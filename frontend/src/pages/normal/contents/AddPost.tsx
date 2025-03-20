@@ -21,6 +21,7 @@ import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { addContent, uploadFiles } from "@/services/user/contentService";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "@/store/store";
 
 interface FormData {
   contentType: "Blog" | "Video";
@@ -38,7 +39,9 @@ const AddPost: React.FC = () => {
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const squads = useSelector((state: any) => state.userSquads.squads);
+  const squads = useSelector((state: RootState) => state.userSquads.squads);
+  const user = useSelector((state: RootState) => state.auth.user);
+  console.log(user);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -327,20 +330,22 @@ const AddPost: React.FC = () => {
             </div>
           )}
 
-          <div className="flex items-center space-x-2">
-            <Controller
-              name="isPremium"
-              control={control}
-              render={({ field }) => (
-                <Checkbox
-                  id="premium"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              )}
-            />
-            <Label htmlFor="premium">Upload as premium?</Label>
-          </div>
+          {user?.isPremium && (
+            <div className="flex items-center space-x-2">
+              <Controller
+                name="isPremium"
+                control={control}
+                render={({ field }) => (
+                  <Checkbox
+                    id="premium"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                )}
+              />
+              <Label htmlFor="premium">Upload as premium?</Label>
+            </div>
+          )}
 
           {submitError && (
             <p className="text-rose-500 text-sm mt-1">{submitError}</p>

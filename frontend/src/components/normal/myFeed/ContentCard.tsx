@@ -43,6 +43,7 @@ interface ContentCardProps {
   isLiked: boolean;
   isBookmarked: boolean;
   username: string;
+  profilePic: string;
 }
 
 const ContentCard: React.FC<ContentCardProps> = (props) => {
@@ -97,7 +98,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
         onClick={() => handleUserClick(props.username)}
       >
         <Avatar>
-          <AvatarImage src="https://avatar.iran.liara.run/public" />
+          <AvatarImage src={props.profilePic} />
           <AvatarFallback>{props.avatarFallback}</AvatarFallback>
         </Avatar>
         <div className="w-full flex justify-between items-center">
