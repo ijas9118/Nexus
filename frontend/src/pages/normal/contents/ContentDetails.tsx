@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { getContent } from "@/services/user/contentService";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -6,31 +6,28 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FaThumbsUp, FaRegThumbsUp } from "react-icons/fa";
 import { MessageCircle, Bookmark, Share2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ContentDetails() {
   const { id } = useParams<{ id: string }>();
-  const [content, setContent] = useState<any>(null);
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [likes, setLikes] = useState<number>(0);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchContent = async () => {
-      try {
-        const data = await getContent(id as string);
-        setContent(data);
-        setLikes(data.likes || 0);
-        setIsLiked(data.isLiked || false);
-        setIsBookmarked(data.isBookmarked || false);
-      } catch (error) {
-        console.error("Error fetching content details:", error);
-      }
-    };
+  const {
+    data: content,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["content", id],
+    queryFn: () => getContent(id as string),
+    enabled: !!id,
+  });
 
-    fetchContent();
-  }, [id]);
+  if (isLoading) return <p className="text-center text-gray-500">Loading...</p>;
 
-  if (!content) return <p className="text-center text-gray-500">Loading...</p>;
+  if (error || !content)
+    return <p className="text-center text-red-500">Failed to load content.</p>;
 
   return (
     <div className="container mx-auto px-6 py-8 max-w-4xl">

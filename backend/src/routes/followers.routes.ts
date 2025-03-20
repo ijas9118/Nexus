@@ -21,60 +21,72 @@ const router = Router();
 
 router.post(
   '/follow',
-  authenticate(['user']),
+  authenticate(['user', 'premium']),
   validateRequest(followUserSchema),
   followersController.followUser
 );
 
 router.post(
   '/unfollow',
-  authenticate(['user']),
+  authenticate(['user', 'premium']),
   validateRequest(followUserSchema),
   followersController.unfollowUser
 );
 
-router.get('/:userId/followers', authenticate(['user']), followersController.getFollowers);
+router.get(
+  '/:userId/followers',
+  authenticate(['user', 'premium']),
+  followersController.getFollowers
+);
 
-router.get('/:userId/following', authenticate(['user']), followersController.getFollowing);
+router.get(
+  '/:userId/following',
+  authenticate(['user', 'premium']),
+  followersController.getFollowing
+);
 
 router.post('/is-following', validateRequest(isFollowingSchema), followersController.isFollowing);
 
 router.post(
   '/connect',
-  authenticate(['user']),
+  authenticate(['user', 'premium']),
   validateRequest(sendConnectionSchema),
   connectionsController.sendConnectionRequest
 );
 
 router.post(
   '/accept',
-  authenticate(['user']),
+  authenticate(['user', 'premium']),
   validateRequest(acceptConnectionSchema),
   connectionsController.acceptConnectionRequest
 );
 
 router.post(
   '/has-requested',
-  authenticate(['user']),
+  authenticate(['user', 'premium']),
   connectionsController.hasSentConnectionRequest
 );
 
 router.post(
   '/is-connected',
-  authenticate(['user']),
+  authenticate(['user', 'premium']),
   validateRequest(isConnectedSchema),
   connectionsController.isConnected
 );
 
 router.post(
   '/withdraw',
-  authenticate(['user']),
+  authenticate(['user', 'premium']),
   validateRequest(withdrawConnectionSchema),
   connectionsController.withdrawConnectionRequest
 );
 
-router.get('/connections', authenticate(['user']), connectionsController.getAllConnections);
+router.get(
+  '/connections',
+  authenticate(['user', 'premium']),
+  connectionsController.getAllConnections
+);
 
-router.get('/pending', authenticate(['user']), connectionsController.getPendingRequests);
+router.get('/pending', authenticate(['user', 'premium']), connectionsController.getPendingRequests);
 
 export default router;
