@@ -8,4 +8,5 @@ export interface Squad {
   description?: string;
   handle?: string;
   isJoined?: boolean;
+  isPremium: boolean;
 }
