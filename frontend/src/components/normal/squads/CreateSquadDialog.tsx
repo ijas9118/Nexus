@@ -28,6 +28,7 @@ import { Category } from "@/types/category";
 import { Squad } from "@/types/squad";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z
@@ -69,6 +70,7 @@ export function CreateSquadDialog({
 }: CreateSquadDialogProps) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const {
     control,
@@ -100,6 +102,7 @@ export function CreateSquadDialog({
 
   const onSubmit = async (data: FormData) => {
     try {
+      setLoading(true);
       let logo: string | undefined = undefined;
 
       if (data.logo instanceof File) {
@@ -125,6 +128,7 @@ export function CreateSquadDialog({
 
       const result = await SquadService.createSquad(squadData);
       onSquadCreated(result);
+      setLoading(false);
 
       toast.success("Success", {
         description: result.message || "Squad created successfully!",
@@ -133,6 +137,7 @@ export function CreateSquadDialog({
 
       onOpenChange(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error creating squad", error);
       toast.error("Error", {
         description: "Failed to create squad. Please try again.",
@@ -325,7 +330,10 @@ export function CreateSquadDialog({
                 />
                 <Label htmlFor="premium">Premium</Label>
               </div>
-              <Button type="submit">Save Squad</Button>
+              <Button type="submit">
+                {loading && <Loader2 className="animate-spin" />}
+                Save Squad
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>

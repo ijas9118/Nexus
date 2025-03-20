@@ -84,7 +84,6 @@ export class AuthController implements IAuthController {
   login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const loginDto: LoginDto = req.body;
     const user = await this.authService.login(loginDto);
-    console.log(user);
 
     setRefreshTokenCookie(res, { _id: user._id.toString(), role: user.role as UserRole });
 

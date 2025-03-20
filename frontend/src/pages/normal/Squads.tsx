@@ -88,7 +88,7 @@ const Squads: FC = () => {
     };
 
     fetchSquads();
-  }, [dispatch, selectedCategory, squadsByCategory]);
+  }, [dispatch, selectedCategory, squadsByCategory, squads]);
 
   const handleJoinSquad = async (squad: Squad) => {
     if (squad.isPremium && !user?.isPremium) {
@@ -140,7 +140,9 @@ const Squads: FC = () => {
           <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>🚀 Unlock Squad Creation</AlertDialogTitle>
+                <AlertDialogTitle>
+                  Unlock Squad Creation <Premium />
+                </AlertDialogTitle>
                 <AlertDialogDescription>
                   Only premium members can create squads. Upgrade now and start
                   building your own squad today!
