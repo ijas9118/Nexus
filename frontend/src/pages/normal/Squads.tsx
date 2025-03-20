@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import Premium from "@/components/ui/icons/Premium";
 import { Skeleton } from "@/components/ui/skeleton";
 import CategoryService from "@/services/admin/categoryService";
 import SquadService from "@/services/user/squadService";
@@ -90,6 +91,11 @@ const Squads: FC = () => {
   }, [dispatch, selectedCategory, squadsByCategory]);
 
   const handleJoinSquad = async (squad: Squad) => {
+    if (squad.isPremium && !user?.isPremium) {
+      toast.error("This squad is for premium members only. Upgrade to join!");
+      return;
+    }
+
     try {
       await SquadService.joinSquad(squad._id);
 
@@ -199,10 +205,11 @@ const Squads: FC = () => {
               <p className="text-sm line-clamp-2 overflow-hidden text-ellipsis">
                 {squad.description}
               </p>
-              <div className="pt-2 text-xs">
+              <div className="pt-2 text-xs flex justify-between items-center">
                 <p>
                   {squad.handle} • {squad.members.length} members
                 </p>
+                {squad.isPremium && <Premium />}
               </div>
             </Card>
           ))
