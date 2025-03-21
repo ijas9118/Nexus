@@ -21,7 +21,11 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
     const contentIdObj = new Types.ObjectId(id);
     console.log(role);
 
-    const result = await ContentModel.findById(contentIdObj).populate('squad', 'name');
+    const result = await ContentModel.findById(contentIdObj)
+      .populate('squad', 'name')
+      .populate('author', 'name profilePic role username');
+
+    console.log(result);
 
     if (result?.isPremium && role !== 'premium') {
       throw new CustomError(
