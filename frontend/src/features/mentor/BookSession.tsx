@@ -1,7 +1,3 @@
-import { MENTORS } from "@/components/normal/mentors/constants";
-import DateTimeSelection from "@/components/normal/mentors/mentor-booking/DateTimeSelection";
-import PaymentDetails from "@/components/normal/mentors/mentor-booking/PaymentDetails";
-import ServiceSelection from "@/components/normal/mentors/mentor-booking/ServiceSelection";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +10,10 @@ import {
 import { Check } from "lucide-react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { MENTORS } from "./components/constants";
+import ServiceSelection from "./components/mentor-booking/ServiceSelection";
+import DateTimeSelection from "./components/mentor-booking/DateTimeSelection";
+import PaymentDetails from "./components/mentor-booking/PaymentDetails";
 
 const BookSession = () => {
   const { mentorId } = useParams<{ mentorId: string }>();

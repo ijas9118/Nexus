@@ -1,11 +1,11 @@
-import MentorCard from "@/components/normal/mentors/MentorCard";
-import MentorFilters from "@/components/normal/mentors/MentorFilters";
-import SearchAndSort from "@/components/normal/mentors/SearchAndSort";
 import { Button } from "@/components/ui/button";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import MentorFilters from "./components/MentorFilters";
+import SearchAndSort from "./components/SearchAndSort";
+import MentorCard from "./components/MentorCard";
 
 export interface Mentor {
   id: number;

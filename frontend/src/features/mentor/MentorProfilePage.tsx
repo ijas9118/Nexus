@@ -1,14 +1,14 @@
-import { MENTORS } from "@/components/normal/mentors/constants";
-import MentorAbout from "@/components/normal/mentors/mentor-profile/MentorAbout";
-import MentorBooking from "@/components/normal/mentors/mentor-profile/MentorBooking";
-import MentorContent from "@/components/normal/mentors/mentor-profile/MentorContent";
-import MentorHeader from "@/components/normal/mentors/mentor-profile/MentorHeader";
-import MentorMessage from "@/components/normal/mentors/mentor-profile/MentorMessage";
-import MentorReviews from "@/components/normal/mentors/mentor-profile/MentorReviews";
-import MentorSquads from "@/components/normal/mentors/mentor-profile/MentorSquads";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, useParams } from "react-router-dom";
+import { MENTORS } from "./components/constants";
+import MentorHeader from "./components/mentor-profile/MentorHeader";
+import MentorAbout from "./components/mentor-profile/MentorAbout";
+import MentorReviews from "./components/mentor-profile/MentorReviews";
+import MentorContent from "./components/mentor-profile/MentorContent";
+import MentorBooking from "./components/mentor-profile/MentorBooking";
+import MentorMessage from "./components/mentor-profile/MentorMessage";
+import MentorSquads from "./components/mentor-profile/MentorSquads";
 
 const MentorProfilePage = () => {
   const { mentorId } = useParams<{ mentorId: string }>();

@@ -1,4 +1,4 @@
-import MentorInvitation from "@/pages/mentor/MentorInvitation";
+import MentorInvitation from "@/features/mentor/MentorInvitation";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 

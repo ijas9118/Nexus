@@ -1,12 +1,12 @@
-import ExperienceForm from "@/components/normal/mentors/mentor-apply/ExperienceForm";
-import MentorshipDetailsForm from "@/components/normal/mentors/mentor-apply/MentorshipDetailsForm";
-import PersonalInfoForm from "@/components/normal/mentors/mentor-apply/PersonalInfoForm";
-import StepIndicator from "@/components/normal/mentors/mentor-apply/StepIndicator";
 import { Button } from "@/components/ui/button";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import PersonalInfoForm from "./components/mentor-apply/PersonalInfoForm";
+import ExperienceForm from "./components/mentor-apply/ExperienceForm";
+import MentorshipDetailsForm from "./components/mentor-apply/MentorshipDetailsForm";
+import StepIndicator from "./components/mentor-apply/StepIndicator";
 
 const MentorApply = () => {
   const [step, setStep] = useState(1);
