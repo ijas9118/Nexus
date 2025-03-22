@@ -24,21 +24,16 @@ interface BasicDetailsFormProps {
   form: UseFormReturn<FormValues>;
   thumbnailPreview: string | null;
   handleThumbnailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  squads: { _id: string; name: string }[];
 }
-
-const squads = [
-  { id: "engineering", name: "Engineering" },
-  { id: "design", name: "Design" },
-  { id: "marketing", name: "Marketing" },
-  { id: "product", name: "Product" },
-  { id: "sales", name: "Sales" },
-];
 
 const BasicDetailsForm: React.FC<BasicDetailsFormProps> = ({
   form,
   thumbnailPreview,
   handleThumbnailChange,
+  squads,
 }) => {
+  console.log(squads);
   return (
     <div className="space-y-4">
       <FormField
@@ -55,7 +50,7 @@ const BasicDetailsForm: React.FC<BasicDetailsFormProps> = ({
               </FormControl>
               <SelectContent>
                 {squads.map((squad) => (
-                  <SelectItem key={squad.id} value={squad.id}>
+                  <SelectItem key={squad._id} value={squad._id}>
                     {squad.name}
                   </SelectItem>
                 ))}
@@ -94,22 +89,20 @@ const BasicDetailsForm: React.FC<BasicDetailsFormProps> = ({
             <FormLabel>Thumbnail Image</FormLabel>
             <FormControl>
               <div className="grid gap-4">
-                <div className="flex items-center justify-center border-2 border-dashed rounded-lg p-6 cursor-pointer hover:border-primary/50 transition-colors">
+                <label className="flex items-center justify-center border-2 border-dashed rounded-lg p-6 cursor-pointer hover:border-primary/50 transition-colors">
                   <Input
                     type="file"
                     accept="image/*"
                     className="hidden"
                     id="thumbnail-upload"
                     onChange={(e) => {
-                      onChange(e.target.files?.[0] || null);
+                      const files = e.target.files;
+                      onChange(files);
                       handleThumbnailChange(e);
                     }}
                     {...field}
                   />
-                  <label
-                    htmlFor="thumbnail-upload"
-                    className="flex flex-col items-center gap-2 cursor-pointer"
-                  >
+                  <div className="flex flex-col items-center gap-2">
                     <div className="rounded-full bg-muted p-2">
                       <ImageIcon className="h-5 w-5" />
                     </div>
@@ -119,8 +112,8 @@ const BasicDetailsForm: React.FC<BasicDetailsFormProps> = ({
                         SVG, PNG, JPG or GIF (max. 2MB)
                       </p>
                     </div>
-                  </label>
-                </div>
+                  </div>
+                </label>
                 {thumbnailPreview && (
                   <div className="relative aspect-video rounded-lg overflow-hidden border">
                     <img

@@ -36,7 +36,7 @@ const ContentSchema: Schema = new Schema(
     },
     contentType: {
       type: String,
-      enum: ['Blog', 'Video'],
+      enum: ['blog', 'video'],
       required: true,
     },
     title: {

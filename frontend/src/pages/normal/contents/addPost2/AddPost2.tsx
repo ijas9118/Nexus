@@ -1,6 +1,20 @@
+import { useEffect } from "react";
 import { BlogCreationForm } from "./BlogCreationForm";
+import { useDispatch } from "react-redux";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 
 const AddPost2 = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      setBreadcrumbs([
+        { title: "Home", url: "/" },
+        { title: "New Post", url: "" },
+      ]),
+    );
+  }, [dispatch]);
+
   return (
     <div className="container mx-auto py-6 px-4 md:px-6">
       <div className="flex flex-col gap-2 mb-8">

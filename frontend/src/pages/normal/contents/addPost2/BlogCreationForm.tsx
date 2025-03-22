@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 
 import { useState } from "react";
@@ -7,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,14 +17,27 @@ import ContentTypeSelector from "./ContentTypeSelector";
 import BasicDetailsForm from "./BasicDetailsForm";
 import ContentEditor from "./ContentEditor";
 import ContentSummary from "./ContentSummary";
+import { addContent, uploadFiles } from "@/services/user/contentService";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const formSchema = z.object({
   contentType: z.enum(["blog", "video"]),
   squad: z.string().min(1, "Please select a squad"),
   title: z.string().min(3, "Title must be at least 3 characters").max(100),
   content: z.string().min(10, "Content must be at least 10 characters"),
-  thumbnail: z.any().optional(),
-  videoFile: z.any().optional(),
+  thumbnail: z
+    .custom<FileList>(
+      (val) => val instanceof FileList,
+      "Invalid thumbnail file",
+    )
+    .optional(),
+  videoFile: z
+    .custom<FileList>((val) => val instanceof FileList, "Invalid video file")
+    .optional(),
   isPremium: z.boolean().default(false),
 });
 
@@ -43,6 +54,8 @@ export function BlogCreationForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
+  const squads = useSelector((state: RootState) => state.userSquads.squads);
+  const navigate = useNavigate();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -64,38 +77,98 @@ export function BlogCreationForm() {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setThumbnailPreview(e.target?.result as string);
+      reader.onloadend = () => {
+        setThumbnailPreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+    } else {
+      setThumbnailPreview(null);
     }
   };
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setVideoPreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+      const videoUrl = URL.createObjectURL(file);
+      setVideoPreview(videoUrl);
+    } else {
+      setVideoPreview(null);
     }
   };
 
-  const nextStep = () => {
-    setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+  const uploadToCloudinary = async (data: FormValues) => {
+    const uploadUrl = `https://api.cloudinary.com/v1_1/${
+      import.meta.env.VITE_CLOUD_NAME
+    }/upload`;
+    const imagePreset = "nexus_images";
+    const videoPreset = "nexus_videos";
+
+    const uploadFile = async (file: File, preset: string) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", preset);
+
+      const response = await uploadFiles(uploadUrl, formData);
+      return response;
+    };
+
+    try {
+      const thumbnailUrl =
+        data.thumbnail && data.thumbnail[0]
+          ? await uploadFile(data.thumbnail[0], imagePreset)
+          : null;
+
+      const videoUrl =
+        data.contentType === "video" && data.videoFile?.[0]
+          ? await uploadFile(data.videoFile[0], videoPreset)
+          : null;
+
+      return { thumbnailUrl, videoUrl };
+    } catch (error) {
+      console.error("Cloudinary upload failed", error);
+      throw new Error("Failed to upload files to Cloudinary");
+    }
   };
 
-  const prevStep = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0));
-  };
+  const submitMutation = useMutation({
+    mutationFn: async (data: FormValues) => {
+      const uploadedFiles = await uploadToCloudinary(data);
+
+      const requestData = {
+        contentType: data.contentType,
+        squad: data.squad,
+        title: data.title,
+        content: data.content,
+        isPremium: data.isPremium,
+        thumbnailUrl: uploadedFiles.thumbnailUrl,
+        videoUrl: uploadedFiles.videoUrl,
+      };
+
+      return await addContent(requestData);
+    },
+    onSuccess: (result) => {
+      toast.success("Wohoo!", {
+        description: result.message,
+      });
+      navigate("/myFeed");
+    },
+    onError: (error) => {
+      console.error("Error submitting form", error);
+      toast.error(
+        "An error occurred while submitting the form. Please try again.",
+      );
+    },
+  });
 
   const onSubmit = (data: FormValues) => {
-    console.log("Form submitted:", data);
-    // Here you would typically send the data to your API
-    alert("Content submitted successfully!");
+    submitMutation.mutate(data);
   };
 
+  const nextStep = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+  };
+  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
   const progress = ((currentStep + 1) / steps.length) * 100;
 
   return (
@@ -135,6 +208,7 @@ export function BlogCreationForm() {
                         form={form}
                         thumbnailPreview={thumbnailPreview}
                         handleThumbnailChange={handleThumbnailChange}
+                        squads={squads}
                       />
                     )}
 
@@ -184,7 +258,16 @@ export function BlogCreationForm() {
                       <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
                   ) : (
-                    <Button type="submit">Publish Content</Button>
+                    <Button type="submit" disabled={submitMutation.isPending}>
+                      {submitMutation.isPending ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Publishing...
+                        </>
+                      ) : (
+                        "Publish Content"
+                      )}
+                    </Button>
                   )}
                 </div>
               </form>
