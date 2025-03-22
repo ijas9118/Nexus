@@ -1,5 +1,3 @@
-import HistoryCard from "@/components/normal/HistoryCard";
-
 import { Input } from "@/components/ui/input";
 import { getHistory } from "@/services/user/contentService";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
@@ -7,6 +5,7 @@ import { IHistoryItem } from "@/types/content";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import HistoryCard from "./components/HistoryCard";
 
 const History = () => {
   const dispatch = useDispatch();

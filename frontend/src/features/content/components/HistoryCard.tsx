@@ -14,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../ui/alert-dialog";
+} from "../../../components/ui/alert-dialog";
 import React from "react";
 
 interface IHistoryCardProps {

@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ProfileReadingStreak from "./tab-contents/ProfileReadingStreak";
-import ProfilePosts from "./tab-contents/ProfilePosts";
-import ProfileUpvoted from "./tab-contents/ProfileUpvoted";
+import ProfileReadingStreak from "./ProfileReadingStreak";
+import ProfilePosts from "./ProfilePosts";
+import ProfileUpvoted from "./ProfileUpvoted";
 
 export default function ProfileActivity() {
   return (

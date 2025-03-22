@@ -1,5 +1,3 @@
-import CategoryScroll from "@/components/normal/squads/CategoryScroll";
-import { CreateSquadDialog } from "@/components/normal/squads/CreateSquadDialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,6 +24,8 @@ import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import CategoryScroll from "./components/CategoryScroll";
+import { CreateSquadDialog } from "./components/CreateSquadDialog";
 
 const Squads: FC = () => {
   const dispatch = useDispatch();

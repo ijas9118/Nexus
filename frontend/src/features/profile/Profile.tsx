@@ -1,6 +1,3 @@
-import ProfileActivity from "@/components/normal/profile/ProfileActivity";
-import ProfileHeader from "@/components/normal/profile/ProfileHeader";
-import SquadsList from "@/components/normal/profile/SquadsList";
 import { getUserProfile } from "@/services/user/profileService";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -16,6 +13,9 @@ import {
 } from "@/services/user/followService";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { toast } from "sonner";
+import ProfileActivity from "./components/ProfileActivity";
+import ProfileHeader from "./components/ProfileHeader";
+import SquadsList from "./components/SquadsList";
 
 export default function ProfilePage() {
   const { username } = useParams();

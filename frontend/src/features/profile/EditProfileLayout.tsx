@@ -1,9 +1,9 @@
-import ProfileForm from "@/components/normal/editProfile/ProfileForm";
-import SecurityForm from "@/components/normal/editProfile/SecurityForm";
-import Sidebar from "@/components/normal/editProfile/Sidebar";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import Sidebar from "./components/Sidebar";
+import ProfileForm from "./components/ProfileForm";
+import SecurityForm from "./components/SecurityForm";
 
 const EditProfileLayout = () => {
   const [activeTab, setActiveTab] = useState("Profile");
