@@ -1,6 +1,6 @@
 import LoginPage from "@/features/auth/Login";
-import Home from "@/pages/normal/Home";
-import Layout from "@/pages/normal/Layout";
+import Home from "@/pages/Home";
+import Layout from "@/pages/Layout";
 import MyFeed from "@/features/content/MyFeed";
 import React from "react";
 import { Route, Routes } from "react-router-dom";

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { AdminUser, columns } from "./columns";
+import { AdminUser, columns } from "./userManagement/columns";
 import AdminUserService from "@/services/admin/userManagement";
-import { DataTable } from "./components/data-table";
+import { DataTable } from "./userManagement/components/data-table";
 
 const UserManagement = () => {
   const [data, setData] = useState<AdminUser[]>([]);

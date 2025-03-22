@@ -1,19 +1,19 @@
-import AdminLayout from "@/pages/admin/AdminLayout";
-import CategoryManagement from "@/pages/admin/category-management/CategoryManagement";
-import Dashboard from "@/pages/admin/Dashboard";
-import Login from "@/pages/admin/Login";
-import MentorManagement from "@/pages/admin/mentorManagement/MentorManagement";
-import SquadManagement from "@/pages/admin/squadManagement/SquadManagement";
-import UserManagement from "@/pages/admin/userManagement/UserManagement";
+import AdminLayout from "@/pages/AdminLayout";
+import CategoryManagement from "@/features/admin/CategoryManagement";
+import Dashboard from "@/features/admin/Dashboard";
+import Login from "@/features/admin/Login";
+import MentorManagement from "@/features/admin/MentorManagement";
+import SquadManagement from "@/features/admin/SquadManagement";
+import UserManagement from "@/features/admin/UserManagement";
 
 import NotFound from "@/pages/NotFound";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
-import CommentManagement from "@/pages/admin/comment-management/CommentManagement";
-import ContentManagement from "@/pages/admin/content-management/ContentManagement";
-import ContentDetail from "@/pages/admin/content-management/components/ContentDetail";
-import PaymentManagement from "@/pages/admin/payment-management/PaymentManagement";
+import CommentManagement from "@/features/admin/CommentManagement";
+import ContentDetail from "@/features/admin/content-management/components/ContentDetail";
+import PaymentManagement from "@/features/admin/PaymentManagement";
+import ContentManagement from "@/features/admin/ContentManagement";
 
 const AdminRoutes: React.FC = () => {
   return (

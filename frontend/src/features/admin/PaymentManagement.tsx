@@ -1,8 +1,8 @@
 import { FC } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { columns } from "./columns";
-import { DataTable } from "./components/data-table";
-import PaymentStats from "./components/PaymentStats";
+import { columns } from "./payment-management/columns";
+import { DataTable } from "./payment-management/components/data-table";
+import PaymentStats from "./payment-management/components/PaymentStats";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PlanService from "@/services/planService";

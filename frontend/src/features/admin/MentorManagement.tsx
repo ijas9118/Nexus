@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
-import { columns } from "./columns";
-import { DataTable } from "./components/data-table";
+import { columns } from "./mentorManagement/columns";
+import { DataTable } from "./mentorManagement/components/data-table";
 import { Mentor } from "@/types/mentor";
 import MentorService from "@/services/admin/mentorService";
 

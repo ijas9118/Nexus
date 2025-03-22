@@ -1,9 +1,9 @@
 import { FC } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { columns } from "./columns";
-import { DataTable } from "./components/data-table";
 import { ContentService } from "@/services/admin/contentService";
-import ContentStats from "./components/ContentStats";
+import ContentStats from "./content-management/components/ContentStats";
+import { DataTable } from "./category-management/components/data-table";
+import { columns } from "./content-management/columns";
 
 const ContentManagement: FC = () => {
   const {

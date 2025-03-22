@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
-import { columns } from "./columns";
-import { DataTable } from "./components/data-table";
+import { columns } from "./squadManagement/columns";
+import { DataTable } from "./squadManagement/components/data-table";
 import AdminSquadService from "@/services/admin/squadService";
 import { Squad } from "@/types/squad";
 

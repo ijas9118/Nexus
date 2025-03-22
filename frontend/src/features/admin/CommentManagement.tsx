@@ -2,9 +2,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertTriangle, CheckCircle, Trash2 } from "lucide-react";
 import { useState } from "react";
-import CommentsList from "./CommentsList";
-import CommentStats from "./CommentStats";
-import CommentFilters from "./CommentFilters";
+import CommentsList from "./comment-management/CommentsList";
+import CommentStats from "./comment-management/CommentStats";
+import CommentFilters from "./comment-management/CommentFilters";
 import { useQuery } from "@tanstack/react-query";
 import { CommentService } from "@/services/admin/commentService";
 
