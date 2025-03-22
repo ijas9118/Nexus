@@ -8,9 +8,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+} from "@/components/molecules/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Button } from "@/components/atoms/button";
 import { Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 

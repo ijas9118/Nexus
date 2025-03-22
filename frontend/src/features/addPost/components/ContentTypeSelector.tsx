@@ -4,7 +4,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/components/organisms/form";
 import { Check, ImageIcon, Video } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "./BlogCreationForm";

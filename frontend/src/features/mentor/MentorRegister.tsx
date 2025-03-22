@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/atoms/button";
 import {
   Card,
   CardContent,
@@ -6,9 +6,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/components/molecules/card";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
 import MentorService from "@/services/admin/mentorService";
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";

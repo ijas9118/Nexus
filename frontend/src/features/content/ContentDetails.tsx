@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getContent } from "@/services/user/contentService";
 import { useQuery } from "@tanstack/react-query";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Button } from "@/components/atoms/button";
+import { Badge } from "@/components/atoms/badge";
+import { Separator } from "@/components/atoms/separator";
+import { Textarea } from "@/components/atoms/textarea";
 import {
   BookmarkIcon,
   MessageCircleIcon,
@@ -17,8 +17,8 @@ import {
 } from "lucide-react";
 import CommentSection from "@/features/content/components/CommentSection";
 import RelatedContent from "@/features/content/components/RelatedContent";
-import { Skeleton } from "@/components/ui/skeleton";
-import Premium from "@/components/ui/icons/Premium";
+import { Skeleton } from "@/components/atoms/skeleton";
+import Premium from "@/components/icons/Premium";
 
 export default function ContentDetails() {
   const { id } = useParams<{ id: string }>();

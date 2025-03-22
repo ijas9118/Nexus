@@ -1,8 +1,8 @@
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/molecules/card";
+import { ScrollArea } from "@/components/organisms/scroll-area";
+import { Badge } from "@/components/atoms/badge";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/atoms/button";
 import { Atom } from "lucide-react";
 import { useSelector } from "react-redux";
 

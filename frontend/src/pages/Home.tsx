@@ -1,12 +1,12 @@
-import BackgroundPattern from "@/components/normal/home/BackgroundPattern";
-import FeatureCard from "@/components/normal/home/FeatureCard";
-import HeroSection from "@/components/normal/home/HeroSection";
+import BackgroundPattern from "@/components/molecules/BackgroundPattern";
+import FeatureCard from "@/components/organisms/FeatureCard";
+import HeroSection from "@/components/organisms/HeroSection";
 import { Rocket, Send, Users, Zap } from "lucide-react";
-import Navbar from "@/components/normal/home/Navbar";
-import TestimonialsCarousel from "@/components/normal/home/TestimonialsCarousel";
-import SectionHeader from "@/components/normal/home/SectionHeader";
-import PricingCardsSection from "@/components/normal/home/PricingCardsSection";
-import Footer from "@/components/normal/home/Footer";
+import Navbar from "@/components/organisms/Navbar";
+import TestimonialsCarousel from "@/components/organisms/TestimonialsCarousel";
+import SectionHeader from "@/components/organisms/SectionHeader";
+import PricingCardsSection from "@/components/organisms/PricingCardsSection";
+import Footer from "@/components/organisms/Footer";
 
 const testimonials = [
   {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import NexusLogo from "@/components/ui/NexusLogo";
+import { Button } from "@/components/atoms/button";
+import NexusLogo from "@/components/icons/NexusLogo";
 import { navbarLinks } from "@/utils/navigationLinks";
 import { useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";

@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
+import { Card } from "@/components/molecules/card";
 import { Calendar, Star, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Mentor } from "../Mentors";

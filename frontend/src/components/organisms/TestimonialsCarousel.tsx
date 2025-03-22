@@ -4,7 +4,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
+} from "@/components/organisms/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import TestimonialCard from "./TestimonialCard";
 import React from "react";

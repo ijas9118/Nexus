@@ -25,8 +25,13 @@ import {
   Minus,
 } from "lucide-react";
 
-import { Toggle } from "@/components/ui/toggle";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Toggle } from "@/components/molecules/toggle";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/organisms/tabs";
 
 interface TipTapEditorProps {
   content: string;

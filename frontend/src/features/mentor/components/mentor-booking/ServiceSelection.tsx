@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/atoms/button";
+import { Label } from "@/components/atoms/label";
+import { RadioGroup, RadioGroupItem } from "@/components/atoms/radio-group";
 
 interface ServiceSelectionProps {
   step: number;

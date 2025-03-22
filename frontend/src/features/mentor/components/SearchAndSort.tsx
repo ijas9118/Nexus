@@ -1,11 +1,11 @@
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/atoms/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/atoms/select";
 import { Search } from "lucide-react";
 
 const SearchAndSort = () => {

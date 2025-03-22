@@ -1,13 +1,13 @@
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/atoms/input";
 import type { Table } from "@tanstack/react-table";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/organisms/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/atoms/button";
 import { FacetedFilter } from "./faceted-filter";
 
 interface DataTableToolbarProps<TData> {

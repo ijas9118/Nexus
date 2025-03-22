@@ -18,7 +18,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/organisms/table";
 import React from "react";
 import { DataTableToolbar } from "./tableToolbar";
 import { DataTablePagination } from "./tablePagination";

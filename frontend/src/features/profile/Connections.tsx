@@ -1,7 +1,12 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Button } from "@/components/atoms/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/molecules/card";
+import { Separator } from "@/components/atoms/separator";
 import {
   acceptConnectionRequest,
   getAllConnections,

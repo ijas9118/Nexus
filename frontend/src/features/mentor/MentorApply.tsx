@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/atoms/button";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";

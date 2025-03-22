@@ -1,4 +1,4 @@
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/atoms/avatar";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 
 const ChatItem = ({ chat, selectedChat, setSelectedChat }: any) => {

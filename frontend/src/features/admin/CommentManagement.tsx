@@ -1,5 +1,10 @@
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/atoms/badge";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/organisms/tabs";
 import { AlertTriangle, CheckCircle, Trash2 } from "lucide-react";
 import { useState } from "react";
 import CommentsList from "./comment-management/CommentsList";

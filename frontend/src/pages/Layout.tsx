@@ -1,5 +1,5 @@
 import { ModeToggle } from "@/components/theme/mode-toggle";
-import { AppSidebar } from "@/components/normal/sidebar/app-sidebar";
+import { AppSidebar } from "@/components/organisms/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,27 +7,27 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+} from "@/components/molecules/breadcrumb";
+import { Button } from "@/components/atoms/button";
+import { Separator } from "@/components/atoms/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
+} from "@/components/organisms/sidebar";
 import useLogout from "@/hooks/useLogout";
 import { RootState } from "@/store/store";
 import { Bell } from "lucide-react";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import Premium from "@/components/ui/icons/Premium";
+import Premium from "@/components/icons/Premium";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/molecules/tooltip";
 
 export default function Layout() {
   const navigate = useNavigate();

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Button } from "@/components/atoms/button";
+import { Textarea } from "@/components/atoms/textarea";
 import { ThumbsUpIcon, ReplyIcon, MoreHorizontalIcon } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -10,7 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/organisms/dropdown-menu";
 
 // Mock function to get comments - replace with your actual API call
 const getComments = async (contentId: string) => {

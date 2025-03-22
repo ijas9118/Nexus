@@ -1,6 +1,11 @@
-import Navbar from "@/components/normal/home/Navbar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Navbar from "@/components/organisms/Navbar";
+import { Button } from "@/components/atoms/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/molecules/card";
 import MentorService from "@/services/admin/mentorService";
 import { Check, Users, Calendar, Clock } from "lucide-react";
 import { useState } from "react";

@@ -1,4 +1,4 @@
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/atoms/input";
 import { getHistory } from "@/services/user/contentService";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { IHistoryItem } from "@/types/content";

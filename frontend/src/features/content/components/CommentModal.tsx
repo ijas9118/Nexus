@@ -1,13 +1,13 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
+} from "@/components/organisms/dialog";
+import { Separator } from "@/components/atoms/separator";
 import CommentInput from "./CommentInput";
 import CommentItem from "./CommentItem";
 import { MessageCircle } from "lucide-react";

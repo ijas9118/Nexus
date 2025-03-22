@@ -1,5 +1,5 @@
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Card } from "@/components/molecules/card";
+import { Progress } from "@/components/molecules/progress";
 import { Flame } from "lucide-react";
 
 export default function ProfileReadingStreak() {

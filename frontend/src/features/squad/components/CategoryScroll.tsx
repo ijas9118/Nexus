@@ -1,4 +1,4 @@
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/organisms/scroll-area";
 import { FC } from "react";
 
 interface CategoryScrollProps {

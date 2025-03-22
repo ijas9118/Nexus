@@ -1,5 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/atoms/button";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/organisms/tabs";
 import { Link, useParams } from "react-router-dom";
 import { MENTORS } from "./components/constants";
 import MentorHeader from "./components/mentor-profile/MentorHeader";

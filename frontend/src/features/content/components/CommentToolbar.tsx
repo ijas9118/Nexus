@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/atoms/button";
+import { Separator } from "@/components/atoms/separator";
 import {
   AtSign,
   Bold,

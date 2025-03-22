@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "@/components/atoms/button";
+import { Card } from "@/components/molecules/card";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

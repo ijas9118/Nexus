@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Button } from "@/components/atoms/button";
+import { ScrollArea, ScrollBar } from "@/components/organisms/scroll-area";
 import { editProfileTabs } from "@/utils/navigationLinks";
 import { FC } from "react";
 

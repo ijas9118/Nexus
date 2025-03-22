@@ -6,8 +6,8 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+} from "@/components/atoms/select";
+import { Input } from "@/components/atoms/input";
 import { Search } from "lucide-react";
 
 interface CommentFiltersProps {

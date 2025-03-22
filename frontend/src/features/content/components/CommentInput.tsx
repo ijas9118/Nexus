@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/atoms/button";
+import { Textarea } from "@/components/atoms/textarea";
 import CommentToolbar from "./CommentToolbar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CommentService } from "@/services/user/commentService";

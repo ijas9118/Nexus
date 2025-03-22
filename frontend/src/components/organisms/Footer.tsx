@@ -1,5 +1,5 @@
 import React from "react";
-import NexusLogo from "@/components/ui/NexusLogo";
+import NexusLogo from "@/components/icons/NexusLogo";
 import { quickLinks, resources, socialLinks } from "@/utils/navigationLinks";
 
 const Footer: React.FC = () => {

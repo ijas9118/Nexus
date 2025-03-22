@@ -1,5 +1,5 @@
 import { Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/atoms/button";
 import { Link } from "react-router-dom";
 import Hero from "./components/Hero";
 import Benifits from "./components/Benifits";

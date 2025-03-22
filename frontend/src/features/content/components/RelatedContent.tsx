@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardFooter } from "@/components/molecules/card";
+import { Badge } from "@/components/atoms/badge";
 import {
   CalendarIcon,
   MessageCircleIcon,

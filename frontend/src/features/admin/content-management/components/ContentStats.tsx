@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/molecules/card";
 import { BarChart, FileText, Video, Pencil } from "lucide-react";
 
 const stats = [

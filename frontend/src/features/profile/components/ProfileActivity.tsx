@@ -1,4 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/organisms/tabs";
 import ProfileReadingStreak from "./ProfileReadingStreak";
 import ProfilePosts from "./ProfilePosts";
 import ProfileUpvoted from "./ProfileUpvoted";

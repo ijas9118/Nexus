@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/atoms/button";
 import {
   Card,
   CardContent,
@@ -6,8 +6,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/molecules/card";
+import { Textarea } from "@/components/atoms/textarea";
 import { MessageSquare } from "lucide-react";
 
 const MentorMessage = ({ mentor }: any) => {

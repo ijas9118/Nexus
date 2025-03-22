@@ -9,25 +9,25 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "@/components/organisms/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../ui/dropdown-menu";
-import { Collapsible } from "../../ui/collapsible";
-import CollapsibleComponent from "./CollapsibleComponent";
-import SquadSubmenu from "./SquadSubmenu";
+} from "./dropdown-menu";
+import { Collapsible } from "../molecules/collapsible";
 import { items, networkItems } from "@/utils/sidebarLinks";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { useNavigate } from "react-router-dom";
 import useLogout from "@/hooks/useLogout";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
-import NexusLogo from "@/components/ui/NexusLogo";
-import { Button } from "@/components/ui/button";
+import NexusLogo from "@/components/icons/NexusLogo";
+import { Button } from "@/components/atoms/button";
+import CollapsibleComponent from "./CollapsibleComponent";
+import SquadSubmenu from "./SquadSubmenu";
 
 export function AppSidebar() {
   const navigate = useNavigate();

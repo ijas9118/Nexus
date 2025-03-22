@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/atoms/button";
+import { Card } from "@/components/molecules/card";
+import { Input } from "@/components/atoms/input";
 import {
   githubAuth,
   googleAuth,
@@ -19,7 +19,7 @@ import {
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
+} from "@/components/organisms/input-otp";
 import { setCredentials } from "@/store/slices/authSlice";
 import { RootState } from "@/store/store";
 import { toast } from "sonner";

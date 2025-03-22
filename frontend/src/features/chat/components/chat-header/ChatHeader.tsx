@@ -1,6 +1,6 @@
 import UserInfo from "./UserInfo";
 import ChatSettings from "./ChatSettings";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 
 const ChatHeader = ({ selectedChat }: { selectedChat: any }) => {
   return (

@@ -1,13 +1,13 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import { bookmarkContent } from "@/services/user/bookmarkService";
 import { likeContent } from "@/services/user/likeService";
 import { Bookmark, Share2 } from "lucide-react";
 import React, { useState } from "react";
 import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import Premium from "@/components/ui/icons/Premium";
+import Premium from "@/components/icons/Premium";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import {
@@ -19,7 +19,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/components/molecules/alert-dialog";
 import CommentModal from "./CommentModal";
 
 interface ContentCardProps {

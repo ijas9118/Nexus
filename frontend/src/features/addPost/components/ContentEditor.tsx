@@ -5,9 +5,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/components/organisms/form";
 import React from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/atoms/input";
 import { Upload } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "./BlogCreationForm";

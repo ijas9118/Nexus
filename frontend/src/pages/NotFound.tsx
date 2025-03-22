@@ -1,5 +1,5 @@
-import Error404 from "@/components/common/Error404";
-import { Button } from "@/components/ui/button";
+import Error404 from "@/components/icons/Error404";
+import { Button } from "@/components/atoms/button";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {

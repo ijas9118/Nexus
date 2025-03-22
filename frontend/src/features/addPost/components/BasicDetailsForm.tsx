@@ -5,16 +5,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/components/organisms/form";
+import { Input } from "@/components/atoms/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+} from "@/components/atoms/select";
+import { Switch } from "@/components/atoms/switch";
 import { ImageIcon } from "lucide-react";
 import React from "react";
 import { UseFormReturn } from "react-hook-form";

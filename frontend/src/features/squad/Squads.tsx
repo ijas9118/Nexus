@@ -7,11 +7,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import Premium from "@/components/ui/icons/Premium";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "@/components/molecules/alert-dialog";
+import { Button } from "@/components/atoms/button";
+import { Card } from "@/components/molecules/card";
+import Premium from "@/components/icons/Premium";
+import { Skeleton } from "@/components/atoms/skeleton";
 import CategoryService from "@/services/admin/categoryService";
 import SquadService from "@/services/user/squadService";
 import { setSquadsByCategory } from "@/store/slices/squadSlice";

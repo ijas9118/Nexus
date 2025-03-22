@@ -1,4 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/molecules/card";
 import { Clock } from "lucide-react";
 
 const MentorAbout = ({ mentor }: any) => {

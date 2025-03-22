@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/molecules/card";
 import { Check, Crown, Star, Zap } from "lucide-react";
 
 const Benifits = () => {

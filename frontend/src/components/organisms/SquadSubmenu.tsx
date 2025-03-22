@@ -6,7 +6,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar";
+} from "@/components/organisms/sidebar";
 import SquadService from "@/services/user/squadService";
 import { setUserSquads } from "@/store/slices/userSquadsSlice";
 import { Atom, DiamondPlus, Podcast } from "lucide-react";

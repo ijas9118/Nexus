@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/atoms/button";
+import { Calendar } from "@/components/organisms/calendar";
 import { CalendarIcon, Clock } from "lucide-react";
 
 interface DateTimeSelectionProps {

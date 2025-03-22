@@ -5,8 +5,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+} from "@/components/molecules/card";
+import { Button } from "@/components/atoms/button";
 import { Check } from "lucide-react";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { useDispatch } from "react-redux";

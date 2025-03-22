@@ -3,8 +3,18 @@ import { useQuery } from "@tanstack/react-query";
 import { columns } from "./payment-management/columns";
 import { DataTable } from "./payment-management/components/data-table";
 import PaymentStats from "./payment-management/components/PaymentStats";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/organisms/tabs";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/molecules/card";
 import PlanService from "@/services/planService";
 
 const PaymentManagement: FC = () => {

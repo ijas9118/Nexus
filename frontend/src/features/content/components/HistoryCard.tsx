@@ -1,6 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Badge } from "@/components/atoms/badge";
+import { Card, CardContent } from "@/components/molecules/card";
 import { TrashIcon } from "lucide-react";
 import { IHistoryItem } from "@/types/content";
 import { removeFromHistory } from "@/services/user/contentService";
@@ -14,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../../../components/ui/alert-dialog";
+} from "../../../components/molecules/alert-dialog";
 import React from "react";
 
 interface IHistoryCardProps {

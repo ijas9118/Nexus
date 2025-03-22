@@ -1,7 +1,7 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/atoms/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { LockIcon } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";

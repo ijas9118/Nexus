@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/atoms/button";
 import {
   Card,
   CardContent,
@@ -6,10 +6,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/molecules/card";
+import { Checkbox } from "@/components/atoms/checkbox";
+import { Label } from "@/components/atoms/label";
+import { Textarea } from "@/components/atoms/textarea";
 import { Link } from "react-router-dom";
 import { MENTORSHIP_TYPES, TARGET_AUDIENCES, TIME_SLOTS } from "../constants";
 import CheckboxGroup from "./CheckboxGroup";
@@ -17,8 +17,8 @@ import { useMentorForm } from "@/context/MentorFormContext";
 import { useMutation } from "@tanstack/react-query";
 import MentorService from "@/services/admin/mentorService";
 import { toast } from "sonner";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Badge } from "@/components/ui/badge";
+import { RadioGroup, RadioGroupItem } from "@/components/atoms/radio-group";
+import { Badge } from "@/components/atoms/badge";
 
 const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
   const { formData, setFormData } = useMentorForm();

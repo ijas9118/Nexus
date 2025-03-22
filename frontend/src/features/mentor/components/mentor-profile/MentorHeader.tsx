@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
+import { Card, CardContent } from "@/components/molecules/card";
 import { Calendar, Globe, Mail, MapPin, Star, Users } from "lucide-react";
 import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
 

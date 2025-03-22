@@ -1,5 +1,5 @@
-import { Card } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card } from "@/components/molecules/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import React from "react";
 
 interface TestimonialProps {

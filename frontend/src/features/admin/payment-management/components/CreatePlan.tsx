@@ -8,10 +8,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+} from "@/components/organisms/dialog";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
+import { Button } from "@/components/atoms/button";
 import { DialogProps } from "@/types/dialog";
 import { toast } from "sonner";
 import PlanService from "@/services/planService";
@@ -21,8 +21,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/atoms/select";
+import { Textarea } from "@/components/atoms/textarea";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 

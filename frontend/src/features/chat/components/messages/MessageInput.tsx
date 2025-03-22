@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
 import { MessageService } from "@/services/user/messageService";
 import { Heart, Link, Send, Smile } from "lucide-react";
 import { useState } from "react";

@@ -9,25 +9,25 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+} from "@/components/organisms/dialog";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
+import { Button } from "@/components/atoms/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from "@/components/atoms/select";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import SquadService from "@/services/admin/squadService";
 import { uploadFiles } from "@/services/user/contentService";
 import CategoryService from "@/services/admin/categoryService";
 import { Category } from "@/types/category";
 import { DialogProps } from "@/types/dialog";
 import { toast } from "sonner";
-import { Switch } from "@/components/ui/switch";
+import { Switch } from "@/components/atoms/switch";
 
 const formSchema = z.object({
   name: z

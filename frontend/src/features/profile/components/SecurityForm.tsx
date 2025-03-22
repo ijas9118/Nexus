@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
 import { updatePassword } from "@/services/user/profileService";
 import { Lock, Trash2, Unlink } from "lucide-react";
 import { FC, useState } from "react";
@@ -10,7 +10,7 @@ import PasswordInput from "./PasswordInput";
 import { toast } from "sonner";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/organisms/scroll-area";
 
 const SecurityForm: FC = () => {
   const user = useSelector((state: any) => state.auth.user);

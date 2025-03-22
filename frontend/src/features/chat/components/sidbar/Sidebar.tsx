@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
 import { ChatService } from "@/services/user/chatService";
 import { PlusCircle, Search } from "lucide-react";
 import { useEffect, useState } from "react";

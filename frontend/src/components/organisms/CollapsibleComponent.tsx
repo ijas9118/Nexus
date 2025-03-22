@@ -1,7 +1,7 @@
 import {
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+} from "@/components/molecules/collapsible";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -9,7 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "@/components/organisms/sidebar";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { ChevronDown } from "lucide-react";
 import React, { FC } from "react";
