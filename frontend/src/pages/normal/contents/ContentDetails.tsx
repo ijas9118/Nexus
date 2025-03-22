@@ -12,13 +12,13 @@ import {
   MessageCircleIcon,
   ShareIcon,
   ThumbsUpIcon,
-  StarIcon,
   SendIcon,
   CalendarIcon,
 } from "lucide-react";
 import CommentSection from "@/components/normal/content/CommentSection";
 import RelatedContent from "@/components/normal/content/RelatedContent";
 import { Skeleton } from "@/components/ui/skeleton";
+import Premium from "@/components/ui/icons/Premium";
 
 export default function ContentDetails() {
   const { id } = useParams<{ id: string }>();
@@ -164,14 +164,12 @@ export default function ContentDetails() {
   });
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 py-8 max-w-4xl h-screen">
       {/* Premium Badge (if applicable) */}
       {content.isPremium && (
-        <div className="mb-6 flex items-center gap-2">
-          <Badge className="bg-gradient-to-r from-amber-500 to-yellow-300 text-black">
-            <StarIcon className="h-3.5 w-3.5 mr-1" />
-            Premium Content
-          </Badge>
+        <div className="mb-4 flex items-center text-sm gap-2 border w-fit px-2 py-2 rounded-lg">
+          <Premium />
+          <span>Premium Content</span>
         </div>
       )}
 
