@@ -1,11 +1,11 @@
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import Hero from "@/components/normal/get-premium/Hero";
-import Benifits from "@/components/normal/get-premium/Benifits";
-import PricingPlanCards from "@/components/normal/get-premium/PricingPlanCards";
-import Testimonials from "@/components/normal/get-premium/Testimonials";
-import FAQ from "@/components/normal/get-premium/FAQ";
+import Hero from "./components/Hero";
+import Benifits from "./components/Benifits";
+import PricingPlanCards from "./components/PricingPlanCards";
+import Testimonials from "./components/Testimonials";
+import FAQ from "./components/FAQ";
 
 export default function PremiumPage() {
   return (

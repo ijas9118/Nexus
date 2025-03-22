@@ -22,6 +22,7 @@ import {
   AlignRight,
   Undo,
   Redo,
+  Minus,
 } from "lucide-react";
 
 import { Toggle } from "@/components/ui/toggle";
@@ -161,6 +162,16 @@ export function TipTapEditor({ content, onChange }: TipTapEditorProps) {
           aria-label="Align right"
         >
           <AlignRight className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          pressed={editor.isActive({ textAlign: "right" })}
+          onPressedChange={() =>
+            editor.chain().focus().setHorizontalRule().run()
+          }
+          aria-label="Align right"
+        >
+          <Minus className="h-4 w-4" />
         </Toggle>
         <Toggle
           size="sm"
