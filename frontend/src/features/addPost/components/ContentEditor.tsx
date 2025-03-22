@@ -7,11 +7,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import React from "react";
-import { TipTapEditor } from "./TipTapEditor";
 import { Input } from "@/components/ui/input";
 import { Upload } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { FormValues } from "./BlogCreationForm";
+import { TipTapEditor } from "@/features/addPost/components/TipTapEditor";
 
 interface ContentEditorProps {
   form: UseFormReturn<FormValues>;

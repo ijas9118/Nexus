@@ -15,8 +15,8 @@ import {
   SendIcon,
   CalendarIcon,
 } from "lucide-react";
-import CommentSection from "@/components/normal/content/CommentSection";
-import RelatedContent from "@/components/normal/content/RelatedContent";
+import CommentSection from "@/features/content/components/CommentSection";
+import RelatedContent from "@/features/content/components/RelatedContent";
 import { Skeleton } from "@/components/ui/skeleton";
 import Premium from "@/components/ui/icons/Premium";
 

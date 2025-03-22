@@ -1,8 +1,8 @@
-import FilterComponent from "@/components/normal/myFeed/FilterComponent";
-import ContentTypeTab from "@/components/normal/myFeed/ContentTypeTab";
-import ContentCard from "@/components/normal/myFeed/ContentCard";
+import FilterComponent from "@/features/content/components/FilterComponent";
+import ContentTypeTab from "@/features/content/components/ContentTypeTab";
 import { useEffect, useState } from "react";
 import { getAllBookmarks } from "@/services/user/bookmarkService";
+import ContentCard from "./components/ContentCard";
 
 export default function Bookmark() {
   const [feedContent, setFeedContent] = useState([]);
@@ -55,6 +55,8 @@ export default function Bookmark() {
             isLiked={item.isLiked}
             isBookmarked={item.isBookmarked}
             username={item.userName}
+            squad={item.squad}
+            profilePic={item.profilePic}
           />
         ))}
       </div>

@@ -1,28 +1,22 @@
 import type React from "react";
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, Loader2 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
 import { ContentPreview } from "./ContentPreview";
 import { Progress } from "@/components/ui/progress";
 import { Form } from "@/components/ui/form";
-import ContentTypeSelector from "./ContentTypeSelector";
-import BasicDetailsForm from "./BasicDetailsForm";
 import ContentEditor from "./ContentEditor";
 import ContentSummary from "./ContentSummary";
-import { addContent, uploadFiles } from "@/services/user/contentService";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import ContentTypeSelector from "./ContentTypeSelector";
+import BasicDetailsForm from "./BasicDetailsForm";
+import { useAddPost } from "../hooks/useAddPost";
 
 const formSchema = z.object({
   contentType: z.enum(["blog", "video"]),
@@ -55,7 +49,6 @@ export function BlogCreationForm() {
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const squads = useSelector((state: RootState) => state.userSquads.squads);
-  const navigate = useNavigate();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -72,6 +65,8 @@ export function BlogCreationForm() {
   const title = form.watch("title");
   const content = form.watch("content");
   const isPremium = form.watch("isPremium");
+
+  const { submitPost, isSubmitting } = useAddPost();
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -96,72 +91,8 @@ export function BlogCreationForm() {
     }
   };
 
-  const uploadToCloudinary = async (data: FormValues) => {
-    const uploadUrl = `https://api.cloudinary.com/v1_1/${
-      import.meta.env.VITE_CLOUD_NAME
-    }/upload`;
-    const imagePreset = "nexus_images";
-    const videoPreset = "nexus_videos";
-
-    const uploadFile = async (file: File, preset: string) => {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", preset);
-
-      const response = await uploadFiles(uploadUrl, formData);
-      return response;
-    };
-
-    try {
-      const thumbnailUrl =
-        data.thumbnail && data.thumbnail[0]
-          ? await uploadFile(data.thumbnail[0], imagePreset)
-          : null;
-
-      const videoUrl =
-        data.contentType === "video" && data.videoFile?.[0]
-          ? await uploadFile(data.videoFile[0], videoPreset)
-          : null;
-
-      return { thumbnailUrl, videoUrl };
-    } catch (error) {
-      console.error("Cloudinary upload failed", error);
-      throw new Error("Failed to upload files to Cloudinary");
-    }
-  };
-
-  const submitMutation = useMutation({
-    mutationFn: async (data: FormValues) => {
-      const uploadedFiles = await uploadToCloudinary(data);
-
-      const requestData = {
-        contentType: data.contentType,
-        squad: data.squad,
-        title: data.title,
-        content: data.content,
-        isPremium: data.isPremium,
-        thumbnailUrl: uploadedFiles.thumbnailUrl,
-        videoUrl: uploadedFiles.videoUrl,
-      };
-
-      return await addContent(requestData);
-    },
-    onSuccess: (result) => {
-      toast.success("Wohoo!", {
-        description: result.message,
-      });
-      navigate("/myFeed");
-    },
-    onError: (error) => {
-      console.error("Error submitting form", error);
-      toast.error(
-        "An error occurred while submitting the form. Please try again.",
-      );
-    },
-  });
-
   const onSubmit = (data: FormValues) => {
-    submitMutation.mutate(data);
+    submitPost(data);
   };
 
   const nextStep = (e: React.MouseEvent) => {
@@ -258,8 +189,8 @@ export function BlogCreationForm() {
                       <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
                   ) : (
-                    <Button type="submit" disabled={submitMutation.isPending}>
-                      {submitMutation.isPending ? (
+                    <Button type="submit" disabled={isSubmitting}>
+                      {isSubmitting ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                           Publishing...

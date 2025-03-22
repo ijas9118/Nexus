@@ -1,10 +1,10 @@
-import FilterComponent from "@/components/normal/myFeed/FilterComponent";
-import ContentTypeTab from "@/components/normal/myFeed/ContentTypeTab";
-import ContentCard from "@/components/normal/myFeed/ContentCard";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { getFollowingUsersContents } from "@/services/user/contentService";
+import FilterComponent from "./components/FilterComponent";
+import ContentTypeTab from "./components/ContentTypeTab";
+import ContentCard from "./components/ContentCard";
 
 export default function Following() {
   const dispatch = useDispatch();
@@ -75,13 +75,14 @@ export default function Following() {
             id={item._id}
             key={index}
             avatarFallback={"IA"}
+            profilePic={item.profilePic}
             userName={item.userName}
             contentType={item.contentType}
             heading={item.title}
             date={item.date}
             likes={item.likes}
             comments={item.comments}
-            tags={[item.squad?.name || "Unknown"]}
+            squad={item.squad}
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
             isLiked={item.isLiked}

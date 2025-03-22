@@ -7,7 +7,6 @@ import { Bookmark, Share2 } from "lucide-react";
 import React, { useState } from "react";
 import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import CommentModal from "../comment/CommentModal";
 import Premium from "@/components/ui/icons/Premium";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -21,6 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import CommentModal from "./CommentModal";
 
 interface ContentCardProps {
   id: string;

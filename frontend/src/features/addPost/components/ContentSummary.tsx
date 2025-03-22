@@ -15,6 +15,15 @@ const ContentSummary: React.FC<ContentSummaryProps> = ({
   isPremium,
   content,
 }) => {
+  const getTextContentLength = (html: string): number => {
+    if (!html) return 0;
+    // Remove HTML tags, leaving only the text content
+    const textContent = html.replace(/<[^>]+>/g, "");
+    // Remove extra whitespace and count characters
+    return textContent.replace(/\s+/g, " ").trim().length;
+  };
+
+  const contentLength = getTextContentLength(content);
   return (
     <Card className="sticky top-6 border-none shadow-md">
       <CardContent className="p-6">
@@ -54,7 +63,7 @@ const ContentSummary: React.FC<ContentSummaryProps> = ({
             <p className="text-sm font-medium text-muted-foreground">
               Content Length
             </p>
-            <p>{content ? `${content.length} characters` : "No content yet"}</p>
+            <p>{content ? `${contentLength} characters` : "No content yet"}</p>
           </div>
         </div>
       </CardContent>

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { BlogCreationForm } from "./BlogCreationForm";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import { BlogCreationForm } from "./components/BlogCreationForm";
 
 const AddPost = () => {
   const dispatch = useDispatch();
