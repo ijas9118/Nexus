@@ -1,5 +1,4 @@
 import LoginPage from "@/pages/auth/Login";
-import AddPost from "@/pages/normal/contents/AddPost";
 import Home from "@/pages/normal/Home";
 import Layout from "@/pages/normal/Layout";
 import MyFeed from "@/pages/normal/contents/MyFeed";
@@ -24,7 +23,7 @@ import MentorApply from "@/pages/normal/mentors/MentorApply";
 import MentorProfilePage from "@/pages/normal/mentors/MentorProfilePage";
 import BookSession from "@/pages/normal/mentors/BookSession";
 import { MentorFormProvider } from "@/context/MentorFormContext";
-import AddPost2 from "@/pages/normal/contents/addPost2/AddPost2";
+import AddPost from "@/pages/normal/contents/addPost/AddPost";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -40,7 +39,7 @@ const UserRoutes: React.FC = () => {
             <Route path="myFeed" element={<MyFeed />} />
             <Route path="profile/:username" element={<ProfilePage />} />
             <Route path="profile/edit" element={<EditProfile />} />
-            <Route path="addPost" element={<AddPost2 />} />
+            <Route path="addPost" element={<AddPost />} />
             <Route path="bookmark" element={<Bookmark />} />
             <Route path="getPremium" element={<GetPremium />} />
             <Route path="mentors" element={<Mentors />} />

@@ -33,6 +33,7 @@ interface TipTapEditorProps {
 }
 
 export function TipTapEditor({ content, onChange }: TipTapEditorProps) {
+  console.log("Content", content, content.length);
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -50,9 +51,16 @@ export function TipTapEditor({ content, onChange }: TipTapEditorProps) {
         placeholder: "Write something amazing...",
       }),
     ],
-    content,
+    content: `
+        <h1>This is a 1st level heading</h1>
+        <h2>This is a 2nd level heading</h2>
+        <h3>This is a 3rd level heading</h3>
+        <h4>This 4th level heading will be converted to a paragraph, because levels are configured to be only 1, 2 or 3.</h4>
+      `,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      const html = editor.getHTML();
+      // Avoid passing <p></p> back to the form
+      onChange(html === "<p></p>" ? "" : html);
     },
   });
 
@@ -61,7 +69,7 @@ export function TipTapEditor({ content, onChange }: TipTapEditorProps) {
   }
 
   return (
-    <div className="border rounded-md">
+    <div className="border rounded-sm">
       <div className="border-b bg-muted/40 p-2 flex flex-wrap gap-1">
         <Toggle
           size="sm"
@@ -223,12 +231,12 @@ export function TipTapEditor({ content, onChange }: TipTapEditorProps) {
         <TabsContent value="write" className="p-0">
           <EditorContent
             editor={editor}
-            className="prose prose-sm max-w-none p-4 focus-visible:outline-none"
+            className="prose prose-sm max-w-none p-4 focus-visible:outline-none min-h-[300px] focus:outline-none"
           />
         </TabsContent>
         <TabsContent value="preview" className="p-0">
           <div
-            className="prose prose-sm max-w-none p-4 min-h-[200px]"
+            className="prose prose-sm max-w-none p-4 min-h-[300px]"
             dangerouslySetInnerHTML={{
               __html:
                 content ||

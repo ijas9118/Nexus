@@ -3,7 +3,7 @@ import { BlogCreationForm } from "./BlogCreationForm";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 
-const AddPost2 = () => {
+const AddPost = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,4 +30,4 @@ const AddPost2 = () => {
   );
 };
 
-export default AddPost2;
+export default AddPost;

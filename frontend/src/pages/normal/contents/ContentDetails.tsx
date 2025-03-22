@@ -274,9 +274,10 @@ export default function ContentDetails() {
       )}
 
       {/* Content Body */}
-      <div className="prose prose-lg max-w-none mb-10 text-gray-800 leading-relaxed">
-        {content.content}
-      </div>
+      <div
+        className="prose prose-lg max-w-none mb-10 text-gray-800 leading-relaxed"
+        dangerouslySetInnerHTML={{ __html: content.content }}
+      />
 
       {/* Comment Section */}
 
