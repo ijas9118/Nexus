@@ -61,7 +61,8 @@ const ContentEditor: React.FC<ContentEditorProps> = ({
                       className="hidden"
                       id="video-upload"
                       onChange={(e) => {
-                        onChange(e.target.files?.[0] || null);
+                        const files = e.target.files;
+                        onChange(files);
                         handleVideoChange(e);
                       }}
                       {...field}

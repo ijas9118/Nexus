@@ -3,6 +3,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LockIcon } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface ContentPreviewProps {
   contentType: string;
@@ -21,6 +23,7 @@ export function ContentPreview({
   videoUrl,
   isPremium,
 }: ContentPreviewProps) {
+  const user = useSelector((state: RootState) => state.auth.user);
   return (
     <div className="space-y-6">
       {isPremium && (
@@ -36,11 +39,11 @@ export function ContentPreview({
 
       <div className="flex items-center gap-2">
         <Avatar className="h-8 w-8">
-          <AvatarImage src="/placeholder-user.jpg" alt="Author" />
+          <AvatarImage src={user?.profilePic} alt="Author" />
           <AvatarFallback>U</AvatarFallback>
         </Avatar>
         <div>
-          <p className="text-sm font-medium">John Doe</p>
+          <p className="text-sm font-medium">{user?.name}</p>
           <p className="text-xs text-muted-foreground">Published just now</p>
         </div>
       </div>

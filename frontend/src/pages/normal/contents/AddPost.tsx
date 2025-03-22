@@ -78,6 +78,8 @@ const AddPost: React.FC = () => {
     const imagePreset = "nexus_images";
     const videoPreset = "nexus_videos";
 
+    console.log(data);
+
     const uploadFile = async (file: File, preset: string) => {
       const formData = new FormData();
       formData.append("file", file);
