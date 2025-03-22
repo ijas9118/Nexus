@@ -1,4 +1,3 @@
-import UserGrowthGraph from "@/components/admin/graphs/UserGrowthGraph";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Atom,
@@ -12,6 +11,7 @@ import {
   Zap,
 } from "lucide-react";
 import { FC } from "react";
+import UserGrowthGraph from "./components/UserGrowthGraph";
 
 interface Activity {
   id: number;

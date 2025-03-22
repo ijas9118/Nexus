@@ -1,4 +1,4 @@
-import AdminAppSidebar from "@/components/admin/sidebar/app-sider";
+import AdminAppSidebar from "@/features/admin/components/app-sider";
 import { ModeToggle } from "@/components/theme/mode-toggle";
 import {
   Breadcrumb,
