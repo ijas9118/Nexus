@@ -1,9 +1,10 @@
 import { AxiosError } from "axios";
 import api from "../api";
+import { AUTH_ROUTES } from "@/utils/constants";
 
 export const loginUser = async (email: string, password: string) => {
   try {
-    const response = await api.post("/auth/login", { email, password });
+    const response = await api.post(AUTH_ROUTES.LOGIN, { email, password });
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
@@ -22,7 +23,7 @@ export const registerUser = async (
   password: string,
 ) => {
   try {
-    const response = await api.post("/auth/register", {
+    const response = await api.post(AUTH_ROUTES.REGISTER, {
       name,
       email,
       password,
@@ -41,7 +42,7 @@ export const registerUser = async (
 
 export const verifyOtp = async (email: string, otp: string) => {
   try {
-    const response = await api.post("/auth/verify-otp", {
+    const response = await api.post(AUTH_ROUTES.VERIFY_OTP, {
       email,
       otp,
     });
@@ -59,7 +60,7 @@ export const verifyOtp = async (email: string, otp: string) => {
 
 export const resendOtp = async (email: string) => {
   try {
-    const response = await api.post("/auth/resend-otp", { email });
+    const response = await api.post(AUTH_ROUTES.RESEND_OTP, { email });
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
@@ -74,7 +75,7 @@ export const resendOtp = async (email: string) => {
 
 export const forgotPassword = async (email: string) => {
   try {
-    const response = await api.post("/auth/forgot-password", { email });
+    const response = await api.post(AUTH_ROUTES.FORGOT_PASSWORD, { email });
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
@@ -93,7 +94,7 @@ export const resetPassword = async (
   password: string,
 ) => {
   try {
-    const response = await api.post("/auth/reset-password", {
+    const response = await api.post(AUTH_ROUTES.RESET_PASSWORD, {
       email,
       token,
       password,
@@ -111,16 +112,16 @@ export const resetPassword = async (
 };
 
 export const googleAuth = async () => {
-  window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`;
+  window.location.href = AUTH_ROUTES.GOOGLE;
 };
 
 export const githubAuth = async () => {
-  window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/github`;
+  window.location.href = AUTH_ROUTES.GITHUB;
 };
 
 export const logout = async () => {
   try {
-    await api.get("/auth/logout");
+    await api.get(AUTH_ROUTES.LOGOUT);
     return { success: true, message: "Logged out successfully." };
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
