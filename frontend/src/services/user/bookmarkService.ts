@@ -1,9 +1,12 @@
 import { AxiosError } from "axios";
 import api from "../api";
+import { CONTENT_ROUTES } from "@/utils/constants";
 
 export const bookmarkContent = async (contentId: string) => {
   try {
-    const result = await api.post(`/content/posts/${contentId}/bookmark`);
+    const result = await api.post(
+      `${CONTENT_ROUTES.POST}/${contentId}/bookmark`,
+    );
     return result.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
@@ -18,7 +21,7 @@ export const bookmarkContent = async (contentId: string) => {
 
 export const getAllBookmarks = async () => {
   try {
-    const response = await api.get("/content/posts/bookmarks");
+    const response = await api.get(CONTENT_ROUTES.BOOKMARKS);
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {

@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import api from "../api";
+import { CONTENT_ROUTES } from "@/utils/constants";
 
 export const uploadFiles = async (
   uploadUrl: string,
@@ -34,7 +35,7 @@ export const addContent = async (requestData: {
   videoUrl: string | null | undefined;
 }): Promise<any> => {
   try {
-    const response = await api.post("/content/posts", requestData);
+    const response = await api.post(CONTENT_ROUTES.POST, requestData);
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
@@ -49,7 +50,9 @@ export const addContent = async (requestData: {
 
 export const getAllContent = async ({ pageParam = 1 }) => {
   try {
-    const response = await api.get(`/content/posts?page=${pageParam}&limit=4`);
+    const response = await api.get(
+      `${CONTENT_ROUTES.POST}?page=${pageParam}&limit=4`,
+    );
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
@@ -64,7 +67,7 @@ export const getAllContent = async ({ pageParam = 1 }) => {
 
 export const getContent = async (id: string) => {
   try {
-    const response = await api.get(`/content/posts/${id}`);
+    const response = await api.get(`${CONTENT_ROUTES.POST}/${id}`);
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
@@ -79,7 +82,7 @@ export const getContent = async (id: string) => {
 
 export const getFollowingUsersContents = async () => {
   try {
-    const response = await api.get("/content/posts/following");
+    const response = await api.get(CONTENT_ROUTES.GET_FOLLOWING_POSTS);
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
@@ -94,7 +97,7 @@ export const getFollowingUsersContents = async () => {
 
 export const getHistory = async () => {
   try {
-    const response = await api.get("/content/history/");
+    const response = await api.get(CONTENT_ROUTES.GET_HISTORY);
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
@@ -109,7 +112,9 @@ export const getHistory = async () => {
 
 export const removeFromHistory = async (contentId: string) => {
   try {
-    const response = await api.post("/content/history/remove", { contentId });
+    const response = await api.post(CONTENT_ROUTES.REMOVE_FROM_HISTORY, {
+      contentId,
+    });
     return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {

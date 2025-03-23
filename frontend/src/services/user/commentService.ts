@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import api from "../api";
+import { CONTENT_ROUTES } from "@/utils/constants";
 
 export const CommentService = {
   addComment: async (
@@ -8,7 +9,7 @@ export const CommentService = {
     parentCommentId?: string,
   ) => {
     try {
-      const response = await api.post("/content/comment", {
+      const response = await api.post(CONTENT_ROUTES.COMMENTS, {
         contentId,
         text,
         parentCommentId,
@@ -27,7 +28,7 @@ export const CommentService = {
 
   getCommentsByContentId: async (contentId: string) => {
     try {
-      const response = await api.get("/content/comment", {
+      const response = await api.get(CONTENT_ROUTES.COMMENTS, {
         params: {
           contentId,
         },
