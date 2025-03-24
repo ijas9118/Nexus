@@ -8,7 +8,7 @@ import { UsersDTO } from '../dtos/responses/admin/users.dto';
 import bcrypt from 'bcrypt';
 import { ISquad } from '../models/squads.model';
 import { Express } from 'express';
-import imageService from './imageService';
+import { IImageService } from '@/core/interfaces/services/IImageService';
 
 interface UserUpdateData {
   profilePic?: string;
@@ -17,7 +17,10 @@ interface UserUpdateData {
 
 @injectable()
 export class UserService extends BaseService<IUser> implements IUserService {
-  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {
+  constructor(
+    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
+    @inject(TYPES.ImageService) private imageService: IImageService
+  ) {
     super(userRepository);
   }
 
@@ -83,10 +86,10 @@ export class UserService extends BaseService<IUser> implements IUserService {
     file?: Express.Multer.File
   ): Promise<UserUpdateData> {
     if (file) {
-      const { url, publicId } = await imageService.uploadImage(file);
+      const { url, publicId } = await this.imageService.uploadImage(file);
       const user = await this.userRepository.getUserById(userId);
       if (user?.profilePicPublicId) {
-        await imageService.deleteImage(user.profilePicPublicId); // Delete old image
+        await this.imageService.deleteImage(user.profilePicPublicId); // Delete old image
       }
       data.profilePic = url;
       data.profilePicPublicId = publicId;

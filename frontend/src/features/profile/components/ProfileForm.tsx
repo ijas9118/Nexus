@@ -4,8 +4,8 @@ import { Label } from "@/components/atoms/label";
 import { Textarea } from "@/components/atoms/textarea";
 import { updateProfile } from "@/services/user/profileService";
 import { updateUserProfile } from "@/store/slices/authSlice";
-import { Link, Loader2 } from "lucide-react";
-import React, { useState } from "react";
+import { Edit, Link, Loader2 } from "lucide-react";
+import React, { useRef, useState } from "react";
 import { useForm, useFormState } from "react-hook-form";
 import {
   FaGithub,
@@ -46,6 +46,7 @@ const ProfileForm = () => {
     ) || {},
   );
   const dispatch = useDispatch();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { register, handleSubmit, control } = useForm({
     defaultValues: {
@@ -98,10 +99,20 @@ const ProfileForm = () => {
     }
   };
 
-  const handleUpdateProfilePic = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const file = (e.currentTarget.elements[0] as HTMLInputElement).files?.[0];
-    if (file) updateProfilePic(file);
+  const handleImageClick = () => {
+    if (!isUpdating) {
+      fileInputRef.current?.click(); // Trigger file input click
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const responseData = await updateProfilePic(file);
+      if (responseData?.profilePic) {
+        dispatch(updateUserProfile({ profilePic: responseData.profilePic }));
+      }
+    }
   };
 
   return (
@@ -114,22 +125,35 @@ const ProfileForm = () => {
               This is how others will see you.
             </p>
           </div>
-          <form onSubmit={handleUpdateProfilePic}>
-            <input type="file" accept="image/*" />
-            <button type="submit" disabled={isUpdating}>
-              Update Profile Pic
-            </button>
-            <img
-              src={user.profilePic}
-              alt="Profile"
-              className="w-20 rounded-full border"
+          <div className="relative">
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className="hidden" // Hide the file input
             />
-          </form>
+            <div
+              className="relative w-20 h-20 cursor-pointer group"
+              onClick={handleImageClick}
+            >
+              <img
+                src={user.profilePic}
+                alt="Profile"
+                className="w-full h-full rounded-full border object-cover"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button variant="secondary" size="sm" disabled={isUpdating}>
+                  {isUpdating ? <Loader2 className="animate-spin" /> : <Edit />}
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex-1 overflow-y-auto p-6"
+        className="flex-1 overflow-y-auto px-6"
       >
         <div className="space-y-4">
           <div>

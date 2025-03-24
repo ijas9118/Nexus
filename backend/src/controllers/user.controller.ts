@@ -55,9 +55,6 @@ export class UserController implements IUserController {
     const updatedUser = await this.userService.updateProfilePic(userId, {}, file);
     await fs.unlink(file.path); // Clean up temporary file
 
-    res.status(200).json({
-      message: 'Profile picture updated',
-      user: { id: updatedUser._id, profilePic: updatedUser.profilePic },
-    });
+    res.status(200).json({ id: updatedUser._id, profilePic: updatedUser.profilePic });
   });
 }

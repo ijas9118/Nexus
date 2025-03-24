@@ -15,6 +15,7 @@ export const TYPES = {
   ConnectionsRepository: Symbol.for('ConnectionsRepository'),
   CommentRepository: Symbol.for('CommentRepository'),
   PlanRepository: Symbol.for('PlanRepository'),
+  CloudinaryRepository: Symbol.for('CloudinaryRepository'),
 
   // Services
   UserService: Symbol.for('UserService'),
@@ -37,6 +38,7 @@ export const TYPES = {
   CommentService: Symbol.for('CommentService'),
   PlanService: Symbol.for('PlanService'),
   PaymentService: Symbol.for('PaymentService'),
+  ImageService: Symbol.for('ImageService'),
 
   // Controllers
   UserController: Symbol.for('UserController'),

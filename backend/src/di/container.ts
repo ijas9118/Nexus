@@ -125,6 +125,10 @@ import { IPaymentService } from '../core/interfaces/services/IPaymentService';
 import { PaymentServce } from '../services/payment.service';
 import { IPaymentController } from '../core/interfaces/controllers/IPaymentController';
 import { PaymentController } from '../controllers/payment.controller';
+import { IImageService } from '@/core/interfaces/services/IImageService';
+import { ImageService } from '@/services/imageService';
+import { ICloudinaryRepository } from '@/core/interfaces/repositories/ICloudinaryRepository';
+import { CloudinaryRepository } from '@/repositories/cloudinaryRepository';
 
 const container = new Container();
 
@@ -197,5 +201,8 @@ container.bind<IPlanController>(TYPES.PlanController).to(PlanController);
 
 container.bind<IPaymentService>(TYPES.PaymentService).to(PaymentServce);
 container.bind<IPaymentController>(TYPES.PaymentController).to(PaymentController);
+
+container.bind<IImageService>(TYPES.ImageService).to(ImageService);
+container.bind<ICloudinaryRepository>(TYPES.CloudinaryRepository).to(CloudinaryRepository);
 
 export { container };

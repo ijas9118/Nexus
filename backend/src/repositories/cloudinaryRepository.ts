@@ -1,12 +1,11 @@
 import cloudinary from '@/config/cloudinary';
+import { ICloudinaryRepository } from '@/core/interfaces/repositories/ICloudinaryRepository';
+import { ImageData } from '@/core/types/image';
 import { Express } from 'express';
+import { injectable } from 'inversify';
 
-interface ImageData {
-  url: string;
-  publicId: string;
-}
-
-class CloudinaryRepository {
+@injectable()
+export class CloudinaryRepository implements ICloudinaryRepository {
   async uploadImage(file: Express.Multer.File): Promise<ImageData> {
     try {
       const result = await cloudinary.uploader.upload(file.path, {
@@ -30,5 +29,3 @@ class CloudinaryRepository {
     }
   }
 }
-
-export default new CloudinaryRepository();

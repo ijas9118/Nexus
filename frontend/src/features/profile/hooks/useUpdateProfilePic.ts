@@ -7,9 +7,11 @@ export function useUpdateProfilePic() {
     mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append("profilePic", file);
-      return await api.put("user/update/profile-pic", formData, {
+      const response = await api.put("user/update/profile-pic", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      return response.data;
     },
     onSuccess: () => {
       toast.success("Profile picture updated!");
@@ -21,7 +23,7 @@ export function useUpdateProfilePic() {
   });
 
   return {
-    updateProfilePic: mutation.mutate,
+    updateProfilePic: mutation.mutateAsync,
     isUpdating: mutation.isPending,
   };
 }

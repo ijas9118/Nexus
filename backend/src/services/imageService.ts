@@ -1,19 +1,20 @@
-import cloudinaryRepository from '../repositories/cloudinaryRepository';
+import { IImageService } from '@/core/interfaces/services/IImageService';
 import type { Express } from 'express';
+import { ImageData } from '@/core/types/image';
+import { ICloudinaryRepository } from '@/core/interfaces/repositories/ICloudinaryRepository';
+import { inject, injectable } from 'inversify';
+import { TYPES } from '@/di/types';
 
-interface ImageData {
-  url: string;
-  publicId: string;
-}
-
-class ImageService {
+@injectable()
+export class ImageService implements IImageService {
+  constructor(
+    @inject(TYPES.CloudinaryRepository) private cloudinaryRepository: ICloudinaryRepository
+  ) {}
   async uploadImage(file: Express.Multer.File): Promise<ImageData> {
-    return await cloudinaryRepository.uploadImage(file);
+    return await this.cloudinaryRepository.uploadImage(file);
   }
 
   async deleteImage(publicId: string): Promise<void> {
-    await cloudinaryRepository.deleteImage(publicId);
+    await this.cloudinaryRepository.deleteImage(publicId);
   }
 }
-
-export default new ImageService();
