@@ -5,7 +5,7 @@ import { Textarea } from "@/components/atoms/textarea";
 import { updateProfile } from "@/services/user/profileService";
 import { updateUserProfile } from "@/store/slices/authSlice";
 import { Link, Loader2 } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm, useFormState } from "react-hook-form";
 import {
   FaGithub,
@@ -18,6 +18,7 @@ import {
 import { FaSquareThreads, FaSquareXTwitter } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
+import { useUpdateProfilePic } from "../hooks/useUpdateProfilePic";
 
 const socialLinks = [
   { key: "github", icon: FaGithub, label: "Github" },
@@ -33,6 +34,7 @@ const socialLinks = [
 
 const ProfileForm = () => {
   const user = useSelector((state: any) => state.auth.user);
+  const { updateProfilePic, isUpdating } = useUpdateProfilePic();
   const [loading, setLoading] = useState(false);
   const [visibleInputs, setVisibleInputs] = useState<Record<string, boolean>>(
     user.socials?.reduce(
@@ -96,7 +98,11 @@ const ProfileForm = () => {
     }
   };
 
-  console.log(user.profilePic);
+  const handleUpdateProfilePic = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const file = (e.currentTarget.elements[0] as HTMLInputElement).files?.[0];
+    if (file) updateProfilePic(file);
+  };
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -108,11 +114,17 @@ const ProfileForm = () => {
               This is how others will see you.
             </p>
           </div>
-          <img
-            src={user.profilePic}
-            alt="Profile"
-            className="w-20 rounded-full border"
-          />
+          <form onSubmit={handleUpdateProfilePic}>
+            <input type="file" accept="image/*" />
+            <button type="submit" disabled={isUpdating}>
+              Update Profile Pic
+            </button>
+            <img
+              src={user.profilePic}
+              alt="Profile"
+              className="w-20 rounded-full border"
+            />
+          </form>
         </div>
       </div>
       <form

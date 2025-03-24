@@ -1,6 +1,7 @@
 import { UsersDTO } from '../../../dtos/responses/admin/users.dto';
 import { ISquad } from '../../../models/squads.model';
 import { IUser } from '../../../models/user.model';
+import { Express } from 'express';
 
 export interface IUserService {
   findByEmail(email: string): Promise<IUser | null>;
@@ -18,4 +19,6 @@ export interface IUserService {
       confirmPassword: string;
     }
   ): Promise<boolean>;
+
+  updateProfilePic(userId: string, data: any, file?: Express.Multer.File): Promise<any>;
 }

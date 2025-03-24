@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, Express } from 'express';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
 
@@ -7,6 +7,7 @@ import { IUserService } from '../core/interfaces/services/IUserService';
 import asyncHandler from 'express-async-handler';
 import CustomError from '../utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
+import fs from 'fs/promises';
 
 @injectable()
 export class UserController implements IUserController {
@@ -38,5 +39,25 @@ export class UserController implements IUserController {
 
     await this.userService.updatePassword(userId, req.body);
     res.status(StatusCodes.OK).json({ success: true, message: 'Password updated successfully' });
+  });
+
+  updateProfilePic = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
+    const file = req.file as Express.Multer.File;
+
+    console.log(userId, file);
+
+    if (!file) {
+      res.status(400).json({ message: 'No file uploaded' });
+      return;
+    }
+
+    const updatedUser = await this.userService.updateProfilePic(userId, {}, file);
+    await fs.unlink(file.path); // Clean up temporary file
+
+    res.status(200).json({
+      message: 'Profile picture updated',
+      user: { id: updatedUser._id, profilePic: updatedUser.profilePic },
+    });
   });
 }

@@ -7,6 +7,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   profilePic: string;
+  profilePicPublicId?: string;
   gender: string;
   place: string;
   postsCount: number;
@@ -47,6 +48,9 @@ const UserSchema: Schema = new Schema(
       type: String,
       default:
         'https://res.cloudinary.com/dhvlhpg55/image/upload/v1740028408/nexus/images/oamn3bzchpmixago65yf.jpg',
+    },
+    profilePicPublicId: {
+      type: String,
     },
     gender: {
       type: String,

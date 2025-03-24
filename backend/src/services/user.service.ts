@@ -7,6 +7,13 @@ import { BaseService } from '../core/abstracts/base.service';
 import { UsersDTO } from '../dtos/responses/admin/users.dto';
 import bcrypt from 'bcrypt';
 import { ISquad } from '../models/squads.model';
+import { Express } from 'express';
+import imageService from './imageService';
+
+interface UserUpdateData {
+  profilePic?: string;
+  profilePicPublicId?: string;
+}
 
 @injectable()
 export class UserService extends BaseService<IUser> implements IUserService {
@@ -48,31 +55,46 @@ export class UserService extends BaseService<IUser> implements IUserService {
   ): Promise<boolean> {
     const { currentPassword, newPassword, confirmPassword } = passwordData;
 
-    // Check if new password matches confirm password
     if (newPassword !== confirmPassword) {
       throw new Error('New password and confirm password do not match');
     }
 
-    // Fetch the user from the database
     const user = await this.userRepository.findOne({ _id: userId });
     if (!user) {
       throw new Error('User not found');
     }
 
-    // Validate current password
     const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
     if (!isPasswordValid) {
       throw new Error('Current password is incorrect');
     }
 
-    // Hash the new password
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-    // Update the user's password
     await this.userRepository.updateOne({ _id: userId }, { $set: { password: hashedPassword } });
 
     return true;
+  }
+
+  async updateProfilePic(
+    userId: string,
+    data: UserUpdateData,
+    file?: Express.Multer.File
+  ): Promise<UserUpdateData> {
+    if (file) {
+      const { url, publicId } = await imageService.uploadImage(file);
+      const user = await this.userRepository.getUserById(userId);
+      if (user?.profilePicPublicId) {
+        await imageService.deleteImage(user.profilePicPublicId); // Delete old image
+      }
+      data.profilePic = url;
+      data.profilePicPublicId = publicId;
+    }
+
+    const updatedUser = await this.userRepository.updateUser(userId, data);
+    if (!updatedUser) throw new Error('User not found');
+    return data;
   }
 
   async deleteUser(userId: string): Promise<boolean> {
