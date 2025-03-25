@@ -4,6 +4,7 @@ export interface IUserFollow extends Document {
   userId: Types.ObjectId;
   followers: Types.ObjectId[];
   following: Types.ObjectId[];
+  connections: Types.ObjectId[];
 }
 
 const UserFollowSchema: Schema = new Schema(

@@ -1,8 +1,7 @@
-import { IUserFollow } from '../../../models/followers.model';
-import { IPendingRequestUser } from '../../types/UserTypes';
+import { IPendingRequestUser, SearchConnections } from '../../types/UserTypes';
 
 export interface IConnectionService {
-  getAllConnections(userId: string, search?: string): Promise<IUserFollow[]>;
+  searchConnections(userId: string, search?: string): Promise<SearchConnections[]>;
   getPendingRequest(userId: string): Promise<IPendingRequestUser[]>;
   sendConnectionRequest(requesterId: string, recipientId: string): Promise<boolean>;
   acceptConnectionRequest(userId: string, requesterId: string): Promise<boolean>;

@@ -84,7 +84,7 @@ router.post(
 router.get(
   '/connections',
   authenticate(['user', 'premium']),
-  connectionsController.getAllConnections
+  connectionsController.searchConnections
 );
 
 router.get('/pending', authenticate(['user', 'premium']), connectionsController.getPendingRequests);

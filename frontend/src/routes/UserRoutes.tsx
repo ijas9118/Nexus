@@ -16,7 +16,6 @@ import History from "@/features/content/History";
 import ContentDetails from "@/features/content/ContentDetails";
 import ProfilePage from "@/features/profile/Profile";
 import EditProfile from "@/features/profile/EditProfileLayout";
-import Chat from "@/features/chat/Chat";
 import Following from "@/features/content/Following";
 import Mentors from "@/features/mentor/Mentors";
 import MentorApply from "@/features/mentor/MentorApply";
@@ -24,6 +23,7 @@ import MentorProfilePage from "@/features/mentor/MentorProfilePage";
 import BookSession from "@/features/mentor/BookSession";
 import { MentorFormProvider } from "@/context/MentorFormContext";
 import AddPost from "@/features/addPost/AddPost";
+import Chat from "@/features/chat2/Chat";
 
 const UserRoutes: React.FC = () => {
   return (

@@ -1,6 +1,5 @@
 import { injectable } from 'inversify';
-import { IUser } from '../models/user.model';
-import User from '../models/user.model';
+import { IUser, UserModel } from '../models/user.model';
 import { BaseRepository } from '../core/abstracts/base.repository';
 import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
 import { Types } from 'mongoose';
@@ -9,7 +8,7 @@ import { ISquad } from '../models/squads.model';
 @injectable()
 export class UserRepository extends BaseRepository<IUser> implements IUserRepository {
   constructor() {
-    super(User);
+    super(UserModel);
   }
 
   async findUserById(id: string): Promise<IUser | null> {
@@ -22,11 +21,11 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   }
 
   async findByGoogleId(googleId: string): Promise<IUser | null> {
-    return await User.findOne({ googleId });
+    return await UserModel.findOne({ googleId });
   }
 
   async findByGithubId(githubId: string): Promise<IUser | null> {
-    return await User.findOne({ githubId });
+    return await UserModel.findOne({ githubId });
   }
 
   async getAllUsers(): Promise<IUser[]> {
@@ -70,7 +69,7 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   }
 
   async getUserJoinedSquads(userId: string): Promise<ISquad[]> {
-    const user = await User.findById(userId).populate('joinedSquads');
+    const user = await UserModel.findById(userId).populate('joinedSquads');
     if (!user) {
       throw new Error('User not found');
     }
@@ -78,6 +77,6 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   }
 
   async getUserByRoleAndId(role: string, id: string): Promise<IUser | null> {
-    return User.findOne({ _id: id, role }).exec();
+    return UserModel.findOne({ _id: id, role }).exec();
   }
 }

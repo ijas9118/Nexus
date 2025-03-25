@@ -9,7 +9,6 @@ import {
 import { Separator } from "@/components/atoms/separator";
 import {
   acceptConnectionRequest,
-  getAllConnections,
   getPendingRequests,
 } from "@/services/user/followService";
 import { useEffect, useState } from "react";
@@ -24,8 +23,8 @@ const Connections = () => {
     const fetchConnections = async () => {
       setLoading(true);
       try {
-        const data = await getAllConnections();
-        setConnections(data);
+        // const data = await getAllConnections();
+        // setConnections(data);
 
         const pendingRequests = await getPendingRequests();
         setRequests(pendingRequests);

@@ -12,11 +12,25 @@ import { IConnectionsController } from '../core/interfaces/controllers/IConnecti
 export class ConnectionsController implements IConnectionsController {
   constructor(@inject(TYPES.ConnectionService) private connectionsService: IConnectionService) {}
 
-  getAllConnections = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  searchConnections = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
-    const { search } = req.query;
+    const search: string = req.query.search as string;
 
-    const result = await this.connectionsService.getAllConnections(userId, search as string);
+    if (search === undefined || search === null) {
+      res.status(StatusCodes.BAD_REQUEST).json({ message: 'Search term is required' });
+      return;
+    }
+
+    const sanitizedSearchTerm = search.replace(/[^a-zA-Z0-9\s@._'-]/g, '').trim();
+
+    if (sanitizedSearchTerm.length === 0) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: 'Search term cannot be empty after sanitization' });
+      return;
+    }
+
+    const result = await this.connectionsService.searchConnections(userId, sanitizedSearchTerm);
 
     res.status(StatusCodes.OK).json(result);
   });

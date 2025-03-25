@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 
 export interface IConnectionsController {
-  getAllConnections: RequestHandler;
+  searchConnections: RequestHandler;
   getPendingRequests: RequestHandler;
   sendConnectionRequest: RequestHandler;
   acceptConnectionRequest: RequestHandler;

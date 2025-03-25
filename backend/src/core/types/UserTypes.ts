@@ -12,3 +12,11 @@ export interface IPendingRequestUser {
   username: string;
   profilePic: string;
 }
+
+export interface SearchConnections {
+  _id: string;
+  name: string;
+  username: string;
+  profilePic: string;
+  email: string;
+}

@@ -3,7 +3,10 @@ import { BaseRepository } from '../core/abstracts/base.repository';
 import UserFollowModel, { IUserFollow } from '../models/followers.model';
 import { Types } from 'mongoose';
 import { IConnectionsRepository } from '../core/interfaces/repositories/IConnectionsRepository';
-import { IPendingRequestUser } from '../core/types/UserTypes';
+import { IPendingRequestUser, SearchConnections } from '../core/types/UserTypes';
+import CustomError from '@/utils/CustomError';
+import { StatusCodes } from 'http-status-codes';
+import { UserModel } from '@/models/user.model';
 
 @injectable()
 export class ConnectionsRepository
@@ -14,46 +17,31 @@ export class ConnectionsRepository
     super(UserFollowModel);
   }
 
-  getAllConnections = async (userId: string, search?: string): Promise<IUserFollow[]> => {
-    const userObjId = new Types.ObjectId(userId);
+  searchConnections = async (userId: string, search: string): Promise<SearchConnections[]> => {
+    const userFollow: IUserFollow = await this.model.findOne({ userId }).select('connections');
+    if (!userFollow || !userFollow.connections.length) {
+      throw new CustomError('No connections found', StatusCodes.NOT_FOUND);
+    }
 
-    const connections = await UserFollowModel.aggregate([
-      { $match: { userId: userObjId } },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'connections',
-          foreignField: '_id',
-          as: 'connectedUsers',
-        },
-      },
-      { $unwind: '$connectedUsers' }, // Flatten the connectedUsers array
-      {
-        $replaceRoot: { newRoot: '$connectedUsers' }, // Replace the root with connectedUsers
-      },
-      ...(search
-        ? [
-            {
-              $match: {
-                $or: [
-                  { name: { $regex: search, $options: 'i' } }, // Case-insensitive search for name
-                  { username: { $regex: search, $options: 'i' } }, // Case-insensitive search for username
-                ],
-              },
-            },
-          ]
-        : []),
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          username: 1,
-          avatar: '$profilePic',
-        },
-      },
-    ]);
+    const connectedUserIds = userFollow.connections;
+    const results = await UserModel.find({
+      _id: { $in: connectedUserIds },
+      $or: [
+        { username: { $regex: search, $options: 'i' } },
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+      ],
+    }).select('username name email profilePic');
 
-    return connections;
+    const formattedResults: SearchConnections[] = results.map((user) => ({
+      _id: user._id.toString(),
+      name: user.name,
+      username: user.username,
+      profilePic: user.profilePic,
+      email: user.email,
+    }));
+
+    return formattedResults;
   };
 
   getPendingRequests = async (userId: string): Promise<IPendingRequestUser[]> => {

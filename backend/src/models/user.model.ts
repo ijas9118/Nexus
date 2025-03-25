@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 import { UserRole } from '../core/types/UserTypes';
 
-export interface IUser extends Document {
+interface IUser extends Document {
   _id: ObjectId;
   name: string;
   email: string;
@@ -23,7 +23,7 @@ export interface IUser extends Document {
   skills: string[];
   socials: [{ platform: string; url: string }];
   role: UserRole;
-  username?: string;
+  username: string;
   isPremium: boolean;
   googleId?: string;
   githubId?: string;
@@ -128,4 +128,5 @@ const UserSchema: Schema = new Schema(
   }
 );
 
-export default mongoose.model<IUser>('User', UserSchema);
+const UserModel = mongoose.model<IUser>('User', UserSchema);
+export { UserModel, IUser };

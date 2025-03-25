@@ -137,7 +137,7 @@ export const checkConnected = async (userId2: string) => {
   }
 };
 
-export const getAllConnections = async (searchTerm?: string) => {
+export const searchConnectedUsers = async (searchTerm?: string) => {
   try {
     const response = await api.get("/followers/connections", {
       params: {
