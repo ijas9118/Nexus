@@ -16,11 +16,17 @@ import {
 import { ScrollArea } from "@/components/organisms/scroll-area";
 import { animationDefaultOptions } from "@/lib/utils";
 import { searchConnectedUsers } from "@/services/user/followService";
+import {
+  setSelectedChatData,
+  setSelectedChatType,
+} from "@/store/slices/chatSlice";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import Lottie from "react-lottie";
+import { useDispatch } from "react-redux";
 
 const NewDM = () => {
+  const dispatch = useDispatch();
   const [openNewContactModel, setOpenNewContactModel] = useState(false);
   const [searchedUsers, setSearchedUsers] = useState([]);
 
@@ -37,6 +43,8 @@ const NewDM = () => {
 
   const selectNewChat = (user: any) => {
     setOpenNewContactModel(false);
+    dispatch(setSelectedChatData(user));
+    dispatch(setSelectedChatType("connection"));
     setSearchedUsers([]);
   };
 
@@ -101,7 +109,7 @@ const NewDM = () => {
                 </div>
               </ScrollArea>
             ) : (
-              <div className="py-10">
+              <div className="py-10 ">
                 <Lottie
                   isClickToPauseDisabled={true}
                   height={100}
