@@ -5,14 +5,17 @@ import { Provider } from "react-redux";
 import store from "./store/store.ts";
 import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SocketProvider } from "./context/SocketContext.tsx";
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
-    <QueryClientProvider client={queryClient}>
-      <App />
-      <Toaster richColors closeButton />
-    </QueryClientProvider>
+    <SocketProvider>
+      <QueryClientProvider client={queryClient}>
+        <App />
+        <Toaster richColors closeButton />
+      </QueryClientProvider>
+    </SocketProvider>
   </Provider>,
 );

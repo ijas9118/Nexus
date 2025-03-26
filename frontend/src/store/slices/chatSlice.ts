@@ -30,6 +30,21 @@ const chatSlice = createSlice({
       state.selectedChatType = undefined;
       state.selectedChatMessages = [];
     },
+    addMessage: (state, action: PayloadAction<any>) => {
+      const message = action.payload;
+      const newMessage = {
+        ...message,
+        recipient:
+          state.selectedChatType === "channel"
+            ? message.recipient
+            : message.recipient_id,
+        sender:
+          state.selectedChatType === "channel"
+            ? message.sender
+            : message.sender_id,
+      };
+      state.selectedChatMessages = [...state.selectedChatMessages, newMessage];
+    },
   },
 });
 
@@ -38,6 +53,7 @@ export const {
   setSelectedChatData,
   setSelectedChatMessages,
   closeChat,
+  addMessage,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

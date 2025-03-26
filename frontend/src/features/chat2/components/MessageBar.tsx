@@ -3,11 +3,21 @@ import { Input } from "@/components/atoms/input";
 import { Paperclip, Send, SmilePlus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import EmojiPicker, { Theme } from "emoji-picker-react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { useSocket } from "@/context/SocketContext";
+import { addMessage } from "@/store/slices/chatSlice";
 
 const MessageBar = () => {
   const [message, setMessage] = useState("");
   const emojiRef = useRef<HTMLDivElement>(null);
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+  const { selectedChatData, selectedChatType } = useSelector(
+    (state: RootState) => state.chat,
+  );
+  const { user } = useSelector((state: RootState) => state.auth);
+  const socket = useSocket();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -25,7 +35,43 @@ const MessageBar = () => {
     };
   }, [emojiRef]);
 
-  const handleSendMessage = async () => {};
+  const handleReceiveMessage = (message: any) => {
+    if (
+      selectedChatType !== undefined &&
+      selectedChatData?._id &&
+      (selectedChatData._id === message.sender._id ||
+        selectedChatData._id === message.recipient._id)
+    ) {
+      console.log("Message Received:", message);
+      dispatch(addMessage(message));
+    }
+  };
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("recieveMessage", handleReceiveMessage);
+
+    return () => {
+      socket.off("recieveMessage", handleReceiveMessage);
+    };
+  }, [socket, selectedChatData, selectedChatType, dispatch]);
+
+  const handleSendMessage = async () => {
+    if (!socket) {
+      console.log("Socket is not initialized");
+      return;
+    }
+    if (selectedChatType === "connection") {
+      socket?.emit("sendMessage", {
+        sender: user?._id,
+        content: message,
+        recipient: selectedChatData._id,
+        messageType: "text",
+        fileUrl: undefined,
+      });
+    }
+  };
 
   const handleAddEmoji = (emoji: { emoji: string }) => {
     setMessage((msg) => msg + emoji.emoji);
