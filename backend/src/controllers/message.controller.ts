@@ -39,13 +39,14 @@ export class MessageController implements IMessageController {
   });
 
   getAllMessages = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const { chatId } = req.params;
+    const user1 = req.user?._id as string;
+    const user2 = req.body.id;
 
-    if (!chatId) {
-      throw new CustomError('Chat ID is required', StatusCodes.BAD_REQUEST);
+    if (!user1 || !user2) {
+      throw new CustomError('Both user ids are required', StatusCodes.BAD_REQUEST);
     }
 
-    const messages = await this.messageService.getAllMessages(chatId);
+    const messages = await this.messageService.getAllMessages(user1, user2);
 
     if (!messages) {
       throw new CustomError('Failed to fetch messages', StatusCodes.INTERNAL_SERVER_ERROR);

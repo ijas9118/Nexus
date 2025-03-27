@@ -2,10 +2,10 @@ import ChatHeader from "./ChatHeader";
 import MessageBar from "./MessageBar";
 import MessageContainer from "./MessageContainer";
 
-const ChatContainer = () => {
+const ChatContainer = ({ toggleContacts }: { toggleContacts: () => void }) => {
   return (
-    <div className="fixed top-0 flex flex-col md:static md:flex-1">
-      <ChatHeader />
+    <div className="flex flex-col flex-1 w-full h-full">
+      <ChatHeader toggleContacts={toggleContacts} />
       <MessageContainer />
       <MessageBar />
     </div>

@@ -4,7 +4,6 @@ import { TYPES } from '../di/types';
 import { IMessage } from '../models/message.model';
 import { IMessageRepository } from '../core/interfaces/repositories/IMessageRepository';
 import { IMessageService } from '../core/interfaces/services/IMessageService';
-import { io } from '../server';
 
 @injectable()
 export class MessageService extends BaseService<IMessage> implements IMessageService {
@@ -18,11 +17,10 @@ export class MessageService extends BaseService<IMessage> implements IMessageSer
     text: string;
   }): Promise<IMessage> => {
     const message = await this.messageRepository.createNewMessage(data);
-    io.to(data.chatId).emit('receiveMessage', message); // Emit the event
     return message;
   };
 
-  getAllMessages = async (chatId: string): Promise<IMessage[]> => {
-    return await this.messageRepository.getAllMessages(chatId);
+  getAllMessages = async (user1: string, user2: string): Promise<IMessage[]> => {
+    return await this.messageRepository.getAllMessages(user1, user2);
   };
 }

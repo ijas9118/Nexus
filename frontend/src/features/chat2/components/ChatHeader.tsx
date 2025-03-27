@@ -5,29 +5,39 @@ import { RootState } from "@/store/store";
 import { X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 
-const ChatHeader = () => {
+const ChatHeader = ({ toggleContacts }: { toggleContacts: () => void }) => {
   const dispatch = useDispatch();
   const { selectedChatData } = useSelector((state: RootState) => state.chat);
 
   return (
-    <div className="h-[10vh] border-b-2 flex items-center justify-between px-20 ">
-      <div className="flex gap-3 items-center justify-center">
-        <Avatar className="h-10 w-10">
+    <div
+      className="h-[10vh] min-h-[60px] border-b-2 flex items-center 
+      justify-between px-4 sm:px-6 md:px-10 lg:px-20"
+    >
+      <div className="flex gap-2 sm:gap-3 items-center w-full overflow-hidden">
+        <Avatar className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
           <AvatarImage src={selectedChatData.profilePic} />
           <AvatarFallback>{selectedChatData.name[0]}</AvatarFallback>
         </Avatar>
-        <div>
-          <h2 className="font-semibold">{selectedChatData.name}</h2>
-          <p className="text-sm text-muted-foreground">Active 2 mins ago</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* <UserInfo selectedChat={selectedChatData} /> */}
-          {/* <ChatSettings /> */}
+        <div className="min-w-0 flex-1">
+          <h2 className="font-semibold text-sm sm:text-base truncate">
+            {selectedChatData.name}
+          </h2>
+          <p className="text-xs sm:text-sm text-muted-foreground truncate">
+            Active 2 mins ago
+          </p>
         </div>
       </div>
-      <div className="flex gap-5 items-center justify-center">
-        <Button variant="ghost" onClick={() => dispatch(closeChat())}>
-          <X />
+      <div className="flex gap-2 sm:gap-5 items-center flex-shrink-0">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => {
+            dispatch(closeChat());
+            toggleContacts();
+          }}
+        >
+          <X className="h-4 w-4 sm:h-5 sm:w-5" />
         </Button>
       </div>
     </div>

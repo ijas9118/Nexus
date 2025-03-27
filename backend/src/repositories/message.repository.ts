@@ -20,9 +20,7 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
   }): Promise<IMessage> => {
     const { chatId, sender, text } = data;
     const message = await this.create({
-      chatId: new mongoose.Types.ObjectId(chatId),
       sender: new mongoose.Types.ObjectId(sender),
-      text,
     });
 
     await this.chatRepository.findOneAndUpdate(
@@ -33,22 +31,21 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
     return message;
   };
 
-  getAllMessages = async (chatId: string): Promise<IMessage[]> => {
-    const messages = await MessageModel.find({
-      chatId: new mongoose.Types.ObjectId(chatId),
-    })
-      .sort({ createdAt: 1 }) // Sort by createdAt in ascending order
-      .populate('sender', 'name profilePic'); // Populate sender details
-
-    // console.log(messages)
-
-    const formattedMessages = messages.map((message: IMessage) => {
-      return {
-        ...message.toObject(),
-        sentTime: FormatTime.formatTime(message.updatedAt.toString()),
-      };
-    });
-
-    return formattedMessages;
+  getAllMessages = async (user1: string, user2: string): Promise<IMessage[]> => {
+    const messages = await this.model
+      .find({
+        $or: [
+          {
+            sender: user1,
+            recipient: user2,
+          },
+          {
+            sender: user2,
+            recipient: user1,
+          },
+        ],
+      })
+      .sort({ updatedAt: 1 });
+    return messages;
   };
 }

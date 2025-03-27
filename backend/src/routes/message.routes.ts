@@ -17,10 +17,6 @@ router.post(
   messageController.createNewMessage
 );
 
-router.get(
-  '/get-all-messages/:chatId',
-  authenticate(['user', 'premium']),
-  messageController.getAllMessages
-);
+router.post('/get-messages/', authenticate(['user', 'premium']), messageController.getAllMessages);
 
 export default router;

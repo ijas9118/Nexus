@@ -37,11 +37,11 @@ const chatSlice = createSlice({
         recipient:
           state.selectedChatType === "channel"
             ? message.recipient
-            : message.recipient_id,
+            : message.recipient._id,
         sender:
           state.selectedChatType === "channel"
             ? message.sender
-            : message.sender_id,
+            : message.sender._id,
       };
       state.selectedChatMessages = [...state.selectedChatMessages, newMessage];
     },

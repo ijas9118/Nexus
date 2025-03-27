@@ -28,12 +28,11 @@ import { useDispatch } from "react-redux";
 const NewDM = () => {
   const dispatch = useDispatch();
   const [openNewContactModel, setOpenNewContactModel] = useState(false);
-  const [searchedUsers, setSearchedUsers] = useState([]);
+  const [searchedUsers, setSearchedUsers] = useState<any[]>([]);
 
   const searchConnections = async (search: string) => {
     try {
       const result = await searchConnectedUsers(search);
-      console.log(result);
       setSearchedUsers(result);
     } catch (error) {
       setSearchedUsers([]);
@@ -48,6 +47,8 @@ const NewDM = () => {
     setSearchedUsers([]);
   };
 
+  console.log(searchedUsers);
+
   return (
     <>
       <TooltipProvider>
@@ -55,10 +56,11 @@ const NewDM = () => {
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              className="cursor-pointer"
+              size="icon"
+              className="rounded-full hover:bg-muted"
               onClick={() => setOpenNewContactModel(true)}
             >
-              <Plus />
+              <Plus className="h-5 w-5" />
             </Button>
           </TooltipTrigger>
           <TooltipContent className="bg-secondary text-muted-foreground">
@@ -68,60 +70,63 @@ const NewDM = () => {
       </TooltipProvider>
 
       <Dialog open={openNewContactModel} onOpenChange={setOpenNewContactModel}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="w-full max-w-[90vw] sm:max-w-md md:max-w-lg lg:max-w-xl p-4 sm:p-6">
           <DialogHeader>
-            <DialogTitle className="mb-5">
-              Please Select a Connected User
+            <DialogTitle className="text-lg sm:text-xl font-semibold mb-2 sm:mb-4">
+              Select a Connection
             </DialogTitle>
-            <DialogDescription></DialogDescription>
-            <div>
-              <Input
-                placeholder="Search Connections..."
-                className="rounded-lg border-none "
-                onChange={(e) => searchConnections(e.target.value)}
-              />
-            </div>
+            <DialogDescription className="hidden">
+              Search and select a user to start a new direct message.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <Input
+              placeholder="Search Connections..."
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary"
+              onChange={(e) => searchConnections(e.target.value)}
+            />
 
             {searchedUsers.length > 0 ? (
-              <ScrollArea className="h-[250px]">
-                <div className="flex flex-col gap-5">
-                  {searchedUsers.map((user: any) => (
+              <ScrollArea className="h-[200px] sm:h-[250px] md:h-[300px] w-full rounded-md border">
+                <div className="p-2 sm:p-4 space-y-2">
+                  {searchedUsers.map((user) => (
                     <div
                       key={user._id}
-                      className="p-2 hover:bg-neutral-50 dark:hover:bg-neutral-900 cursor-pointer"
+                      className="flex items-center gap-3 p-2 sm:p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors duration-200"
                       onClick={() => selectNewChat(user)}
                     >
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={user.profilePic}
-                          alt={user.name}
-                          className="h-8 w-8 rounded-full"
-                        />
-                        <div>
-                          <p className="font-medium">{user.name}</p>
-                          <p className="text-sm text-muted-foreground">
-                            @{user.username}
-                          </p>
-                        </div>
+                      <img
+                        src={user.profilePic}
+                        alt={user.name}
+                        className="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm sm:text-base font-medium truncate">
+                          {user.name}
+                        </p>
+                        <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                          @{user.username}
+                        </p>
                       </div>
                     </div>
                   ))}
                 </div>
               </ScrollArea>
             ) : (
-              <div className="py-10 ">
+              <div className="flex flex-col items-center justify-center py-6 sm:py-10">
                 <Lottie
                   isClickToPauseDisabled={true}
-                  height={100}
-                  width={100}
+                  height={80}
+                  width={80}
                   options={animationDefaultOptions}
                 />
-                <div className="text-opacity-80 text-muted-foreground items-center lg:text-xl text-sm transition-all duration-300 text-center">
-                  <h3>Choose a chat</h3>
-                </div>
+                <p className="mt-2 text-sm sm:text-base text-muted-foreground text-center">
+                  Search for a connection to start a chat
+                </p>
               </div>
             )}
-          </DialogHeader>
+          </div>
         </DialogContent>
       </Dialog>
     </>

@@ -3,6 +3,5 @@ import { BaseRepository } from '../../abstracts/base.repository';
 
 export interface IMessageRepository extends BaseRepository<IMessage> {
   createNewMessage(data: { chatId: string; sender: string; text: string }): Promise<IMessage>;
-
-  getAllMessages(chatId: string): Promise<IMessage[]>;
+  getAllMessages(user1: string, user2: string): Promise<IMessage[]>;
 }

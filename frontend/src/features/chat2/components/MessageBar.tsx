@@ -1,7 +1,7 @@
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { Paperclip, Send, SmilePlus } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import EmojiPicker, { Theme } from "emoji-picker-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -35,17 +35,20 @@ const MessageBar = () => {
     };
   }, [emojiRef]);
 
-  const handleReceiveMessage = (message: any) => {
-    if (
-      selectedChatType !== undefined &&
-      selectedChatData?._id &&
-      (selectedChatData._id === message.sender._id ||
-        selectedChatData._id === message.recipient._id)
-    ) {
-      console.log("Message Received:", message);
-      dispatch(addMessage(message));
-    }
-  };
+  const handleReceiveMessage = useCallback(
+    (message: any) => {
+      if (
+        selectedChatType !== undefined &&
+        selectedChatData?._id &&
+        (selectedChatData._id === message.sender._id ||
+          selectedChatData._id === message.recipient._id)
+      ) {
+        console.log("Message Received:", message);
+        dispatch(addMessage(message));
+      }
+    },
+    [dispatch, selectedChatData._id, selectedChatType],
+  );
 
   useEffect(() => {
     if (!socket) return;
@@ -55,11 +58,20 @@ const MessageBar = () => {
     return () => {
       socket.off("recieveMessage", handleReceiveMessage);
     };
-  }, [socket, selectedChatData, selectedChatType, dispatch]);
+  }, [
+    socket,
+    selectedChatData,
+    selectedChatType,
+    dispatch,
+    handleReceiveMessage,
+  ]);
 
   const handleSendMessage = async () => {
     if (!socket) {
       console.log("Socket is not initialized");
+      return;
+    }
+    if (!message.trim()) {
       return;
     }
     if (selectedChatType === "connection") {
@@ -70,6 +82,14 @@ const MessageBar = () => {
         messageType: "text",
         fileUrl: undefined,
       });
+      setMessage("");
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
@@ -78,23 +98,33 @@ const MessageBar = () => {
   };
 
   return (
-    <div className="h-[4vh] flex justify-center items-center px-8 mb-5 gap-2">
+    <div className="min-h-[4vh] flex items-center px-2 sm:px-4 md:px-8 mb-2 sm:mb-5 gap-1 sm:gap-2">
       <div className="flex-1 flex rounded-md items-center gap-1">
         <Input
           type="text"
-          className="flex-1 bg-transparent rounded-md focus:border-none focus:outline-none"
+          className="flex-1 bg-transparent rounded-md text-sm sm:text-base
+          focus:border-none focus:outline-none py-1 sm:py-2"
           placeholder="Enter a message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyPress}
         />
-        <Button variant="ghost">
-          <Paperclip />
+        <Button variant="ghost" size="sm" className="p-1 sm:p-2">
+          <Paperclip className="h-4 w-4 sm:h-5 sm:w-5" />
         </Button>
         <div className="relative">
-          <Button variant="ghost" onClick={() => setEmojiPickerOpen(true)}>
-            <SmilePlus />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="p-1 sm:p-2"
+            onClick={() => setEmojiPickerOpen(true)}
+          >
+            <SmilePlus className="h-4 w-4 sm:h-5 sm:w-5" />
           </Button>
-          <div className="absolute bottom-16 right-0" ref={emojiRef}>
+          <div
+            className="absolute bottom-12 right-0 scale-75 sm:scale-100 origin-bottom-right"
+            ref={emojiRef}
+          >
             <EmojiPicker
               theme={Theme.DARK}
               open={emojiPickerOpen}
@@ -104,8 +134,13 @@ const MessageBar = () => {
           </div>
         </div>
       </div>
-      <Button variant="ghost" onClick={handleSendMessage}>
-        <Send />
+      <Button
+        variant="ghost"
+        size="sm"
+        className="p-1 sm:p-2"
+        onClick={handleSendMessage}
+      >
+        <Send className="h-4 w-4 sm:h-5 sm:w-5" />
       </Button>
     </div>
   );
