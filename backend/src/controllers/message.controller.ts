@@ -56,4 +56,12 @@ export class MessageController implements IMessageController {
       .status(StatusCodes.OK)
       .json({ message: 'Fetched all messages', data: messages, success: true });
   });
+
+  getUsersWithChats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
+
+    const chats = await this.messageService.getUsersWithChats(userId);
+
+    res.status(StatusCodes.OK).json(chats);
+  });
 }

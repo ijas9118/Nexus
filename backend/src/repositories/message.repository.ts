@@ -31,6 +31,59 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
     return message;
   };
 
+  getUsersWithChats = async (userId: string): Promise<any[]> => {
+    const userIdObj = new mongoose.Types.ObjectId(userId);
+
+    const chats = await MessageModel.aggregate([
+      {
+        $match: {
+          $or: [{ sender: userIdObj }, { recipient: userIdObj }],
+        },
+      },
+      {
+        $sort: { updatedAt: -1 },
+      },
+      {
+        $group: {
+          _id: {
+            $cond: {
+              if: { $eq: ['$sender', userIdObj] },
+              then: '$recipient',
+              else: '$sender',
+            },
+          },
+          lastMessageTime: { $first: '$updatedAt' },
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'userInfo',
+        },
+      },
+      {
+        $unwind: '$userInfo',
+      },
+      {
+        $project: {
+          _id: 1,
+          lastMessageTime: 1,
+          email: '$userInfo.email',
+          username: '$userInfo.username',
+          name: '$userInfo.name',
+          profilePic: '$userInfo.profilePic',
+        },
+      },
+      {
+        $sort: { lastMessageTime: -1 },
+      },
+    ]);
+
+    return chats;
+  };
+
   getAllMessages = async (user1: string, user2: string): Promise<IMessage[]> => {
     const messages = await this.model
       .find({

@@ -18,6 +18,22 @@ export const MessageService = {
       }
     }
   },
+
+  getUsersWithChat: async () => {
+    try {
+      const response = await api.get("/message/get-users-with-chat/");
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
+    }
+  },
+
   sendMessage: async (chatId: string, text: string) => {
     try {
       const response = await api.post("/message/new-message", { chatId, text });

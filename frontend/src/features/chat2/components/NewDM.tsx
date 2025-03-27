@@ -47,8 +47,6 @@ const NewDM = () => {
     setSearchedUsers([]);
   };
 
-  console.log(searchedUsers);
-
   return (
     <>
       <TooltipProvider>

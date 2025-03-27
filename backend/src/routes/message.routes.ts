@@ -19,4 +19,10 @@ router.post(
 
 router.post('/get-messages/', authenticate(['user', 'premium']), messageController.getAllMessages);
 
+router.get(
+  '/get-users-with-chat',
+  authenticate(['user', 'premium', 'mentor']),
+  messageController.getUsersWithChats
+);
+
 export default router;

@@ -81,7 +81,12 @@ const MessageContainer = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-2 sm:p-4 md:px-8 w-full ">
+    <div
+      className="flex-1 overflow-y-auto p-2 sm:p-4 md:px-8 w-full "
+      style={{
+        backgroundImage: `url('')`,
+      }}
+    >
       {renderMessages()}
       <div ref={scrollRef} />
     </div>
