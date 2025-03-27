@@ -1,4 +1,4 @@
-import { ImageData } from '@/core/types/image';
+import { ImageData } from '@/core/types/cloudinary';
 import { Express } from 'express';
 
 export interface ICloudinaryRepository {

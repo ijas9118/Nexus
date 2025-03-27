@@ -7,6 +7,7 @@ export function useUpdateProfilePic() {
     mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append("profilePic", file);
+
       const response = await api.put("user/update/profile-pic", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });

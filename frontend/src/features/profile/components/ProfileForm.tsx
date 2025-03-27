@@ -107,11 +107,16 @@ const ProfileForm = () => {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const responseData = await updateProfilePic(file);
+    if (!file) return;
+
+    try {
+      const responseData = await updateProfilePic(file); // Toast is handled in the hook
       if (responseData?.profilePic) {
         dispatch(updateUserProfile({ profilePic: responseData.profilePic }));
       }
+    } catch (error) {
+      // Error is already toasted by the hook, but you can add additional handling if needed
+      console.error("Error in handleFileChange:", error);
     }
   };
 
