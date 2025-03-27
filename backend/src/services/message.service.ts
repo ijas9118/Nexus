@@ -11,15 +11,6 @@ export class MessageService extends BaseService<IMessage> implements IMessageSer
     super(messageRepository);
   }
 
-  createNewMessage = async (data: {
-    chatId: string;
-    sender: string;
-    text: string;
-  }): Promise<IMessage> => {
-    const message = await this.messageRepository.createNewMessage(data);
-    return message;
-  };
-
   getAllMessages = async (user1: string, user2: string): Promise<IMessage[]> => {
     return await this.messageRepository.getAllMessages(user1, user2);
   };

@@ -23,7 +23,7 @@ import MentorProfilePage from "@/features/mentor/MentorProfilePage";
 import BookSession from "@/features/mentor/BookSession";
 import { MentorFormProvider } from "@/context/MentorFormContext";
 import AddPost from "@/features/addPost/AddPost";
-import Chat from "@/features/chat2/Chat";
+import Chat from "@/features/chat/Chat";
 
 const UserRoutes: React.FC = () => {
   return (
