@@ -87,8 +87,21 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
 
   return (
     <div className="w-full border-b py-6 hover:scale-[101%] transition-all">
-      <div className="flex flex-col md:flex-row gap-6 items-center">
-        <div className="flex-1 flex flex-col justify-between cursor-pointer">
+      <div className="flex flex-col md:flex-row-reverse gap-6 items-start md:items-center">
+        {/* Thumbnail image */}
+        <div
+          className="md:w-64 flex-shrink-0 cursor-pointer"
+          onClick={() => handleCardClick(props.id)}
+        >
+          <img
+            src={props.image}
+            alt={props.heading}
+            className="w-fit h-fit object-cover rounded-lg"
+          />
+        </div>
+
+        {/* Content details */}
+        <div className="flex-1 flex flex-col w-full justify-between cursor-pointer">
           <div onClick={() => handleCardClick(props.id)}>
             <div
               className="flex items-center gap-3 mb-2"
@@ -123,7 +136,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-around md:justify-start gap-4">
             <Button
               variant="ghost"
               size="sm"
@@ -160,16 +173,6 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
               <Share2 className="h-5 w-5" />
             </Button>
           </div>
-        </div>
-        <div
-          className="md:w-64 flex-shrink-0 cursor-pointer"
-          onClick={() => handleCardClick(props.id)}
-        >
-          <img
-            src={props.image}
-            alt={props.heading}
-            className="w-fit h-fit object-cover rounded-lg"
-          />
         </div>
       </div>
 

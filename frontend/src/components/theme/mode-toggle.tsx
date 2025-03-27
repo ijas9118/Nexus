@@ -20,8 +20,9 @@ export function ModeToggle() {
             <Sun className="absolute h-full w-full rotate-0 scale-100 transition-transform duration-300 ease-in-out opacity-100 dark:opacity-0 dark:rotate-90" />
             <Moon className="absolute h-full w-full rotate-90 scale-100 transition-transform duration-300 ease-in-out opacity-0 dark:opacity-100 dark:rotate-0" />
           </div>
-          <span className="sr-only">Toggle theme</span>
-          <span className="text-sm text-muted-foreground">⌘K</span>
+          <span className="text-sm text-muted-foreground hidden md:block">
+            ⌘K
+          </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

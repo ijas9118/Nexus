@@ -85,7 +85,11 @@ export default function Layout() {
                 </TooltipProvider>
               )}
               <Bell />
-              <Button variant="outline" onClick={() => logoutUser()}>
+              <Button
+                className="hidden md:block"
+                variant="outline"
+                onClick={() => logoutUser()}
+              >
                 Logout
               </Button>
             </div>

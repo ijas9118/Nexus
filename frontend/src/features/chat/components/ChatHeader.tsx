@@ -11,8 +11,8 @@ const ChatHeader = ({ toggleContacts }: { toggleContacts: () => void }) => {
 
   return (
     <div
-      className="h-[10vh] min-h-[60px] border-b-2 flex items-center 
-      justify-between px-4 sm:px-6 md:px-10 lg:px-20"
+      className="h-fit border-b-2 flex items-center 
+      justify-between px-4 py-4 sm:px-6 md:px-10 lg:px-20"
     >
       <div className="flex gap-2 sm:gap-3 items-center w-full overflow-hidden">
         <Avatar className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">

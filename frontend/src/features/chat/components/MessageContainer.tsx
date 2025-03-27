@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { setSelectedChatMessages } from "@/store/slices/chatSlice";
 import { MessageService } from "@/services/user/messageService";
+import { motion } from "framer-motion";
+import { ScrollArea } from "@/components/organisms/scroll-area";
 
 const MessageContainer = () => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -46,21 +48,32 @@ const MessageContainer = () => {
       return (
         <div key={index}>
           {showDate && (
-            <div className="text-center text-muted-foreground my-2">
+            <motion.div
+              className="text-center text-muted-foreground my-2"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
               {moment(message.updatedAt).format("LL")}
-            </div>
+            </motion.div>
           )}
-          {selectedChatType === "connection" && renderDMMessages(message)}
+          {selectedChatType === "connection" &&
+            renderDMMessages(message, index)}
         </div>
       );
     });
   };
 
-  const renderDMMessages = (message: any) => {
-    console.log(message);
+  const renderDMMessages = (message: any, index: number) => {
     return (
-      <div
+      <motion.div
         className={`${message.sender === selectedChatData._id ? "text-left" : "text-right"}`}
+        initial={{
+          opacity: 0,
+          x: message.sender === selectedChatData._id ? -50 : 50,
+        }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.05 }}
       >
         {message.messageType === "text" && (
           <div
@@ -76,19 +89,16 @@ const MessageContainer = () => {
         <div className="text-xs text-muted-foreground">
           {moment(message.updatedAt).format("LT")}
         </div>
-      </div>
+      </motion.div>
     );
   };
 
   return (
-    <div
-      className="flex-1 overflow-y-auto p-2 sm:p-4 md:px-8 w-full "
-      style={{
-        backgroundImage: `url('')`,
-      }}
-    >
-      {renderMessages()}
-      <div ref={scrollRef} />
+    <div className="flex-1 w-full h-full">
+      <ScrollArea className="h-[calc(100vh-200px)] px-2 sm:px-4 md:px-8">
+        {renderMessages()}
+        <div ref={scrollRef} />
+      </ScrollArea>
     </div>
   );
 };

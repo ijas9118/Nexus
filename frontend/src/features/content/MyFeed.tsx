@@ -80,7 +80,7 @@ export default function MyFeed() {
 
       {status === "error" && (
         <p className="text-center text-red-500 font-medium mt-4">
-          Error: {(error as Error).message}
+          Oops! Something went wrong,
         </p>
       )}
 
