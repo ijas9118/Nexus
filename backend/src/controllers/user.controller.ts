@@ -45,15 +45,12 @@ export class UserController implements IUserController {
     const userId = req.user?._id as string;
     const file = req.file as Express.Multer.File;
 
-    console.log(userId, file);
-
     if (!file) {
       res.status(400).json({ message: 'No file uploaded' });
       return;
     }
 
     const updatedUser = await this.userService.updateProfilePic(userId, {}, file);
-    await fs.unlink(file.path); // Clean up temporary file
 
     res.status(200).json({ id: updatedUser._id, profilePic: updatedUser.profilePic });
   });

@@ -8,7 +8,7 @@ import { UsersDTO } from '../dtos/responses/admin/users.dto';
 import bcrypt from 'bcrypt';
 import { ISquad } from '../models/squads.model';
 import { Express } from 'express';
-import { IImageService } from '@/core/interfaces/services/IImageService';
+import { deleteFromCloudinary, uploadToCloudinary } from '@/utils/cloudinaryUtils';
 
 interface UserUpdateData {
   profilePic?: string;
@@ -17,10 +17,7 @@ interface UserUpdateData {
 
 @injectable()
 export class UserService extends BaseService<IUser> implements IUserService {
-  constructor(
-    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-    @inject(TYPES.ImageService) private imageService: IImageService
-  ) {
+  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {
     super(userRepository);
   }
 
@@ -86,11 +83,18 @@ export class UserService extends BaseService<IUser> implements IUserService {
     file?: Express.Multer.File
   ): Promise<UserUpdateData> {
     if (file) {
-      const { url, publicId } = await this.imageService.uploadImage(file);
+      const { url, publicId } = await uploadToCloudinary(file, {
+        baseFolder: 'images',
+        subFolder: 'profile-pic',
+        resourceType: 'image',
+      });
+
       const user = await this.userRepository.getUserById(userId);
+
       if (user?.profilePicPublicId) {
-        await this.imageService.deleteImage(user.profilePicPublicId); // Delete old image
+        await deleteFromCloudinary(user.profilePicPublicId);
       }
+
       data.profilePic = url;
       data.profilePicPublicId = publicId;
     }

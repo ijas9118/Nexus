@@ -1,4 +1,4 @@
-export interface ImageData {
+export interface CloudinaryResult {
   url: string;
   publicId: string;
 }
