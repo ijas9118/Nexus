@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { IMessageService } from '../core/interfaces/services/IMessageService';
-import { Request, Response } from 'express';
+import { Request, Response, Express } from 'express';
 import { IMessageController } from '../core/interfaces/controllers/IMessageController';
 import { TYPES } from '../di/types';
 import asyncHandler from 'express-async-handler';
@@ -36,5 +36,18 @@ export class MessageController implements IMessageController {
     const chats = await this.messageService.getUsersWithChats(userId);
 
     res.status(StatusCodes.OK).json(chats);
+  });
+
+  uploadFile = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const file = req.file as Express.Multer.File;
+
+    if (!file) {
+      res.status(400).json({ message: 'No file uploaded' });
+      return;
+    }
+
+    const result = await this.messageService.uploadFile(file);
+
+    res.status(StatusCodes.OK).json({ ...result });
   });
 }
