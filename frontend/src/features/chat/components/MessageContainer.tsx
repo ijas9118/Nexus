@@ -10,9 +10,7 @@ import { FaFolder } from "react-icons/fa";
 import { Download } from "lucide-react";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogHeader,
   DialogTitle,
 } from "@/components/organisms/dialog";
 import { Button } from "@/components/atoms/button";
@@ -86,19 +84,25 @@ const MessageContainer = () => {
     return videoRegex.test(filePath);
   };
 
-  const downloadFile = (url: string) => {
-    // Create a temporary anchor element
-    const link = document.createElement("a");
-    link.href = url;
+  const downloadFile = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
 
-    // Extract the filename from the URL
-    const filename = url.split("/").pop() || "downloaded_file";
-    link.setAttribute("download", filename); // Set the download attribute with the filename
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      const filename = url.split("/").pop()?.split("?")[0] || "downloaded_file";
+      link.setAttribute("download", filename);
 
-    // Append to the document, trigger click, and remove
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
   };
 
   const renderDMMessages = (message: any, index: number) => {
@@ -180,23 +184,19 @@ const MessageContainer = () => {
         <div ref={scrollRef} />
         {showImage && (
           <Dialog open={showImage} onOpenChange={setShowImage}>
-            <DialogContent className="w-[95vw] max-w-[95vw] max-h-[90vh]">
-              <DialogHeader>
-                <DialogTitle>Image Preview</DialogTitle>
-                <DialogClose className="absolute right-4 top-4" />
-              </DialogHeader>
+            <DialogContent className="w-[99vw] max-w-[99vw] max-h-[99vh] h-[99vh] text-secondary dark:text-primary bg-black/50 border-none">
               <div className="flex flex-col items-center justify-center gap-4">
                 <img
                   src={imageUrl}
                   alt="Enlarged chat image"
                   className="max-h-[70vh] w-auto object-contain"
                 />
+
                 <Button
-                  variant="outline"
+                  className="absolute top-2 right-12 text-2xl cursor-pointer bg-transparent border-none hover:scale-110 transition-all duration-300"
                   onClick={() => downloadFile(imageUrl)}
                 >
-                  <Download className="mr-2" />
-                  Download Image
+                  <Download size={32} />
                 </Button>
               </div>
             </DialogContent>

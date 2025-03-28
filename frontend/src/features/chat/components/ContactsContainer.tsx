@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setDirectMessageChats } from "@/store/slices/chatSlice";
 import DMList from "./DMList";
+import CreateChannel from "./CreateChannel";
 
 const ContactsContainer = () => {
   const { directMessageChats } = useSelector((state: RootState) => state.chat);
@@ -25,8 +26,8 @@ const ContactsContainer = () => {
   return (
     <div className="md:w-[25vw] lg:w-[20vw] border-r w-full h-full">
       <div className="py-5">
-        <div className="flex items-center justify-between pr-10">
-          <div className="uppercase tracking-wide text-muted-foreground pl-10 font-normal text-xs">
+        <div className="flex items-center justify-between px-4">
+          <div className="uppercase tracking-wide text-muted-foreground font-normal text-xs">
             Direct Messages
           </div>
           <NewDM />
@@ -36,10 +37,11 @@ const ContactsContainer = () => {
         </div>
       </div>
       <div className="my-5">
-        <div className="flex items-center justify-between pr-10">
-          <div className="uppercase tracking-wide text-muted-foreground pl-10 font-normal text-xs">
+        <div className="flex  items-center justify-between px-4">
+          <div className="uppercase tracking-wide text-muted-foreground font-normal text-xs ">
             Channels
           </div>
+          <CreateChannel />
         </div>
       </div>
     </div>

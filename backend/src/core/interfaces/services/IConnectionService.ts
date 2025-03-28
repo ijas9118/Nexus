@@ -8,4 +8,5 @@ export interface IConnectionService {
   hasSentConnectionRequest(requesterId: string, recipientId: string): Promise<boolean>;
   withdrawConnectionRequest(requesterId: string, recipientId: string): Promise<boolean>;
   isConnected(userId1: string, userId2: string): Promise<boolean>;
+  getAllConnections(userId: string): Promise<any[]>;
 }

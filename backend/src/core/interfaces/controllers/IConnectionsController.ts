@@ -8,4 +8,5 @@ export interface IConnectionsController {
   hasSentConnectionRequest: RequestHandler;
   withdrawConnectionRequest: RequestHandler;
   isConnected: RequestHandler;
+  getAllConnections: RequestHandler;
 }
