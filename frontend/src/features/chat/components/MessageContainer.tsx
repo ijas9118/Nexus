@@ -7,7 +7,7 @@ import { MessageService } from "@/services/user/messageService";
 import { motion } from "framer-motion";
 import { ScrollArea } from "@/components/organisms/scroll-area";
 import { FaFolder } from "react-icons/fa";
-import { Download, X } from "lucide-react";
+import { Download } from "lucide-react";
 import {
   Dialog,
   DialogClose,
