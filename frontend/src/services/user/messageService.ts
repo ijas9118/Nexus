@@ -34,6 +34,23 @@ export const MessageService = {
     }
   },
 
+  uploadFile: async (formData: FormData) => {
+    try {
+      const response = await api.post("/message/upload-file", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return response;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw error.response?.data || error.message;
+      } else if (error instanceof Error) {
+        throw error.message;
+      } else {
+        throw "An unknown error occurred";
+      }
+    }
+  },
+
   // sendMessage: async (chatId: string, text: string) => {
   //   try {
   //     const response = await api.post("/message/new-message", { chatId, text });

@@ -1,13 +1,12 @@
 import cloudinary from '@/config/cloudinary';
-import { CloudinaryResult } from '@/core/types/cloudinary';
+import { CloudinaryResult, ResourceType } from '@/core/types/cloudinary';
 import { Express } from 'express';
-
-type ResourceType = 'image' | 'video' | 'raw';
+import path from 'path';
 
 export const uploadToCloudinary = async (
   file: Express.Multer.File,
   options: {
-    baseFolder: 'images' | 'videos' | 'documents';
+    baseFolder: 'images' | 'videos' | 'chat';
     subFolder: string;
     resourceType: ResourceType;
   }
@@ -15,13 +14,23 @@ export const uploadToCloudinary = async (
   const { baseFolder, subFolder, resourceType } = options;
   const folder = `nexus/${baseFolder}/${subFolder}`;
 
+  const filename = path.basename(file.originalname, path.extname(file.originalname));
+
+  console.log(filename);
+
+  const publicId = `${folder}/${filename}`;
+
   try {
     const result = await new Promise<CloudinaryResult>((resolve, reject) => {
       cloudinary.uploader
         .upload_stream(
           {
             folder,
+            public_id: publicId,
             resource_type: resourceType,
+            overwrite: true,
+            use_filename: true,
+            unique_filename: false,
           },
           (error, result) => {
             if (error) return reject(error);

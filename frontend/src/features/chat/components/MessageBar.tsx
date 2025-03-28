@@ -7,10 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useSocket } from "@/context/SocketContext";
 import { addMessage } from "@/store/slices/chatSlice";
+import { MessageService } from "@/services/user/messageService";
 
 const MessageBar = () => {
   const [message, setMessage] = useState("");
   const emojiRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const { selectedChatData, selectedChatType } = useSelector(
     (state: RootState) => state.chat,
@@ -97,6 +99,40 @@ const MessageBar = () => {
     setMessage((msg) => msg + emoji.emoji);
   };
 
+  const handleFileClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    try {
+      const file = event.target.files![0];
+
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const response = await MessageService.uploadFile(formData);
+
+        if (response.status === 200 && response.data) {
+          if (selectedChatType === "connection") {
+            socket?.emit("sendMessage", {
+              sender: user?._id,
+              content: undefined,
+              recipient: selectedChatData._id,
+              messageType: "file",
+              fileUrl: response.data.url,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className=" flex items-center p-2 sm:px-4 md:px-8 sm: gap-1 sm:gap-2 h-full border-t">
       <div className="flex-1 flex rounded-md items-center gap-1 h-full">
@@ -109,9 +145,20 @@ const MessageBar = () => {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyPress}
         />
-        <Button variant="ghost" size="sm" className="p-1 sm:p-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="p-1 sm:p-2"
+          onClick={handleFileClick}
+        >
           <Paperclip className="h-4 w-4 sm:h-5 sm:w-5" />
         </Button>
+        <input
+          type="file"
+          className="hidden"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+        />
         <div className="relative">
           <Button
             variant="ghost"

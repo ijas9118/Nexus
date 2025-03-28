@@ -4,6 +4,9 @@ import { TYPES } from '../di/types';
 import { IMessage } from '../models/message.model';
 import { IMessageRepository } from '../core/interfaces/repositories/IMessageRepository';
 import { IMessageService } from '../core/interfaces/services/IMessageService';
+import { Express } from 'express';
+import { uploadToCloudinary } from '@/utils/cloudinaryUtils';
+import { mimeToResourceType, ResourceType, subFolderMap } from '@/core/types/cloudinary';
 
 @injectable()
 export class MessageService extends BaseService<IMessage> implements IMessageService {
@@ -17,5 +20,21 @@ export class MessageService extends BaseService<IMessage> implements IMessageSer
 
   getUsersWithChats = async (userId: string): Promise<any[]> => {
     return await this.messageRepository.getUsersWithChats(userId);
+  };
+
+  uploadFile = async (file: Express.Multer.File): Promise<{ url: string; publicId: string }> => {
+    const resourceType: ResourceType =
+      (mimeToResourceType[file.mimetype as keyof typeof mimeToResourceType] as ResourceType) ||
+      'raw';
+
+    const subFolder = subFolderMap[resourceType as keyof typeof subFolderMap] || 'chat';
+
+    const { url, publicId } = await uploadToCloudinary(file, {
+      baseFolder: 'chat',
+      subFolder,
+      resourceType,
+    });
+
+    return { url, publicId };
   };
 }

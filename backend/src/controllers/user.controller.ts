@@ -1,13 +1,11 @@
 import { Request, Response, Express } from 'express';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
-
 import { IUserController } from '../core/interfaces/controllers/IUserController';
 import { IUserService } from '../core/interfaces/services/IUserService';
 import asyncHandler from 'express-async-handler';
 import CustomError from '../utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
-import fs from 'fs/promises';
 
 @injectable()
 export class UserController implements IUserController {
