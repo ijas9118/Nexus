@@ -119,6 +119,13 @@ import { PaymentServce } from '../services/payment.service';
 import { IPaymentController } from '../core/interfaces/controllers/IPaymentController';
 import { PaymentController } from '../controllers/payment.controller';
 
+import { IChannelRepository } from '@/core/interfaces/repositories/IChannelRepository';
+import { ChannelRepository } from '@/repositories/channel.repository';
+import { IChannelService } from '@/core/interfaces/services/IChannelService';
+import { ChannelService } from '@/services/channel.service';
+import { IChannelController } from '@/core/interfaces/controllers/IChannelController';
+import { ChannelController } from '@/controllers/channel.controller';
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -186,5 +193,9 @@ container.bind<IPlanController>(TYPES.PlanController).to(PlanController);
 
 container.bind<IPaymentService>(TYPES.PaymentService).to(PaymentServce);
 container.bind<IPaymentController>(TYPES.PaymentController).to(PaymentController);
+
+container.bind<IChannelRepository>(TYPES.ChannelRepository).to(ChannelRepository);
+container.bind<IChannelService>(TYPES.ChannelService).to(ChannelService);
+container.bind<IChannelController>(TYPES.ChannelController).to(ChannelController);
 
 export { container };

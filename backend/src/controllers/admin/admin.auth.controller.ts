@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { IAdminAuthController } from '../../core/interfaces/controllers/admin/IAdminAuthController';
-import { LoginDto } from '../../dtos/requests/auth/login.dto';
+import { LoginDto } from '../../dtos/requests/login.dto';
 import { AdminAuthService } from '../../services/admin/admin.auth.service';
 import { generateAccessToken, verifyAccessToken } from '../../utils/jwt.util';
 import { inject, injectable } from 'inversify';

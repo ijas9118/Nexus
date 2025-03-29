@@ -7,7 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 const ChatHeader = ({ toggleContacts }: { toggleContacts: () => void }) => {
   const dispatch = useDispatch();
-  const { selectedChatData } = useSelector((state: RootState) => state.chat);
+  const { selectedChatData, selectedChatType } = useSelector(
+    (state: RootState) => state.chat,
+  );
 
   return (
     <div
@@ -23,9 +25,11 @@ const ChatHeader = ({ toggleContacts }: { toggleContacts: () => void }) => {
           <h2 className="font-semibold text-sm sm:text-base truncate">
             {selectedChatData.name}
           </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground truncate">
-            Active 2 mins ago
-          </p>
+          {selectedChatType === "connection" && (
+            <p className="text-xs sm:text-sm text-muted-foreground truncate">
+              Active 2 mins ago
+            </p>
+          )}
         </div>
       </div>
       <div className="flex gap-2 sm:gap-5 items-center flex-shrink-0">

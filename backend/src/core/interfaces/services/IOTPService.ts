@@ -1,4 +1,4 @@
-import { RegisterDto } from '../../../dtos/requests/auth/register.dto';
+import { RegisterDto } from '../../../dtos/requests/register.dto';
 
 export interface IOTPService {
   generateOTP(): string;

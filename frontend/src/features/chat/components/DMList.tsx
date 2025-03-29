@@ -63,9 +63,20 @@ const DMList = ({
               </>
             )}
             {isChannel && (
-              <div className="bg-[#ffffff22] h-10 w-10 flex items-center justify-center rounded-full">
-                #
-              </div>
+              <>
+                <Avatar className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
+                  <AvatarImage src={chat.profilePic} className="rounded-full" />
+                  <AvatarFallback>{chat.name[0]}</AvatarFallback>
+                </Avatar>
+                <div className="min-w-0 flex-1">
+                  <h2 className="font-semibold text-sm sm:text-base truncate">
+                    {chat.name}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                    Active 2 mins ago
+                  </p>
+                </div>
+              </>
             )}
           </div>
         </div>

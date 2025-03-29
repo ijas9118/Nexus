@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from './constants';
-import { JwtPayloadWithUser } from '../core/types/jwt';
+import { JwtPayloadWithUser } from '../core/types/global/jwt';
 
 const ACCESS_TOKEN_SECRET = ACCESS_TOKEN || 'access_secret';
 const REFRESH_TOKEN_SECRET = REFRESH_TOKEN || 'refresh_secret';

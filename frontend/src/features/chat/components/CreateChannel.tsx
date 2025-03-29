@@ -14,15 +14,17 @@ import {
   DialogTitle,
 } from "@/components/organisms/dialog";
 import MultipleSelector from "@/components/organisms/multiple-select";
+import { ChannelService } from "@/services/user/channelService";
 import { getAllConnections } from "@/services/user/followService";
+import { addChannel } from "@/store/slices/chatSlice";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { toast } from "sonner";
 
 const CreateChannel = () => {
   const dispatch = useDispatch();
   const [openNewChannelModel, setOpenNewChannelModel] = useState(false);
-  const [searchedUsers, setSearchedUsers] = useState<any[]>([]);
   const [allConnections, setAllConnections] = useState<any[]>([]);
   const [selectedConnection, setSelectedConnection] = useState<any[]>([]);
   const [channelName, setChannelName] = useState("");
@@ -30,14 +32,35 @@ const CreateChannel = () => {
   useEffect(() => {
     const getData = async () => {
       const response = await getAllConnections();
-      console.log(response.data);
       setAllConnections(response.data);
     };
 
     getData();
   }, []);
 
-  const createChannel = async () => {};
+  const createChannel = async () => {
+    try {
+      if (channelName.length > 0 && selectedConnection.length > 0) {
+        const response = await ChannelService.createChannel({
+          name: channelName,
+          members: selectedConnection.map((connection) => connection.value),
+        });
+
+        console.log(response);
+
+        if (response) {
+          setChannelName("");
+          setSelectedConnection([]);
+          setOpenNewChannelModel(false);
+          dispatch(addChannel(response));
+        }
+      } else {
+        toast.error("Please fill all the fields");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>

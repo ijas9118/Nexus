@@ -1,5 +1,5 @@
+import { UserRole } from '@/core/types/global/user-role';
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
-import { UserRole } from '../core/types/UserTypes';
 
 interface IUser extends Document {
   _id: ObjectId;

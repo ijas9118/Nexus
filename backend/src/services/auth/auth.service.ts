@@ -1,8 +1,8 @@
 import { injectable, inject } from 'inversify';
 import { TYPES } from '../../di/types';
 import { IUserRepository } from '../../core/interfaces/repositories/IUserRepository';
-import { LoginDto } from '../../dtos/requests/auth/login.dto';
-import { RegisterDto } from '../../dtos/requests/auth/register.dto';
+import { LoginDto } from '../../dtos/requests/login.dto';
+import { RegisterDto } from '../../dtos/requests/register.dto';
 import { compare, hash } from 'bcrypt';
 import { RegisterResponseDto } from '../../dtos/responses/auth/registerResponse.dto';
 import { LoginResponseDto } from '../../dtos/responses/auth/loginResponse.dto';

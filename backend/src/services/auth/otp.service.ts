@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import redisClient from '../../config/redisClient.config';
 import CustomError from '../../utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
-import { RegisterDto } from '../../dtos/requests/auth/register.dto';
+import { RegisterDto } from '../../dtos/requests/register.dto';
 import { IOTPService } from '../../core/interfaces/services/IOTPService';
 import { TYPES } from '../../di/types';
 import { IEmailService } from '../../core/interfaces/services/IEmailService';

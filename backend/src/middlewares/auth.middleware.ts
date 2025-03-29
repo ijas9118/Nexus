@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { verifyAccessToken, verifyRefreshToken } from '../utils/jwt.util';
-import { UserRole } from '../core/types/UserTypes';
 import { StatusCodes } from 'http-status-codes';
+import { UserRole } from '@/core/types/global/user-role';
 
 interface IUser {
   _id: string;

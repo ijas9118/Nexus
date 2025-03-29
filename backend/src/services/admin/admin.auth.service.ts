@@ -1,5 +1,5 @@
 import { compare } from 'bcrypt';
-import { LoginDto } from '../../dtos/requests/auth/login.dto';
+import { LoginDto } from '../../dtos/requests/login.dto';
 import { LoginResponseDto } from '../../dtos/responses/auth/loginResponse.dto';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../di/types';
