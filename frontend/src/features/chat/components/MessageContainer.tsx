@@ -8,17 +8,16 @@ import { motion } from "framer-motion";
 import { ScrollArea } from "@/components/organisms/scroll-area";
 import { FaFolder } from "react-icons/fa";
 import { Download } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@/components/organisms/dialog";
+import { Dialog, DialogContent } from "@/components/organisms/dialog";
 import { Button } from "@/components/atoms/button";
 
 const MessageContainer = () => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const { selectedChatData, selectedChatType, selectedChatMessages } =
     useSelector((state: RootState) => state.chat);
+  const userId = useSelector(
+    (state: RootState) => state.auth.user?._id as string,
+  );
   const dispatch = useDispatch();
   const [showImage, setShowImage] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
@@ -69,6 +68,8 @@ const MessageContainer = () => {
           )}
           {selectedChatType === "connection" &&
             renderDMMessages(message, index)}
+          {selectedChatType === "channel" &&
+            renderChannelMessages(message, index)}
         </div>
       );
     });
@@ -174,6 +175,26 @@ const MessageContainer = () => {
           {moment(message.updatedAt).format("LT")}
         </div>
       </motion.div>
+    );
+  };
+
+  const renderChannelMessages = (message: any, index: number) => {
+    return (
+      <div
+        className={`mt-5 ${message.sender._id !== userId ? "text-left" : "text-right"}`}
+      >
+        {message.messageType === "text" && (
+          <div
+            className={`${
+              message.sender._id === userId
+                ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
+                : "bg-[#2a2b33]/5 text-white/80 border-white/20"
+            } border inline-block p-4 rounded my-1 max-w-[50%] break-words `}
+          >
+            {message.content}
+          </div>
+        )}
+      </div>
     );
   };
 
