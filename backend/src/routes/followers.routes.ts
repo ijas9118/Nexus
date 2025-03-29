@@ -87,6 +87,12 @@ router.get(
   connectionsController.searchConnections
 );
 
+router.get(
+  '/get-all-connections',
+  authenticate(['user', 'mentor', 'premium']),
+  connectionsController.getAllConnections
+);
+
 router.get('/pending', authenticate(['user', 'premium']), connectionsController.getPendingRequests);
 
 export default router;

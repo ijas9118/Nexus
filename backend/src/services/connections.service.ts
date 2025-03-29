@@ -41,4 +41,8 @@ export class ConnectionService implements IConnectionService {
   isConnected = async (userId1: string, userId2: string): Promise<boolean> => {
     return this.connectionsRepository.isConnected(userId1, userId2);
   };
+
+  getAllConnections = async (userId: string): Promise<any[]> => {
+    return this.connectionsRepository.getAllConnections(userId);
+  };
 }

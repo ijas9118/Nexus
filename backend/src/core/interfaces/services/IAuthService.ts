@@ -1,5 +1,5 @@
-import { LoginDto } from '../../../dtos/requests/auth/login.dto';
-import { RegisterDto } from '../../../dtos/requests/auth/register.dto';
+import { LoginDto } from '../../../dtos/requests/login.dto';
+import { RegisterDto } from '../../../dtos/requests/register.dto';
 import { LoginResponseDto } from '../../../dtos/responses/auth/loginResponse.dto';
 import { RegisterResponseDto } from '../../../dtos/responses/auth/registerResponse.dto';
 import { IUser } from '../../../models/user.model';

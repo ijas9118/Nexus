@@ -3,7 +3,7 @@ import { BaseRepository } from '../core/abstracts/base.repository';
 import UserFollowModel, { IUserFollow } from '../models/followers.model';
 import { Types } from 'mongoose';
 import { IConnectionsRepository } from '../core/interfaces/repositories/IConnectionsRepository';
-import { IPendingRequestUser, SearchConnections } from '../core/types/UserTypes';
+import { IPendingRequestUser, IUserWhoFollow, SearchConnections } from '../core/types/UserTypes';
 import CustomError from '@/utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
 import { UserModel } from '@/models/user.model';
@@ -158,5 +158,18 @@ export class ConnectionsRepository
     });
 
     return !!user;
+  };
+
+  getAllConnections = async (userId: string): Promise<any[]> => {
+    const connections = await UserFollowModel.findOne({ userId })
+      .populate<{ connections: IUserWhoFollow[] }>('connections', 'name profilePic')
+      .lean();
+
+    return (
+      connections?.connections.map((connection) => ({
+        label: connection.name,
+        value: connection._id,
+      })) || []
+    );
   };
 }

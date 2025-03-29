@@ -8,6 +8,8 @@ import morgan from 'morgan';
 import errorMiddleware from './middlewares/errorMiddleware';
 import { setupSwagger } from './utils/swaggerConfig';
 
+import passport from './config/passport';
+
 import authRoutes from './routes/auth.routes';
 import contentRoutes from './routes/content.routes';
 import adminRoutes from './routes/admin.routes';
@@ -19,7 +21,7 @@ import messageRoutes from './routes/message.routes';
 import planRoutes from './routes/plan.routes';
 import paymentRoutes from './routes/payment.routes';
 import webhookRouter from './routes/webhook.routes';
-import passport from './config/passport';
+import channelRoutes from './routes/channel.routes';
 
 const app = express();
 setupSwagger(app);
@@ -52,6 +54,7 @@ app.use('/api/followers', followerRoutes);
 app.use('/api/message', messageRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/channel', channelRoutes);
 
 app.use(errorMiddleware);
 

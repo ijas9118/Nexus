@@ -1,8 +1,8 @@
 import { injectable, inject } from 'inversify';
 import { Request, Response } from 'express';
 import { TYPES } from '../di/types';
-import { LoginDto } from '../dtos/requests/auth/login.dto';
-import { RegisterDto } from '../dtos/requests/auth/register.dto';
+import { LoginDto } from '../dtos/requests/login.dto';
+import { RegisterDto } from '../dtos/requests/register.dto';
 import { IAuthController } from '../core/interfaces/controllers/IAuthController';
 import { generateAccessToken, verifyRefreshToken } from '../utils/jwt.util';
 import { clearRefreshTokenCookie, setRefreshTokenCookie } from '../utils/cookieUtils';
@@ -16,7 +16,7 @@ import { ITokenService } from '../core/interfaces/services/ITokenService';
 import { CLIENT_URL } from '@/utils/constants';
 import { Profile } from 'passport-google-oauth20';
 import { Profile as GitHubProfile } from 'passport-github2';
-import { UserRole } from '@/core/types/UserTypes';
+import { UserRole } from '@/core/types/global/user-role';
 
 @injectable()
 export class AuthController implements IAuthController {

@@ -170,3 +170,18 @@ export const getPendingRequests = async () => {
     }
   }
 };
+
+export const getAllConnections = async () => {
+  try {
+    const response = await api.get("/followers/get-all-connections");
+    return response.data;
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      throw error.response?.data || error.message;
+    } else if (error instanceof Error) {
+      throw error.message;
+    } else {
+      throw "An unknown error occurred";
+    }
+  }
+};

@@ -1,5 +1,5 @@
 import cloudinary from '@/config/cloudinary';
-import { CloudinaryResult, ResourceType } from '@/core/types/cloudinary';
+import { CloudinaryResult, ResourceType } from '@/core/types/service/cloudinary';
 import { Express } from 'express';
 import path from 'path';
 

@@ -1,4 +1,4 @@
-import { UserRole } from '@/core/types/UserTypes';
+import { UserRole } from '@/core/types/global/user-role';
 import { ObjectId } from 'mongoose';
 
 export interface LoginResponseDto {

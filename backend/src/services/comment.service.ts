@@ -3,7 +3,7 @@ import { ICommentService } from '../core/interfaces/services/ICommentService';
 import { IComment } from '../models/comments.model';
 import CustomError from '../utils/CustomError';
 import { ICommentRepository } from '../core/interfaces/repositories/ICommentRepository';
-import { AddCommentParams } from '../core/types/Contet';
+import { AddCommentParams } from '../core/types/service/add-comment';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
 

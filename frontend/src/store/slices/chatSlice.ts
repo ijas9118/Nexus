@@ -5,6 +5,7 @@ export interface ChatState {
   selectedChatData: any | undefined;
   selectedChatMessages: any[];
   directMessageChats: any[];
+  channels: any[];
 }
 
 const initialState: ChatState = {
@@ -12,6 +13,7 @@ const initialState: ChatState = {
   selectedChatData: undefined,
   selectedChatMessages: [],
   directMessageChats: [],
+  channels: [],
 };
 
 const chatSlice = createSlice({
@@ -29,6 +31,9 @@ const chatSlice = createSlice({
     },
     setDirectMessageChats: (state, action: PayloadAction<any[]>) => {
       state.directMessageChats = action.payload;
+    },
+    setChannels: (state, action: PayloadAction<any[]>) => {
+      state.channels = action.payload;
     },
     closeChat: (state) => {
       state.selectedChatData = undefined;
@@ -50,6 +55,10 @@ const chatSlice = createSlice({
       };
       state.selectedChatMessages = [...state.selectedChatMessages, newMessage];
     },
+    addChannel: (state, action: PayloadAction<any>) => {
+      const channel = action.payload;
+      state.channels = [channel, ...state.channels];
+    },
   },
 });
 
@@ -58,8 +67,10 @@ export const {
   setSelectedChatData,
   setSelectedChatMessages,
   setDirectMessageChats,
+  setChannels,
   closeChat,
   addMessage,
+  addChannel,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

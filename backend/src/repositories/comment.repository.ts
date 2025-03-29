@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { BaseRepository } from '../core/abstracts/base.repository';
 import { ICommentRepository } from '../core/interfaces/repositories/ICommentRepository';
-import { AddCommentParams } from '../core/types/Contet';
+import { AddCommentParams } from '../core/types/service/add-comment';
 import CommentModel, { IComment } from '../models/comments.model';
 import { injectable } from 'inversify';
 import { FormatTime } from '../utils/formatTime';

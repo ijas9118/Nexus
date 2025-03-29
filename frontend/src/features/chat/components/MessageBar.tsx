@@ -52,13 +52,29 @@ const MessageBar = () => {
     [dispatch, selectedChatData._id, selectedChatType],
   );
 
+  const handleReveiveChannelMessage = useCallback(
+    (message: any) => {
+      if (
+        selectedChatType !== undefined &&
+        selectedChatData?._id &&
+        selectedChatData._id === message.channelId
+      ) {
+        console.log("Message Received:", message);
+        dispatch(addMessage(message));
+      }
+    },
+    [dispatch, selectedChatData._id, selectedChatType],
+  );
+
   useEffect(() => {
     if (!socket) return;
 
     socket.on("recieveMessage", handleReceiveMessage);
+    socket.on("recieve-channel-message", handleReveiveChannelMessage);
 
     return () => {
       socket.off("recieveMessage", handleReceiveMessage);
+      socket.off("recieve-channel-message", handleReveiveChannelMessage);
     };
   }, [
     socket,
@@ -66,6 +82,7 @@ const MessageBar = () => {
     selectedChatType,
     dispatch,
     handleReceiveMessage,
+    handleReveiveChannelMessage,
   ]);
 
   const handleSendMessage = async () => {
@@ -84,8 +101,16 @@ const MessageBar = () => {
         messageType: "text",
         fileUrl: undefined,
       });
-      setMessage("");
+    } else if (selectedChatType === "channel") {
+      socket?.emit("send-channel-message", {
+        sender: user?._id,
+        content: message,
+        messageType: "text",
+        fileUrl: undefined,
+        channelId: selectedChatData._id,
+      });
     }
+    setMessage("");
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -124,6 +149,14 @@ const MessageBar = () => {
               recipient: selectedChatData._id,
               messageType: "file",
               fileUrl: response.data.url,
+            });
+          } else if (selectedChatType === "channel") {
+            socket?.emit("send-channel-message", {
+              sender: user?._id,
+              content: undefined,
+              messageType: "file",
+              fileUrl: response.data.url,
+              channelId: selectedChatData._id,
             });
           }
         }

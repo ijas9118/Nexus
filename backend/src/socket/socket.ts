@@ -1,3 +1,4 @@
+import ChannelModel from '@/models/channel.model';
 import MessageModel, { IMessage } from '@/models/message.model';
 import { CLIENT_URL } from '@/utils/constants';
 import { Server } from 'http';
@@ -45,6 +46,48 @@ const setUpSocket = (server: Server) => {
     }
   };
 
+  const sendChannelMessage = async (message: any) => {
+    const { channelId, sender, content, messageType, fileUrl } = message;
+
+    const createdMessage = await MessageModel.create({
+      sender,
+      recipient: null,
+      content,
+      messageType,
+      fileUrl,
+    });
+
+    const messageData = await MessageModel.findById(createdMessage._id)
+      .populate('sender', '_id email name profilePic username')
+      .lean()
+      .exec();
+
+    console.log(messageData);
+
+    await ChannelModel.findByIdAndUpdate(channelId, {
+      $push: { messages: createdMessage._id },
+    });
+
+    const channel = await ChannelModel.findById(channelId).populate('members');
+
+    const finalData = { ...messageData, channelId: channel?._id };
+
+    if (channel && channel.members) {
+      channel.members.forEach((member) => {
+        const memberSocketId = userSocketMap.get(member._id.toString());
+
+        if (memberSocketId) {
+          io.to(memberSocketId).emit('recieve-channel-message', finalData);
+        }
+      });
+
+      const adminSocketId = userSocketMap.get(channel.admin._id.toString());
+      if (adminSocketId) {
+        io.to(adminSocketId).emit('recieve-channel-message', finalData);
+      }
+    }
+  };
+
   io.on('connection', (socket) => {
     const userId = socket.handshake.query.userId;
 
@@ -56,6 +99,8 @@ const setUpSocket = (server: Server) => {
     }
 
     socket.on('sendMessage', sendMessage);
+
+    socket.on('send-channel-message', sendChannelMessage);
 
     socket.on('disconnect', () => disconnect(socket));
   });

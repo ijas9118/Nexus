@@ -6,7 +6,7 @@ import { IMessageRepository } from '../core/interfaces/repositories/IMessageRepo
 import { IMessageService } from '../core/interfaces/services/IMessageService';
 import { Express } from 'express';
 import { uploadToCloudinary } from '@/utils/cloudinaryUtils';
-import { mimeToResourceType, ResourceType, subFolderMap } from '@/core/types/cloudinary';
+import { mimeToResourceType, ResourceType, subFolderMap } from '@/core/types/service/cloudinary';
 
 @injectable()
 export class MessageService extends BaseService<IMessage> implements IMessageService {

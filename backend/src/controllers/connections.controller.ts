@@ -118,4 +118,12 @@ export class ConnectionsController implements IConnectionsController {
 
     res.status(StatusCodes.OK).json({ result });
   });
+
+  getAllConnections = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
+
+    const data = await this.connectionsService.getAllConnections(userId);
+
+    res.status(StatusCodes.OK).json({ data });
+  });
 }
