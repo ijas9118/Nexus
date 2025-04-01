@@ -78,6 +78,7 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
         ],
       })
       .sort({ updatedAt: 1 });
+
     return messages;
   };
 }

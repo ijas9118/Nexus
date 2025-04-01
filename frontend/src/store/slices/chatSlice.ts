@@ -62,16 +62,40 @@ const chatSlice = createSlice({
     addChannelInChannelList: (state, action: PayloadAction<any>) => {
       const message = action.payload;
       const channels = state.channels;
-      const data = channels.find(
-        (channel) => channel._id === message.channelId,
-      );
       const index = channels.findIndex(
         (channel) => channel._id === message.channelId,
       );
 
-      if (index === -1 || index === undefined) {
+      const data = channels.find(
+        (channel) => channel._id === message.channelId,
+      );
+
+      if (index !== -1 && data) {
         state.channels.splice(index, 1);
         state.channels.unshift(data);
+      }
+    },
+    addConnectionsInDMList: (
+      state,
+      action: PayloadAction<{ message: any; userId: string }>,
+    ) => {
+      const { message, userId } = action.payload;
+      const fromId =
+        message.sender._id === userId
+          ? message.recipient._id
+          : message.sender._id;
+      const fromData =
+        message.sender._id === userId ? message.recipient : message.sender;
+
+      const index = state.directMessageChats.findIndex(
+        (contact) => contact._id === fromId,
+      );
+
+      if (index !== -1) {
+        const [existingContact] = state.directMessageChats.splice(index, 1);
+        state.directMessageChats.unshift(existingContact);
+      } else {
+        state.directMessageChats.unshift(fromData);
       }
     },
   },
@@ -87,6 +111,7 @@ export const {
   addMessage,
   addChannel,
   addChannelInChannelList,
+  addConnectionsInDMList,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

@@ -2,7 +2,6 @@ import { BaseRepository } from '@/core/abstracts/base.repository';
 import { IChannelRepository } from '@/core/interfaces/repositories/IChannelRepository';
 import { ChannelData } from '@/core/types/service/create-channel';
 import ChannelModel, { IChannel } from '@/models/channel.model';
-import { IMessage } from '@/models/message.model';
 import CustomError from '@/utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
 import { injectable } from 'inversify';
@@ -31,7 +30,8 @@ export class ChannelRepository extends BaseRepository<IChannel> implements IChan
 
     const channels = await ChannelModel.find({
       $or: [{ admin: userId }, { members: userId }],
-    }).sort({ updateAt: -1 });
+    }).sort({ updatedAt: -1 });
+
     return channels;
   };
 

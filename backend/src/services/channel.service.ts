@@ -3,7 +3,6 @@ import { IChannelService } from '@/core/interfaces/services/IChannelService';
 import { ChannelData } from '@/core/types/service/create-channel';
 import { TYPES } from '@/di/types';
 import { IChannel } from '@/models/channel.model';
-import { IMessage } from '@/models/message.model';
 import { inject, injectable } from 'inversify';
 
 @injectable()

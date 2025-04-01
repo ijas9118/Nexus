@@ -2,7 +2,6 @@ import { IChannelController } from '@/core/interfaces/controllers/IChannelContro
 import { IChannelService } from '@/core/interfaces/services/IChannelService';
 import { TYPES } from '@/di/types';
 import { ICreateChannelDTO } from '@/dtos/requests/channel.dto';
-import CustomError from '@/utils/CustomError';
 import { Request, Response } from 'express';
 import asyncHanlder from 'express-async-handler';
 import { StatusCodes } from 'http-status-codes';
@@ -17,7 +16,6 @@ export class ChannelController implements IChannelController {
     const admin = req.user?._id as string;
 
     const channel = await this.channelService.createChannel({ name, members, admin });
-    console.log(channel);
 
     res.status(StatusCodes.CREATED).json(channel);
   });
@@ -26,7 +24,6 @@ export class ChannelController implements IChannelController {
     const user = req.user?._id as string;
 
     const channels = await this.channelService.getUserChannels(user);
-    console.log(channels);
 
     res.status(StatusCodes.OK).json(channels);
   });
