@@ -46,8 +46,6 @@ const CreateChannel = () => {
           members: selectedConnection.map((connection) => connection.value),
         });
 
-        console.log(response);
-
         if (response) {
           setChannelName("");
           setSelectedConnection([]);
@@ -106,11 +104,7 @@ const CreateChannel = () => {
                 placeholder="Search Connections..."
                 value={selectedConnection}
                 onChange={setSelectedConnection}
-                emptyIndicator={
-                  <p className="text-center text-sm text-gray-600">
-                    No results found.
-                  </p>
-                }
+                emptyIndicator={<p>No results found.</p>}
               />
             </div>
             <div>

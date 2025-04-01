@@ -9,7 +9,6 @@ const SocketContext = createContext<Socket | null>(null);
 
 export const useSocket = () => {
   const socket = useContext(SocketContext);
-  console.log(socket);
   return socket;
 };
 

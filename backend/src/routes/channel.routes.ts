@@ -20,4 +20,10 @@ router.get(
   channelController.getUserChannels
 );
 
+router.get(
+  '/get-channel-messages/:channelId',
+  authenticate(['user', 'mentor', 'premium']),
+  channelController.getChannelMessages
+);
+
 export default router;

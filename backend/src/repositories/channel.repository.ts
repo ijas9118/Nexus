@@ -2,6 +2,9 @@ import { BaseRepository } from '@/core/abstracts/base.repository';
 import { IChannelRepository } from '@/core/interfaces/repositories/IChannelRepository';
 import { ChannelData } from '@/core/types/service/create-channel';
 import ChannelModel, { IChannel } from '@/models/channel.model';
+import { IMessage } from '@/models/message.model';
+import CustomError from '@/utils/CustomError';
+import { StatusCodes } from 'http-status-codes';
 import { injectable } from 'inversify';
 import mongoose from 'mongoose';
 
@@ -30,5 +33,23 @@ export class ChannelRepository extends BaseRepository<IChannel> implements IChan
       $or: [{ admin: userId }, { members: userId }],
     }).sort({ updateAt: -1 });
     return channels;
+  };
+
+  getChannelMessages = async (channelId: string): Promise<any[]> => {
+    const channelIdObj = new mongoose.Types.ObjectId(channelId);
+
+    const channelMessages = await ChannelModel.findById(channelIdObj).populate({
+      path: 'messages',
+      populate: {
+        path: 'sender',
+        select: 'name profilePic _id email username',
+      },
+    });
+
+    if (!channelMessages) {
+      throw new CustomError('No Channel Found', StatusCodes.NOT_FOUND);
+    }
+
+    return channelMessages.messages;
   };
 }

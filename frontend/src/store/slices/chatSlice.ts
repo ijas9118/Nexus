@@ -59,6 +59,21 @@ const chatSlice = createSlice({
       const channel = action.payload;
       state.channels = [channel, ...state.channels];
     },
+    addChannelInChannelList: (state, action: PayloadAction<any>) => {
+      const message = action.payload;
+      const channels = state.channels;
+      const data = channels.find(
+        (channel) => channel._id === message.channelId,
+      );
+      const index = channels.findIndex(
+        (channel) => channel._id === message.channelId,
+      );
+
+      if (index === -1 || index === undefined) {
+        state.channels.splice(index, 1);
+        state.channels.unshift(data);
+      }
+    },
   },
 });
 
@@ -71,6 +86,7 @@ export const {
   closeChat,
   addMessage,
   addChannel,
+  addChannelInChannelList,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

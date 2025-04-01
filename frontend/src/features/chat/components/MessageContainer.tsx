@@ -1,5 +1,5 @@
 import { RootState } from "@/store/store";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { setSelectedChatMessages } from "@/store/slices/chatSlice";
@@ -10,6 +10,8 @@ import { FaFolder } from "react-icons/fa";
 import { Download } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/organisms/dialog";
 import { Button } from "@/components/atoms/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { ChannelService } from "@/services/user/channelService";
 
 const MessageContainer = () => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -22,25 +24,46 @@ const MessageContainer = () => {
   const [showImage, setShowImage] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
 
-  useEffect(() => {
-    const getMessages = async () => {
-      try {
-        const response = await MessageService.getMessages(selectedChatData._id);
-        if (response) {
-          console.log(response);
-          dispatch(setSelectedChatMessages(response));
-        }
-      } catch (error) {
-        console.log(error);
+  const getMessages = useCallback(async () => {
+    try {
+      const response = await MessageService.getMessages(selectedChatData._id);
+      if (response) {
+        console.log(response);
+        dispatch(setSelectedChatMessages(response));
       }
-    };
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch, selectedChatData]);
 
+  const getChannelMessages = useCallback(async () => {
+    try {
+      const response = await ChannelService.getChannelMessages(
+        selectedChatData._id,
+      );
+      if (response) {
+        dispatch(setSelectedChatMessages(response.messages));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch, selectedChatData]);
+
+  useEffect(() => {
     if (selectedChatData._id) {
       if (selectedChatType === "connection") {
         getMessages();
+      } else if (selectedChatType === "channel") {
+        getChannelMessages();
       }
     }
-  }, [dispatch, selectedChatData, selectedChatType]);
+  }, [
+    dispatch,
+    getChannelMessages,
+    getMessages,
+    selectedChatData,
+    selectedChatType,
+  ]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -180,8 +203,14 @@ const MessageContainer = () => {
 
   const renderChannelMessages = (message: any, index: number) => {
     return (
-      <div
+      <motion.div
         className={`mt-5 ${message.sender._id !== userId ? "text-left" : "text-right"}`}
+        initial={{
+          opacity: 0,
+          x: message.sender === selectedChatData._id ? -50 : 50,
+        }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.05 }}
       >
         {message.messageType === "text" && (
           <div
@@ -189,12 +218,78 @@ const MessageContainer = () => {
               message.sender._id === userId
                 ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
                 : "bg-[#2a2b33]/5 text-white/80 border-white/20"
-            } border inline-block p-4 rounded my-1 max-w-[50%] break-words `}
+            } border inline-block p-4 rounded my-1 max-w-[50%] break-words ml-9`}
           >
             {message.content}
           </div>
         )}
-      </div>
+        {message.messageType === "file" && (
+          <div
+            className={`${
+              message.sender._id === userId
+                ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
+                : "bg-[#2a2b33]/5 text-white/80 border-white/20"
+            } border inline-block p-4 rounded my-1 max-w-[50%] break-words `}
+          >
+            {checkIfImage(message.fileUrl) ? (
+              <div
+                className="cursor-pointer"
+                onClick={() => {
+                  setShowImage(true);
+                  setImageUrl(message.fileUrl);
+                }}
+              >
+                <img src={message.fileUrl} height={300} width={300} />
+              </div>
+            ) : checkIfVideo(message.fileUrl) ? (
+              <div className="cursor-pointer">
+                <video
+                  height={300}
+                  width={300}
+                  src={message.fileUrl}
+                  controls
+                />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center gap-5">
+                <span className="text-white/80 text-3xl bg-black/20 rounded-full p-3">
+                  <FaFolder />
+                </span>
+                <span>{message.fileUrl.split("/").pop()}</span>
+                <span
+                  className=""
+                  onClick={() => downloadFile(message.fileUrl)}
+                >
+                  <Download />
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+        {message.sender._id !== userId ? (
+          <div className="flex items-center justify-start gap-3">
+            <Avatar className="h-8 w-8 sm:h-8 sm:w-8 flex-shrink-0">
+              <AvatarImage
+                src={message.sender.profilePic}
+                className="rounded-full object-cover"
+              />
+              <AvatarFallback>{message.sender.name[0]}</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <span className="text-sm text-muted-foreground">
+                {message.sender.name}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {moment(message.createdAt).format("LT")}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="text-xs text-white/60 mt-1">
+            {moment(message.createdAt).format("LT")}
+          </div>
+        )}
+      </motion.div>
     );
   };
 

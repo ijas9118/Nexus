@@ -6,7 +6,7 @@ import EmojiPicker, { Theme } from "emoji-picker-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useSocket } from "@/context/SocketContext";
-import { addMessage } from "@/store/slices/chatSlice";
+import { addChannelInChannelList, addMessage } from "@/store/slices/chatSlice";
 import { MessageService } from "@/services/user/messageService";
 
 const MessageBar = () => {
@@ -54,6 +54,7 @@ const MessageBar = () => {
 
   const handleReveiveChannelMessage = useCallback(
     (message: any) => {
+      console.log(message);
       if (
         selectedChatType !== undefined &&
         selectedChatData?._id &&
@@ -62,6 +63,8 @@ const MessageBar = () => {
         console.log("Message Received:", message);
         dispatch(addMessage(message));
       }
+
+      dispatch(addChannelInChannelList(message));
     },
     [dispatch, selectedChatData._id, selectedChatType],
   );

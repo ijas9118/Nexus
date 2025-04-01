@@ -24,7 +24,6 @@ const DMList = ({
     } else {
       dispatch(setSelectedChatType("connection"));
     }
-
     dispatch(setSelectedChatData(chat));
 
     if (selectedChatData && selectedChatData._id !== chat._id) {

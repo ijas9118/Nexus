@@ -47,6 +47,7 @@ const setUpSocket = (server: Server) => {
   };
 
   const sendChannelMessage = async (message: any) => {
+    console.log(message.channelId);
     const { channelId, sender, content, messageType, fileUrl } = message;
 
     const createdMessage = await MessageModel.create({
