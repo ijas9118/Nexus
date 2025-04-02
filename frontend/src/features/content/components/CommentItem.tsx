@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 const CommentItem = ({ comment }: { comment: any }) => {
+  console.log(comment);
   return (
     <div key={comment.id} className="flex gap-3">
       <Avatar className="h-10 w-10">

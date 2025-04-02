@@ -3,12 +3,14 @@ import { BaseRepository } from '../core/abstracts/base.repository';
 import { ICommentRepository } from '../core/interfaces/repositories/ICommentRepository';
 import { AddCommentParams } from '../core/types/service/add-comment';
 import CommentModel, { IComment } from '../models/comments.model';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { FormatTime } from '../utils/formatTime';
+import { TYPES } from '@/di/types';
+import { IContentRepository } from '@/core/interfaces/repositories/IContentRepository';
 
 @injectable()
 export class CommentRepository extends BaseRepository<IComment> implements ICommentRepository {
-  constructor() {
+  constructor(@inject(TYPES.ContentRepository) private contentRepository: IContentRepository) {
     super(CommentModel);
   }
 
@@ -25,6 +27,8 @@ export class CommentRepository extends BaseRepository<IComment> implements IComm
         parentCommentId: new mongoose.Types.ObjectId(commentData.parentCommentId),
       }),
     };
+
+    await this.contentRepository.updateOne({ _id: contentId }, { $inc: { commentCount: 1 } });
 
     return this.create(commentObj);
   };
