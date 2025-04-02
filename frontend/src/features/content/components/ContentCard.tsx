@@ -20,7 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/molecules/alert-dialog";
-import CommentModal from "./CommentModal";
+import CommentModal from "./comment/CommentModal";
 
 interface ContentCardProps {
   id: string;

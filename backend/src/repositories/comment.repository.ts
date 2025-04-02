@@ -44,12 +44,12 @@ export class CommentRepository extends BaseRepository<IComment> implements IComm
 
   findCommentsByContentId = async (contentId: string): Promise<IComment[]> => {
     return await CommentModel.find({ contentId, parentCommentId: null })
-      .populate('userId', 'name profilePic')
+      .populate('userId', 'name profilePic username')
       .populate({
         path: 'replies',
         populate: {
           path: 'userId',
-          select: 'name profilePic',
+          select: 'name profilePic username',
         },
       })
       .lean()

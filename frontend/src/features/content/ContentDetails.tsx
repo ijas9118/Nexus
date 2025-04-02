@@ -8,7 +8,10 @@ import { ContentLoadingSkeleton } from "./components/ContentLoadingSkeleton";
 import { ContentHeader } from "./components/ContentHeader";
 import { InteractionBar } from "./components/InteractionBar";
 import { ContentBody } from "./components/ContentBody";
-import { CommentInput } from "./components/CommentInput2";
+import { CommentInput } from "./components/CommentInput";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CommentService } from "@/services/user/commentService";
+import { toast } from "sonner";
 
 export default function ContentDetails() {
   const { id } = useParams<{ id: string }>();
@@ -17,9 +20,29 @@ export default function ContentDetails() {
     content?.likeCount,
   );
 
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: ({
+      text,
+      parentCommentId,
+    }: {
+      text: string;
+      parentCommentId?: string;
+    }) => CommentService.addComment(id as string, text, parentCommentId),
+    onSuccess: () => {
+      toast.success("Comment posted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["comments", id] }); // Refresh comments
+    },
+    onError: (error: any) => {
+      toast.error(
+        `Failed to post comment: ${error.message || "Unknown error"}`,
+      );
+    },
+  });
+
   const handleSubmitComment = (comment: string) => {
-    // API call to submit comment would go here
-    console.log("New comment:", comment);
+    mutation.mutate({ text: comment });
   };
 
   if (isLoading) return <ContentLoadingSkeleton />;
@@ -50,7 +73,10 @@ export default function ContentDetails() {
       />
       <div className="mt-8">
         <h3 className="text-xl font-semibold mb-4">Comments</h3>
-        <CommentInput onSubmit={handleSubmitComment} />
+        <CommentInput
+          onSubmit={handleSubmitComment}
+          isPending={mutation.isPending}
+        />
         <CommentSection contentId={id as string} />
       </div>
       <div className="mt-16">

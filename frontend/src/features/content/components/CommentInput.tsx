@@ -1,46 +1,49 @@
+// features/content/components/CommentInput.tsx
 import { useState } from "react";
+import { Avatar, AvatarFallback } from "@/components/atoms/avatar";
 import { Button } from "@/components/atoms/button";
 import { Textarea } from "@/components/atoms/textarea";
-import CommentToolbar from "./CommentToolbar";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CommentService } from "@/services/user/commentService";
+import { SendIcon } from "lucide-react";
 
-const CommentInput = ({ contentId }: { contentId: string }) => {
-  const [commentText, setCommentText] = useState("");
-  const queryClient = useQueryClient();
+interface CommentInputProps {
+  onSubmit: (comment: string) => void;
+  isPending?: boolean;
+}
 
-  const mutation = useMutation({
-    mutationFn: (newComment: string) =>
-      CommentService.addComment(contentId, newComment),
-    onSuccess: () => {
-      setCommentText("");
-      queryClient.invalidateQueries({ queryKey: ["comments", contentId] });
-    },
-    onError: (error) => {
-      console.error("Failed to add comment:", error);
-    },
-  });
+export const CommentInput = ({ onSubmit, isPending }: CommentInputProps) => {
+  const [newComment, setNewComment] = useState<string>("");
+
+  const handleSubmit = () => {
+    if (newComment.trim()) {
+      onSubmit(newComment);
+      setNewComment("");
+    }
+  };
 
   return (
-    <div className="p-4 rounded-lg border">
-      <Textarea
-        placeholder="Add comment..."
-        className="min-h-[100px] bg-transparent border-none shadow-none focus-visible:ring-0 resize-none p-0 placeholder:text-muted-foreground"
-        value={commentText}
-        onChange={(e) => setCommentText(e.target.value)}
-      />
-      <div className="flex justify-between items-center mt-2">
-        <CommentToolbar />
-        <Button
-          className="rounded-full px-6"
-          disabled={!commentText.trim() || mutation.isPending}
-          onClick={() => mutation.mutate(commentText)}
-        >
-          {mutation.isPending ? "Submitting..." : "Submit"}
-        </Button>
+    <div className="flex gap-3 mb-6">
+      <Avatar className="h-8 w-8">
+        <AvatarFallback>U</AvatarFallback>
+      </Avatar>
+      <div className="flex-1">
+        <Textarea
+          placeholder="Add a comment..."
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          className="mb-2 resize-none"
+          disabled={isPending}
+        />
+        <div className="flex justify-end">
+          <Button
+            size="sm"
+            onClick={handleSubmit}
+            disabled={!newComment.trim()}
+          >
+            <SendIcon className="h-4 w-4 mr-2" />
+            {isPending ? "Posting..." : "Post"}
+          </Button>
+        </div>
       </div>
     </div>
   );
 };
-
-export default CommentInput;
