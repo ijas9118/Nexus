@@ -20,7 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/molecules/alert-dialog";
-import CommentModal from "./CommentModal";
+import CommentModal from "./comment/CommentModal";
 
 interface ContentCardProps {
   id: string;
@@ -30,7 +30,7 @@ interface ContentCardProps {
   heading: string;
   date: string;
   likes: number;
-  comments: number;
+  commentCount: number;
   squad: { name: string; _id: string };
   isPremium: boolean;
   image: string;
@@ -84,6 +84,8 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
   const handleUserClick = (username: string) => {
     navigate(`/profile/${username}`);
   };
+
+  console.log(props);
 
   return (
     <div className="w-full border-b py-6 hover:scale-[101%] transition-all">

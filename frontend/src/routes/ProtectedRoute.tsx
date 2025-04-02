@@ -12,8 +12,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
     (state: RootState) => state.auth,
   );
 
-  console.log(user);
-
   if (status === "loading") {
     return (
       <div className="container mx-auto px-8 py-8 flex h-screen justify-center items-center">

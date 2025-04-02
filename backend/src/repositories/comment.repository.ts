@@ -3,12 +3,14 @@ import { BaseRepository } from '../core/abstracts/base.repository';
 import { ICommentRepository } from '../core/interfaces/repositories/ICommentRepository';
 import { AddCommentParams } from '../core/types/service/add-comment';
 import CommentModel, { IComment } from '../models/comments.model';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { FormatTime } from '../utils/formatTime';
+import { TYPES } from '@/di/types';
+import { IContentRepository } from '@/core/interfaces/repositories/IContentRepository';
 
 @injectable()
 export class CommentRepository extends BaseRepository<IComment> implements ICommentRepository {
-  constructor() {
+  constructor(@inject(TYPES.ContentRepository) private contentRepository: IContentRepository) {
     super(CommentModel);
   }
 
@@ -26,16 +28,31 @@ export class CommentRepository extends BaseRepository<IComment> implements IComm
       }),
     };
 
-    return this.create(commentObj);
+    const newComment = await this.create(commentObj);
+
+    if (commentData.parentCommentId) {
+      await CommentModel.findByIdAndUpdate(commentData.parentCommentId, {
+        $push: { replies: newComment._id },
+      });
+      await this.contentRepository.updateOne({ _id: contentId }, { $inc: { commentCount: 1 } });
+    } else {
+      await this.contentRepository.updateOne({ _id: contentId }, { $inc: { commentCount: 1 } });
+    }
+
+    return newComment;
   };
 
   findCommentsByContentId = async (contentId: string): Promise<IComment[]> => {
     return await CommentModel.find({ contentId, parentCommentId: null })
-      .populate('userId', 'name profilePic')
+      .populate('userId', 'name profilePic username')
       .populate({
         path: 'replies',
-        populate: { path: 'userId', select: 'name profilePic' },
+        populate: {
+          path: 'userId',
+          select: 'name profilePic username',
+        },
       })
+      .lean()
       .exec();
   };
 

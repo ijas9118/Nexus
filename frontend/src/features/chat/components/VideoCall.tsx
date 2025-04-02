@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Peer, { MediaConnection } from "peerjs";
 import { useSocket } from "@/context/SocketContext";
-import "./style.css";
 import { Dialog, DialogContent } from "@/components/organisms/dialog";
 import { Button } from "@/components/atoms/button";
 import {
@@ -78,7 +77,7 @@ const VideoCall: React.FC<VideoCallProps> = ({
     peer.on("call", (call) => {
       console.log("Received incoming call");
       callInstance.current = call; // Store the call
-      if (localStream.current && window.confirm("Incoming call. Accept?")) {
+      if (localStream.current) {
         call.answer(localStream.current);
         call.on("stream", (remoteStream) => {
           console.log("Received remote stream from call");
@@ -99,30 +98,27 @@ const VideoCall: React.FC<VideoCallProps> = ({
     socket?.on("call-made", (data) => {
       console.log(`Call-made received from ${data.from}`);
       if (data.from !== userId && localStream.current) {
-        const accept = window.confirm(`${data.from} is calling. Accept?`);
-        console.log("asdfasdf", accept);
-        if (accept) {
-          const call = peerInstance.current!.call(
-            data.from,
-            localStream.current,
-          );
-          callInstance.current = call;
-          call.on("stream", (remoteStream) => {
-            if (remoteVideoRef.current) {
-              remoteVideoRef.current.srcObject = remoteStream;
-            }
-            setCallActive(true);
-            setCallStatus("In call");
-          });
-          call.on("error", (err) => {
-            console.error("Call error:", err);
-            setCallStatus(`Call error: ${err.message}`);
-          });
-          call.on("close", () => endCall("Call ended by remote user"));
-        } else {
-          socket.emit("reject-call", { to: data.from });
-          setCallStatus("Call rejected");
-        }
+        // const accept = window.confirm(`${data.from} is calling. Accept?`);
+        // console.log("asdfasdf", accept);
+        // if (accept) {
+        const call = peerInstance.current!.call(data.from, localStream.current);
+        callInstance.current = call;
+        call.on("stream", (remoteStream) => {
+          if (remoteVideoRef.current) {
+            remoteVideoRef.current.srcObject = remoteStream;
+          }
+          setCallActive(true);
+          setCallStatus("In call");
+        });
+        call.on("error", (err) => {
+          console.error("Call error:", err);
+          setCallStatus(`Call error: ${err.message}`);
+        });
+        call.on("close", () => endCall("Call ended by remote user"));
+        // } else {
+        //   socket.emit("reject-call", { to: data.from });
+        //   setCallStatus("Call rejected");
+        // }
       }
     });
 

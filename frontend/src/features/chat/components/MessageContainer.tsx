@@ -1,7 +1,7 @@
 import { RootState } from "@/store/store";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
+import dayjs from "dayjs";
 import { setSelectedChatMessages } from "@/store/slices/chatSlice";
 import { MessageService } from "@/services/user/messageService";
 import { motion } from "framer-motion";
@@ -74,7 +74,7 @@ const MessageContainer = () => {
   const renderMessages = () => {
     let lastDate: string | null = null;
     return selectedChatMessages.map((message, index) => {
-      const messageDate = moment(message.updatedAt).format("DD-MM-YYYY");
+      const messageDate = dayjs(message.updatedAt).format("DD-MM-YYYY");
       const showDate = messageDate !== lastDate;
       lastDate = messageDate;
       return (
@@ -86,7 +86,7 @@ const MessageContainer = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              {moment(message.updatedAt).format("LL")}
+              {dayjs(message.updatedAt).format("MMMM D, YYYY")}
             </motion.div>
           )}
           {selectedChatType === "connection" &&
@@ -195,7 +195,7 @@ const MessageContainer = () => {
           </div>
         )}
         <div className="text-xs text-muted-foreground">
-          {moment(message.updatedAt).format("LT")}
+          {dayjs(message.updatedAt).format("h:mm A")}
         </div>
       </motion.div>
     );
@@ -280,13 +280,13 @@ const MessageContainer = () => {
                 {message.sender.name}
               </span>
               <span className="text-xs text-muted-foreground">
-                {moment(message.createdAt).format("LT")}
+                {dayjs(message.createdAt).format("h:mm A")}
               </span>
             </div>
           </div>
         ) : (
           <div className="text-xs text-white/60 mt-1">
-            {moment(message.createdAt).format("LT")}
+            {dayjs(message.createdAt).format("h:mm A")}
           </div>
         )}
       </motion.div>

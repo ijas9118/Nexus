@@ -95,7 +95,7 @@ export default function MyFeed() {
             heading={item.title}
             date={item.date}
             likes={item.likes}
-            comments={item.comments}
+            commentCount={item.commentCount}
             squad={item.squad}
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
