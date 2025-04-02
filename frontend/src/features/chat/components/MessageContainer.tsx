@@ -7,6 +7,7 @@ import { MessageService } from "@/services/user/messageService";
 import { motion } from "framer-motion";
 import { ScrollArea } from "@/components/organisms/scroll-area";
 import { FaFolder } from "react-icons/fa";
+import { MdOutlineDownloading } from "react-icons/md";
 import { Download } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/organisms/dialog";
 import { Button } from "@/components/atoms/button";
@@ -131,7 +132,7 @@ const MessageContainer = () => {
   const renderDMMessages = (message: any, index: number) => {
     return (
       <motion.div
-        className={`${message.sender === selectedChatData._id ? "text-left" : "text-right"}`}
+        className={`${message.sender === selectedChatData._id ? "text-left" : "text-right"} my-3`}
         initial={{
           opacity: 0,
           x: message.sender === selectedChatData._id ? -50 : 50,
@@ -143,9 +144,9 @@ const MessageContainer = () => {
           <div
             className={`${
               message.sender !== selectedChatData._id
-                ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
-                : "bg-[#2a2b33]/5 text-white/80 border-white/20"
-            } border inline-block p-4 rounded my-1 max-w-[50%] break-words `}
+                ? "bg-primary text-secondary rounded-tr-none rounded-br-xl"
+                : "bg-secondary text-primary rounded-tl-none rounded-bl-xl"
+            }  inline-block px-4 py-[10px] rounded-2xl max-w-[50%] break-words mb-1`}
           >
             {message.content}
           </div>
@@ -154,40 +155,42 @@ const MessageContainer = () => {
           <div
             className={`${
               message.sender !== selectedChatData._id
-                ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
-                : "bg-[#2a2b33]/5 text-white/80 border-white/20"
-            } border inline-block p-4 rounded my-1 max-w-[50%] break-words `}
+                ? "bg-primary text-secondary rounded-tr-none rounded-br-xl"
+                : "bg-secondary text-primary rounded-tl-none rounded-bl-xl"
+            } inline-block rounded-2xl my-1 max-w-[50%] break-words overflow-hidden `}
           >
             {checkIfImage(message.fileUrl) ? (
-              <div
-                className="cursor-pointer"
+              <img
+                src={message.fileUrl}
+                height={300}
+                width={300}
+                className="object-cover cursor-pointer"
                 onClick={() => {
                   setShowImage(true);
                   setImageUrl(message.fileUrl);
                 }}
-              >
-                <img src={message.fileUrl} height={300} width={300} />
-              </div>
+              />
             ) : checkIfVideo(message.fileUrl) ? (
-              <div className="cursor-pointer">
-                <video
-                  height={300}
-                  width={300}
-                  src={message.fileUrl}
-                  controls
-                />
-              </div>
+              <video
+                height={300}
+                width={300}
+                src={message.fileUrl}
+                controls
+                className="object-cover cursor-pointer"
+              />
             ) : (
-              <div className="flex items-center justify-center gap-5">
-                <span className="text-white/80 text-3xl bg-black/20 rounded-full p-3">
-                  <FaFolder />
-                </span>
-                <span>{message.fileUrl.split("/").pop()}</span>
+              <div className="flex items-center justify-between gap-4 mx-2">
+                <div className="flex items-center">
+                  <span className="text-secondary text-3xl p-3">
+                    <FaFolder />
+                  </span>
+                  <span>{message.fileUrl.split("/").pop()}</span>
+                </div>
                 <span
-                  className=""
+                  className="text-xl cursor-pointer"
                   onClick={() => downloadFile(message.fileUrl)}
                 >
-                  <Download />
+                  <MdOutlineDownloading />
                 </span>
               </div>
             )}
@@ -215,9 +218,9 @@ const MessageContainer = () => {
           <div
             className={`${
               message.sender._id === userId
-                ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
-                : "bg-[#2a2b33]/5 text-white/80 border-white/20"
-            } border inline-block p-4 rounded my-1 max-w-[50%] break-words ml-9`}
+                ? "bg-primary text-secondary rounded-tr-none rounded-br-xl"
+                : "bg-secondary text-primary rounded-tl-none rounded-bl-xl"
+            }  inline-block px-4 py-[10px] rounded-2xl max-w-[50%] break-words mb-1`}
           >
             {message.content}
           </div>
@@ -226,40 +229,42 @@ const MessageContainer = () => {
           <div
             className={`${
               message.sender._id === userId
-                ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
-                : "bg-[#2a2b33]/5 text-white/80 border-white/20"
-            } border inline-block p-4 rounded my-1 max-w-[50%] break-words `}
+                ? "bg-primary text-secondary rounded-tr-none rounded-br-xl"
+                : "bg-secondary text-primary rounded-tl-none rounded-bl-xl"
+            } inline-block rounded-2xl my-1 max-w-[50%] break-words overflow-hidden `}
           >
             {checkIfImage(message.fileUrl) ? (
-              <div
-                className="cursor-pointer"
+              <img
+                src={message.fileUrl}
+                height={300}
+                width={300}
+                className="object-cover cursor-pointer"
                 onClick={() => {
                   setShowImage(true);
                   setImageUrl(message.fileUrl);
                 }}
-              >
-                <img src={message.fileUrl} height={300} width={300} />
-              </div>
+              />
             ) : checkIfVideo(message.fileUrl) ? (
-              <div className="cursor-pointer">
-                <video
-                  height={300}
-                  width={300}
-                  src={message.fileUrl}
-                  controls
-                />
-              </div>
+              <video
+                height={300}
+                width={300}
+                src={message.fileUrl}
+                controls
+                className="object-cover cursor-pointer"
+              />
             ) : (
-              <div className="flex items-center justify-center gap-5">
-                <span className="text-white/80 text-3xl bg-black/20 rounded-full p-3">
-                  <FaFolder />
-                </span>
-                <span>{message.fileUrl.split("/").pop()}</span>
+              <div className="flex items-center justify-between gap-4 mx-2">
+                <div className="flex items-center">
+                  <span className="text-secondary text-3xl p-3">
+                    <FaFolder />
+                  </span>
+                  <span>{message.fileUrl.split("/").pop()}</span>
+                </div>
                 <span
-                  className=""
+                  className="text-xl cursor-pointer"
                   onClick={() => downloadFile(message.fileUrl)}
                 >
-                  <Download />
+                  <MdOutlineDownloading />
                 </span>
               </div>
             )}
@@ -284,7 +289,7 @@ const MessageContainer = () => {
             </div>
           </div>
         ) : (
-          <div className="text-xs text-white/60 mt-1">
+          <div className="text-xs text-muted-foreground">
             {dayjs(message.createdAt).format("h:mm A")}
           </div>
         )}
