@@ -2,14 +2,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Button } from "@/components/atoms/button";
 import { closeChat } from "@/store/slices/chatSlice";
 import { RootState } from "@/store/store";
-import { X } from "lucide-react";
+import { Video, X } from "lucide-react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import VideoCall from "./VideoCall";
 
 const ChatHeader = ({ toggleContacts }: { toggleContacts: () => void }) => {
   const dispatch = useDispatch();
   const { selectedChatData, selectedChatType } = useSelector(
     (state: RootState) => state.chat,
   );
+  const { user } = useSelector((state: RootState) => state.auth);
+  const [showVideoCall, setShowVideoCall] = useState(false);
 
   return (
     <div
@@ -33,6 +37,16 @@ const ChatHeader = ({ toggleContacts }: { toggleContacts: () => void }) => {
         </div>
       </div>
       <div className="flex gap-2 sm:gap-5 items-center flex-shrink-0">
+        <Button onClick={() => setShowVideoCall(true)}>
+          <Video />
+        </Button>
+        {showVideoCall && (
+          <VideoCall
+            userId={user?._id as string}
+            recipientId={selectedChatData._id}
+            onClose={() => setShowVideoCall(false)}
+          />
+        )}
         <Button
           variant="ghost"
           size="sm"

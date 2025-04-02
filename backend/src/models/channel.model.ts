@@ -1,6 +1,7 @@
 import mongoose, { Document } from 'mongoose';
 
 export interface IChannel extends Document {
+  _id: string;
   name: string;
   members: mongoose.Types.ObjectId[];
   admin: mongoose.Types.ObjectId;

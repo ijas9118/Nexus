@@ -1,6 +1,6 @@
 import { RootState } from "@/store/store";
 import { HOST } from "@/utils/constants";
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { io, Socket } from "socket.io-client";
 import { ReactNode } from "react";
@@ -14,6 +14,7 @@ export const useSocket = () => {
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useSelector((state: RootState) => state.auth);
+  const [onGoingCall, setOnGoingCall] = useState(null);
 
   const socket = useMemo(() => {
     if (!user?._id) {
