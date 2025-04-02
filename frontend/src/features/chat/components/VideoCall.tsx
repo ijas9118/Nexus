@@ -2,6 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import Peer, { MediaConnection } from "peerjs";
 import { useSocket } from "@/context/SocketContext";
 import "./style.css";
+import { Dialog, DialogContent } from "@/components/organisms/dialog";
+import { Button } from "@/components/atoms/button";
+import {
+  Maximize2,
+  Mic,
+  MicOff,
+  Minimize2,
+  PhoneOff,
+  VideoIcon,
+  VideoOff,
+} from "lucide-react";
 
 interface VideoCallProps {
   userId: string;
@@ -21,11 +32,13 @@ const VideoCall: React.FC<VideoCallProps> = ({
   const [micOn, setMicOn] = useState(true);
   const [videoOn, setVideoOn] = useState(true);
   const [callStatus, setCallStatus] = useState<string>("");
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const peerInstance = useRef<Peer | null>(null);
   const localStream = useRef<MediaStream | null>(null);
   const callInstance = useRef<MediaConnection | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const setupMedia = async () => {
     try {
@@ -177,6 +190,7 @@ const VideoCall: React.FC<VideoCallProps> = ({
     setCallActive(false);
     setStreamReady(false);
     setCallStatus(reason);
+    setIsFullScreen(false);
     onClose();
   };
 
@@ -196,31 +210,112 @@ const VideoCall: React.FC<VideoCallProps> = ({
     }
   };
 
+  const toggleFullScreen = () => {
+    if (!modalRef.current) return;
+
+    if (!isFullScreen) {
+      modalRef.current.requestFullscreen().catch((err) => {
+        console.error("Error entering fullscreen:", err);
+      });
+      setIsFullScreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullScreen(false);
+    }
+  };
   return (
-    <div className="video-call-container">
-      <h3>My Peer ID: {peerId}</h3>
-      <p>Status: {callStatus}</p>
-      <video ref={localVideoRef} autoPlay muted playsInline />
-      <video ref={remoteVideoRef} autoPlay playsInline />
-      <div className="controls">
-        {!callActive ? (
-          <>
-            <button onClick={startCall} disabled={!streamReady}>
-              Call {recipientId}
-            </button>
-            <button onClick={() => endCall("Closed")}>Close</button>
-          </>
-        ) : (
-          <>
-            <button onClick={toggleMic}>{micOn ? "Mute" : "Unmute"}</button>
-            <button onClick={toggleVideo}>
-              {videoOn ? "Video Off" : "Video On"}
-            </button>
-            <button onClick={() => endCall("Call ended")}>End Call</button>
-          </>
-        )}
-      </div>
-    </div>
+    <Dialog open={true} onOpenChange={() => endCall("Closed")}>
+      <DialogContent
+        ref={modalRef}
+        className={`bg-gray-900 text-white p-6 rounded-lg shadow-xl w-full max-w-4xl transition-all duration-300 ${
+          isFullScreen ? "h-full max-h-full" : "max-h-[90vh]"
+        }`}
+      >
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold">
+            Video Call - Peer ID: {peerId}
+          </h3>
+        </div>
+
+        <p className="text-sm text-gray-400 mb-4">Status: {callStatus}</p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <video
+            ref={localVideoRef}
+            autoPlay
+            muted
+            playsInline
+            className="w-full h-64 bg-black rounded-md object-cover"
+          />
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            playsInline
+            className="w-full h-64 bg-black rounded-md object-cover"
+          />
+        </div>
+
+        <div className="flex justify-center gap-4">
+          {!callActive ? (
+            <>
+              <Button onClick={startCall} disabled={!streamReady}>
+                Call {recipientId}
+              </Button>
+              <Button variant="secondary" onClick={() => endCall("Closed")}>
+                Close
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant={micOn ? "default" : "destructive"}
+                onClick={toggleMic}
+                className="flex items-center gap-2"
+              >
+                {micOn ? (
+                  <Mic className="h-4 w-4" />
+                ) : (
+                  <MicOff className="h-4 w-4" />
+                )}
+                {micOn ? "Mute" : "Unmute"}
+              </Button>
+              <Button
+                variant={videoOn ? "default" : "destructive"}
+                onClick={toggleVideo}
+                className="flex items-center gap-2"
+              >
+                {videoOn ? (
+                  <VideoIcon className="h-4 w-4" />
+                ) : (
+                  <VideoOff className="h-4 w-4" />
+                )}
+                {videoOn ? "Video Off" : "Video On"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={toggleFullScreen}
+                className="flex items-center gap-2 text-white border-gray-600 hover:bg-gray-800"
+              >
+                {isFullScreen ? (
+                  <Minimize2 className="h-4 w-4" />
+                ) : (
+                  <Maximize2 className="h-4 w-4" />
+                )}
+                {isFullScreen ? "Exit Full Screen" : "Full Screen"}
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => endCall("Call ended")}
+                className="flex items-center gap-2"
+              >
+                <PhoneOff className="h-4 w-4" />
+                End Call
+              </Button>
+            </>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
