@@ -19,7 +19,6 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
 
   async findContent(id: string, role: string): Promise<IContent | null> {
     const contentIdObj = new Types.ObjectId(id);
-    console.log(role);
 
     const result = await ContentModel.findById(contentIdObj)
       .populate('squad', 'name')

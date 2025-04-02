@@ -28,9 +28,18 @@ export class CommentRepository extends BaseRepository<IComment> implements IComm
       }),
     };
 
-    await this.contentRepository.updateOne({ _id: contentId }, { $inc: { commentCount: 1 } });
+    const newComment = await this.create(commentObj);
 
-    return this.create(commentObj);
+    if (commentData.parentCommentId) {
+      await CommentModel.findByIdAndUpdate(commentData.parentCommentId, {
+        $push: { replies: newComment._id },
+      });
+      await this.contentRepository.updateOne({ _id: contentId }, { $inc: { commentCount: 1 } });
+    } else {
+      await this.contentRepository.updateOne({ _id: contentId }, { $inc: { commentCount: 1 } });
+    }
+
+    return newComment;
   };
 
   findCommentsByContentId = async (contentId: string): Promise<IComment[]> => {
@@ -38,8 +47,12 @@ export class CommentRepository extends BaseRepository<IComment> implements IComm
       .populate('userId', 'name profilePic')
       .populate({
         path: 'replies',
-        populate: { path: 'userId', select: 'name profilePic' },
+        populate: {
+          path: 'userId',
+          select: 'name profilePic',
+        },
       })
+      .lean()
       .exec();
   };
 
