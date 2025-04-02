@@ -28,7 +28,6 @@ const MessageContainer = () => {
     try {
       const response = await MessageService.getMessages(selectedChatData._id);
       if (response) {
-        console.log(response);
         dispatch(setSelectedChatMessages(response));
       }
     } catch (error) {

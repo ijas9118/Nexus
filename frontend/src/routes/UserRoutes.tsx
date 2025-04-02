@@ -24,6 +24,7 @@ import BookSession from "@/features/mentor/BookSession";
 import { MentorFormProvider } from "@/context/MentorFormContext";
 import AddPost from "@/features/addPost/AddPost";
 import Chat from "@/features/chat/Chat";
+import NotificationsPage from "@/features/notification/NotificationsPage";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -52,6 +53,7 @@ const UserRoutes: React.FC = () => {
             <Route path="history" element={<History />} />
             <Route path="content/:id" element={<ContentDetails />} />
             <Route path="following" element={<Following />} />
+            <Route path="notification" element={<NotificationsPage />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

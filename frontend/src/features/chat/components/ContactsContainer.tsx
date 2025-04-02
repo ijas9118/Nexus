@@ -24,6 +24,7 @@ const ContactsContainer = () => {
 
   const getChannels = useCallback(async () => {
     const response = await ChannelService.getUserChannels();
+
     console.log(response);
 
     if (response) {

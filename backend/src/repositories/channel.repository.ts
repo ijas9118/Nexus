@@ -25,12 +25,92 @@ export class ChannelRepository extends BaseRepository<IChannel> implements IChan
     return newChannel;
   };
 
-  getUserChannels = async (user: string): Promise<IChannel[]> => {
+  getUserChannels = async (user: string): Promise<any[]> => {
     const userId = new mongoose.Types.ObjectId(user);
 
-    const channels = await ChannelModel.find({
-      $or: [{ admin: userId }, { members: userId }],
-    }).sort({ updatedAt: -1 });
+    const channels = await ChannelModel.aggregate([
+      {
+        $match: {
+          $or: [{ admin: userId }, { members: userId }],
+        },
+      },
+      {
+        $lookup: {
+          from: 'messages',
+          localField: 'messages',
+          foreignField: '_id',
+          as: 'messageDetails',
+        },
+      },
+      {
+        $unwind: {
+          path: '$messageDetails',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $sort: {
+          'messageDetails.updatedAt': -1,
+        },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          name: { $first: '$name' },
+          members: { $first: '$members' },
+          admin: { $first: '$admin' },
+          messages: { $first: '$messages' },
+          createdAt: { $first: '$createdAt' },
+          updatedAt: { $first: '$updatedAt' },
+          lastMessageTime: { $first: '$messageDetails.updatedAt' },
+          lastMessageType: { $first: '$messageDetails.messageType' },
+          lastMessageContent: { $first: '$messageDetails.content' },
+          lastMessageFileUrl: { $first: '$messageDetails.fileUrl' },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          members: 1,
+          admin: 1,
+          messages: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          lastMessageTime: 1,
+          lastMessageContent: {
+            $cond: {
+              if: { $eq: ['$lastMessageType', 'text'] },
+              then: { $substr: ['$lastMessageContent', 0, 50] },
+              else: {
+                $cond: {
+                  if: { $eq: ['$lastMessageType', 'file'] },
+                  then: {
+                    $cond: {
+                      if: {
+                        $regexMatch: {
+                          input: '$lastMessageFileUrl',
+                          regex: /\.(jpg|jpeg|png|gif)$/i,
+                        },
+                      },
+                      then: 'Sent an image',
+                      else: 'Sent a file',
+                    },
+                  },
+                  else: '',
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        $sort: {
+          lastMessageTime: -1,
+          updatedAt: -1,
+        },
+      },
+    ]);
 
     return channels;
   };

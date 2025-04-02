@@ -18,7 +18,7 @@ const ChatHeader = ({ toggleContacts }: { toggleContacts: () => void }) => {
   return (
     <div
       className="h-fit border-b-2 flex items-center 
-      justify-between px-4 py-4 sm:px-6 md:px-10 lg:px-20"
+      justify-between px-4 py-4 md:px-6 "
     >
       <div className="flex gap-2 sm:gap-3 items-center w-full overflow-hidden">
         <Avatar className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
@@ -37,15 +37,19 @@ const ChatHeader = ({ toggleContacts }: { toggleContacts: () => void }) => {
         </div>
       </div>
       <div className="flex gap-2 sm:gap-5 items-center flex-shrink-0">
-        <Button onClick={() => setShowVideoCall(true)}>
-          <Video />
-        </Button>
-        {showVideoCall && (
-          <VideoCall
-            userId={user?._id as string}
-            recipientId={selectedChatData._id}
-            onClose={() => setShowVideoCall(false)}
-          />
+        {selectedChatType === "connection" && (
+          <>
+            <Button onClick={() => setShowVideoCall(true)} variant="ghost">
+              <Video />
+            </Button>
+            {showVideoCall && (
+              <VideoCall
+                userId={user?._id as string}
+                recipientId={selectedChatData._id}
+                onClose={() => setShowVideoCall(false)}
+              />
+            )}
+          </>
         )}
         <Button
           variant="ghost"

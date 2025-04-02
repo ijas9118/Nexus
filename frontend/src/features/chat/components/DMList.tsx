@@ -7,6 +7,7 @@ import {
 import { RootState } from "@/store/store";
 import { Avatar } from "@radix-ui/react-avatar";
 import { useDispatch, useSelector } from "react-redux";
+import { formatLastMessageTime } from "../utils/last-message-format";
 
 const DMList = ({
   chats,
@@ -51,12 +52,17 @@ const DMList = ({
                   <AvatarImage src={chat.profilePic} className="rounded-full" />
                   <AvatarFallback>{chat.name[0]}</AvatarFallback>
                 </Avatar>
-                <div className="min-w-0 flex-1">
-                  <h2 className="font-semibold text-sm sm:text-base truncate">
-                    {chat.name}
-                  </h2>
+                <div className="min-w-0 flex-1 mr-3">
+                  <div className="flex justify-between items-center ">
+                    <span className="font-semibold text-sm sm:text-base truncate">
+                      {chat.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {formatLastMessageTime(chat.lastMessageTime)}
+                    </span>
+                  </div>
                   <p className="text-xs sm:text-sm text-muted-foreground truncate">
-                    Active 2 mins ago
+                    {chat.lastMessageContent}
                   </p>
                 </div>
               </>
@@ -67,12 +73,17 @@ const DMList = ({
                   <AvatarImage src={chat.profilePic} className="rounded-full" />
                   <AvatarFallback>{chat.name[0]}</AvatarFallback>
                 </Avatar>
-                <div className="min-w-0 flex-1">
-                  <h2 className="font-semibold text-sm sm:text-base truncate">
-                    {chat.name}
-                  </h2>
+                <div className="min-w-0 flex-1 mr-3">
+                  <div className="flex justify-between items-center ">
+                    <span className="font-semibold text-sm sm:text-base truncate">
+                      {chat.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {formatLastMessageTime(chat.lastMessageTime)}
+                    </span>
+                  </div>
                   <p className="text-xs sm:text-sm text-muted-foreground truncate">
-                    Active 2 mins ago
+                    {chat.lastMessageContent}
                   </p>
                 </div>
               </>

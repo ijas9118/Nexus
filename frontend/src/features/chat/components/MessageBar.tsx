@@ -49,7 +49,6 @@ const MessageBar = () => {
         (selectedChatData._id === message.sender._id ||
           selectedChatData._id === message.recipient._id)
       ) {
-        console.log("Message Received:", message);
         dispatch(addMessage(message));
       }
 
@@ -68,7 +67,6 @@ const MessageBar = () => {
         selectedChatData?._id &&
         selectedChatData._id === message.channelId
       ) {
-        console.log("Message Received:", message);
         dispatch(addMessage(message));
       }
 

@@ -32,6 +32,9 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
             },
           },
           lastMessageTime: { $first: '$updatedAt' },
+          lastMessageType: { $first: '$messageType' },
+          lastMessageContent: { $first: '$content' },
+          lastMessageFileUrl: { $first: '$fileUrl' },
         },
       },
       {
@@ -49,6 +52,31 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
         $project: {
           _id: 1,
           lastMessageTime: 1,
+          lastMessageType: 1,
+          lastMessageContent: {
+            $cond: {
+              if: { $eq: ['$lastMessageType', 'text'] },
+              then: { $substr: ['$lastMessageContent', 0, 50] }, // Limit to 50 chars
+              else: {
+                $cond: {
+                  if: { $eq: ['$lastMessageType', 'file'] },
+                  then: {
+                    $cond: {
+                      if: {
+                        $regexMatch: {
+                          input: '$lastMessageFileUrl',
+                          regex: /\.(jpg|jpeg|png|gif)$/i,
+                        },
+                      },
+                      then: 'Sent an image',
+                      else: 'Sent a file',
+                    },
+                  },
+                  else: '',
+                },
+              },
+            },
+          },
           email: '$userInfo.email',
           username: '$userInfo.username',
           name: '$userInfo.name',

@@ -54,6 +54,32 @@ const chatSlice = createSlice({
             : message.sender._id,
       };
       state.selectedChatMessages = [...state.selectedChatMessages, newMessage];
+
+      if (state.selectedChatType === "connection") {
+        const chatIndex = state.directMessageChats.findIndex(
+          (chat) =>
+            chat._id === message.recipient._id ||
+            chat._id === message.sender._id,
+        );
+        if (chatIndex !== -1) {
+          state.directMessageChats[chatIndex] = {
+            ...state.directMessageChats[chatIndex],
+            lastMessageContent: message.content || "File sent",
+            lastMessageTime: message.createdAt || new Date().toISOString(),
+          };
+        }
+      } else if (state.selectedChatType === "channel") {
+        const channelIndex = state.channels.findIndex(
+          (channel) => channel._id === message.channelId,
+        );
+        if (channelIndex !== -1) {
+          state.channels[channelIndex] = {
+            ...state.channels[channelIndex],
+            lastMessageContent: message.content || "File sent",
+            lastMessageTime: message.createdAt || new Date().toISOString(),
+          };
+        }
+      }
     },
     addChannel: (state, action: PayloadAction<any>) => {
       const channel = action.payload;
