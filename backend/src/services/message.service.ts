@@ -14,6 +14,14 @@ export class MessageService extends BaseService<IMessage> implements IMessageSer
     super(messageRepository);
   }
 
+  createMessage = async (message: Partial<IMessage>): Promise<IMessage> => {
+    return await this.messageRepository.create(message);
+  };
+
+  getMessageById = async (messageId: string, isGroup: boolean): Promise<IMessage | null> => {
+    return await this.messageRepository.getMessageById(messageId, isGroup);
+  };
+
   getAllMessages = async (user1: string, user2: string): Promise<IMessage[]> => {
     return await this.messageRepository.getAllMessages(user1, user2);
   };

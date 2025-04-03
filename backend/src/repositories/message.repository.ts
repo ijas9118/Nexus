@@ -109,4 +109,17 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
 
     return messages;
   };
+
+  getMessageById = async (messageId: string, isGroup: boolean): Promise<IMessage | null> => {
+    if (isGroup) {
+      return await MessageModel.findById(messageId)
+        .populate('sender', '_id email name profilePic username')
+        .lean()
+        .exec();
+    } else {
+      return await MessageModel.findById(messageId)
+        .populate('sender', '_id name email profilePic username')
+        .populate('recipient', '_id name email profilePic username');
+    }
+  };
 }

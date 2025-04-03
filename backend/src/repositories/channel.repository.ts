@@ -132,4 +132,15 @@ export class ChannelRepository extends BaseRepository<IChannel> implements IChan
 
     return channelMessages.messages;
   };
+
+  addMessageToChannel = async (channelId: string, messageId: string): Promise<void> => {
+    await ChannelModel.updateOne(
+      { _id: new mongoose.Types.ObjectId(channelId) },
+      { $push: { messages: messageId } }
+    );
+  };
+
+  getChannelById = async (channelId: string): Promise<IChannel | null> => {
+    return await ChannelModel.findById(channelId).populate('members');
+  };
 }
