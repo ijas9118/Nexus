@@ -5,7 +5,7 @@ import { Express } from 'express';
 
 export interface IUserService {
   findByEmail(email: string): Promise<IUser | null>;
-  getUsers(): Promise<UsersDTO[]>;
+  getUsers(page: number, limit: number): Promise<{ users: UsersDTO[]; total: number }>;
   getUserById(userId: string): Promise<IUser | null>;
   updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null>;
   deleteUser(userId: string): Promise<boolean>;

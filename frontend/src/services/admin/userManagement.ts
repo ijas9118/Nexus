@@ -2,9 +2,10 @@ import { AxiosError } from "axios";
 import api from "../api";
 
 const AdminUserService = {
-  getUsers: async (params = {}) => {
+  getUsers: async (page: number = 1, limit: number = 10) => {
     try {
-      const response = await api.get("admin/user", { params });
+      const response = await api.get("admin/user", { params: { page, limit } });
+      console.log(response);
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {

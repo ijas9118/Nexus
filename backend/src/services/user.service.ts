@@ -2,7 +2,7 @@ import { injectable, inject } from 'inversify';
 import { TYPES } from '../di/types';
 import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
 import { IUserService } from '../core/interfaces/services/IUserService';
-import { IUser } from '../models/user.model';
+import { IUser, UserModel } from '../models/user.model';
 import { BaseService } from '../core/abstracts/base.service';
 import { UsersDTO } from '../dtos/responses/admin/users.dto';
 import bcrypt from 'bcrypt';
@@ -25,9 +25,17 @@ export class UserService extends BaseService<IUser> implements IUserService {
     return this.userRepository.findByEmail(email);
   }
 
-  async getUsers(): Promise<UsersDTO[]> {
-    const users = await this.userRepository.getAllUsers();
-    return users.map((user) => ({
+  async getUsers(
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ users: UsersDTO[]; total: number }> {
+    const skip = (page - 1) * limit;
+    const [users, total] = await Promise.all([
+      this.userRepository.getAllUsers(skip, limit),
+      UserModel.countDocuments({}),
+    ]);
+
+    const userDTOs = users.map((user) => ({
       id: user._id.toString(),
       name: user.name,
       email: user.email,
@@ -35,6 +43,8 @@ export class UserService extends BaseService<IUser> implements IUserService {
       postsCount: user.postsCount,
       joinedSquadsCount: user.joinedSquads.length,
     }));
+
+    return { users: userDTOs, total };
   }
 
   async getUserById(userId: string): Promise<IUser | null> {

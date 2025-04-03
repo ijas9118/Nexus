@@ -28,8 +28,8 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     return await UserModel.findOne({ githubId });
   }
 
-  async getAllUsers(): Promise<IUser[]> {
-    return this.find({});
+  async getAllUsers(skip: number = 0, limit: number = 10): Promise<IUser[]> {
+    return this.model.find({}).skip(skip).limit(limit).exec();
   }
 
   async addPostCount(userId: string): Promise<IUser | null> {

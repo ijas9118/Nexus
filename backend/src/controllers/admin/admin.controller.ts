@@ -11,8 +11,17 @@ export class AdminController implements IAdminController {
   constructor(@inject(TYPES.UserService) private userService: IUserService) {}
 
   async getUsers(req: Request, res: Response): Promise<void> {
-    const users = await this.userService.getUsers();
-    res.status(StatusCodes.OK).json(users);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    const { users, total } = await this.userService.getUsers(page, limit);
+    res.status(StatusCodes.OK).json({
+      data: users,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    });
   }
 
   async getUserById(req: Request, res: Response): Promise<void> {
