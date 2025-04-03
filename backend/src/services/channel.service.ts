@@ -20,4 +20,12 @@ export class ChannelService implements IChannelService {
   getChannelMessages = async (channelId: string): Promise<any[]> => {
     return await this.channelRepository.getChannelMessages(channelId);
   };
+
+  addMessageToChannel = async (channelId: string, messageId: string): Promise<void> => {
+    return await this.channelRepository.addMessageToChannel(channelId, messageId);
+  };
+
+  getChannelById = async (channelId: string): Promise<IChannel | null> => {
+    return await this.channelRepository.getChannelById(channelId);
+  };
 }
