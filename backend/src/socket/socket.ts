@@ -2,7 +2,6 @@ import { IChannelService } from '@/core/interfaces/services/IChannelService';
 import { IMessageService } from '@/core/interfaces/services/IMessageService';
 import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
-import ChannelModel from '@/models/channel.model';
 import { IMessage } from '@/models/message.model';
 import { CLIENT_URL } from '@/utils/constants';
 import { Server } from 'http';
