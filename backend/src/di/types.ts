@@ -57,4 +57,5 @@ export const TYPES = {
   CommentController: Symbol.for('CommentController'),
   PlanController: Symbol.for('PlanController'),
   PaymentController: Symbol.for('PaymentController'),
+  SocketController: Symbol.for('SocketController'),
 };

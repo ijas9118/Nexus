@@ -126,6 +126,7 @@ import { IMessageRepository } from '@/core/interfaces/repositories/IMessageRepos
 import { IMessageService } from '@/core/interfaces/services/IMessageService';
 import { MessageRepository } from '@/repositories/message.repository';
 import { MessageService } from '@/services/message.service';
+import { SocketController } from '@/controllers/socket.controller';
 
 const container = new Container();
 
@@ -199,5 +200,7 @@ container.bind<IGroupService>(TYPES.GroupService).to(GroupService);
 
 container.bind<IMessageRepository>(TYPES.MessageRepository).to(MessageRepository);
 container.bind<IMessageService>(TYPES.MessageService).to(MessageService);
+
+container.bind<SocketController>(TYPES.SocketController).to(SocketController);
 
 export { container };
