@@ -36,6 +36,9 @@ export const TYPES = {
   CommentService: Symbol.for('CommentService'),
   PlanService: Symbol.for('PlanService'),
   PaymentService: Symbol.for('PaymentService'),
+  ChatService: Symbol.for('ChatService'),
+  GroupService: Symbol.for('GroupService'),
+  MessageService: Symbol.for('MessageService'),
 
   // Controllers
   UserController: Symbol.for('UserController'),

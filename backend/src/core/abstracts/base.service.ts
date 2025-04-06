@@ -1,8 +1,8 @@
 import { Document, FilterQuery, Types } from 'mongoose';
-import { BaseRepository } from './base.repository';
+import { IBaseRepository } from '../interfaces/repositories/IBaseRepository';
 
 export abstract class BaseService<T extends Document> {
-  constructor(protected repository: BaseRepository<T>) {}
+  constructor(protected repository: IBaseRepository<T>) {}
 
   async create(data: Partial<T>): Promise<T> {
     return this.repository.create(data);

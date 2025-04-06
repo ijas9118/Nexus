@@ -111,12 +111,21 @@ import { IPaymentService } from '../core/interfaces/services/IPaymentService';
 import { PaymentServce } from '../services/payment.service';
 import { IPaymentController } from '../core/interfaces/controllers/IPaymentController';
 import { PaymentController } from '../controllers/payment.controller';
+
 import { IChatRepository } from '@/core/interfaces/repositories/IChatRepository';
+import { IChatService } from '@/core/interfaces/services/IChatService';
 import { ChatRepository } from '@/repositories/chat.repository';
-import { GroupRepository } from '@/repositories/group.repository';
-import { MessageRepository } from '@/repositories/message.repository';
+import { ChatService } from '@/services/chat.service';
+
 import { IGroupRepository } from '@/core/interfaces/repositories/IGroupRepository';
+import { IGroupService } from '@/core/interfaces/services/IGroupService';
+import { GroupRepository } from '@/repositories/group.repository';
+import { GroupService } from '@/services/group.service';
+
 import { IMessageRepository } from '@/core/interfaces/repositories/IMessageRepository';
+import { IMessageService } from '@/core/interfaces/services/IMessageService';
+import { MessageRepository } from '@/repositories/message.repository';
+import { MessageService } from '@/services/message.service';
 
 const container = new Container();
 
@@ -183,9 +192,12 @@ container.bind<IPaymentService>(TYPES.PaymentService).to(PaymentServce);
 container.bind<IPaymentController>(TYPES.PaymentController).to(PaymentController);
 
 container.bind<IChatRepository>(TYPES.ChatRepository).to(ChatRepository);
+container.bind<IChatService>(TYPES.ChatService).to(ChatService);
 
 container.bind<IGroupRepository>(TYPES.GroupRepository).to(GroupRepository);
+container.bind<IGroupService>(TYPES.GroupService).to(GroupService);
 
 container.bind<IMessageRepository>(TYPES.MessageRepository).to(MessageRepository);
+container.bind<IMessageService>(TYPES.MessageService).to(MessageService);
 
 export { container };

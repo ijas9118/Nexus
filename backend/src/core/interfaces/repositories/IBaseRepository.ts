@@ -1,4 +1,4 @@
-import { FilterQuery, Types } from 'mongoose';
+import { DeleteResult, FilterQuery, Types, UpdateQuery, UpdateWriteOpResult } from 'mongoose';
 
 export interface IBaseRepository<T> {
   findAll(): Promise<T[]>;
@@ -7,4 +7,12 @@ export interface IBaseRepository<T> {
   delete(id: Types.ObjectId): Promise<T | null>;
   find(filter: FilterQuery<T>): Promise<T[]>;
   findOne(filter: FilterQuery<T>): Promise<T | null>;
+  findById(id: Types.ObjectId): Promise<T | null>;
+  findByIdAndUpdate(id: Types.ObjectId, update: UpdateQuery<T>): Promise<T | null>;
+
+  updateOne(filter: FilterQuery<T>, update: UpdateQuery<T>): Promise<UpdateWriteOpResult>;
+  deleteOne(filter: FilterQuery<T>): Promise<DeleteResult>;
+
+  findOneAndUpdate(filter: FilterQuery<T>, update: UpdateQuery<T>): Promise<T>;
+  findOneAndDelete(filter: FilterQuery<T>): Promise<T | null>;
 }
