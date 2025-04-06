@@ -1,20 +1,24 @@
-import { RootState } from "@/store/store";
+import { SocketContext } from "@/hooks/useSocket";
+import {
+  addMessage,
+  setChats,
+  setGroups,
+  setUnreadCount,
+  updateMessage,
+} from "@/store/slices/chatSlice";
+import store, { RootState } from "@/store/store";
 import { HOST } from "@/utils/constants";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
-import { io, Socket } from "socket.io-client";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { io } from "socket.io-client";
 
-const SocketContext = createContext<Socket | null>(null);
+interface SocketProviderProps {
+  children: ReactNode;
+}
 
-export const useSocket = () => {
-  const socket = useContext(SocketContext);
-  return socket;
-};
-
-export const SocketProvider = ({ children }: { children: ReactNode }) => {
+export const SocketProvider = ({ children }: SocketProviderProps) => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
-  const [onGoingCall, setOnGoingCall] = useState(null);
 
   const socket = useMemo(() => {
     if (!user?._id) {
@@ -22,22 +26,52 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       return null;
     }
     console.log("Creating socket for user:", user._id);
-    const socketInstance = io(HOST, {
+    return io(HOST, {
       withCredentials: true,
       query: { userId: user._id },
     });
-
-    return socketInstance;
   }, [user?._id]);
 
   useEffect(() => {
+    if (!socket) return;
+
+    socket.on("chatCreated", (chat) => {
+      dispatch(setChats([...(store.getState().chat.chats || []), chat]));
+    });
+
+    socket.on("groupCreated", (group) => {
+      dispatch(setGroups([...(store.getState().chat.groups || []), group]));
+    });
+
+    socket.on("newMessage", (message) => {
+      dispatch(addMessage(message));
+    });
+
+    socket.on("messageReaction", (message) => {
+      dispatch(updateMessage(message));
+    });
+
+    socket.on("reactionRemoved", (message) => {
+      dispatch(updateMessage(message));
+    });
+
+    socket.on("messageDeleted", (message) => {
+      dispatch(updateMessage(message));
+    });
+
+    socket.on("messagesRead", ({ chatId }) => {
+      dispatch(setUnreadCount({ chatId, count: 0 }));
+    });
+
+    socket.on("error", (error) => {
+      console.error("Socket error:", error);
+    });
+
     return () => {
-      if (socket) {
-        socket.disconnect();
-        console.log("Socket disconnected");
-      }
+      socket.disconnect();
+      console.log("Socket disconnected");
     };
-  }, [socket]);
+  }, [socket, dispatch]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
