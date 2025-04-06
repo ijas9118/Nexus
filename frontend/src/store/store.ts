@@ -3,7 +3,6 @@ import authReducer from "./slices/authSlice";
 import breadcrumbReducer from "./slices/breadcrumbSlice";
 import squadReducer from "./slices/squadSlice";
 import userSquadsReducer from "./slices/userSquadsSlice";
-import chatReducer from "./slices/chatSlice";
 
 const store = configureStore({
   reducer: {
@@ -11,7 +10,6 @@ const store = configureStore({
     breadcrumb: breadcrumbReducer,
     squads: squadReducer,
     userSquads: userSquadsReducer,
-    chat: chatReducer,
   },
 });
 

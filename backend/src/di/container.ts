@@ -77,13 +77,6 @@ import { FollowersService } from '../services/followers.service';
 import { IFollowersController } from '../core/interfaces/controllers/IFollowersController';
 import { FollowersController } from '../controllers/followers.controller';
 
-import { IMessageRepository } from '../core/interfaces/repositories/IMessageRepository';
-import { MessageRepository } from '../repositories/message.repository';
-import { MessageService } from '../services/message.service';
-import { IMessageService } from '../core/interfaces/services/IMessageService';
-import { IMessageController } from '../core/interfaces/controllers/IMessageController';
-import { MessageController } from '../controllers/message.controller';
-
 import { IOTPService } from '../core/interfaces/services/IOTPService';
 import { OTPService } from '../services/auth/otp.service';
 
@@ -118,13 +111,12 @@ import { IPaymentService } from '../core/interfaces/services/IPaymentService';
 import { PaymentServce } from '../services/payment.service';
 import { IPaymentController } from '../core/interfaces/controllers/IPaymentController';
 import { PaymentController } from '../controllers/payment.controller';
-
-import { IChannelRepository } from '@/core/interfaces/repositories/IChannelRepository';
-import { ChannelRepository } from '@/repositories/channel.repository';
-import { IChannelService } from '@/core/interfaces/services/IChannelService';
-import { ChannelService } from '@/services/channel.service';
-import { IChannelController } from '@/core/interfaces/controllers/IChannelController';
-import { ChannelController } from '@/controllers/channel.controller';
+import { IChatRepository } from '@/core/interfaces/repositories/IChatRepository';
+import { ChatRepository } from '@/repositories/chat.repository';
+import { GroupRepository } from '@/repositories/group.repository';
+import { MessageRepository } from '@/repositories/message.repository';
+import { IGroupRepository } from '@/core/interfaces/repositories/IGroupRepository';
+import { IMessageRepository } from '@/core/interfaces/repositories/IMessageRepository';
 
 const container = new Container();
 
@@ -179,10 +171,6 @@ container.bind<IConnectionsRepository>(TYPES.ConnectionsRepository).to(Connectio
 container.bind<IConnectionService>(TYPES.ConnectionService).to(ConnectionService);
 container.bind<IConnectionsController>(TYPES.ConnectionsController).to(ConnectionsController);
 
-container.bind<IMessageRepository>(TYPES.MessageRepository).to(MessageRepository);
-container.bind<IMessageService>(TYPES.MessageService).to(MessageService);
-container.bind<IMessageController>(TYPES.MessageController).to(MessageController);
-
 container.bind<ICommentRepository>(TYPES.CommentRepository).to(CommentRepository);
 container.bind<ICommentService>(TYPES.CommentService).to(CommentService);
 container.bind<ICommentController>(TYPES.CommentController).to(CommentController);
@@ -194,8 +182,10 @@ container.bind<IPlanController>(TYPES.PlanController).to(PlanController);
 container.bind<IPaymentService>(TYPES.PaymentService).to(PaymentServce);
 container.bind<IPaymentController>(TYPES.PaymentController).to(PaymentController);
 
-container.bind<IChannelRepository>(TYPES.ChannelRepository).to(ChannelRepository);
-container.bind<IChannelService>(TYPES.ChannelService).to(ChannelService);
-container.bind<IChannelController>(TYPES.ChannelController).to(ChannelController);
+container.bind<IChatRepository>(TYPES.ChatRepository).to(ChatRepository);
+
+container.bind<IGroupRepository>(TYPES.GroupRepository).to(GroupRepository);
+
+container.bind<IMessageRepository>(TYPES.MessageRepository).to(MessageRepository);
 
 export { container };

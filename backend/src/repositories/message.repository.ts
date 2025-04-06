@@ -1,7 +1,6 @@
-import mongoose from 'mongoose';
-import { BaseRepository } from '../core/abstracts/base.repository';
-import { IMessageRepository } from '../core/interfaces/repositories/IMessageRepository';
-import MessageModel, { IMessage } from '../models/message.model';
+import { BaseRepository } from '@/core/abstracts/base.repository';
+import { IMessageRepository } from '@/core/interfaces/repositories/IMessageRepository';
+import { IMessage, MessageModel } from '@/models/message.model';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -10,116 +9,51 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
     super(MessageModel);
   }
 
-  getUsersWithChats = async (userId: string): Promise<any[]> => {
-    const userIdObj = new mongoose.Types.ObjectId(userId);
+  async getMessagesByChat(chatId: string, chatType: 'Chat' | 'Group'): Promise<IMessage[]> {
+    return this.model.find({ chatId, chatType, isDeleted: false }).sort({ createdAt: 1 });
+  }
 
-    const chats = await MessageModel.aggregate([
-      {
-        $match: {
-          $or: [{ sender: userIdObj }, { recipient: userIdObj }],
-        },
-      },
-      {
-        $sort: { updatedAt: -1 },
-      },
-      {
-        $group: {
-          _id: {
-            $cond: {
-              if: { $eq: ['$sender', userIdObj] },
-              then: '$recipient',
-              else: '$sender',
-            },
-          },
-          lastMessageTime: { $first: '$updatedAt' },
-          lastMessageType: { $first: '$messageType' },
-          lastMessageContent: { $first: '$content' },
-          lastMessageFileUrl: { $first: '$fileUrl' },
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: '_id',
-          foreignField: '_id',
-          as: 'userInfo',
-        },
-      },
-      {
-        $unwind: '$userInfo',
-      },
-      {
-        $project: {
-          _id: 1,
-          lastMessageTime: 1,
-          lastMessageType: 1,
-          lastMessageContent: {
-            $cond: {
-              if: { $eq: ['$lastMessageType', 'text'] },
-              then: { $substr: ['$lastMessageContent', 0, 50] }, // Limit to 50 chars
-              else: {
-                $cond: {
-                  if: { $eq: ['$lastMessageType', 'file'] },
-                  then: {
-                    $cond: {
-                      if: {
-                        $regexMatch: {
-                          input: '$lastMessageFileUrl',
-                          regex: /\.(jpg|jpeg|png|gif)$/i,
-                        },
-                      },
-                      then: 'Sent an image',
-                      else: 'Sent a file',
-                    },
-                  },
-                  else: '',
-                },
-              },
-            },
-          },
-          email: '$userInfo.email',
-          username: '$userInfo.username',
-          name: '$userInfo.name',
-          profilePic: '$userInfo.profilePic',
-        },
-      },
-      {
-        $sort: { lastMessageTime: -1 },
-      },
-    ]);
+  async getUnreadCount(
+    userId: string,
+    chatId: string,
+    chatType: 'Chat' | 'Group'
+  ): Promise<number> {
+    return this.model.countDocuments({
+      chatId,
+      chatType,
+      isDeleted: false,
+      readBy: { $ne: userId },
+    });
+  }
 
-    return chats;
-  };
+  async markMessagesAsRead(
+    chatId: string,
+    chatType: 'Chat' | 'Group',
+    userId: string
+  ): Promise<void> {
+    await this.model.updateMany(
+      { chatId, chatType, isDeleted: false, readBy: { $ne: userId } },
+      { $addToSet: { readBy: userId } }
+    );
+  }
 
-  getAllMessages = async (user1: string, user2: string): Promise<IMessage[]> => {
-    const messages = await this.model
-      .find({
-        $or: [
-          {
-            sender: user1,
-            recipient: user2,
-          },
-          {
-            sender: user2,
-            recipient: user1,
-          },
-        ],
-      })
-      .sort({ updatedAt: 1 });
+  async addReaction(messageId: string, userId: string, reaction: string): Promise<IMessage | null> {
+    return this.model.findByIdAndUpdate(
+      messageId,
+      { $push: { reactions: { userId, reaction } } },
+      { new: true }
+    );
+  }
 
-    return messages;
-  };
+  async removeReaction(messageId: string, userId: string): Promise<IMessage | null> {
+    return this.model.findByIdAndUpdate(
+      messageId,
+      { $pull: { reactions: { userId } } },
+      { new: true }
+    );
+  }
 
-  getMessageById = async (messageId: string, isGroup: boolean): Promise<IMessage | null> => {
-    if (isGroup) {
-      return await MessageModel.findById(messageId)
-        .populate('sender', '_id email name profilePic username')
-        .lean()
-        .exec();
-    } else {
-      return await MessageModel.findById(messageId)
-        .populate('sender', '_id name email profilePic username')
-        .populate('recipient', '_id name email profilePic username');
-    }
-  };
+  async softDeleteMessage(messageId: string): Promise<IMessage | null> {
+    return this.model.findByIdAndUpdate(messageId, { isDeleted: true }, { new: true });
+  }
 }

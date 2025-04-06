@@ -17,11 +17,9 @@ import squadRouters from './routes/squads.routes';
 import userRoutes from './routes/user.routes';
 import mentorRoutes from './routes/mentor.routes';
 import followerRoutes from './routes/followers.routes';
-import messageRoutes from './routes/message.routes';
 import planRoutes from './routes/plan.routes';
 import paymentRoutes from './routes/payment.routes';
 import webhookRouter from './routes/webhook.routes';
-import channelRoutes from './routes/channel.routes';
 
 const app = express();
 setupSwagger(app);
@@ -51,10 +49,8 @@ app.use('/api/squad', squadRouters);
 app.use('/api/user', userRoutes);
 app.use('/api/mentor', mentorRoutes);
 app.use('/api/followers', followerRoutes);
-app.use('/api/message', messageRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/payment', paymentRoutes);
-app.use('/api/channel', channelRoutes);
 
 app.use(errorMiddleware);
 

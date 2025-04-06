@@ -1,8 +1,11 @@
-import { IMessage } from '../../../models/message.model';
-import { BaseRepository } from '../../abstracts/base.repository';
+import { IMessage } from '@/models/message.model';
+import { IBaseRepository } from './IBaseRepository';
 
-export interface IMessageRepository extends BaseRepository<IMessage> {
-  getAllMessages(user1: string, user2: string): Promise<IMessage[]>;
-  getUsersWithChats(userId: string): Promise<any[]>;
-  getMessageById(messageId: string, isGroup: boolean): Promise<IMessage | null>;
+export interface IMessageRepository extends IBaseRepository<IMessage> {
+  getMessagesByChat(chatId: string, chatType: 'Chat' | 'Group'): Promise<IMessage[]>;
+  getUnreadCount(userId: string, chatId: string, chatType: 'Chat' | 'Group'): Promise<number>;
+  markMessagesAsRead(chatId: string, chatType: 'Chat' | 'Group', userId: string): Promise<void>;
+  addReaction(messageId: string, userId: string, reaction: string): Promise<IMessage | null>;
+  removeReaction(messageId: string, userId: string): Promise<IMessage | null>;
+  softDeleteMessage(messageId: string): Promise<IMessage | null>;
 }

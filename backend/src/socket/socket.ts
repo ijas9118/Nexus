@@ -1,16 +1,8 @@
-import { IChannelService } from '@/core/interfaces/services/IChannelService';
-import { IMessageService } from '@/core/interfaces/services/IMessageService';
-import { container } from '@/di/container';
-import { TYPES } from '@/di/types';
-import { IMessage } from '@/models/message.model';
 import { CLIENT_URL } from '@/utils/constants';
 import { Server } from 'http';
 import { Socket, Server as SocketIOServer } from 'socket.io';
 
 const setUpSocket = (server: Server) => {
-  const messageService = container.get<IMessageService>(TYPES.MessageService);
-  const channelService = container.get<IChannelService>(TYPES.ChannelService);
-
   const io = new SocketIOServer(server, {
     cors: {
       origin: CLIENT_URL,
@@ -32,60 +24,6 @@ const setUpSocket = (server: Server) => {
     }
   };
 
-  const sendMessage = async (message: Partial<IMessage>) => {
-    const senderSocketId = userSocketMap.get(message.sender);
-    const recipientSocketId = userSocketMap.get(message.recipient);
-
-    const createdMessage = await messageService.createMessage(message);
-
-    const messageData = await messageService.getMessageById(createdMessage._id as string, false);
-
-    if (recipientSocketId) {
-      io.to(recipientSocketId).emit('recieveMessage', messageData);
-    }
-
-    if (senderSocketId) {
-      io.to(senderSocketId).emit('recieveMessage', messageData);
-    }
-  };
-
-  const sendChannelMessage = async (message: any) => {
-    const { channelId, sender, content, messageType, fileUrl } = message;
-
-    const createdMessage = await messageService.createMessage({
-      sender,
-      recipient: undefined,
-      content,
-      messageType,
-      fileUrl,
-    });
-
-    const messageData = await messageService.getMessageById(createdMessage._id as string, true);
-
-    console.log(messageData);
-
-    await channelService.addMessageToChannel(channelId, createdMessage._id as string);
-
-    const channel = await channelService.getChannelById(channelId);
-
-    const finalData = { ...messageData, channelId: channel?._id };
-
-    if (channel && channel.members) {
-      channel.members.forEach((member) => {
-        const memberSocketId = userSocketMap.get(member._id.toString());
-
-        if (memberSocketId) {
-          io.to(memberSocketId).emit('recieve-channel-message', finalData);
-        }
-      });
-
-      const adminSocketId = userSocketMap.get(channel.admin._id.toString());
-      if (adminSocketId) {
-        io.to(adminSocketId).emit('recieve-channel-message', finalData);
-      }
-    }
-  };
-
   io.on('connection', (socket) => {
     const userId = socket.handshake.query.userId;
 
@@ -97,10 +35,6 @@ const setUpSocket = (server: Server) => {
     } else {
       console.log('User ID not provided during connection');
     }
-
-    socket.on('sendMessage', sendMessage);
-
-    socket.on('send-channel-message', sendChannelMessage);
 
     socket.on('disconnect', () => disconnect(socket));
 

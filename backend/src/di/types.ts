@@ -10,11 +10,12 @@ export const TYPES = {
   MentorRepository: Symbol.for('MentorRepository'),
   HistoryRepository: Symbol.for('HistoryRepository'),
   FollowersRepository: Symbol.for('FollowersRepository'),
-  MessageRepository: Symbol.for('MessageRepository'),
   ConnectionsRepository: Symbol.for('ConnectionsRepository'),
   CommentRepository: Symbol.for('CommentRepository'),
   PlanRepository: Symbol.for('PlanRepository'),
-  ChannelRepository: Symbol.for('ChannelRepository'),
+  ChatRepository: Symbol.for('ChatRepository'),
+  GroupRepository: Symbol.for('GroupRepository'),
+  MessageRepository: Symbol.for('MessageRepository'),
 
   // Services
   UserService: Symbol.for('UserService'),
@@ -28,7 +29,6 @@ export const TYPES = {
   MentorService: Symbol.for('MentorService'),
   HistoryService: Symbol.for('HistoryService'),
   FollowersService: Symbol.for('FollowersService'),
-  MessageService: Symbol.for('MessageService'),
   OTPService: Symbol.for('IOTPService'),
   EmailService: Symbol.for('IEmailService'),
   TokenService: Symbol.for('ITokenService'),
@@ -36,7 +36,6 @@ export const TYPES = {
   CommentService: Symbol.for('CommentService'),
   PlanService: Symbol.for('PlanService'),
   PaymentService: Symbol.for('PaymentService'),
-  ChannelService: Symbol.for('ChannelService'),
 
   // Controllers
   UserController: Symbol.for('UserController'),
@@ -51,10 +50,8 @@ export const TYPES = {
   MentorController: Symbol.for('MentorController'),
   HistoryController: Symbol.for('HistoryController'),
   FollowersController: Symbol.for('FollowersController'),
-  MessageController: Symbol.for('MessageController'),
   ConnectionsController: Symbol.for('ConnectionsController'),
   CommentController: Symbol.for('CommentController'),
   PlanController: Symbol.for('PlanController'),
   PaymentController: Symbol.for('PaymentController'),
-  ChannelController: Symbol.for('ChannelController'),
 };
