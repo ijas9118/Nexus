@@ -10,6 +10,7 @@ export interface Chat {
   _id: string;
   participants: string[];
   createdAt: string;
+  unreadCounts: { userId: string; count: number }[];
   updatedAt: string;
 }
 
@@ -19,6 +20,7 @@ export interface Group {
   members: string[];
   createdBy: string;
   createdAt: string;
+  unreadCounts: { userId: string; count: number }[];
   updatedAt: string;
 }
 

@@ -15,19 +15,25 @@ import {
   getAllConnections,
   searchConnectedUsers,
 } from "@/services/user/followService";
-import { setActiveChat, setChats, setGroups } from "@/store/slices/chatSlice";
+import {
+  setActiveChat,
+  setChats,
+  setGroups,
+  setPendingChat,
+} from "@/store/slices/chatSlice";
 import { RootState } from "@/store/store";
-import { User } from "@/types";
+import { Chat, Group, User } from "@/types";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export const ChatList = () => {
   const dispatch = useDispatch();
-  const { chats, groups, activeChat, unreadCounts } = useSelector(
+  const { chats, groups, activeChat } = useSelector(
     (state: RootState) => state.chat,
   );
   const { user } = useSelector((state: RootState) => state.auth);
+  const userId = user?._id as string;
   const socket = useSocket();
 
   // Group creation states
@@ -46,14 +52,16 @@ export const ChatList = () => {
       try {
         const chatsData = await ChatService.fetchChats();
         const groupsData = await ChatService.fetchGroups();
+
+        console.log(chatsData, groupsData);
         dispatch(setChats(chatsData));
         dispatch(setGroups(groupsData));
       } catch (error) {
         console.error("Failed to load initial data:", error);
       }
     };
-    if (user?._id) loadInitialData();
-  }, [user?._id, dispatch]);
+    if (userId) loadInitialData();
+  }, [userId, dispatch]);
 
   useEffect(() => {
     const fetchConnections = async () => {
@@ -65,8 +73,8 @@ export const ChatList = () => {
       }
     };
 
-    if (open && user?._id) fetchConnections();
-  }, [open, user?._id]);
+    if (open && userId) fetchConnections();
+  }, [open, userId]);
 
   useEffect(() => {
     const search = async () => {
@@ -96,7 +104,7 @@ export const ChatList = () => {
         // Set as active chat if it matches the current user selection
         if (
           activeChat?.id ===
-          chat.participants.find((id: string) => id !== user?._id)
+          chat.participants.find((id: string) => id !== userId)
         ) {
           dispatch(setActiveChat({ id: chat._id, type: "Chat" }));
         }
@@ -113,7 +121,7 @@ export const ChatList = () => {
         socket.off("groupCreated");
       };
     }
-  }, [socket, chats, groups, activeChat, user?._id, dispatch]);
+  }, [socket, chats, groups, activeChat, userId, dispatch]);
 
   const handleSelectChat = (id: string, type: "Chat" | "Group") => {
     dispatch(setActiveChat({ id, type }));
@@ -126,14 +134,14 @@ export const ChatList = () => {
     const existingChat = chats.find(
       (chat) =>
         chat.participants.length === 2 &&
-        chat.participants.includes(user?._id || "") &&
+        chat.participants.includes(userId || "") &&
         chat.participants.includes(selectedUser._id),
     );
     if (existingChat) {
       handleSelectChat(existingChat._id, "Chat");
     } else {
       // Set as active chat but don’t create until a message is sent
-      dispatch(setActiveChat({ id: selectedUser._id, type: "Chat" }));
+      dispatch(setPendingChat({ userId: selectedUser._id }));
     }
     setSearchTerm("");
     setShowDropdown(false);
@@ -147,6 +155,11 @@ export const ChatList = () => {
       setSelectedMembers([]);
       setOpen(false);
     }
+  };
+
+  const getUnreadCount = (item: Chat | Group, userId: string): number => {
+    const countObj = item.unreadCounts.find((c) => c.userId === userId);
+    return countObj?.count || 0;
   };
 
   return (
@@ -199,19 +212,19 @@ export const ChatList = () => {
               {/* Placeholder avatar */}
               <span className="text-white font-medium">
                 {chat.participants
-                  .filter((id) => id !== user?._id)[0]
+                  .filter((id) => id !== userId)[0]
                   ?.charAt(0)
                   .toUpperCase()}
               </span>
             </div>
             <div className="flex-1">
               <p className="text-sm font-medium">
-                {chat.participants.filter((id) => id !== user?._id).join(", ")}
+                {chat.participants.filter((id) => id !== userId).join(", ")}
               </p>
             </div>
-            {unreadCounts[chat._id] > 0 && (
+            {getUnreadCount(chat, userId) > 0 && (
               <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs">
-                {unreadCounts[chat._id]}
+                {getUnreadCount(chat, userId)}
               </span>
             )}
           </div>
@@ -270,9 +283,9 @@ export const ChatList = () => {
             <div className="flex-1">
               <p className="text-sm font-medium">{group.name}</p>
             </div>
-            {unreadCounts[group._id] > 0 && (
+            {getUnreadCount(group, userId) > 0 && (
               <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs">
-                {unreadCounts[group._id]}
+                {getUnreadCount(group, userId)}
               </span>
             )}
           </div>

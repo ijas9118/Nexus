@@ -9,13 +9,14 @@ import { setMessages } from "@/store/slices/chatSlice";
 
 const ChatWindow = () => {
   const dispatch = useDispatch();
-  const { activeChat, messages } = useSelector(
+  const { activeChat, messages, pendingChat } = useSelector(
     (state: RootState) => state.chat,
   );
   const socket = useSocket();
   const hasFetched = useRef<{ [key: string]: boolean }>({});
 
   useEffect(() => {
+    console.log(activeChat);
     if (activeChat && socket) {
       const fetchMessages = async () => {
         try {
@@ -62,7 +63,7 @@ const ChatWindow = () => {
     }
   }, [socket, dispatch, messages]);
 
-  if (!activeChat) {
+  if (!activeChat && !pendingChat) {
     return (
       <div className="w-3/4 h-full flex items-center justify-center ">
         <p className="text-muted-foreground">
@@ -71,14 +72,31 @@ const ChatWindow = () => {
       </div>
     );
   }
+
+  if (pendingChat) {
+    return (
+      <div className="w-3/4 h-full flex flex-col">
+        <div className="flex-1 p-4 overflow-y-auto">
+          <p className="text-muted-foreground">
+            Start a conversation with this user!
+          </p>
+        </div>
+        <MessageInput chatId={pendingChat.userId} chatType="Chat" />
+      </div>
+    );
+  }
+
   return (
     <div className="w-3/4 h-full flex flex-col ">
       <div className="flex-1 p-4 overflow-y-auto">
-        {messages[activeChat.id]?.map((message) => (
-          <MessageBubble key={message._id} message={message} />
-        ))}
+        {activeChat &&
+          messages[activeChat.id]?.map((message) => (
+            <MessageBubble key={message._id} message={message} />
+          ))}
       </div>
-      <MessageInput chatId={activeChat.id} chatType={activeChat.type} />
+      {activeChat && (
+        <MessageInput chatId={activeChat.id} chatType={activeChat.type} />
+      )}
     </div>
   );
 };

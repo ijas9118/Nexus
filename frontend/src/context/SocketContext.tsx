@@ -3,7 +3,6 @@ import {
   addMessage,
   setChats,
   setGroups,
-  setUnreadCount,
   updateMessage,
 } from "@/store/slices/chatSlice";
 import store, { RootState } from "@/store/store";
@@ -59,9 +58,9 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       dispatch(updateMessage(message));
     });
 
-    socket.on("messagesRead", ({ chatId }) => {
-      dispatch(setUnreadCount({ chatId, count: 0 }));
-    });
+    // socket.on("messagesRead", ({ chatId }) => {
+    //   dispatch(setUnreadCount({ chatId, count: 0 }));
+    // });
 
     socket.on("error", (error) => {
       console.error("Socket error:", error);

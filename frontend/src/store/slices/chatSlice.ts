@@ -5,7 +5,7 @@ interface ChatState {
   chats: Chat[];
   groups: Group[];
   messages: { [key: string]: Message[] }; // chatId -> messages
-  unreadCounts: { [key: string]: number }; // chatId -> unread count
+  pendingChat: { userId: string } | null;
   activeChat: { id: string; type: "Chat" | "Group" } | null;
 }
 
@@ -13,7 +13,7 @@ const initialState: ChatState = {
   chats: [],
   groups: [],
   messages: {},
-  unreadCounts: {},
+  pendingChat: null,
   activeChat: null,
 };
 
@@ -42,10 +42,6 @@ const chatSlice = createSlice({
       if (!state.messages[chatId]) state.messages[chatId] = [];
 
       state.messages[chatId].push(action.payload);
-
-      if (state.activeChat?.id !== chatId) {
-        state.unreadCounts[chatId] = (state.unreadCounts[chatId] || 0) + 1;
-      }
     },
 
     updateMessage(state, action: PayloadAction<Message>) {
@@ -58,21 +54,23 @@ const chatSlice = createSlice({
       }
     },
 
-    setUnreadCount(
-      state,
-      action: PayloadAction<{ chatId: string; count: number }>,
-    ) {
-      state.unreadCounts[action.payload.chatId] = action.payload.count;
-    },
+    // setUnreadCount(
+    //   state,
+    //   action: PayloadAction<{ chatId: string; count: number }>,
+    // ) {
+    //   state.unreadCounts[action.payload.chatId] = action.payload.count;
+    // },
 
     setActiveChat(
       state,
       action: PayloadAction<{ id: string; type: "Chat" | "Group" } | null>,
     ) {
       state.activeChat = action.payload;
-      if (action.payload) {
-        state.unreadCounts[action.payload.id] = 0; // Reset unread count when chat is opened
-      }
+    },
+
+    setPendingChat(state, action: PayloadAction<{ userId: string }>) {
+      state.pendingChat = action.payload;
+      state.activeChat = null; // Clear active chat when setting a pending chat
     },
   },
 });
@@ -83,7 +81,8 @@ export const {
   setMessages,
   addMessage,
   updateMessage,
-  setUnreadCount,
+  // setUnreadCount,
   setActiveChat,
+  setPendingChat,
 } = chatSlice.actions;
 export default chatSlice.reducer;

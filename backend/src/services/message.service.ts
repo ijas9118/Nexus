@@ -42,6 +42,38 @@ export class MessageService extends BaseService<IMessage> implements IMessageSer
       readBy: [userId], // Sender has read their own message
     });
 
+    if (chatType === 'Chat') {
+      const chat = await this.chatRepository.findById(new Types.ObjectId(chatId));
+      if (chat) {
+        chat.unreadCounts = chat.participants.map((participantId) => {
+          if (participantId === userId) return { userId: participantId, count: 0 };
+
+          const existing = chat.unreadCounts.find((uc) => uc.userId === participantId);
+          return {
+            userId: participantId,
+            count: existing ? existing.count + 1 : 1,
+          };
+        });
+
+        await chat.save();
+      }
+    } else {
+      const group = await this.groupRepository.findById(new Types.ObjectId(chatId));
+      if (group) {
+        group.unreadCounts = group.members.map((memberId) => {
+          if (memberId === userId) return { userId: memberId, count: 0 };
+
+          const existing = group.unreadCounts.find((uc) => uc.userId === memberId);
+          return {
+            userId: memberId,
+            count: existing ? existing.count + 1 : 1,
+          };
+        });
+
+        await group.save();
+      }
+    }
+
     if (io) {
       io.to(chatId).emit('newMessage', message);
     }
@@ -132,6 +164,24 @@ export class MessageService extends BaseService<IMessage> implements IMessageSer
     await this.validateChatAccess(userId, chatId, chatType);
 
     await this.repository.markMessagesAsRead(chatId, chatType, userId);
+
+    if (chatType === 'Chat') {
+      const chat = await this.chatRepository.findById(new Types.ObjectId(chatId));
+      if (chat) {
+        chat.unreadCounts = chat.unreadCounts.map((uc) =>
+          uc.userId === userId ? { ...uc, count: 0 } : uc
+        );
+        await chat.save();
+      }
+    } else {
+      const group = await this.groupRepository.findById(new Types.ObjectId(chatId));
+      if (group) {
+        group.unreadCounts = group.unreadCounts.map((uc) =>
+          uc.userId === userId ? { ...uc, count: 0 } : uc
+        );
+        await group.save();
+      }
+    }
 
     if (io) {
       io.to(chatId).emit('messagesRead', { chatId, userId });

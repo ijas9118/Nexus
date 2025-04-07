@@ -5,26 +5,44 @@ export interface IGroup extends Document {
   name: string;
   members: string[]; // Array of User IDs (2 or more)
   createdBy: string; // User ID
+  unreadCounts: { userId: string; count: number }[];
 }
 
-const groupSchema = new Schema<IGroup>({
-  name: {
-    type: String,
-    required: true,
-  },
-  members: [
-    {
+const groupSchema = new Schema<IGroup>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    members: [
+      {
+        type: String,
+        ref: 'User',
+        required: true,
+      },
+    ],
+    createdBy: {
       type: String,
       ref: 'User',
       required: true,
     },
-  ],
-  createdBy: {
-    type: String,
-    ref: 'User',
-    required: true,
+    unreadCounts: [
+      {
+        userId: {
+          type: String,
+          ref: 'User',
+          required: true,
+        },
+        count: {
+          type: Number,
+          required: true,
+          default: 0,
+        },
+      },
+    ],
   },
-});
+  { timestamps: true }
+);
 
 groupSchema.pre('save', function (next) {
   if (this.members.length < 2) {
@@ -33,5 +51,7 @@ groupSchema.pre('save', function (next) {
     next();
   }
 });
+
+groupSchema.index({ members: 1 });
 
 export const GroupModel = mongoose.model<IGroup>('Group', groupSchema);

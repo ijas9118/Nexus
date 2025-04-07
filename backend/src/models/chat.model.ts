@@ -3,6 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IChat extends Document {
   _id: string;
   participants: string[]; // Array of User IDs (exactly 2 for one-on-one)
+  unreadCounts: { userId: string; count: number }[];
 }
 
 const chatSchema = new Schema<IChat>(
@@ -12,6 +13,20 @@ const chatSchema = new Schema<IChat>(
         type: String,
         ref: 'User',
         required: true,
+      },
+    ],
+    unreadCounts: [
+      {
+        userId: {
+          type: String,
+          ref: 'User',
+          required: true,
+        },
+        count: {
+          type: Number,
+          required: true,
+          default: 0,
+        },
       },
     ],
   },
@@ -25,5 +40,7 @@ chatSchema.pre('save', function (next) {
     next();
   }
 });
+
+chatSchema.index({ participants: 1 });
 
 export const ChatModel = mongoose.model<IChat>('Chat', chatSchema);
