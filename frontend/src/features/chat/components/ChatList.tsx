@@ -109,7 +109,7 @@ export const ChatList = () => {
       });
 
       return () => {
-        socket.off("chatCreated");
+        // socket.off("chatCreated");
         socket.off("groupCreated");
       };
     }

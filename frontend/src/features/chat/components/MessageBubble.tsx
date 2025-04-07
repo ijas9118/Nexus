@@ -8,6 +8,7 @@ import {
 import { useSocket } from "@/hooks/useSocket";
 import { RootState } from "@/store/store";
 import { Message } from "@/types";
+import { MoreVertical } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -40,89 +41,101 @@ const MessageBubble = ({ message }: MessageBubbleProps) => {
   };
 
   return (
-    <div className={`flex ${isSender ? "justify-end" : "justify-start"} mb-4`}>
-      <div
-        className={`max-w-xs p-3 rounded-lg ${isSender ? "bg-blue-500 text-white" : "bg-gray-200 text-black"}`}
-      >
-        {message.isDeleted ? (
-          <p className="italic">This message was deleted</p>
-        ) : (
-          <>
-            {message.content && <p>{message.content}</p>}
-            {message.fileUrl && (
-              <div>
-                {message.fileType === "image" && (
-                  <img
-                    src={message.fileUrl}
-                    alt="Attachment"
-                    className="max-w-full rounded"
-                  />
-                )}
-                {message.fileType === "video" && (
-                  <video
-                    src={message.fileUrl}
-                    controls
-                    className="max-w-full rounded"
-                  />
-                )}
-                {message.fileType === "pdf" && (
-                  <a
-                    href={message.fileUrl}
-                    target="_blank"
-                    className="text-blue-300 underline"
-                  >
-                    View PDF
-                  </a>
-                )}
-              </div>
-            )}
-            {message.replyTo && (
-              <p className="text-xs italic">Replying to: {message.replyTo}</p>
-            )}
-            <div className="flex space-x-1 mt-1">
-              {message.reactions.map((r) => (
-                <span key={r.userId} className="text-sm">
-                  {r.reaction}
-                </span>
-              ))}
-            </div>
-          </>
-        )}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="mt-1">
-              ...
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => setShowReactions(!showReactions)}>
-              {showReactions ? "Hide Reactions" : "React"}
-            </DropdownMenuItem>
-            {isSender && !message.isDeleted && (
-              <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
-            )}
-            {message.reactions.some((r) => r.userId === user?._id) && (
-              <DropdownMenuItem onClick={handleRemoveReaction}>
-                Remove Reaction
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-        {showReactions && (
-          <div className="flex space-x-2 mt-2">
-            {["👍", "❤️", "😂", "😢", "😡"].map((emoji) => (
-              <Button
-                key={emoji}
-                variant="ghost"
-                size="sm"
-                onClick={() => handleReact(emoji)}
+    <div
+      className={`relative flex flex-col gap-1 mb-6 ${
+        isSender ? "items-end" : "items-start"
+      }`}
+    >
+      <div className="relative flex items-center group">
+        {/* Message Bubble */}
+        <div
+          className={`max-w-xs md:max-w-md p-3 rounded-2xl shadow ${
+            isSender
+              ? "bg-primary text-background  rounded-br-none"
+              : "bg-secondary rounded-bl-none"
+          }`}
+        >
+          {message.isDeleted ? (
+            <p className="italic text-sm">This message was deleted</p>
+          ) : (
+            <>
+              {message.replyTo && (
+                <p className="text-xs italic mb-1">
+                  Replying to: {message.replyTo}
+                </p>
+              )}
+              {message.content && (
+                <p className="whitespace-pre-line">{message.content}</p>
+              )}
+              {message.fileUrl && (
+                <div className="mt-2">
+                  {/* Handle image/video/pdf display here */}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        {/* More Button - now floats just beside the bubble */}
+        <div
+          className={`absolute top-1/2 -translate-y-1/2 group-hover:opacity-100 opacity-0 transition-all duration-300 ${
+            isSender ? "-left-6" : "-right-6"
+          }`}
+        >
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <MoreVertical className="w-4 h-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem
+                onClick={() => setShowReactions(!showReactions)}
               >
-                {emoji}
-              </Button>
-            ))}
-          </div>
-        )}
+                {showReactions ? "Hide Reactions" : "React"}
+              </DropdownMenuItem>
+              {isSender && !message.isDeleted && (
+                <DropdownMenuItem onClick={handleDelete}>
+                  Delete
+                </DropdownMenuItem>
+              )}
+              {message.reactions.some((r) => r.userId === user?._id) && (
+                <DropdownMenuItem onClick={handleRemoveReaction}>
+                  Remove Reaction
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
+
+      {/* Reactions */}
+      {message.reactions.length > 0 && (
+        <div
+          className={`flex items-center gap-1 px-2 py-1 rounded-full text-sm border shadow-sm ${
+            isSender ? "bg-primary" : "bg-secondary"
+          } -mt-3 z-10`}
+        >
+          {message.reactions.map((r) => (
+            <span key={r.userId}>{r.reaction}</span>
+          ))}
+        </div>
+      )}
+
+      {/* Reaction Options */}
+      {showReactions && (
+        <div className="flex gap-2 mt-1">
+          {["👍", "❤️", "😂", "😢", "😡"].map((emoji) => (
+            <Button
+              key={emoji}
+              variant="ghost"
+              size="sm"
+              className="text-xl"
+              onClick={() => handleReact(emoji)}
+            >
+              {emoji}
+            </Button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

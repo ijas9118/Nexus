@@ -1,6 +1,6 @@
 import { useSocket } from "@/hooks/useSocket";
 import { RootState } from "@/store/store";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MessageBubble from "./MessageBubble";
 import MessageInput from "./MessageInput";
@@ -13,6 +13,7 @@ const ChatWindow = () => {
     (state: RootState) => state.chat,
   );
   const socket = useSocket();
+  const hasFetched = useRef<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     if (activeChat && socket) {
@@ -30,7 +31,10 @@ const ChatWindow = () => {
         }
       };
 
-      if (!messages[activeChat.id]?.length) {
+      if (
+        !hasFetched.current[activeChat.id] &&
+        !messages[activeChat.id]?.length
+      ) {
         fetchMessages();
       }
 
@@ -39,7 +43,7 @@ const ChatWindow = () => {
         chatType: activeChat.type,
       });
     }
-  }, [activeChat, dispatch, messages, socket]);
+  }, [activeChat, dispatch, socket]);
 
   useEffect(() => {
     if (socket) {

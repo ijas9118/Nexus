@@ -23,7 +23,7 @@ const MessageInput = ({ chatId, chatType }: MessageInputProps) => {
   };
 
   return (
-    <div className="p-4 border-t bg-gray-50 flex items-center space-x-2">
+    <div className="p-4 border-t bg-primary-foreground flex items-center space-x-2">
       <Input
         value={content}
         onChange={(e) => setContent(e.target.value)}
