@@ -20,6 +20,7 @@ import followerRoutes from './routes/followers.routes';
 import planRoutes from './routes/plan.routes';
 import paymentRoutes from './routes/payment.routes';
 import webhookRouter from './routes/webhook.routes';
+import chatRoutes from './routes/chat.routes';
 
 const app = express();
 setupSwagger(app);
@@ -51,6 +52,7 @@ app.use('/api/mentor', mentorRoutes);
 app.use('/api/followers', followerRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/chat', chatRoutes);
 
 app.use(errorMiddleware);
 

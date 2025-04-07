@@ -10,11 +10,12 @@ import MultipleSelector, {
   Option,
 } from "@/components/organisms/multiple-select";
 import { useSocket } from "@/hooks/useSocket";
+import { ChatService } from "@/services/user/chatService";
 import {
   getAllConnections,
   searchConnectedUsers,
 } from "@/services/user/followService";
-import { setActiveChat } from "@/store/slices/chatSlice";
+import { setActiveChat, setChats, setGroups } from "@/store/slices/chatSlice";
 import { RootState } from "@/store/store";
 import { User } from "@/types";
 import { Plus } from "lucide-react";
@@ -41,6 +42,20 @@ export const ChatList = () => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const chatsData = await ChatService.fetchChats();
+        const groupsData = await ChatService.fetchGroups();
+        dispatch(setChats(chatsData));
+        dispatch(setGroups(groupsData));
+      } catch (error) {
+        console.error("Failed to load initial data:", error);
+      }
+    };
+    if (user?._id) loadInitialData();
+  }, [user?._id, dispatch]);
+
+  useEffect(() => {
     const fetchConnections = async () => {
       try {
         const options = await getAllConnections();
@@ -50,9 +65,7 @@ export const ChatList = () => {
       }
     };
 
-    if (open && user?._id) {
-      fetchConnections();
-    }
+    if (open && user?._id) fetchConnections();
   }, [open, user?._id]);
 
   useEffect(() => {
@@ -72,6 +85,35 @@ export const ChatList = () => {
     };
     search();
   }, [searchTerm]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("chatCreated", (chat: any) => {
+        // Only add if not already in chats to prevent duplicates
+        if (!chats.find((c) => c._id === chat._id)) {
+          dispatch(setChats([...chats, chat]));
+        }
+        // Set as active chat if it matches the current user selection
+        if (
+          activeChat?.id ===
+          chat.participants.find((id: string) => id !== user?._id)
+        ) {
+          dispatch(setActiveChat({ id: chat._id, type: "Chat" }));
+        }
+      });
+
+      socket.on("groupCreated", (group: any) => {
+        if (!groups.find((g) => g._id === group._id)) {
+          dispatch(setGroups([...groups, group]));
+        }
+      });
+
+      return () => {
+        socket.off("chatCreated");
+        socket.off("groupCreated");
+      };
+    }
+  }, [socket, chats, groups, activeChat, user?._id, dispatch]);
 
   const handleSelectChat = (id: string, type: "Chat" | "Group") => {
     dispatch(setActiveChat({ id, type }));

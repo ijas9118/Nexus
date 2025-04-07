@@ -1,11 +1,14 @@
 import { useSocket } from "@/hooks/useSocket";
 import { RootState } from "@/store/store";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MessageBubble from "./MessageBubble";
 import MessageInput from "./MessageInput";
+import { ChatService } from "@/services/user/chatService";
+import { setMessages } from "@/store/slices/chatSlice";
 
 const ChatWindow = () => {
+  const dispatch = useDispatch();
   const { activeChat, messages } = useSelector(
     (state: RootState) => state.chat,
   );
@@ -13,10 +16,47 @@ const ChatWindow = () => {
 
   useEffect(() => {
     if (activeChat && socket) {
-      // Fetch messages if not already loaded (could call an API here)
-      // For now, assume messages are updated via socket
+      const fetchMessages = async () => {
+        try {
+          const chatMessages = await ChatService.fetchMessages(
+            activeChat.id,
+            activeChat.type,
+          );
+          dispatch(
+            setMessages({ chatId: activeChat.id, messages: chatMessages }),
+          );
+        } catch (error) {
+          console.error("Failed to fetch messages:", error);
+        }
+      };
+
+      if (!messages[activeChat.id]?.length) {
+        fetchMessages();
+      }
+
+      socket.emit("markMessagesAsRead", {
+        chatId: activeChat.id,
+        chatType: activeChat.type,
+      });
     }
-  }, [activeChat, socket]);
+  }, [activeChat, dispatch, messages, socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("newMessage", (message: any) => {
+        dispatch(
+          setMessages({
+            chatId: message.chatId,
+            messages: [...(messages[message.chatId] || []), message],
+          }),
+        );
+      });
+
+      return () => {
+        socket.off("newMessage");
+      };
+    }
+  }, [socket, dispatch, messages]);
 
   if (!activeChat) {
     return (

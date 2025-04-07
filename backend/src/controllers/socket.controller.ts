@@ -4,6 +4,7 @@ import { IMessageService } from '@/core/interfaces/services/IMessageService';
 import { TYPES } from '@/di/types';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { inject, injectable } from 'inversify';
+import mongoose from 'mongoose';
 
 @injectable()
 export class SocketController {
@@ -146,9 +147,29 @@ export class SocketController {
     io: SocketIOServer
   ): Promise<void> {
     try {
+      let actualChatId = data.chatId;
+      if (data.chatType === 'Chat') {
+        const existingChat = await this.chatService
+          .findById(new mongoose.Types.ObjectId(data.chatId))
+          .catch(() => null); // Handle invalid ObjectId gracefully
+        if (!existingChat) {
+          // Assume chatId is a user ID; create a new chat
+          const chat = await this.chatService.createChat(userId, data.chatId);
+          actualChatId = chat._id.toString();
+          socket.join(actualChatId);
+
+          const otherSocketId = this.userSocketMap.get(data.chatId);
+          if (otherSocketId) {
+            io.to(otherSocketId).emit('chatCreated', chat);
+            io.sockets.sockets.get(otherSocketId)?.join(actualChatId);
+          }
+          socket.emit('chatCreated', chat);
+        }
+      }
+
       const message = await this.messageService.sendMessage(
         userId,
-        data.chatId,
+        actualChatId,
         data.chatType,
         data.content,
         data.fileUrl,
@@ -157,8 +178,9 @@ export class SocketController {
         io
       );
 
-      socket.emit('messageSent', message); // Confirm to sender
+      socket.emit('messageSent', message);
     } catch (error) {
+      console.error('Error in handleSendMessage:', error);
       socket.emit('error', (error as Error).message);
     }
   }
