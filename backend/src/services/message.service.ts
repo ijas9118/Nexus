@@ -45,7 +45,7 @@ export class MessageService extends BaseService<IMessage> implements IMessageSer
     if (chatType === 'Chat') {
       const chat = await this.chatRepository.findById(new Types.ObjectId(chatId));
       if (chat) {
-        chat.unreadCounts = chat.participants.map((participantId) => {
+        const updatedUnreadCounts = chat.participants.map((participantId) => {
           if (participantId === userId) return { userId: participantId, count: 0 };
 
           const existing = chat.unreadCounts.find((uc) => uc.userId === participantId);
@@ -55,12 +55,15 @@ export class MessageService extends BaseService<IMessage> implements IMessageSer
           };
         });
 
-        await chat.save();
+        await this.chatRepository.updateOne(
+          { _id: chatId },
+          { $set: { unreadCounts: updatedUnreadCounts } }
+        );
       }
     } else {
       const group = await this.groupRepository.findById(new Types.ObjectId(chatId));
       if (group) {
-        group.unreadCounts = group.members.map((memberId) => {
+        const updatedUnreadCounts = group.members.map((memberId) => {
           if (memberId === userId) return { userId: memberId, count: 0 };
 
           const existing = group.unreadCounts.find((uc) => uc.userId === memberId);
@@ -70,7 +73,10 @@ export class MessageService extends BaseService<IMessage> implements IMessageSer
           };
         });
 
-        await group.save();
+        await this.groupRepository.updateOne(
+          { _id: chatId },
+          { $set: { unreadCounts: updatedUnreadCounts } }
+        );
       }
     }
 
@@ -168,23 +174,49 @@ export class MessageService extends BaseService<IMessage> implements IMessageSer
     if (chatType === 'Chat') {
       const chat = await this.chatRepository.findById(new Types.ObjectId(chatId));
       if (chat) {
-        chat.unreadCounts = chat.unreadCounts.map((uc) =>
-          uc.userId === userId ? { ...uc, count: 0 } : uc
+        const updatedUnreadCounts = chat.unreadCounts.map((uc) => {
+          if (uc.userId === userId) {
+            return {
+              userId: uc.userId,
+              count: 0,
+            };
+          }
+          return {
+            userId: uc.userId,
+            count: uc.count,
+          };
+        });
+
+        await this.chatRepository.updateOne(
+          { _id: chatId },
+          { $set: { unreadCounts: updatedUnreadCounts } }
         );
-        await chat.save();
       }
     } else {
       const group = await this.groupRepository.findById(new Types.ObjectId(chatId));
       if (group) {
-        group.unreadCounts = group.unreadCounts.map((uc) =>
-          uc.userId === userId ? { ...uc, count: 0 } : uc
+        const updatedUnreadCounts = group.unreadCounts.map((uc) => {
+          if (uc.userId === userId) {
+            return {
+              userId: uc.userId,
+              count: 0,
+            };
+          }
+          return {
+            userId: uc.userId,
+            count: uc.count,
+          };
+        });
+
+        await this.groupRepository.updateOne(
+          { _id: chatId },
+          { $set: { unreadCounts: updatedUnreadCounts } }
         );
-        await group.save();
       }
     }
 
     if (io) {
-      io.to(chatId).emit('messagesRead', { chatId, userId });
+      io.to(chatId).emit('messagesRead', { chatId, userId, chatType });
     }
   }
 

@@ -159,6 +159,7 @@ export const ChatList = () => {
 
   const getUnreadCount = (item: Chat | Group, userId: string): number => {
     const countObj = item.unreadCounts.find((c) => c.userId === userId);
+    console.log(userId + " " + countObj?.count);
     return countObj?.count || 0;
   };
 
