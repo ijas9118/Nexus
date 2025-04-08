@@ -17,6 +17,7 @@ const MessageInput = ({ chatId, chatType }: MessageInputProps) => {
 
   const handleSend = () => {
     if (socket && content.trim() && user) {
+      console.log(content);
       socket.emit("sendMessage", { chatId, chatType, content });
       setContent("");
     }

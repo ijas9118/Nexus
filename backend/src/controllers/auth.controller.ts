@@ -38,7 +38,7 @@ export class AuthController implements IAuthController {
 
     const otp = this.otpService.generateOTP();
 
-    await this.emailService.sendOtpEmail(userData.email, otp);
+    await this.emailService.sendOtpEmail(userData, otp);
 
     res
       .status(StatusCodes.OK)
@@ -50,6 +50,8 @@ export class AuthController implements IAuthController {
     const { email, otp } = req.body;
 
     const userData = await this.otpService.verifyAndRetrieveUser(email, otp);
+
+    console.log(userData);
 
     const result = await this.authService.register(userData);
 

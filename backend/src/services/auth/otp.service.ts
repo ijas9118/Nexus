@@ -19,7 +19,7 @@ export class OTPService implements IOTPService {
 
   // Resend OTP to the user's email
   async resendOtp(email: string): Promise<void> {
-    const existingData = await redisClient.get(`otp:${email}`);
+    const existingData = JSON.parse((await redisClient.get(`otp:${email}`)) as string);
     if (!existingData) {
       throw new CustomError(
         'OTP expired or not found. Please register again.',
@@ -29,18 +29,21 @@ export class OTPService implements IOTPService {
 
     const newOtp = this.generateOTP();
 
-    await this.emailService.sendOtpEmail(email, newOtp);
+    await this.emailService.sendOtpEmail(existingData, newOtp);
   }
 
   // Verify OTP and retrieve stored user data
   async verifyAndRetrieveUser(email: string, otp: string): Promise<RegisterDto> {
     const storedData = await redisClient.get(`otp:${email}`);
+    console.log(storedData);
 
     if (!storedData) {
       throw new CustomError('OTP expired or invalid.', StatusCodes.BAD_REQUEST);
     }
 
     const { userData, otp: storedOTP } = JSON.parse(storedData);
+
+    console.log('User', userData);
 
     if (otp !== storedOTP) {
       throw new CustomError('Invalid OTP.', StatusCodes.BAD_REQUEST);

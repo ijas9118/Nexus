@@ -24,6 +24,7 @@ const ChatWindow = () => {
             activeChat.id,
             activeChat.type,
           );
+          console.log(chatMessages);
           dispatch(
             setMessages({ chatId: activeChat.id, messages: chatMessages }),
           );
@@ -32,10 +33,7 @@ const ChatWindow = () => {
         }
       };
 
-      if (
-        !hasFetched.current[activeChat.id] &&
-        !messages[activeChat.id]?.length
-      ) {
+      if (!hasFetched.current[activeChat.id]) {
         fetchMessages();
       }
 

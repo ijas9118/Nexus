@@ -73,6 +73,45 @@ const chatSlice = createSlice({
       }
     },
 
+    incrementUnreadCount(
+      state,
+      action: PayloadAction<{
+        chatId: string;
+        userId: string;
+        type: "Chat" | "Group";
+      }>,
+    ) {
+      const { chatId, userId, type } = action.payload;
+      const list = type === "Chat" ? state.chats : state.groups;
+      const chat = list.find((c) => c._id === chatId);
+      if (chat && chat.unreadCounts) {
+        const unreadCount = chat.unreadCounts.find(
+          (uc) => uc.userId === userId,
+        );
+        if (unreadCount) {
+          unreadCount.count += 1;
+        } else {
+          chat.unreadCounts.push({ userId, count: 1 });
+        }
+      }
+    },
+
+    updateLastMessage(
+      state,
+      action: PayloadAction<{
+        chatId: string;
+        type: "Chat" | "Group";
+        lastMessage: Message;
+      }>,
+    ) {
+      const { chatId, type, lastMessage } = action.payload;
+      const list = type === "Chat" ? state.chats : state.groups;
+      const chat = list.find((c) => c._id === chatId);
+      if (chat) {
+        chat.lastMessage = lastMessage;
+      }
+    },
+
     setActiveChat(
       state,
       action: PayloadAction<{ id: string; type: "Chat" | "Group" } | null>,
@@ -93,8 +132,9 @@ export const {
   setMessages,
   addMessage,
   updateMessage,
-  // setUnreadCount,
+  incrementUnreadCount,
   setUserUnreadCountToZero,
+  updateLastMessage,
   setActiveChat,
   setPendingChat,
 } = chatSlice.actions;

@@ -4,6 +4,13 @@ export interface IChat extends Document {
   _id: string;
   participants: string[]; // Array of User IDs (exactly 2 for one-on-one)
   unreadCounts: { userId: string; count: number }[];
+  lastMessage?: {
+    content?: string;
+    fileUrl?: string;
+    fileType?: 'image' | 'video' | 'pdf';
+    sender: string;
+    createdAt: Date;
+  };
 }
 
 const chatSchema = new Schema<IChat>(
@@ -29,6 +36,23 @@ const chatSchema = new Schema<IChat>(
         },
       },
     ],
+    lastMessage: {
+      content: { type: String },
+      fileUrl: { type: String },
+      fileType: {
+        type: String,
+        enum: ['image', 'video', 'pdf'],
+      },
+      sender: {
+        type: String,
+        ref: 'User',
+        required: true,
+      },
+      createdAt: {
+        type: Date,
+        required: true,
+      },
+    },
   },
   { timestamps: true }
 );

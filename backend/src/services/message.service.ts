@@ -6,7 +6,7 @@ import { IMessageService } from '@/core/interfaces/services/IMessageService';
 import { TYPES } from '@/di/types';
 import { IMessage } from '@/models/message.model';
 import { inject, injectable } from 'inversify';
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { Server as SocketIOServer } from 'socket.io';
 
 @injectable()
@@ -41,6 +41,26 @@ export class MessageService extends BaseService<IMessage> implements IMessageSer
       replyTo,
       readBy: [userId], // Sender has read their own message
     });
+
+    const lastMessagePayload = {
+      content: message.content,
+      fileUrl: message.fileUrl,
+      fileType: message.fileType,
+      sender: message.sender,
+      createdAt: message.createdAt,
+    };
+
+    if (message.chatType === 'Chat') {
+      console.log('=========', lastMessagePayload);
+
+      await this.chatRepository.findByIdAndUpdate(new mongoose.Types.ObjectId(message.chatId), {
+        lastMessage: lastMessagePayload,
+      });
+    } else {
+      await this.groupRepository.findByIdAndUpdate(new mongoose.Types.ObjectId(message.chatId), {
+        lastMessage: lastMessagePayload,
+      });
+    }
 
     if (chatType === 'Chat') {
       const chat = await this.chatRepository.findById(new Types.ObjectId(chatId));

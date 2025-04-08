@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Input } from "@/components/atoms/input";
 import {
   Dialog,
@@ -26,6 +27,7 @@ import { Chat, Group, User } from "@/types";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { formatLastMessageTime } from "../utils/last-message-format";
 
 export const ChatList = () => {
   const dispatch = useDispatch();
@@ -134,8 +136,8 @@ export const ChatList = () => {
     const existingChat = chats.find(
       (chat) =>
         chat.participants.length === 2 &&
-        chat.participants.includes(userId || "") &&
-        chat.participants.includes(selectedUser._id),
+        chat.participants.some((p) => p._id === userId) &&
+        chat.participants.some((p) => p._id === selectedUser._id),
     );
     if (existingChat) {
       handleSelectChat(existingChat._id, "Chat");
@@ -159,12 +161,11 @@ export const ChatList = () => {
 
   const getUnreadCount = (item: Chat | Group, userId: string): number => {
     const countObj = item.unreadCounts.find((c) => c.userId === userId);
-    console.log(userId + " " + countObj?.count);
     return countObj?.count || 0;
   };
 
   return (
-    <div className="w-1/4 h-full bg-muted p-4 overflow-y-auto">
+    <div className="w-1/4 h-full p-4 overflow-y-auto border-r">
       {/* Search Bar */}
       <div className="mb-4 relative">
         <Input
@@ -201,35 +202,57 @@ export const ChatList = () => {
       {/* Chats List */}
       <h2 className="text-lg font-semibold mb-2">Chats</h2>
       <div className="flex-1 overflow-y-auto">
-        {chats.map((chat) => (
-          <div
-            key={chat._id}
-            onClick={() => handleSelectChat(chat._id, "Chat")}
-            className={`p-3 mb-2 rounded-lg cursor-pointer flex items-center space-x-3 ${
-              activeChat?.id === chat._id ? "bg-blue-100" : "hover:bg-gray-200"
-            }`}
-          >
-            <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-              {/* Placeholder avatar */}
-              <span className="text-white font-medium">
-                {chat.participants
-                  .filter((id) => id !== userId)[0]
-                  ?.charAt(0)
-                  .toUpperCase()}
-              </span>
+        {chats.map((chat) => {
+          const otherParticipant = chat.participants.find(
+            (p) => p._id !== userId,
+          );
+          return (
+            <div
+              key={chat._id}
+              onClick={() => handleSelectChat(chat._id, "Chat")}
+              className={`p-3 mb-2 rounded-lg cursor-pointer flex items-center space-x-3 ${
+                activeChat?.id === chat._id ? "bg-muted" : "hover:bg-muted"
+              }`}
+            >
+              <div className="flex-1 flex items-center gap-3">
+                <Avatar className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
+                  <AvatarImage
+                    src={otherParticipant?.profilePic || ""}
+                    className="rounded-full"
+                  />
+                  {/* <AvatarFallback>{otherParticipant?.name[0]}</AvatarFallback> */}
+                </Avatar>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium">
+                      {otherParticipant?.name}
+                    </p>
+                    {chat.lastMessage?.createdAt && (
+                      <p className="text-xs text-muted-foreground whitespace-nowrap">
+                        {/* {formatLastMessageTime(chat.lastMessage.createdAt)} */}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-muted-foreground truncate">
+                      {chat.lastMessage?.content
+                        ? chat.lastMessage.content
+                        : chat.lastMessage?.fileType
+                          ? `📎 ${chat.lastMessage.fileType.toUpperCase()} File`
+                          : ""}
+                    </p>
+                    {getUnreadCount(chat, userId) > 0 && (
+                      <span className="bg-primary text-secondary rounded-full px-2 py-1 text-xs">
+                        {getUnreadCount(chat, userId)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium">
-                {chat.participants.filter((id) => id !== userId).join(", ")}
-              </p>
-            </div>
-            {getUnreadCount(chat, userId) > 0 && (
-              <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs">
-                {getUnreadCount(chat, userId)}
-              </span>
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Groups List */}
@@ -268,29 +291,56 @@ export const ChatList = () => {
         </Dialog>
       </div>
       <div className="flex-1 overflow-y-auto">
-        {groups.map((group) => (
-          <div
-            key={group._id}
-            onClick={() => handleSelectChat(group._id, "Group")}
-            className={`p-3 mb-2 rounded-lg cursor-pointer flex items-center space-x-3 ${
-              activeChat?.id === group._id ? "bg-blue-100" : "hover:bg-gray-200"
-            }`}
-          >
-            <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-              <span className="text-white font-medium">
-                {group.name.charAt(0).toUpperCase()}
-              </span>
+        {groups.map((group) => {
+          const lastMsg = group.lastMessage;
+          return (
+            <div
+              key={group._id}
+              onClick={() => handleSelectChat(group._id, "Group")}
+              className={`p-3 mb-2 rounded-lg cursor-pointer flex items-center space-x-3 ${
+                activeChat?.id === group._id ? "bg-muted" : "hover:bg-muted"
+              }`}
+            >
+              <div className="flex-1 flex items-center gap-3">
+                {/* Group Avatar */}
+                <Avatar className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
+                  <AvatarImage src={""} className="rounded-full object-cover" />
+                  <AvatarFallback>
+                    {group.name.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="flex-1">
+                  {/* Top row: group name + time */}
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium truncate">{group.name}</p>
+                    {lastMsg?.createdAt && (
+                      <p className="text-xs text-muted-foreground whitespace-nowrap">
+                        {formatLastMessageTime(lastMsg.createdAt)}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Bottom row: last message + unread count */}
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-muted-foreground truncate">
+                      {lastMsg?.content
+                        ? lastMsg.content
+                        : lastMsg?.fileType
+                          ? `📎 ${lastMsg.fileType.toUpperCase()} File`
+                          : ""}
+                    </p>
+                    {getUnreadCount(group, userId) > 0 && (
+                      <span className="bg-primary text-secondary rounded-full px-2 py-1 text-xs">
+                        {getUnreadCount(group, userId)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium">{group.name}</p>
-            </div>
-            {getUnreadCount(group, userId) > 0 && (
-              <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs">
-                {getUnreadCount(group, userId)}
-              </span>
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

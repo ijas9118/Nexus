@@ -1,9 +1,11 @@
 import { SocketContext } from "@/hooks/useSocket";
 import {
   addMessage,
+  incrementUnreadCount,
   setChats,
   setGroups,
   setUserUnreadCountToZero,
+  updateLastMessage,
   updateMessage,
 } from "@/store/slices/chatSlice";
 import store, { RootState } from "@/store/store";
@@ -19,6 +21,7 @@ interface SocketProviderProps {
 export const SocketProvider = ({ children }: SocketProviderProps) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
+  const { activeChat } = useSelector((state: RootState) => state.chat);
 
   const socket = useMemo(() => {
     if (!user?._id) {
@@ -45,6 +48,29 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
     socket.on("newMessage", (message) => {
       dispatch(addMessage(message));
+
+      dispatch(
+        updateLastMessage({
+          chatId: message.chatId,
+          type: message.chatType,
+          lastMessage: message,
+        }),
+      );
+
+      const userId = user?._id;
+      if (
+        userId &&
+        message.sender !== userId &&
+        (!activeChat || activeChat.id !== message.chatId)
+      ) {
+        dispatch(
+          incrementUnreadCount({
+            chatId: message.chatId,
+            userId,
+            type: message.chatType,
+          }),
+        );
+      }
     });
 
     socket.on("messageReaction", (message) => {

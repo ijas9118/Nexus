@@ -6,6 +6,13 @@ export interface IGroup extends Document {
   members: string[]; // Array of User IDs (2 or more)
   createdBy: string; // User ID
   unreadCounts: { userId: string; count: number }[];
+  lastMessage?: {
+    content?: string;
+    fileUrl?: string;
+    fileType?: 'image' | 'video' | 'pdf';
+    sender: string; // userId
+    createdAt: Date;
+  };
 }
 
 const groupSchema = new Schema<IGroup>(
@@ -40,6 +47,23 @@ const groupSchema = new Schema<IGroup>(
         },
       },
     ],
+    lastMessage: {
+      content: { type: String },
+      fileUrl: { type: String },
+      fileType: {
+        type: String,
+        enum: ['image', 'video', 'pdf'],
+      },
+      sender: {
+        type: String,
+        ref: 'User',
+        required: true,
+      },
+      createdAt: {
+        type: Date,
+        required: true,
+      },
+    },
   },
   { timestamps: true }
 );

@@ -7,21 +7,22 @@ import { transporter } from '../../utils/nodemailerTransporter';
 import { IEmailService } from '../../core/interfaces/services/IEmailService';
 import { TYPES } from '../../di/types';
 import { ITokenService } from '../../core/interfaces/services/ITokenService';
+import { RegisterDto } from '@/dtos/requests/register.dto';
 
 @injectable()
 export class EmailService implements IEmailService {
   constructor(@inject(TYPES.TokenService) private tokenService: ITokenService) {}
 
   // Send OTP to the user's email for verification
-  async sendOtpEmail(email: string, otp: string): Promise<void> {
-    const expirationTime = '10 minutes';
-    const data = JSON.stringify({ otp });
+  async sendOtpEmail(userData: RegisterDto, otp: string): Promise<void> {
+    const expirationTime = 10 * 60;
+    const data = JSON.stringify({ userData, otp });
 
-    await redisClient.setex(`otp:${email}`, expirationTime, data);
+    await redisClient.setex(`otp:${userData.email}`, expirationTime, data);
 
     const mailOptions = {
       from: USER_EMAIL,
-      to: email,
+      to: userData.email,
       subject: 'Your OTP for Verification - Nexus',
       text: `Your OTP for verification is ${otp}. It is valid for ${expirationTime}.`,
       html: `
@@ -52,13 +53,13 @@ export class EmailService implements IEmailService {
     };
 
     try {
-      await transporter.sendMail(mailOptions);
+      // await transporter.sendMail(mailOptions);
     } catch (error) {
       console.error('Error sending OTP email:', error);
       throw new CustomError('Failed to send OTP. Please try again later.', StatusCodes.BAD_REQUEST);
     }
 
-    console.log(email, otp);
+    console.log(userData.email, otp);
   }
 
   // Create a reset password link with token
