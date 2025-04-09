@@ -46,11 +46,9 @@ const chatSchema = new Schema<IChat>(
       sender: {
         type: String,
         ref: 'User',
-        required: true,
       },
       createdAt: {
         type: Date,
-        required: true,
       },
     },
   },

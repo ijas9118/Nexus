@@ -42,7 +42,7 @@ const MessageBubble = ({ message }: MessageBubbleProps) => {
 
   return (
     <div
-      className={`relative flex flex-col gap-1 mb-6 ${
+      className={`relative flex flex-col gap-1 my-4 ${
         isSender ? "items-end" : "items-start"
       }`}
     >

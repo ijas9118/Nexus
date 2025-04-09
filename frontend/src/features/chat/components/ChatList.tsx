@@ -106,9 +106,22 @@ export const ChatList = () => {
         // Set as active chat if it matches the current user selection
         if (
           activeChat?.id ===
-          chat.participants.find((id: string) => id !== userId)
+          chat.participants.find((p: any) => p._id !== userId)?._id
         ) {
-          dispatch(setActiveChat({ id: chat._id, type: "Chat" }));
+          const otherParticipant = chat.participants.find(
+            (p: any) => p._id !== userId,
+          );
+          dispatch(
+            setActiveChat({
+              id: chat._id,
+              type: "Chat",
+              userDetails: {
+                userId: otherParticipant!._id,
+                name: otherParticipant!.name,
+                profilePic: otherParticipant!.profilePic,
+              },
+            }),
+          );
         }
       });
 
@@ -125,10 +138,43 @@ export const ChatList = () => {
     }
   }, [socket, chats, groups, activeChat, userId, dispatch]);
 
-  const handleSelectChat = (id: string, type: "Chat" | "Group") => {
-    dispatch(setActiveChat({ id, type }));
+  const handleSelectChat = (
+    chatOrGroup: Chat | Group,
+    type: "Chat" | "Group",
+  ) => {
+    if (type === "Chat") {
+      const chat = chatOrGroup as Chat;
+      const otherParticipant = chat.participants.find((p) => p._id !== userId);
+      dispatch(
+        setActiveChat({
+          id: chat._id,
+          type: "Chat",
+          userDetails: {
+            userId: otherParticipant!._id,
+            username: otherParticipant?.username,
+            name: otherParticipant!.name,
+            profilePic: otherParticipant!.profilePic,
+          },
+        }),
+      );
+    } else {
+      const group = chatOrGroup as Group;
+      dispatch(
+        setActiveChat({
+          id: group._id,
+          type: "Group",
+          userDetails: {
+            name: group.name,
+            // profilePic: group., // Add this if your Group type has a profilePic field
+          },
+        }),
+      );
+    }
     if (socket) {
-      socket.emit("markMessagesAsRead", { chatId: id, chatType: type });
+      socket.emit("markMessagesAsRead", {
+        chatId: chatOrGroup._id,
+        chatType: type,
+      });
     }
   };
 
@@ -140,7 +186,7 @@ export const ChatList = () => {
         chat.participants.some((p) => p._id === selectedUser._id),
     );
     if (existingChat) {
-      handleSelectChat(existingChat._id, "Chat");
+      handleSelectChat(existingChat, "Chat");
     } else {
       // Set as active chat but don’t create until a message is sent
       dispatch(setPendingChat({ userId: selectedUser._id }));
@@ -209,7 +255,7 @@ export const ChatList = () => {
           return (
             <div
               key={chat._id}
-              onClick={() => handleSelectChat(chat._id, "Chat")}
+              onClick={() => handleSelectChat(chat, "Chat")}
               className={`p-3 mb-2 rounded-lg cursor-pointer flex items-center space-x-3 ${
                 activeChat?.id === chat._id ? "bg-muted" : "hover:bg-muted"
               }`}
@@ -296,7 +342,7 @@ export const ChatList = () => {
           return (
             <div
               key={group._id}
-              onClick={() => handleSelectChat(group._id, "Group")}
+              onClick={() => handleSelectChat(group, "Group")}
               className={`p-3 mb-2 rounded-lg cursor-pointer flex items-center space-x-3 ${
                 activeChat?.id === group._id ? "bg-muted" : "hover:bg-muted"
               }`}

@@ -1,12 +1,23 @@
 import { Chat, Group, Message } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface ActiveChat {
+  id: string;
+  type: "Chat" | "Group";
+  userDetails: {
+    userId?: string;
+    name: string;
+    username?: string;
+    profilePic?: string;
+  };
+}
+
 interface ChatState {
   chats: Chat[];
   groups: Group[];
   messages: { [key: string]: Message[] }; // chatId -> messages
   pendingChat: { userId: string } | null;
-  activeChat: { id: string; type: "Chat" | "Group" } | null;
+  activeChat: ActiveChat | null;
 }
 
 const initialState: ChatState = {
@@ -112,11 +123,11 @@ const chatSlice = createSlice({
       }
     },
 
-    setActiveChat(
-      state,
-      action: PayloadAction<{ id: string; type: "Chat" | "Group" } | null>,
-    ) {
+    setActiveChat(state, action: PayloadAction<ActiveChat | null>) {
       state.activeChat = action.payload;
+      if (action.payload) {
+        state.pendingChat = null;
+      }
     },
 
     setPendingChat(state, action: PayloadAction<{ userId: string }>) {

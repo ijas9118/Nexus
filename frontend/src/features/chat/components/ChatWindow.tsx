@@ -6,6 +6,8 @@ import MessageBubble from "./MessageBubble";
 import MessageInput from "./MessageInput";
 import { ChatService } from "@/services/user/chatService";
 import { setMessages } from "@/store/slices/chatSlice";
+import ChatHeader from "./ChatHeader";
+import { ScrollArea } from "@/components/organisms/scroll-area";
 
 const ChatWindow = () => {
   const dispatch = useDispatch();
@@ -74,7 +76,8 @@ const ChatWindow = () => {
   if (pendingChat) {
     return (
       <div className="w-3/4 h-full flex flex-col">
-        <div className="flex-1 p-4 overflow-y-auto">
+        <ChatHeader />
+        <div className="h-full flex items-center justify-center ">
           <p className="text-muted-foreground">
             Start a conversation with this user!
           </p>
@@ -86,11 +89,14 @@ const ChatWindow = () => {
 
   return (
     <div className="w-3/4 h-full flex flex-col ">
-      <div className="flex-1 p-4 overflow-y-auto">
-        {activeChat &&
-          messages[activeChat.id]?.map((message) => (
-            <MessageBubble key={message._id} message={message} />
-          ))}
+      <ChatHeader />
+      <div className="flex-1 w-full h-full">
+        <ScrollArea className="h-[calc(100vh-200px)] px-2 sm:px-4 md:px-6">
+          {activeChat &&
+            messages[activeChat.id]?.map((message) => (
+              <MessageBubble key={message._id} message={message} />
+            ))}
+        </ScrollArea>
       </div>
       {activeChat && (
         <MessageInput chatId={activeChat.id} chatType={activeChat.type} />
