@@ -55,7 +55,6 @@ export const ChatList = () => {
         const chatsData = await ChatService.fetchChats();
         const groupsData = await ChatService.fetchGroups();
 
-        console.log(chatsData, groupsData);
         dispatch(setChats(chatsData));
         dispatch(setGroups(groupsData));
       } catch (error) {
@@ -266,7 +265,7 @@ export const ChatList = () => {
                     src={otherParticipant?.profilePic || ""}
                     className="rounded-full"
                   />
-                  {/* <AvatarFallback>{otherParticipant?.name[0]}</AvatarFallback> */}
+                  <AvatarFallback>{otherParticipant?.name[0]}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
@@ -275,7 +274,7 @@ export const ChatList = () => {
                     </p>
                     {chat.lastMessage?.createdAt && (
                       <p className="text-xs text-muted-foreground whitespace-nowrap">
-                        {/* {formatLastMessageTime(chat.lastMessage.createdAt)} */}
+                        {formatLastMessageTime(chat.lastMessage.createdAt)}
                       </p>
                     )}
                   </div>

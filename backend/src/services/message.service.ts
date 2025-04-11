@@ -51,8 +51,6 @@ export class MessageService extends BaseService<IMessage> implements IMessageSer
     };
 
     if (message.chatType === 'Chat') {
-      console.log('=========', lastMessagePayload);
-
       await this.chatRepository.findByIdAndUpdate(new mongoose.Types.ObjectId(message.chatId), {
         lastMessage: lastMessagePayload,
       });

@@ -58,11 +58,12 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       );
 
       const userId = user?._id;
-      if (
-        userId &&
-        message.sender !== userId &&
-        (!activeChat || activeChat.id !== message.chatId)
-      ) {
+      const isActiveChat =
+        activeChat &&
+        activeChat.id === message.chatId &&
+        activeChat.type === message.chatType;
+
+      if (userId && message.sender !== userId && !isActiveChat) {
         dispatch(
           incrementUnreadCount({
             chatId: message.chatId,

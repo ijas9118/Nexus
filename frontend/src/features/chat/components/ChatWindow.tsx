@@ -11,6 +11,7 @@ import { ScrollArea } from "@/components/organisms/scroll-area";
 
 const ChatWindow = () => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state: RootState) => state.auth);
   const { activeChat, messages, pendingChat } = useSelector(
     (state: RootState) => state.chat,
   );
@@ -18,7 +19,6 @@ const ChatWindow = () => {
   const hasFetched = useRef<{ [key: string]: boolean }>({});
 
   useEffect(() => {
-    console.log(activeChat);
     if (activeChat && socket) {
       const fetchMessages = async () => {
         try {
@@ -26,7 +26,6 @@ const ChatWindow = () => {
             activeChat.id,
             activeChat.type,
           );
-          console.log(chatMessages);
           dispatch(
             setMessages({ chatId: activeChat.id, messages: chatMessages }),
           );
@@ -47,21 +46,37 @@ const ChatWindow = () => {
   }, [activeChat, dispatch, socket]);
 
   useEffect(() => {
-    if (socket) {
-      socket.on("newMessage", (message: any) => {
-        dispatch(
-          setMessages({
-            chatId: message.chatId,
-            messages: [...(messages[message.chatId] || []), message],
-          }),
-        );
-      });
+    if (!socket) return;
 
-      return () => {
-        socket.off("newMessage");
-      };
-    }
-  }, [socket, dispatch, messages]);
+    const handleNewMessage = (message: any) => {
+      dispatch(
+        setMessages({
+          chatId: message.chatId,
+          messages: [...(messages[message.chatId] || []), message],
+        }),
+      );
+
+      const isUserViewingChat =
+        activeChat &&
+        activeChat.id === message.chatId &&
+        activeChat.type === message.chatType;
+
+      const isNotSender = message.sender !== user?._id;
+
+      if (isUserViewingChat && isNotSender) {
+        socket.emit("markMessagesAsRead", {
+          chatId: message.chatId,
+          chatType: message.chatType,
+        });
+      }
+    };
+
+    socket.on("newMessage", handleNewMessage);
+
+    return () => {
+      socket.off("newMessage", handleNewMessage);
+    };
+  }, [socket, dispatch, messages, activeChat, user?._id]);
 
   if (!activeChat && !pendingChat) {
     return (

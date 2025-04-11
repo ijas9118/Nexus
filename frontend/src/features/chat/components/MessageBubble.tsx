@@ -1,4 +1,3 @@
-import { Button } from "@/components/atoms/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,9 +7,11 @@ import {
 import { useSocket } from "@/hooks/useSocket";
 import { RootState } from "@/store/store";
 import { Message } from "@/types";
+import dayjs from "dayjs";
 import { MoreVertical } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import EmojiPicker from "emoji-picker-react";
 
 interface MessageBubbleProps {
   message: Message;
@@ -20,11 +21,13 @@ const MessageBubble = ({ message }: MessageBubbleProps) => {
   const { user } = useSelector((state: RootState) => state.auth);
   const socket = useSocket();
   const isSender = message.sender === user?._id;
-  const [showReactions, setShowReactions] = useState(false);
+  const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+  const emojiRef = useRef<HTMLDivElement>(null);
 
   const handleReact = (reaction: string) => {
     if (socket) {
       socket.emit("reactToMessage", { messageId: message._id, reaction });
+      setEmojiPickerOpen(false);
     }
   };
 
@@ -39,6 +42,25 @@ const MessageBubble = ({ message }: MessageBubbleProps) => {
       socket.emit("deleteMessage", message._id);
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        emojiRef.current &&
+        !emojiRef.current.contains(event.target as Node)
+      ) {
+        setEmojiPickerOpen(false);
+      }
+    };
+
+    if (emojiPickerOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [emojiPickerOpen]);
 
   return (
     <div
@@ -72,11 +94,19 @@ const MessageBubble = ({ message }: MessageBubbleProps) => {
                   {/* Handle image/video/pdf display here */}
                 </div>
               )}
+              <p
+                className={`text-xs mt-1 ${
+                  isSender
+                    ? "text-background/70 text-end"
+                    : "text-muted-foreground"
+                }`}
+              >
+                {dayjs(message.createdAt).format("h:mm A")}
+              </p>
             </>
           )}
         </div>
 
-        {/* More Button - now floats just beside the bubble */}
         <div
           className={`absolute top-1/2 -translate-y-1/2 group-hover:opacity-100 opacity-0 transition-all duration-300 ${
             isSender ? "-left-6" : "-right-6"
@@ -88,9 +118,9 @@ const MessageBubble = ({ message }: MessageBubbleProps) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem
-                onClick={() => setShowReactions(!showReactions)}
+                onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}
               >
-                {showReactions ? "Hide Reactions" : "React"}
+                {emojiPickerOpen ? "Close Reactions" : "React"}
               </DropdownMenuItem>
               {isSender && !message.isDeleted && (
                 <DropdownMenuItem onClick={handleDelete}>
@@ -115,25 +145,27 @@ const MessageBubble = ({ message }: MessageBubbleProps) => {
           } -mt-3 z-10`}
         >
           {message.reactions.map((r) => (
-            <span key={r.userId}>{r.reaction}</span>
+            <span
+              key={r.userId}
+              onClick={handleRemoveReaction}
+              className="cursor-pointer"
+            >
+              {r.reaction}
+            </span>
           ))}
         </div>
       )}
 
-      {/* Reaction Options */}
-      {showReactions && (
-        <div className="flex gap-2 mt-1">
-          {["👍", "❤️", "😂", "😢", "😡"].map((emoji) => (
-            <Button
-              key={emoji}
-              variant="ghost"
-              size="sm"
-              className="text-xl"
-              onClick={() => handleReact(emoji)}
-            >
-              {emoji}
-            </Button>
-          ))}
+      {emojiPickerOpen && (
+        <div
+          className={`absolute  ${isSender ? "right-0 " : "left-0"} mt-2 z-20 scale-75`}
+          ref={emojiRef}
+        >
+          <EmojiPicker
+            open={emojiPickerOpen}
+            onEmojiClick={(emoji) => handleReact(emoji.emoji)}
+            autoFocusSearch={false}
+          />
         </div>
       )}
     </div>

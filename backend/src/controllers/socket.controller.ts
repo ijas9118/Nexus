@@ -66,8 +66,9 @@ export class SocketController {
       );
       socket.on(
         'markMessagesAsRead',
-        ({ chatId, chatType }: { chatId: string; chatType: 'Chat' | 'Group' }) =>
-          this.handleMarkMessagesAsRead(userId, chatId, chatType, io)
+        ({ chatId, chatType }: { chatId: string; chatType: 'Chat' | 'Group' }) => {
+          this.handleMarkMessagesAsRead(userId, chatId, chatType, io);
+        }
       );
 
       // Handle disconnection

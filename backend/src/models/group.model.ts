@@ -57,11 +57,9 @@ const groupSchema = new Schema<IGroup>(
       sender: {
         type: String,
         ref: 'User',
-        required: true,
       },
       createdAt: {
         type: Date,
-        required: true,
       },
     },
   },
