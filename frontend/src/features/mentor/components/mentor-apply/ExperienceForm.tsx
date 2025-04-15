@@ -23,7 +23,10 @@ import { ArrowRight } from "lucide-react";
 import FileUpload from "./FileUpload";
 import React from "react";
 import { useMentorForm } from "@/context/MentorFormContext";
-import { EXPERIENCE_LEVELS, EXPERTISE_AREAS, TECHNOLOGIES } from "../constants";
+import { useQuery } from "@tanstack/react-query";
+import { MentorConfigService } from "@/services/mentorConfigService";
+import { MentorshipConfig } from "@/types/mentor";
+import { formatLabel } from "@/utils";
 
 interface ExperienceFormProps {
   onBack: () => void;
@@ -35,6 +38,21 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
   onContinue,
 }) => {
   const { formData, setFormData } = useMentorForm();
+
+  const { data: experienceLevels = [], isLoading: isLoadingLevels } = useQuery({
+    queryKey: ["experienceLevels"],
+    queryFn: () => MentorConfigService.getConfigsByCategory("experienceLevel"),
+  });
+
+  const { data: expertiseAreas = [], isLoading: isLoadingAreas } = useQuery({
+    queryKey: ["expertiseAreas"],
+    queryFn: () => MentorConfigService.getConfigsByCategory("expertiseArea"),
+  });
+
+  const { data: technologies = [], isLoading: isLoadingTechs } = useQuery({
+    queryKey: ["technologies"],
+    queryFn: () => MentorConfigService.getConfigsByCategory("technology"),
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -120,79 +138,91 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
 
         <div className="grid gap-2">
           <Label htmlFor="experience">Years of Professional Experience</Label>
-          <Select
-            onValueChange={handleExperienceLevelChange}
-            value={formData.experience.experienceLevel}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select experience level" />
-            </SelectTrigger>
-            <SelectContent>
-              {EXPERIENCE_LEVELS.map((level) => (
-                <SelectItem key={level.value} value={level.value}>
-                  {level.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {isLoadingLevels ? (
+            <div>Loading...</div>
+          ) : (
+            <Select
+              onValueChange={handleExperienceLevelChange}
+              value={formData.experience.experienceLevel}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select experience level" />
+              </SelectTrigger>
+              <SelectContent>
+                {experienceLevels.map((level: MentorshipConfig) => (
+                  <SelectItem key={level._id} value={level._id}>
+                    {level.value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
 
         <div className="grid gap-2">
           <Label>Areas of Expertise</Label>
-          <div className="grid grid-cols-2 gap-2">
-            {EXPERTISE_AREAS.map((area) => (
-              <div key={area.value} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`expertise-${area.value}`}
-                  checked={formData.experience.expertiseAreas.includes(
-                    area.value,
-                  )}
-                  onCheckedChange={(checked) =>
-                    handleCheckboxChange(
-                      "expertiseAreas",
-                      area.value,
-                      checked === true,
-                    )
-                  }
-                />
-                <Label
-                  htmlFor={`expertise-${area.value}`}
-                  className="text-sm font-normal"
-                >
-                  {area.label}
-                </Label>
-              </div>
-            ))}
-          </div>
+          {isLoadingAreas ? (
+            <div>Loading...</div>
+          ) : (
+            <div className="grid grid-cols-2 gap-2">
+              {expertiseAreas.map((area: MentorshipConfig) => (
+                <div key={area._id} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`expertise-${area._id}`}
+                    checked={formData.experience.expertiseAreas.includes(
+                      area._id,
+                    )}
+                    onCheckedChange={(checked) =>
+                      handleCheckboxChange(
+                        "expertiseAreas",
+                        area._id,
+                        checked === true,
+                      )
+                    }
+                  />
+                  <Label
+                    htmlFor={`expertise-${area._id}`}
+                    className="text-sm font-normal"
+                  >
+                    {formatLabel(area.value)}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="grid gap-2">
           <Label>Technologies & Languages</Label>
-          <div className="grid grid-cols-3 gap-2">
-            {TECHNOLOGIES.map((tech) => (
-              <div key={tech.value} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`tech-${tech.value}`}
-                  checked={formData.experience.technologies.includes(
-                    tech.value,
-                  )}
-                  onCheckedChange={(checked) =>
-                    handleCheckboxChange(
-                      "technologies",
-                      tech.value,
-                      checked === true,
-                    )
-                  }
-                />
-                <Label
-                  htmlFor={`tech-${tech.value}`}
-                  className="text-sm font-normal"
-                >
-                  {tech.label}
-                </Label>
-              </div>
-            ))}
-          </div>
+          {isLoadingTechs ? (
+            <div>Loading...</div>
+          ) : (
+            <div className="grid grid-cols-3 gap-2">
+              {technologies.map((tech: MentorshipConfig) => (
+                <div key={tech._id} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`tech-${tech._id}`}
+                    checked={formData.experience.technologies.includes(
+                      tech._id,
+                    )}
+                    onCheckedChange={(checked) =>
+                      handleCheckboxChange(
+                        "technologies",
+                        tech._id,
+                        checked === true,
+                      )
+                    }
+                  />
+                  <Label
+                    htmlFor={`tech-${tech._id}`}
+                    className="text-sm font-normal"
+                  >
+                    {formatLabel(tech.value)}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="grid gap-2">

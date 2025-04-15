@@ -11,17 +11,44 @@ import { Checkbox } from "@/components/atoms/checkbox";
 import { Label } from "@/components/atoms/label";
 import { Textarea } from "@/components/atoms/textarea";
 import { Link } from "react-router-dom";
-import { MENTORSHIP_TYPES, TARGET_AUDIENCES, TIME_SLOTS } from "../constants";
 import CheckboxGroup from "./CheckboxGroup";
 import { useMentorForm } from "@/context/MentorFormContext";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import MentorService from "@/services/admin/mentorService";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/atoms/radio-group";
 import { Badge } from "@/components/atoms/badge";
+import { MentorConfigService } from "@/services/mentorConfigService";
+import { MentorshipConfig } from "@/types/mentor";
+import { formatLabel } from "@/utils";
+
+export const TIME_SLOTS = [
+  "9:00 AM - 10:00 AM",
+  "10:00 AM - 11:00 AM",
+  "11:00 AM - 12:00 PM",
+  "12:00 PM - 1:00 PM",
+  "1:00 PM - 2:00 PM",
+  "2:00 PM - 3:00 PM",
+  "3:00 PM - 4:00 PM",
+  "4:00 PM - 5:00 PM",
+  "5:00 PM - 6:00 PM",
+  "6:00 PM - 7:00 PM",
+  "7:00 PM - 8:00 PM",
+];
 
 const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
   const { formData, setFormData } = useMentorForm();
+
+  const { data: mentorshipTypes = [], isLoading: isLoadingTypes } = useQuery({
+    queryKey: ["mentorshipTypes"],
+    queryFn: () => MentorConfigService.getConfigsByCategory("mentorshipType"),
+  });
+
+  const { data: targetAudiences = [], isLoading: isLoadingAudiences } =
+    useQuery({
+      queryKey: ["targetAudiences"],
+      queryFn: () => MentorConfigService.getConfigsByCategory("targetAudience"),
+    });
 
   const handleAvailabilityTypeChange = (value: string) => {
     setFormData((prev) => ({
@@ -65,6 +92,26 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
     },
   });
 
+  const handleMentorshipTypesChange = (selectedTypes: string[]) => {
+    setFormData((prev) => ({
+      ...prev,
+      mentorshipDetails: {
+        ...prev.mentorshipDetails,
+        mentorshipTypes: selectedTypes,
+      },
+    }));
+  };
+
+  const handleTargetAudiencesChange = (selectedAudiences: string[]) => {
+    setFormData((prev) => ({
+      ...prev,
+      mentorshipDetails: {
+        ...prev.mentorshipDetails,
+        targetAudiences: selectedAudiences,
+      },
+    }));
+  };
+
   const handleSubmit = () => {
     mutation.mutate(formData);
   };
@@ -80,16 +127,38 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
           <Label>
             What type of mentorship are you interested in providing?
           </Label>
-          <CheckboxGroup items={MENTORSHIP_TYPES} idPrefix="type" columns={1} />
+          {isLoadingTypes ? (
+            <div>Loading...</div>
+          ) : (
+            <CheckboxGroup
+              items={mentorshipTypes.map((item: MentorshipConfig) => ({
+                value: item._id,
+                label: formatLabel(item.value),
+              }))}
+              idPrefix="type"
+              columns={1}
+              value={formData.mentorshipDetails.mentorshipTypes}
+              onChange={handleMentorshipTypesChange}
+            />
+          )}
         </div>
 
         <div className="grid gap-2">
           <Label>What is your target audience?</Label>
-          <CheckboxGroup
-            items={TARGET_AUDIENCES}
-            idPrefix="audience"
-            columns={2}
-          />
+          {isLoadingAudiences ? (
+            <div>Loading...</div>
+          ) : (
+            <CheckboxGroup
+              items={targetAudiences.map((item: MentorshipConfig) => ({
+                value: item._id,
+                label: formatLabel(item.value),
+              }))}
+              idPrefix="audience"
+              columns={2}
+              value={formData.mentorshipDetails.targetAudiences}
+              onChange={handleTargetAudiencesChange}
+            />
+          )}
         </div>
 
         <div className="grid gap-2">

@@ -5,3 +5,12 @@ export interface Mentor {
   specialization: string[];
   status: string;
 }
+
+export interface MentorshipConfig {
+  _id: string;
+  category: string;
+  value: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}

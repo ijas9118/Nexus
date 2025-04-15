@@ -12,7 +12,7 @@ import { IBaseRepository } from '../interfaces/repositories/IBaseRepository';
 export abstract class BaseRepository<T extends Document> implements IBaseRepository<T> {
   constructor(protected model: Model<T>) {}
 
-  async findById(id: Types.ObjectId): Promise<T | null> {
+  async findById(id: Types.ObjectId | string): Promise<T | null> {
     return this.model.findById(id);
   }
 
@@ -29,7 +29,7 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
     return document.save();
   }
 
-  async update(id: Types.ObjectId, data: Partial<T>): Promise<T | null> {
+  async update(id: Types.ObjectId | string, data: Partial<T>): Promise<T | null> {
     return this.model.findByIdAndUpdate(id, data, { new: true });
   }
 
@@ -37,7 +37,7 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
     return this.model.updateOne(filter, update);
   }
 
-  async delete(id: Types.ObjectId): Promise<T | null> {
+  async delete(id: Types.ObjectId | string): Promise<T | null> {
     return this.model.findByIdAndDelete(id);
   }
 

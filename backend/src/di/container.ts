@@ -128,6 +128,13 @@ import { MessageRepository } from '@/repositories/message.repository';
 import { MessageService } from '@/services/message.service';
 import { SocketController } from '@/controllers/socket.controller';
 
+import { IMentorshipConfigRepository } from '@/core/interfaces/repositories/IMentorshipConfigRepository';
+import { MentorshipConfigRepository } from '@/repositories/mentorship-config.repository';
+import { IMentorshipConfigService } from '@/core/interfaces/services/IMentorshipConfigService';
+import { MentorshipConfigService } from '@/services/mentorship-config.service';
+import { IMentorshipConfigController } from '@/core/interfaces/controllers/IMentorshipConfigController';
+import { MentorshipConfigController } from '@/controllers/mentor-config.controller';
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -202,5 +209,13 @@ container.bind<IMessageRepository>(TYPES.MessageRepository).to(MessageRepository
 container.bind<IMessageService>(TYPES.MessageService).to(MessageService);
 
 container.bind<SocketController>(TYPES.SocketController).to(SocketController);
+
+container
+  .bind<IMentorshipConfigRepository>(TYPES.MentorshipConfigRepository)
+  .to(MentorshipConfigRepository);
+container.bind<IMentorshipConfigService>(TYPES.MentorshipConfigService).to(MentorshipConfigService);
+container
+  .bind<IMentorshipConfigController>(TYPES.MentorshipConfigController)
+  .to(MentorshipConfigController);
 
 export { container };

@@ -338,8 +338,12 @@ export default function LoginPage() {
           )}
         </div>
       </Card>
-
-      <div className="hidden md:block bg-primary"></div>
+      <div
+        className="bg-gradient-to-br from-zinc-900 via-gray-800 to-black bg-[length:200%_200%] animate-[gradientX_8s_ease_infinite]"
+        style={{
+          backgroundPosition: "0% 50%",
+        }}
+      />
     </div>
   );
 }
