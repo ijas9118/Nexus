@@ -8,9 +8,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
-  const { accessToken, status, user } = useSelector(
-    (state: RootState) => state.auth,
-  );
+  const { accessToken, status } = useSelector((state: RootState) => state.auth);
 
   if (status === "loading") {
     return (

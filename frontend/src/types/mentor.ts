@@ -8,9 +8,15 @@ export interface Mentor {
 
 export interface MentorshipConfig {
   _id: string;
-  category: string;
+  category: ConfigCategory | string;
   value: string;
   isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
 }
+
+export type ConfigCategory =
+  | "mentorshipType"
+  | "targetAudience"
+  | "expertiseArea"
+  | "technology"
+  | "experienceLevel";

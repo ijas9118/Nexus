@@ -14,6 +14,7 @@ import CommentManagement from "@/features/admin/CommentManagement";
 import ContentDetail from "@/features/admin/content-management/components/ContentDetail";
 import PaymentManagement from "@/features/admin/PaymentManagement";
 import ContentManagement from "@/features/admin/ContentManagement";
+import MentorshipConfigManagement from "@/features/admin/MentorshipConfigManagement";
 
 const AdminRoutes: React.FC = () => {
   return (
@@ -30,6 +31,10 @@ const AdminRoutes: React.FC = () => {
           <Route path="contents" element={<ContentManagement />} />
           <Route path="contents/:contentId" element={<ContentDetail />} />
           <Route path="payment" element={<PaymentManagement />} />
+          <Route
+            path="mentorship-config"
+            element={<MentorshipConfigManagement />}
+          />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

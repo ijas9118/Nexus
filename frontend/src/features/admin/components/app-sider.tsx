@@ -38,6 +38,7 @@ import {
   MessageCircleMore,
   SettingsIcon,
   Users,
+  UserCog,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -105,6 +106,11 @@ const otherItems = [
     title: "Analytics",
     url: "analytics",
     icon: ChartColumn,
+  },
+  {
+    title: "Mentorship Config",
+    url: "mentorship-config",
+    icon: UserCog,
   },
   {
     title: "Settings",

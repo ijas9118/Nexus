@@ -8,12 +8,13 @@ import { TYPES } from '../../di/types';
 import { clearRefreshTokenCookie, setRefreshTokenCookie } from '../../utils/cookieUtils';
 import { StatusCodes } from 'http-status-codes';
 import CustomError from '../../utils/CustomError';
+import asyncHandler from 'express-async-handler';
 
 @injectable()
 export class AdminAuthController implements IAdminAuthController {
   constructor(@inject(TYPES.AdminAuthService) private adminAuthService: AdminAuthService) {}
 
-  login = async (req: Request, res: Response): Promise<void> => {
+  login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const loginDto: LoginDto = req.body;
     const user = await this.adminAuthService.login(loginDto);
 
@@ -31,14 +32,14 @@ export class AdminAuthController implements IAdminAuthController {
     });
 
     res.status(StatusCodes.OK).json({ message: 'success', accessToken, user });
-  };
+  });
 
-  logout = async (req: Request, res: Response): Promise<void> => {
+  logout = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     clearRefreshTokenCookie(res);
     res.status(StatusCodes.OK).json({ message: 'Logged out successfully.' });
-  };
+  });
 
-  async verifyToken(req: Request, res: Response): Promise<void> {
+  verifyToken = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const accessToken = req.cookies.accessToken;
 
     if (!accessToken) {
@@ -58,5 +59,5 @@ export class AdminAuthController implements IAdminAuthController {
     }
 
     res.status(StatusCodes.OK).json(payload.user);
-  }
+  });
 }

@@ -150,6 +150,7 @@ export class AuthController implements IAuthController {
       });
 
       res.status(StatusCodes.OK).json({ accessToken, decodedToken });
+      return;
     }
 
     const user = await this.authService.getUserByRoleAndId(

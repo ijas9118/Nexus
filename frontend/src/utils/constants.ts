@@ -3,7 +3,6 @@ export const HOST = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
 const AUTH_ROUTE = "/auth";
 const CONTENT_ROUTE = "/content";
 const MESSAGE_ROUTE = "/message";
-const CHANNEL_ROUTE = "/channel";
 
 export const AUTH_ROUTES = {
   LOGIN: `${AUTH_ROUTE}/login`,
