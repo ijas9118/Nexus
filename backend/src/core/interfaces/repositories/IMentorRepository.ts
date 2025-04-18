@@ -1,6 +1,13 @@
-import { IMentor } from '../../../models/mentor.model';
-import { BaseRepository } from '../../abstracts/base.repository';
+import { BaseRepository } from '@/core/abstracts/base.repository';
+import { IMentor } from '@/models/mentor.model';
 
 export interface IMentorRepository extends BaseRepository<IMentor> {
-  getAllMentors(): Promise<IMentor[]>;
+  createMentorApplication(userId: string, mentorData: Partial<IMentor>): Promise<IMentor>;
+
+  findMentorByUserId(userId: string): Promise<IMentor | null>;
+
+  updateMentorStatus(
+    mentorId: string,
+    status: 'pending' | 'approved' | 'rejected'
+  ): Promise<IMentor | null>;
 }

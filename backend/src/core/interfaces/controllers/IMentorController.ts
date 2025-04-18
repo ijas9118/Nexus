@@ -1,8 +1,7 @@
 import { RequestHandler } from 'express';
 
 export interface IMentorController {
-  sendInvitation: RequestHandler;
-  acceptInvitation: RequestHandler;
-  getAllMentors: RequestHandler;
-  completeProfile: RequestHandler;
+  applyAsMentor: RequestHandler;
+  approveMentor: RequestHandler;
+  rejectMentor: RequestHandler;
 }

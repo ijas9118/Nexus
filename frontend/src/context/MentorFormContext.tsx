@@ -25,7 +25,6 @@ interface MentorFormData {
     targetAudiences: string[];
     availabilityType: string;
     availableTimeSlots: string[];
-    sessionDuration: string;
     motivation: string;
   };
 }
@@ -67,7 +66,6 @@ export const MentorFormProvider: React.FC<{ children: React.ReactNode }> = ({
       targetAudiences: [],
       availabilityType: "",
       availableTimeSlots: [],
-      sessionDuration: "",
       motivation: "",
     },
   });

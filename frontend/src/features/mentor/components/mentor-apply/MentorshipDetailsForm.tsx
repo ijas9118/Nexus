@@ -21,6 +21,7 @@ import { Badge } from "@/components/atoms/badge";
 import { MentorConfigService } from "@/services/mentorConfigService";
 import { MentorshipConfig } from "@/types/mentor";
 import { formatLabel } from "@/utils";
+import React from "react";
 
 export const TIME_SLOTS = [
   "9:00 AM - 10:00 AM",
@@ -108,6 +109,19 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
       mentorshipDetails: {
         ...prev.mentorshipDetails,
         targetAudiences: selectedAudiences,
+      },
+    }));
+  };
+
+  const handleMotivationChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const { value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      mentorshipDetails: {
+        ...prev.mentorshipDetails,
+        motivation: value,
       },
     }));
   };
@@ -218,6 +232,8 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
             id="motivation"
             placeholder="Tell us why you're interested in mentoring and what you hope to achieve..."
             className="min-h-[100px]"
+            value={formData.mentorshipDetails.motivation}
+            onChange={handleMotivationChange}
           />
         </div>
 

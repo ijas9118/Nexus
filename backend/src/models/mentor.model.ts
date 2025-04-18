@@ -2,16 +2,6 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 export interface IMentor extends Document {
   userId: ObjectId;
-  personalInfo: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    location: string;
-    linkedin?: string;
-    github?: string;
-    profilePic?: string | null;
-  };
   experience: {
     currentRole: string;
     company: string;
@@ -41,34 +31,53 @@ const MentorSchema: Schema = new Schema(
       required: true,
       unique: true,
     },
-    personalInfo: {
-      firstName: { type: String, required: true },
-      lastName: { type: String, required: true },
-      email: { type: String, required: true },
-      phone: { type: String, required: true },
-      location: { type: String, required: true },
-      linkedin: { type: String },
-      github: { type: String },
-      profilePic: { type: String, default: null },
-    },
     experience: {
       currentRole: { type: String, required: true },
       company: { type: String, required: true },
-      experienceLevel: { type: String, required: true },
-      expertiseAreas: { type: [String], required: true },
-      technologies: { type: [String], required: true },
+      experienceLevel: {
+        type: Schema.Types.ObjectId,
+        ref: 'MentorshipConfig',
+        required: true,
+      },
+      expertiseAreas: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'MentorshipConfig',
+          required: true,
+        },
+      ],
+      technologies: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'MentorshipConfig',
+          required: true,
+        },
+      ],
       bio: { type: String, required: true },
       resume: { type: String, default: null },
     },
     mentorshipDetails: {
-      mentorshipTypes: [{ type: Schema.Types.ObjectId, ref: 'MentorshipConfig', default: [] }],
-      targetAudiences: [{ type: Schema.Types.ObjectId, ref: 'MentorshipConfig', default: [] }],
+      mentorshipTypes: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'MentorshipConfig',
+          default: [],
+        },
+      ],
+      targetAudiences: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'MentorshipConfig',
+          default: [],
+        },
+      ],
       availabilityType: {
         type: String,
-        enum: ['in-person', 'remote', 'both'],
+        enum: ['weekdays', 'weekend', 'both'],
         default: 'both',
       },
       availableTimeSlots: { type: [String], required: true },
+      motivation: { type: String, default: '' },
     },
     status: {
       type: String,

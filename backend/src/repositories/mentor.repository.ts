@@ -1,7 +1,7 @@
-import { injectable } from 'inversify';
-import { BaseRepository } from '../core/abstracts/base.repository';
-import { IMentorRepository } from '../core/interfaces/repositories/IMentorRepository';
+import { BaseRepository } from '@/core/abstracts/base.repository';
 import { IMentor, MentorModel } from '../models/mentor.model';
+import { IMentorRepository } from '@/core/interfaces/repositories/IMentorRepository';
+import { injectable } from 'inversify';
 
 @injectable()
 export class MentorRepository extends BaseRepository<IMentor> implements IMentorRepository {
@@ -9,32 +9,26 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
     super(MentorModel);
   }
 
-  getAllMentors = async (): Promise<IMentor[]> => {
-    return MentorModel.aggregate([
-      {
-        $lookup: {
-          from: 'users', // The collection to join with (User collection)
-          localField: 'userId', // Field from the Mentor collection
-          foreignField: '_id', // Field from the User collection
-          as: 'user', // Output array field
-        },
-      },
-      {
-        $unwind: '$user', // Convert the "user" array to an object
-      },
-      {
-        $project: {
-          _id: 1,
-          specialization: 1,
-          availability: 1,
-          verified: 1,
-          squadsCreated: 1,
-          rating: 1,
-          name: '$user.name', // Include the name field from the User collection
-          email: '$user.email', // Include the email field from the User collection
-          profilePic: '$user.profilePic', // Include the profilePic field from the User collection
-        },
-      },
-    ]).exec();
+  createMentorApplication = async (
+    userId: string,
+    mentorData: Partial<IMentor>
+  ): Promise<IMentor> => {
+    return this.create({ userId, ...mentorData, status: 'pending' } as Partial<IMentor>);
   };
+
+  findMentorByUserId = async (userId: string): Promise<IMentor | null> => {
+    return await MentorModel.findOne({ userId })
+      .populate('experience.experienceLevel')
+      .populate('experience.expertiseAreas')
+      .populate('experience.technologies')
+      .populate('mentorshipDetails.mentorshipTypes')
+      .populate('mentorshipDetails.targetAudiences');
+  };
+
+  async updateMentorStatus(
+    mentorId: string,
+    status: 'pending' | 'approved' | 'rejected'
+  ): Promise<IMentor | null> {
+    return await MentorModel.findByIdAndUpdate(mentorId, { status }, { new: true });
+  }
 }

@@ -1,6 +1,17 @@
+import { PersonalInfo } from '@/core/types';
+import { IMentor } from '@/models/mentor.model';
+
 export interface IMentorService {
-  completeProfile(email: string, name: string, password: string): unknown;
-  getAllMentors(): unknown;
-  acceptInvitation(token: string): unknown;
-  sendInvitation(email: string, specialization: string, name: string): unknown;
+  applyAsMentor(
+    userId: string,
+    data: {
+      personalInfo: PersonalInfo;
+      experience: IMentor['experience'];
+      mentorshipDetails: IMentor['mentorshipDetails'];
+    }
+  ): Promise<IMentor>;
+
+  approveMentor(mentorId: string, userId: string): Promise<IMentor>;
+
+  rejectMentor(mentorId: string): Promise<IMentor>;
 }

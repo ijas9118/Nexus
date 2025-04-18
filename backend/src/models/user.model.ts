@@ -5,11 +5,12 @@ interface IUser extends Document {
   _id: ObjectId;
   name: string;
   email: string;
+  phone?: string;
+  location?: string;
   password: string;
   profilePic: string;
   profilePicPublicId?: string;
   gender: string;
-  place: string;
   postsCount: number;
   totalViews: number;
   totalLikes: number;
@@ -44,6 +45,8 @@ const UserSchema: Schema = new Schema(
       type: String,
       required: true,
     },
+    location: { type: String },
+    phone: { type: Number },
     profilePic: {
       type: String,
       default:
@@ -53,9 +56,6 @@ const UserSchema: Schema = new Schema(
       type: String,
     },
     gender: {
-      type: String,
-    },
-    place: {
       type: String,
     },
     postsCount: {

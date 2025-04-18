@@ -1,15 +1,17 @@
 import { IMentorController } from '@/core/interfaces/controllers/IMentorController';
 import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
-import { validateRequest } from '@/middlewares/validate.middleware';
-import { completeProfileSchema } from '@/validations/mentor.schema';
+import { authenticate } from '@/middlewares/auth.middleware';
 import { Router } from 'express';
 
 const mentorController = container.get<IMentorController>(TYPES.MentorController);
 
 const router = Router();
 
-router.get('/', mentorController.getAllMentors);
-router.post('/register', validateRequest(completeProfileSchema), mentorController.completeProfile);
+router.post('/apply', authenticate(['admin', 'user']), mentorController.applyAsMentor);
+
+router.patch('/approve/:mentorId/:userId', authenticate(['admin']), mentorController.approveMentor);
+
+router.patch('/reject/:mentorId', authenticate(['admin']), mentorController.rejectMentor);
 
 export default router;

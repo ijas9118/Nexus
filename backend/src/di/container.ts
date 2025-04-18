@@ -56,13 +56,6 @@ import { SquadController } from '../controllers/squad.controller';
 import { IUserController } from '../core/interfaces/controllers/IUserController';
 import { UserController } from '../controllers/user.controller';
 
-import { IMentorRepository } from '../core/interfaces/repositories/IMentorRepository';
-import { MentorRepository } from '../repositories/mentor.repository';
-import { IMentorService } from '../core/interfaces/services/IMentorService';
-import { MentorService } from '../services/mentor.service';
-import { IMentorController } from '../core/interfaces/controllers/IMentorController';
-import { MentorController } from '../controllers/mentor.controller';
-
 import { IHistoryRepository } from '../core/interfaces/repositories/IHistoryRepository';
 import { HistoryRepository } from '../repositories/history.repository';
 import { IHistoryService } from '../core/interfaces/services/IHistoryService';
@@ -135,6 +128,13 @@ import { MentorshipConfigService } from '@/services/mentorship-config.service';
 import { IMentorshipConfigController } from '@/core/interfaces/controllers/IMentorshipConfigController';
 import { MentorshipConfigController } from '@/controllers/mentor-config.controller';
 
+import { IMentorController } from '@/core/interfaces/controllers/IMentorController';
+import { MentorController } from '@/controllers/mentor.controller';
+import { IMentorService } from '@/core/interfaces/services/IMentorService';
+import { MentorService } from '@/services/mentor.service';
+import { IMentorRepository } from '@/core/interfaces/repositories/IMentorRepository';
+import { MentorRepository } from '@/repositories/mentor.repository';
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -171,10 +171,6 @@ container.bind<ICategoryController>(TYPES.CategoryController).to(CategoryControl
 container.bind<ISquadRepository>(TYPES.SquadRepository).to(SquadRepository);
 container.bind<ISquadService>(TYPES.SquadService).to(SquadService);
 container.bind<ISquadController>(TYPES.SquadController).to(SquadController);
-
-container.bind<IMentorRepository>(TYPES.MentorRepository).to(MentorRepository);
-container.bind<IMentorService>(TYPES.MentorService).to(MentorService);
-container.bind<IMentorController>(TYPES.MentorController).to(MentorController);
 
 container.bind<IHistoryRepository>(TYPES.HistoryRepository).to(HistoryRepository);
 container.bind<IHistoryService>(TYPES.HistoryService).to(HistoryService);
@@ -217,5 +213,9 @@ container.bind<IMentorshipConfigService>(TYPES.MentorshipConfigService).to(Mento
 container
   .bind<IMentorshipConfigController>(TYPES.MentorshipConfigController)
   .to(MentorshipConfigController);
+
+container.bind<IMentorController>(TYPES.MentorController).to(MentorController);
+container.bind<IMentorService>(TYPES.MentorService).to(MentorService);
+container.bind<IMentorRepository>(TYPES.MentorRepository).to(MentorRepository);
 
 export { container };
