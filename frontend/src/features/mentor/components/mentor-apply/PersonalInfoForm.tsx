@@ -11,8 +11,10 @@ import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
 import { ArrowRight, Github, Linkedin } from "lucide-react";
 import FileUpload from "./FileUpload";
-import React from "react";
+import React, { useEffect } from "react";
 import { useMentorForm } from "@/context/MentorFormContext";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 interface PersonalInfoFormProps {
   onContinue: () => void;
@@ -20,6 +22,31 @@ interface PersonalInfoFormProps {
 
 const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
   const { formData, setFormData } = useMentorForm();
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  useEffect(() => {
+    if (user) {
+      const [firstName, ...rest] = user.name?.split(" ") ?? [];
+      const lastName = rest.join(" ");
+
+      const findSocial = (platform: string) =>
+        user.socials?.find((s) => s.platform === platform)?.url || "";
+
+      setFormData((prev) => ({
+        ...prev,
+        personalInfo: {
+          ...prev.personalInfo,
+          firstName,
+          lastName,
+          email: user.email || "",
+          location: user.location || "",
+          linkedin: findSocial("linkedin"),
+          github: findSocial("github"),
+          phone: user.phone || "",
+        },
+      }));
+    }
+  }, [user, setFormData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -67,7 +94,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
             type="email"
             placeholder="Enter your email address"
             value={formData.personalInfo.email}
-            onChange={handleChange}
+            disabled
           />
         </div>
 

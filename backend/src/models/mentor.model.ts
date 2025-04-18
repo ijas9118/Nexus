@@ -1,3 +1,4 @@
+import { MentorStatus } from '@/core/types';
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 export interface IMentor extends Document {
@@ -18,7 +19,7 @@ export interface IMentor extends Document {
     availableTimeSlots: string[];
     motivation: string;
   };
-  status: 'pending' | 'approved' | 'rejected';
+  status: MentorStatus;
   createdAt: Date;
   updatedAt: Date;
 }

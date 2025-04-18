@@ -31,4 +31,11 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
   ): Promise<IMentor | null> {
     return await MentorModel.findByIdAndUpdate(mentorId, { status }, { new: true });
   }
+
+  getAllMentors = async (): Promise<IMentor[] | null> => {
+    return await MentorModel.find().select('status createdAt userId').populate({
+      path: 'userId',
+      select: 'name email username profilePic',
+    });
+  };
 }

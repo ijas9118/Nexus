@@ -2,7 +2,7 @@ import { BaseService } from '@/core/abstracts/base.service';
 import { IMentorRepository } from '@/core/interfaces/repositories/IMentorRepository';
 import { IUserRepository } from '@/core/interfaces/repositories/IUserRepository';
 import { IMentorService } from '@/core/interfaces/services/IMentorService';
-import { PersonalInfo } from '@/core/types';
+import { MentorStatus, PersonalInfo } from '@/core/types';
 import { TYPES } from '@/di/types';
 import { IMentor } from '@/models/mentor.model';
 import CustomError from '@/utils/CustomError';
@@ -72,5 +72,19 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
       throw new CustomError('Mentor application not found.');
     }
     return mentor;
+  };
+
+  getStatus = async (userId: string): Promise<MentorStatus | null> => {
+    const mentor = await this.findOne({ userId });
+
+    if (!mentor) {
+      return null; // User hasn't applied yet
+    }
+
+    return mentor.status;
+  };
+
+  getAllMentors = async (): Promise<IMentor[] | null> => {
+    return await this.mentorRepository.getAllMentors();
   };
 }

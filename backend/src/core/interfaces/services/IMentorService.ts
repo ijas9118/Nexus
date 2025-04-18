@@ -1,4 +1,4 @@
-import { PersonalInfo } from '@/core/types';
+import { MentorStatus, PersonalInfo } from '@/core/types';
 import { IMentor } from '@/models/mentor.model';
 
 export interface IMentorService {
@@ -14,4 +14,8 @@ export interface IMentorService {
   approveMentor(mentorId: string, userId: string): Promise<IMentor>;
 
   rejectMentor(mentorId: string): Promise<IMentor>;
+
+  getStatus(userId: string): Promise<MentorStatus | null>;
+
+  getAllMentors(): Promise<IMentor[] | null>;
 }

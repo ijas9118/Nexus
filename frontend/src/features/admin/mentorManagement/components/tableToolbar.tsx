@@ -10,7 +10,6 @@ import { ChevronDown, Plus } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import { FacetedFilter } from "./faceted-filter";
 import { useState } from "react";
-import { CreateMentorDialog } from "./CreateMentorDialog";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -44,14 +43,6 @@ export function DataTableToolbar<TData>({
         )}
       </div>
       <div className="flex items-center space-x-2">
-        <Button variant="secondary" onClick={() => setIsDialogOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Invite Mentor
-        </Button>
-        <CreateMentorDialog
-          open={isDialogOpen}
-          onOpenChange={setIsDialogOpen}
-        />
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

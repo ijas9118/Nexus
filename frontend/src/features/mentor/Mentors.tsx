@@ -2,10 +2,12 @@ import { Button } from "@/components/atoms/button";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { data, Link } from "react-router-dom";
 import MentorFilters from "./components/MentorFilters";
 import SearchAndSort from "./components/SearchAndSort";
 import MentorCard from "./components/MentorCard";
+import { useQuery } from "@tanstack/react-query";
+import MentorService from "@/services/mentorService";
 
 export interface Mentor {
   id: number;
@@ -106,6 +108,21 @@ const Mentors = () => {
     );
   }, [dispatch]);
 
+  const {
+    data: mentorStatus,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["mentor-status"],
+    queryFn: () => MentorService.getStatus(),
+    staleTime: 1000 * 60 * 5, // optional: 5 minutes
+  });
+
+  console.log(mentorStatus);
+
+  if (isLoading) return <p>Loading mentor status...</p>;
+  if (isError) return <p>Failed to load mentor status</p>;
+
   return (
     <div className="container mx-auto py-8 px-4 md:px-6 max-w-7xl">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -118,9 +135,23 @@ const Mentors = () => {
           </p>
         </div>
         <div className="flex gap-2">
-          <Link to="/mentors/apply">
-            <Button>Become a Mentor</Button>
-          </Link>
+          {!mentorStatus && (
+            <Link to="/mentors/apply">
+              <Button>Become a Mentor</Button>
+            </Link>
+          )}
+
+          {mentorStatus === "pending" && (
+            <p className="text-sm text-muted-foreground italic">
+              Your mentor application is under review.
+            </p>
+          )}
+
+          {mentorStatus === "approved" && (
+            <p className="text-sm text-green-600 font-medium">
+              You're already a mentor!
+            </p>
+          )}
         </div>
       </div>
 

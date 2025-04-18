@@ -1,33 +1,5 @@
+import { MentorFormData } from "@/types/mentor";
 import React, { createContext, useContext, useState } from "react";
-
-interface MentorFormData {
-  personalInfo: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    location: string;
-    linkedin: string;
-    github: string;
-    profilePhoto: File | null;
-  };
-  experience: {
-    currentRole: string;
-    company: string;
-    experienceLevel: string;
-    expertiseAreas: string[];
-    technologies: string[];
-    bio: string;
-    resume: File | null;
-  };
-  mentorshipDetails: {
-    mentorshipTypes: string[];
-    targetAudiences: string[];
-    availabilityType: string;
-    availableTimeSlots: string[];
-    motivation: string;
-  };
-}
 
 interface MentorFormContextType {
   formData: MentorFormData;

@@ -80,6 +80,8 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
     value: string,
     checked: boolean,
   ) => {
+    console.log(value);
+
     setFormData((prev) => {
       const currentValues = prev.experience[field];
       const updatedValues = checked

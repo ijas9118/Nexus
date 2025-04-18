@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import CheckboxGroup from "./CheckboxGroup";
 import { useMentorForm } from "@/context/MentorFormContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import MentorService from "@/services/admin/mentorService";
+import MentorService from "@/services/mentorService";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/atoms/radio-group";
 import { Badge } from "@/components/atoms/badge";
@@ -79,8 +79,7 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
   };
 
   const mutation = useMutation({
-    mutationFn: (data: typeof formData) =>
-      MentorService.createMentorApplication(data),
+    mutationFn: (data: typeof formData) => MentorService.applyAsMentor(data),
     onSuccess: () => {
       toast("Application submitted", {
         description: "We've received your mentor application.",

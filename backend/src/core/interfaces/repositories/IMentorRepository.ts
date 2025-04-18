@@ -10,4 +10,6 @@ export interface IMentorRepository extends BaseRepository<IMentor> {
     mentorId: string,
     status: 'pending' | 'approved' | 'rejected'
   ): Promise<IMentor | null>;
+
+  getAllMentors(): Promise<IMentor[] | null>;
 }

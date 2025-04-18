@@ -13,10 +13,7 @@ import { Mentor } from "@/types/mentor";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-export const columns = (
-  resendInvite: (email: string) => void,
-  revokeMentor: (id: string) => void,
-): ColumnDef<Mentor>[] => [
+export const columns: ColumnDef<Mentor>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -38,6 +35,21 @@ export const columns = (
     ),
     enableSorting: false,
     enableHiding: false,
+  },
+  {
+    accessorKey: "profilePic",
+    header: "Profile",
+    cell: ({ row }) => {
+      const profilePic = row.getValue("profilePic") as string;
+      return (
+        <img
+          src={profilePic || "https://avatar.iran.liara.run/public"}
+          alt="Profile"
+          className="w-10 h-10 rounded-full object-cover"
+        />
+      );
+    },
+    enableSorting: false,
   },
   {
     accessorKey: "name",
@@ -64,13 +76,6 @@ export const columns = (
         </Button>
       );
     },
-  },
-  {
-    accessorKey: "specialization",
-    header: "Specialization",
-    cell: ({ row }) => (
-      <div className="text-center">{row.getValue("specialization")}</div>
-    ),
   },
   {
     accessorKey: "status",
@@ -110,15 +115,6 @@ export const columns = (
               Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            {mentor.status === "pending" ? (
-              <DropdownMenuItem onClick={() => resendInvite(mentor.email)}>
-                Resend Invite
-              </DropdownMenuItem>
-            ) : (
-              <DropdownMenuItem onClick={() => revokeMentor(mentor._id)}>
-                Revoke Mentor
-              </DropdownMenuItem>
-            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );

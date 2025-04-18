@@ -8,3 +8,5 @@ export type PersonalInfo = {
   github?: string;
   profilePic?: string | null;
 };
+
+export type MentorStatus = 'pending' | 'approved' | 'rejected';

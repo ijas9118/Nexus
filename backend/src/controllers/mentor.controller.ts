@@ -10,7 +10,7 @@ import { StatusCodes } from 'http-status-codes';
 export class MentorController implements IMentorController {
   constructor(@inject(TYPES.MentorService) private mentorService: IMentorService) {}
 
-  applyAsMentor = asyncHandler(async (req: Request, res: Response) => {
+  applyAsMentor = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
     console.log('CONt', userId);
     const mentorData = req.body;
@@ -19,15 +19,26 @@ export class MentorController implements IMentorController {
     res.status(StatusCodes.CREATED).json({ success: true, data: mentor });
   });
 
-  approveMentor = asyncHandler(async (req: Request, res: Response) => {
+  approveMentor = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { mentorId, userId } = req.params;
     const mentor = await this.mentorService.approveMentor(mentorId, userId);
     res.status(StatusCodes.OK).json({ success: true, data: mentor });
   });
 
-  rejectMentor = asyncHandler(async (req: Request, res: Response) => {
+  rejectMentor = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { mentorId } = req.params;
     const mentor = await this.mentorService.rejectMentor(mentorId);
     res.status(StatusCodes.OK).json({ success: true, data: mentor });
+  });
+
+  getStatus = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
+    const status = await this.mentorService.getStatus(userId);
+    res.status(StatusCodes.OK).json(status);
+  });
+
+  getAllMentors = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const mentors = await this.mentorService.getAllMentors();
+    res.status(StatusCodes.OK).json(mentors);
   });
 }

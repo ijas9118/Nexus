@@ -9,7 +9,7 @@ import {
 } from "@/components/molecules/card";
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
-import MentorService from "@/services/admin/mentorService";
+import MentorService from "@/services/mentorService";
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";

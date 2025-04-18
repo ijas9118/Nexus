@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
-import MentorService from "@/services/admin/mentorService";
+import MentorService from "@/services/mentorService";
 import { Check, Users, Calendar, Clock } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
