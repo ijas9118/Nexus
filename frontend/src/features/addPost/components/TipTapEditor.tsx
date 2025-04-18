@@ -242,12 +242,12 @@ export function TipTapEditor({ content, onChange }: TipTapEditorProps) {
         <TabsContent value="write" className="p-0">
           <EditorContent
             editor={editor}
-            className="prose prose-sm max-w-none p-4 focus-visible:outline-none min-h-[300px] focus:outline-none"
+            className="prose prose-sm max-w-none p-4 text-primary focus-visible:outline-none min-h-[300px] focus:outline-none"
           />
         </TabsContent>
         <TabsContent value="preview" className="p-0">
           <div
-            className="prose prose-sm max-w-none p-4 min-h-[300px]"
+            className="prose prose-sm max-w-none p-4 min-h-[300px] text-primary"
             dangerouslySetInnerHTML={{
               __html:
                 content ||

@@ -41,4 +41,10 @@ export class MentorController implements IMentorController {
     const mentors = await this.mentorService.getAllMentors();
     res.status(StatusCodes.OK).json(mentors);
   });
+
+  getMentorDetails = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const mentorId = req.params.mentorId;
+    const mentor = await this.mentorService.getMentorDetails(mentorId);
+    res.status(StatusCodes.OK).json(mentor);
+  });
 }

@@ -102,6 +102,8 @@ export function BlogCreationForm() {
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
   const progress = ((currentStep + 1) / steps.length) * 100;
 
+  console.log(isPremium);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-10">
       <div className="lg:col-span-2">
@@ -212,7 +214,7 @@ export function BlogCreationForm() {
           contentType={contentType}
           title={title}
           thumbnailPreview={thumbnailPreview}
-          isPremium
+          isPremium={isPremium}
           content={content}
         />
       </div>

@@ -1,3 +1,5 @@
+import { UserInterface } from "./user";
+
 export interface Mentor {
   _id: string;
   name: string;
@@ -48,4 +50,28 @@ export interface MentorFormData {
     availableTimeSlots: string[];
     motivation: string;
   };
+}
+
+export interface MentorApplication {
+  _id: string;
+  userId: UserInterface;
+  experience: {
+    currentRole: string;
+    company: string;
+    experienceLevel: MentorshipConfig;
+    expertiseAreas: MentorshipConfig[];
+    technologies: MentorshipConfig[];
+    bio: string;
+    resume: string | null;
+  };
+  mentorshipDetails: {
+    mentorshipTypes: MentorshipConfig[];
+    targetAudiences: MentorshipConfig[];
+    availabilityType: "weekdays" | "weekend" | "both";
+    availableTimeSlots: string[];
+    motivation: string;
+  };
+  status: "pending" | "approved" | "rejected";
+  createdAt: string;
+  updatedAt: string;
 }

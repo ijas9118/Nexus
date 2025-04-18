@@ -6,10 +6,9 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import { ChevronDown, Plus } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import { FacetedFilter } from "./faceted-filter";
-import { useState } from "react";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -18,8 +17,6 @@ interface DataTableToolbarProps<TData> {
 export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
   return (
     <div className="flex items-center justify-between py-4">
       <div className="flex flex-1 items-center space-x-2">

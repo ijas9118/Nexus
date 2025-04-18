@@ -60,7 +60,7 @@ export function ContentPreview({
             </div>
           )}
           <div
-            className="prose prose-sm max-w-none"
+            className="prose prose-sm max-w-none text-primary"
             dangerouslySetInnerHTML={{
               __html: content || "<p>No content available</p>",
             }}

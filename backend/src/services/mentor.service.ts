@@ -87,4 +87,8 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
   getAllMentors = async (): Promise<IMentor[] | null> => {
     return await this.mentorRepository.getAllMentors();
   };
+
+  getMentorDetails = async (mentorId: string): Promise<IMentor | null> => {
+    return await this.mentorRepository.getMentorDetails(mentorId);
+  };
 }

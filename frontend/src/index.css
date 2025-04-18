@@ -143,6 +143,15 @@
   outline: none;
 }
 
+.prose strong,
+.prose b,
+.prose h1,
+.prose h2,
+.prose h3 {
+  color: inherit; /* 👈 this is key */
+  font-weight: bold;
+}
+
 @keyframes gradientX {
   0%,
   100% {

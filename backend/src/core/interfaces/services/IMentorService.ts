@@ -18,4 +18,6 @@ export interface IMentorService {
   getStatus(userId: string): Promise<MentorStatus | null>;
 
   getAllMentors(): Promise<IMentor[] | null>;
+
+  getMentorDetails(mentorId: string): Promise<IMentor | null>;
 }

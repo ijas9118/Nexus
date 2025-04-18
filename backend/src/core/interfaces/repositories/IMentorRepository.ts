@@ -12,4 +12,6 @@ export interface IMentorRepository extends BaseRepository<IMentor> {
   ): Promise<IMentor | null>;
 
   getAllMentors(): Promise<IMentor[] | null>;
+
+  getMentorDetails(mentorId: string): Promise<IMentor | null>;
 }

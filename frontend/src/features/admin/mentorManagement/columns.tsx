@@ -112,9 +112,12 @@ export const columns: ColumnDef<Mentor>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => console.log(mentor._id)}>
-              Edit
+              View
             </DropdownMenuItem>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => console.log(mentor._id)}>
+              Edit
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

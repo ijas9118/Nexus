@@ -15,6 +15,7 @@ const ContentSummary: React.FC<ContentSummaryProps> = ({
   isPremium,
   content,
 }) => {
+  console.log(isPremium);
   const getTextContentLength = (html: string): number => {
     if (!html) return 0;
     // Remove HTML tags, leaving only the text content

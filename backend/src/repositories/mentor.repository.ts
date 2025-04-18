@@ -38,4 +38,14 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
       select: 'name email username profilePic',
     });
   };
+
+  getMentorDetails = async (mentorId: string): Promise<IMentor | null> => {
+    return await MentorModel.findById(mentorId)
+      .populate('userId', 'name email profilePic username location') // 👈 pick what you need
+      .populate('experience.experienceLevel')
+      .populate('experience.expertiseAreas')
+      .populate('experience.technologies')
+      .populate('mentorshipDetails.mentorshipTypes')
+      .populate('mentorshipDetails.targetAudiences');
+  };
 }
