@@ -10,11 +10,11 @@ const historyController = container.get<IHistoryController>(TYPES.HistoryControl
 
 const router = Router();
 
-router.get('/', authenticate(['user', 'premium']), historyController.getAllHistory);
+router.get('/', authenticate(['user', 'premium', 'mentor']), historyController.getAllHistory);
 
 router.post(
   '/remove/',
-  authenticate(['user', 'premium']),
+  authenticate(['user', 'premium', 'mentor']),
   validateRequest(removeFromHistorySchema),
   historyController.removeFromHistory
 );

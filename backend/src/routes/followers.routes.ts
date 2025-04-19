@@ -21,27 +21,27 @@ const router = Router();
 
 router.post(
   '/follow',
-  authenticate(['user', 'premium']),
+  authenticate(['user', 'premium', 'mentor']),
   validateRequest(followUserSchema),
   followersController.followUser
 );
 
 router.post(
   '/unfollow',
-  authenticate(['user', 'premium']),
+  authenticate(['user', 'premium', 'mentor']),
   validateRequest(followUserSchema),
   followersController.unfollowUser
 );
 
 router.get(
   '/:userId/followers',
-  authenticate(['user', 'premium']),
+  authenticate(['user', 'premium', 'mentor']),
   followersController.getFollowers
 );
 
 router.get(
   '/:userId/following',
-  authenticate(['user', 'premium']),
+  authenticate(['user', 'premium', 'mentor']),
   followersController.getFollowing
 );
 
@@ -49,41 +49,41 @@ router.post('/is-following', validateRequest(isFollowingSchema), followersContro
 
 router.post(
   '/connect',
-  authenticate(['user', 'premium']),
+  authenticate(['user', 'premium', 'mentor']),
   validateRequest(sendConnectionSchema),
   connectionsController.sendConnectionRequest
 );
 
 router.post(
   '/accept',
-  authenticate(['user', 'premium']),
+  authenticate(['user', 'premium', 'mentor']),
   validateRequest(acceptConnectionSchema),
   connectionsController.acceptConnectionRequest
 );
 
 router.post(
   '/has-requested',
-  authenticate(['user', 'premium']),
+  authenticate(['user', 'premium', 'mentor']),
   connectionsController.hasSentConnectionRequest
 );
 
 router.post(
   '/is-connected',
-  authenticate(['user', 'premium']),
+  authenticate(['user', 'premium', 'mentor']),
   validateRequest(isConnectedSchema),
   connectionsController.isConnected
 );
 
 router.post(
   '/withdraw',
-  authenticate(['user', 'premium']),
+  authenticate(['user', 'premium', 'mentor']),
   validateRequest(withdrawConnectionSchema),
   connectionsController.withdrawConnectionRequest
 );
 
 router.get(
   '/connections',
-  authenticate(['user', 'premium']),
+  authenticate(['user', 'premium', 'mentor']),
   connectionsController.searchConnections
 );
 
@@ -93,6 +93,10 @@ router.get(
   connectionsController.getAllConnections
 );
 
-router.get('/pending', authenticate(['user', 'premium']), connectionsController.getPendingRequests);
+router.get(
+  '/pending',
+  authenticate(['user', 'premium', 'mentor']),
+  connectionsController.getPendingRequests
+);
 
 export default router;
