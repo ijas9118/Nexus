@@ -9,6 +9,8 @@ import bcrypt from 'bcrypt';
 import { ISquad } from '../models/squads.model';
 import { Express } from 'express';
 import { deleteFromCloudinary, uploadToCloudinary } from '@/utils/cloudinaryUtils';
+import { IContent } from '@/models/content.model';
+import { IContentRepository } from '@/core/interfaces/repositories/IContentRepository';
 
 interface UserUpdateData {
   profilePic?: string;
@@ -17,7 +19,10 @@ interface UserUpdateData {
 
 @injectable()
 export class UserService extends BaseService<IUser> implements IUserService {
-  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {
+  constructor(
+    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
+    @inject(TYPES.ContentRepository) private contentRepo: IContentRepository
+  ) {
     super(userRepository);
   }
 
@@ -123,6 +128,17 @@ export class UserService extends BaseService<IUser> implements IUserService {
   }
 
   async getUserByUsername(username: string): Promise<IUser | null> {
-    return this.userRepository.findOne({ username });
+    return this.userRepository.getUserByUsername(username);
   }
+
+  getUserContents = async (username: string): Promise<IContent[] | null> => {
+    const userId = await this.userRepository.getUserIdByUsername(username);
+    if (!userId) {
+      throw new Error('User not found');
+    }
+
+    const contents = await this.contentRepo.getUserContents(userId);
+
+    return contents;
+  };
 }

@@ -16,11 +16,6 @@ interface IUser extends Document {
   totalLikes: number;
   bio: string;
   joinedSquads: mongoose.Types.ObjectId[];
-  streak: {
-    current: number;
-    longest: number;
-    total: number;
-  };
   skills: string[];
   socials: [{ platform: string; url: string }];
   role: UserRole;
@@ -79,20 +74,6 @@ const UserSchema: Schema = new Schema(
         ref: 'Squad',
       },
     ],
-    streak: {
-      current: {
-        type: Number,
-        default: 0,
-      },
-      longest: {
-        type: Number,
-        default: 0,
-      },
-      total: {
-        type: Number,
-        default: 0,
-      },
-    },
     skills: {
       type: [String],
     },

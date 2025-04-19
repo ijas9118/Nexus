@@ -1,7 +1,7 @@
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
-import { updatePassword } from "@/services/user/profileService";
+import ProfileService from "@/services/user/profileService";
 import { Lock, Trash2, Unlink } from "lucide-react";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -41,7 +41,7 @@ const SecurityForm: FC = () => {
 
     try {
       console.log("Updating Password...", data);
-      await updatePassword(data);
+      await ProfileService.updatePassword(data);
       toast.success("Your password is updated.");
     } catch (error: any) {
       console.error("Failed to update password", error);

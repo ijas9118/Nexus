@@ -79,4 +79,13 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   async getUserByRoleAndId(role: string, id: string): Promise<IUser | null> {
     return UserModel.findOne({ _id: id, role }).exec();
   }
+
+  getUserByUsername = async (username: string): Promise<IUser | null> => {
+    return this.findOne({ username });
+  };
+
+  getUserIdByUsername = async (username: string): Promise<string | null> => {
+    const user = await this.findOne({ username });
+    return user ? user._id.toString() : null;
+  };
 }

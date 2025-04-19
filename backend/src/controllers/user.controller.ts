@@ -52,4 +52,15 @@ export class UserController implements IUserController {
 
     res.status(200).json({ id: updatedUser._id, profilePic: updatedUser.profilePic });
   });
+
+  getUserContents = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const username = req.body.username;
+
+    if (!username) {
+      throw new CustomError('Username is required', StatusCodes.BAD_REQUEST);
+    }
+
+    const contents = await this.userService.getUserContents(username);
+    res.status(StatusCodes.OK).json(contents);
+  });
 }

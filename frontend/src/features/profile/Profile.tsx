@@ -1,4 +1,3 @@
-import { getUserProfile } from "@/services/user/profileService";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +15,7 @@ import { toast } from "sonner";
 import ProfileActivity from "./components/ProfileActivity";
 import ProfileHeader from "./components/ProfileHeader";
 import SquadsList from "./components/SquadsList";
+import ProfileService from "@/services/user/profileService";
 
 export default function ProfilePage() {
   const { username } = useParams();
@@ -30,8 +30,9 @@ export default function ProfilePage() {
 
     const fetchUser = async () => {
       try {
-        const data = await getUserProfile(username);
+        const data = await ProfileService.getUserProfile(username);
         setProfileUser(data);
+        console.log(data);
 
         if (currentUser !== data?._id) {
           const followingStatus = await checkIsFollowing(currentUser, data._id);
@@ -76,7 +77,9 @@ export default function ProfilePage() {
 
       // Toggle the state and refetch user details
       setIsFollowing(!isFollowing);
-      const updatedUser = await getUserProfile(username as string);
+      const updatedUser = await ProfileService.getUserProfile(
+        username as string,
+      );
       setProfileUser(updatedUser);
     } catch (err: any) {
       console.error("Error updating follow status:", err);
@@ -104,7 +107,9 @@ export default function ProfilePage() {
 
       // Toggle the state and refetch user details
       setIsConnected(!isConnected);
-      const updatedUser = await getUserProfile(username as string);
+      const updatedUser = await ProfileService.getUserProfile(
+        username as string,
+      );
       setProfileUser(updatedUser);
     } catch (err: any) {
       console.error("Error updating follow status:", err);
@@ -115,12 +120,12 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="container mx-auto max-w-4xl px-6 h-full border-x-[1px] py-8 space-y-8">
-      <div className="grid gap-6 lg:grid-cols-[1fr,0.6fr]">
-        <div className="space-y-6">
+    <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 h-full space-y-6">
+      <div className="grid gap-4 lg:grid-cols-[1fr,0.6fr] h-full">
+        <div className="space-y-6 py-8">
           <ProfileActivity />
         </div>
-        <div className="space-y-6">
+        <div className="space-y-6 px-4 h-full py-8">
           <ProfileHeader
             profileUser={profileUser}
             isFollowing={isFollowing}

@@ -2,7 +2,7 @@ import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
 import { Textarea } from "@/components/atoms/textarea";
-import { updateProfile } from "@/services/user/profileService";
+import ProfileService from "@/services/user/profileService";
 import { updateUserProfile } from "@/store/slices/authSlice";
 import { Edit, Link, Loader2 } from "lucide-react";
 import React, { useRef, useState } from "react";
@@ -84,7 +84,7 @@ const ProfileForm = () => {
     };
 
     try {
-      await updateProfile(formattedData);
+      await ProfileService.updateProfile(formattedData);
       dispatch(updateUserProfile(formattedData));
       toast("Wohoo!", {
         description: "Your profile updated.",

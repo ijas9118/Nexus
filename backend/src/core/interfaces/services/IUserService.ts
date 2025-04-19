@@ -1,3 +1,4 @@
+import { IContent } from '@/models/content.model';
 import { UsersDTO } from '../../../dtos/responses/admin/users.dto';
 import { ISquad } from '../../../models/squads.model';
 import { IUser } from '../../../models/user.model';
@@ -21,4 +22,6 @@ export interface IUserService {
   ): Promise<boolean>;
 
   updateProfilePic(userId: string, data: any, file?: Express.Multer.File): Promise<any>;
+
+  getUserContents(username: string): Promise<IContent[] | null>;
 }

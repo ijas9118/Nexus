@@ -1,5 +1,6 @@
 import { Button } from "@/components/atoms/button";
 import { Card } from "@/components/molecules/card";
+import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -52,14 +53,14 @@ export default function ProfileHeader({
         )}
       </div>
       <Card className="p-6">
-        <div className="mb-4 flex justify-start bg-red-200 rounded-lg">
+        <div className="mb-4 flex justify-start bg-blue-400/40 rounded-lg">
           <img
             alt="Profile picture"
             src={
               profileUser.profilePic ||
               "https://randomuser.me/api/portraits/men/4.jpg"
             }
-            className="rounded-lg outline outline-4 outline-white bg-white dark:outline-black"
+            className="rounded-lg border outline outline-4 outline-white bg-white dark:outline-black"
             width="80"
           />
         </div>
@@ -67,11 +68,8 @@ export default function ProfileHeader({
           {profileUser.name}
         </h1>
         <p className="text-start text-sm text-muted-foreground">
-          @{profileUser.username} · Joined{" "}
-          {/* {new Date(profileUser.joinedAt).toLocaleDateString("en-US", {
-            month: "long",
-            year: "numeric",
-          })} */}
+          @{profileUser.username} · Joined on{" "}
+          {dayjs(profileUser.joinedAt).format("MMMM, YYYY")}
         </p>
         <div className="flex text-center justify-start gap-4 text-sm text-muted-foreground py-4">
           <div>

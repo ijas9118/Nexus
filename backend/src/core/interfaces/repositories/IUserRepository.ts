@@ -13,4 +13,6 @@ export interface IUserRepository extends BaseRepository<IUser> {
   getUserByRoleAndId(role: string, id: string): Promise<IUser | null>;
   findByGoogleId(googleId: string): Promise<IUser | null>;
   findByGithubId(githubId: string): Promise<IUser | null>;
+  getUserByUsername(username: string): Promise<IUser | null>;
+  getUserIdByUsername(username: string): Promise<string | null>;
 }

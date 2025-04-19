@@ -29,6 +29,12 @@ router.put(
   userController.updateProfilePic
 );
 
-router.post('/:username', userController.getUserData);
+router.get('/:username', userController.getUserData);
+
+router.post(
+  '/contents',
+  authenticate(['user', 'premium', 'mentor']),
+  userController.getUserContents
+);
 
 export default router;

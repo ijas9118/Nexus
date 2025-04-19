@@ -3,9 +3,8 @@ import api from "./api";
 import { MentorApplication, MentorFormData } from "@/types/mentor";
 
 const MentorService = {
-  applyAsMentor: (formData: MentorFormData) => {
-    handleApi(() => api.post("/mentor/apply", formData));
-  },
+  applyAsMentor: (formData: MentorFormData) =>
+    handleApi(() => api.post("/mentor/apply", formData)),
 
   getStatus: () => handleApi(() => api.get("/mentor/get-status")),
 

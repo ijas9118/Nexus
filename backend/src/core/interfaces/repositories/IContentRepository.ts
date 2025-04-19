@@ -8,4 +8,5 @@ export interface IContentRepository extends BaseRepository<IContent> {
   verifyContent(contentId: string): Promise<IContent | null>;
   getFollowingUsersContents(userId: string): Promise<IContent[]>;
   getContentCount(): Promise<number>;
+  getUserContents(userId: string): Promise<IContent[] | null>;
 }
