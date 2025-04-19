@@ -17,7 +17,11 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { Collapsible } from "../molecules/collapsible";
-import { items, networkItems } from "@/utils/sidebarLinks";
+import {
+  getSidebarItems,
+  mentorItems,
+  networkItems,
+} from "@/utils/sidebarLinks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { useNavigate } from "react-router-dom";
 import useLogout from "@/hooks/useLogout";
@@ -33,6 +37,7 @@ export function AppSidebar() {
   const navigate = useNavigate();
   const logoutUser = useLogout();
   const user = useSelector((state: RootState) => state.auth.user);
+  const items = getSidebarItems(user?.role as string);
   const dispatch = useDispatch();
 
   const handleMenuClick = (url: string, title: string) => {
@@ -83,6 +88,12 @@ export function AppSidebar() {
           <CollapsibleComponent title="Network" items={networkItems} />
         </Collapsible>
 
+        {user?.role === "mentor" && (
+          <Collapsible defaultOpen className="group/collapsible">
+            <CollapsibleComponent title="Mentor Tools" items={mentorItems} />
+          </Collapsible>
+        )}
+
         <SquadSubmenu />
       </SidebarContent>
 
@@ -98,7 +109,9 @@ export function AppSidebar() {
                   </Avatar>
                   <div className="flex flex-col">
                     <span className="text-sm">{user?.name}</span>
-                    {/* <span className="text-xs text-neutral-500">@ijasahmmed</span> */}
+                    <span className="text-xs text-neutral-500">
+                      @{user?.username}
+                    </span>
                   </div>
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>

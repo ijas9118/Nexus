@@ -15,7 +15,7 @@ import MentorBooking from "./components/mentor-profile/MentorBooking";
 import MentorMessage from "./components/mentor-profile/MentorMessage";
 import MentorSquads from "./components/mentor-profile/MentorSquads";
 
-const MentorProfilePage = () => {
+const MentorDetailPage = () => {
   const { mentorId } = useParams<{ mentorId: string }>();
   const id = Number.parseInt(mentorId || "");
 
@@ -69,4 +69,4 @@ const MentorProfilePage = () => {
   );
 };
 
-export default MentorProfilePage;
+export default MentorDetailPage;
