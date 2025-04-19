@@ -8,15 +8,23 @@ import { Router } from 'express';
 const userController = container.get<UserController>(TYPES.UserController);
 const router = Router();
 
-router.get('/squads', authenticate(['user', 'premium']), userController.getUserJoinedSquads);
+router.get(
+  '/squads',
+  authenticate(['user', 'premium', 'mentor']),
+  userController.getUserJoinedSquads
+);
 
-router.post('/update', authenticate(['user', 'premium']), userController.updateUser);
+router.post('/update', authenticate(['user', 'premium', 'mentor']), userController.updateUser);
 
-router.post('/update/password', authenticate(['user', 'premium']), userController.updatePassword);
+router.post(
+  '/update/password',
+  authenticate(['user', 'premium', 'mentor']),
+  userController.updatePassword
+);
 
 router.put(
   '/update/profile-pic',
-  authenticate(['user', 'premium']),
+  authenticate(['user', 'premium', 'mentor']),
   upload.single('profilePic'),
   userController.updateProfilePic
 );

@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 
 export const formatLastMessageTime = (date: string) => {
-  console.log(date);
   const messageDate = dayjs(date);
   const now = dayjs();
 

@@ -19,7 +19,7 @@ import EditProfile from "@/features/profile/EditProfileLayout";
 import Following from "@/features/content/Following";
 import Mentors from "@/features/mentor/Mentors";
 import MentorApply from "@/features/mentor/MentorApply";
-import MentorProfilePage from "@/features/mentor/MentorProfilePage";
+import MentorProfilePage from "@/features/mentor/MentorDetailPage";
 import BookSession from "@/features/mentor/BookSession";
 import { MentorFormProvider } from "@/context/MentorFormContext";
 import AddPost from "@/features/addPost/AddPost";

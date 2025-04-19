@@ -28,6 +28,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/molecules/tooltip";
+import Mentor from "@/components/icons/Mentor";
 
 export default function Layout() {
   const navigate = useNavigate();
@@ -72,7 +73,18 @@ export default function Layout() {
             </div>
             <div className="flex items-center gap-4">
               <ModeToggle />
-              {user?.isPremium && (
+              {user?.isPremium && user.role === "mentor" ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Mentor />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Mentor</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>

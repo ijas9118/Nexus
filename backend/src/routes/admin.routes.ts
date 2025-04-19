@@ -11,7 +11,7 @@ const router = Router();
 
 router.use('/', adminAuthRoutes);
 router.use('/user', adminUserRoutes);
-router.use('/category', authenticate(['admin', 'user', 'premium']), adminCategoryRoutes);
+router.use('/category', authenticate(['admin', 'user', 'premium', 'mentor']), adminCategoryRoutes);
 router.use('/squad', authenticate(['admin']), adminSquadRoutes);
 router.use('/comment', authenticate(['admin']), adminCommentRoutes);
 router.use('/content', authenticate(['admin']), adminContentRoutes);
