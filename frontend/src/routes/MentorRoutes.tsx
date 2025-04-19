@@ -1,4 +1,4 @@
-import MenteeRequests from "@/features/menteeRequests/MenteeRequests";
+import MenteeRequests from "@/features/mentorDashboard/MenteeRequests";
 import MentorDashboard from "@/features/mentorDashboard/MentorDashboard";
 import MentorPayments from "@/features/mentorPayment/MentorPayments";
 import ScheduleCallsManagement from "@/features/mentorshipSchedule/ScheduleCallsManagement";

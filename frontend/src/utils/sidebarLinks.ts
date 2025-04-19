@@ -12,7 +12,7 @@ import {
   CalendarClock,
   CreditCard,
   Clock,
-  ListChecks,
+  Inbox,
 } from "lucide-react";
 
 // Base sidebar items for all users
@@ -54,7 +54,7 @@ export const mentorItems = [
   {
     title: "Mentee Requests",
     url: "/mentor/requests",
-    icon: ListChecks,
+    icon: Inbox,
   },
   {
     title: "Time Slots",
