@@ -1,14 +1,23 @@
-import { v4 as uuidv4 } from 'uuid';
-
 export class UsernameGenerator {
-  static generateUsername(): string {
-    const adjectives = ['Witty', 'Silly', 'Happy', 'Lazy', 'Grumpy', 'Quirky', 'Sleepy'];
-    const nouns = ['Cactus', 'Penguin', 'Noodle', 'Muffin', 'Dolphin', 'Taco', 'Unicorn'];
+  static async generateUsername(
+    fullName: string,
+    checkUsernameExists: (username: string) => Promise<boolean>
+  ): Promise<string> {
+    const base = fullName
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '') // remove special chars
+      .trim()
+      .replace(/\s+/g, '_'); // replace spaces with underscore
 
-    const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-    const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
-    const shortUUID = uuidv4().slice(0, 6);
+    let username = base;
+    let suffix = 0;
 
-    return `${randomAdjective}${randomNoun}_${shortUUID}`;
+    // Add suffix if needed
+    while (await checkUsernameExists(username)) {
+      suffix += 1;
+      username = `${base}_${suffix}`;
+    }
+
+    return username;
   }
 }

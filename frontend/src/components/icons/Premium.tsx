@@ -1,9 +1,17 @@
 import { Sparkles } from "lucide-react";
 
-const Premium = () => {
+interface PremiumProps {
+  className?: string;
+  size?: number;
+}
+
+const Premium = ({ className = "", size = 24 }: PremiumProps) => {
   return (
     <div>
-      <Sparkles className="fill-amber-300 stroke-amber-300 dark:fill-amber-400 dark:stroke-amber-400" />
+      <Sparkles
+        size={size}
+        className={`fill-amber-400 stroke-amber-400 dark:fill-amber-300 dark:stroke-amber-300 ${className}`}
+      />
     </div>
   );
 };

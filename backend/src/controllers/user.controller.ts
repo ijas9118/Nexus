@@ -63,4 +63,11 @@ export class UserController implements IUserController {
     const contents = await this.userService.getUserContents(username);
     res.status(StatusCodes.OK).json(contents);
   });
+
+  validateUsername = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const username = req.params.username as string;
+
+    const status = await this.userService.validateUsername(username);
+    res.status(StatusCodes.OK).json({ status });
+  });
 }

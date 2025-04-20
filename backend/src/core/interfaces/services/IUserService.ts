@@ -22,6 +22,6 @@ export interface IUserService {
   ): Promise<boolean>;
 
   updateProfilePic(userId: string, data: any, file?: Express.Multer.File): Promise<any>;
-
   getUserContents(username: string): Promise<IContent[] | null>;
+  validateUsername(username: string): Promise<boolean>;
 }

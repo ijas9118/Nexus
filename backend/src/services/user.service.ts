@@ -141,4 +141,9 @@ export class UserService extends BaseService<IUser> implements IUserService {
 
     return contents;
   };
+
+  validateUsername = async (username: string): Promise<boolean> => {
+    const user = await this.userRepository.findOne({ username });
+    return !user;
+  };
 }

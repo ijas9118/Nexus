@@ -16,6 +16,11 @@ const ProfileService = {
 
   getUserContents: (username: string) =>
     handleApi(() => api.post<any>("/user/contents", { username })),
+
+  validateUsername: (username: string) =>
+    handleApi(() =>
+      api.get<{ status: boolean }>(`/user/check-username/${username}`),
+    ),
 };
 
 export default ProfileService;

@@ -1,6 +1,10 @@
 import { Button } from "@/components/atoms/button";
+import Mentor from "@/components/icons/Mentor";
+import Premium from "@/components/icons/Premium";
 import { Card } from "@/components/molecules/card";
+import getSocialIcon from "@/utils/getSocialIcons";
 import dayjs from "dayjs";
+import { MapPin } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +15,13 @@ interface ProfileHeaderProps {
     username: string;
     profilePic?: string;
     joinedAt: string;
+    role: string;
     bio?: string;
+    socials: [{ platform: string; url: string }];
+    location: string;
+    postsCount: number;
+    totalLikes: number;
+    totalViews: number;
   };
   isFollowing: boolean;
   isConnected: boolean;
@@ -52,8 +62,8 @@ export default function ProfileHeader({
           </Button>
         )}
       </div>
-      <Card className="p-6">
-        <div className="mb-4 flex justify-start bg-blue-400/40 rounded-lg">
+      <Card className="p-6 space-y-4">
+        <div className="flex justify-start bg-blue-400/40 rounded-lg">
           <img
             alt="Profile picture"
             src={
@@ -64,41 +74,117 @@ export default function ProfileHeader({
             width="80"
           />
         </div>
-        <h1 className="text-start text-2xl font-semibold">
-          {profileUser.name}
-        </h1>
-        <p className="text-start text-sm text-muted-foreground">
-          @{profileUser.username} · Joined on{" "}
-          {dayjs(profileUser.joinedAt).format("MMMM, YYYY")}
-        </p>
-        <div className="flex text-center justify-start gap-4 text-sm text-muted-foreground py-4">
-          <div>
-            <span className="font-semibold text-foreground text-lg">10</span>{" "}
-            Followers
+        <div className="flex flex-col">
+          <div className="flex items-start gap-2">
+            <h1 className="text-start text-lg font-semibold">
+              {profileUser.name}
+            </h1>
+            {profileUser.role === "premium" && (
+              <span className="flex font-semibold items-center gap-1 text-blue-500 dark:text-blue-300 text-xs bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-md">
+                <Premium size={16} />
+                Premium
+              </span>
+            )}
+            {profileUser.role === "mentor" && (
+              <span className="flex font-semibold items-center gap-1 text-blue-500 dark:text-blue-300 text-xs bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-md">
+                <Mentor size={16} />
+                Mentor
+              </span>
+            )}
           </div>
-          <div>
-            <span className="font-semibold text-foreground text-lg">0</span>{" "}
-            Following
+
+          <p className="text-start text-sm text-muted-foreground">
+            @{profileUser.username} · Joined on{" "}
+            {dayjs(profileUser.joinedAt).format("MMMM, YYYY")}
+          </p>
+        </div>
+
+        <div className="">
+          {profileUser.bio ? (
+            <>
+              <h3 className="text-xs font-bold text-muted-foreground">Bio</h3>
+              <p className="text-sm">{profileUser.bio}</p>
+            </>
+          ) : (
+            isCurrentUser && (
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full"
+                onClick={() => navigate("/profile/edit")}
+              >
+                Add Bio
+              </Button>
+            )
+          )}
+        </div>
+
+        {profileUser.socials && profileUser.socials.length > 0 && (
+          <div className="">
+            <h3 className="text-xs font-bold text-muted-foreground">
+              Social Links
+            </h3>
+            <div className="flex gap-4 items-center my-2">
+              {profileUser.socials.map((social, idx) => (
+                <a
+                  key={idx}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:text-blue-500 dark:hover:text-blue-300 transition"
+                >
+                  {getSocialIcon(social.platform)}
+                </a>
+              ))}
+            </div>
           </div>
+        )}
+
+        {profileUser.location && (
           <div>
-            <span className="font-semibold text-foreground text-lg">12</span>{" "}
-            Connections
+            <h3 className="text-xs font-bold text-muted-foreground">
+              Location
+            </h3>
+            <p className="flex gap-2 items-center text-sm my-2">
+              <MapPin size={20} className="text-gray-500 dark:text-gray-400" />
+              {profileUser.location}
+            </p>
+          </div>
+        )}
+
+        <div className="space-y-2">
+          <h3 className="text-xs font-bold text-muted-foreground">Stats</h3>
+          <div className="flex gap-6 text-sm text-muted-foreground">
+            <div>
+              <strong className="text-primary">{profileUser.postsCount}</strong>{" "}
+              Posts
+            </div>
+            <div>
+              <strong className="text-primary">{profileUser.totalLikes}</strong>{" "}
+              Likes
+            </div>
+            <div>
+              <strong className="text-primary">{profileUser.totalViews}</strong>{" "}
+              Views
+            </div>
           </div>
         </div>
-        {profileUser.bio && (
-          <div className="mb-3 text-sm">
-            <p>{profileUser.bio}</p>
+
+        <div className="flex text-center justify-between text-sm text-muted-foreground bg-muted p-3 rounded-md">
+          <div className="flex flex-col items-center justify-center">
+            <span className="font-semibold text-foreground text-lg">10</span>
+            <span>Followers</span>
           </div>
-        )}
-        {isCurrentUser && !profileUser.bio && (
-          <Button
-            className="w-full"
-            variant="outline"
-            onClick={() => navigate("/profile/edit")}
-          >
-            Add bio
-          </Button>
-        )}
+          <div className="flex flex-col items-center justify-center">
+            <span className="font-semibold text-foreground text-lg">0</span>
+            <span>Following</span>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <span className="font-semibold text-foreground text-lg">12</span>
+            <span>Connections</span>
+          </div>
+        </div>
+
         {!isCurrentUser && (
           <div className="mt-4 flex gap-2">
             <Button

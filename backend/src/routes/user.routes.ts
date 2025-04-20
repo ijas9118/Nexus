@@ -37,4 +37,6 @@ router.post(
   userController.getUserContents
 );
 
+router.get('/check-username/:username', userController.validateUsername);
+
 export default router;

@@ -84,7 +84,7 @@ export default function Layout() {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-              ) : (
+              ) : user?.isPremium ? (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
@@ -95,7 +95,7 @@ export default function Layout() {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-              )}
+              ) : null}
               <Bell />
               <Button
                 className="hidden md:block"

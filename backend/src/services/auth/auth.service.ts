@@ -31,7 +31,11 @@ export class AuthService implements IAuthService {
   async register(registerDto: RegisterDto): Promise<RegisterResponseDto> {
     const { name, email, password } = registerDto;
     const hashedPassword = await hash(password, 10);
-    const username = UsernameGenerator.generateUsername();
+    const username = await UsernameGenerator.generateUsername(
+      name,
+      async (u) => !!(await this.userRepository.getUserByUsername(u))
+    );
+
     const user = await this.userRepository.create({
       name,
       email,
@@ -104,7 +108,10 @@ export class AuthService implements IAuthService {
         const dummyPassword = Math.random().toString(36).slice(-8);
         const hashedPassword = await hash(dummyPassword, 10);
 
-        const username = UsernameGenerator.generateUsername();
+        const username = await UsernameGenerator.generateUsername(
+          googleData.name,
+          async (u) => !!(await this.userRepository.getUserByUsername(u))
+        );
 
         user = await this.userRepository.create({
           googleId: googleData.googleId,
@@ -139,7 +146,10 @@ export class AuthService implements IAuthService {
         const dummyPassword = Math.random().toString(36).slice(-8);
         const hashedPassword = await hash(dummyPassword, 10);
 
-        const username = UsernameGenerator.generateUsername();
+        const username = await UsernameGenerator.generateUsername(
+          githubData.name,
+          async (u) => !!(await this.userRepository.getUserByUsername(u))
+        );
 
         user = await this.userRepository.create({
           githubId: githubData.githubId,

@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
+import Premium from "@/components/icons/Premium";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -70,6 +71,7 @@ export default function ProfilePosts() {
                           @{content.author.username}
                         </p>
                       </div>
+                      {content.isPremium && <Premium />}
                     </div>
                     <Badge variant="squad" className="w-fit">
                       {content.contentType}

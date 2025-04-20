@@ -6,4 +6,5 @@ export interface IUserController {
   updateUser: RequestHandler;
   updatePassword: RequestHandler;
   updateProfilePic: RequestHandler;
+  validateUsername: RequestHandler;
 }

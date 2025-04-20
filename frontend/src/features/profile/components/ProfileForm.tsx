@@ -19,6 +19,8 @@ import { FaSquareThreads, FaSquareXTwitter } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import { useUpdateProfilePic } from "../hooks/useUpdateProfilePic";
+import { useNavigate } from "react-router-dom";
+import { debounce } from "@/utils/debounce";
 
 const socialLinks = [
   { key: "github", icon: FaGithub, label: "Github" },
@@ -46,9 +48,11 @@ const ProfileForm = () => {
     ) || {},
   );
   const dispatch = useDispatch();
+  const navigator = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { register, handleSubmit, control } = useForm({
+    mode: "onChange",
     defaultValues: {
       username: user.username || "",
       bio: user.bio || "",
@@ -66,7 +70,28 @@ const ProfileForm = () => {
         ) || {},
     },
   });
-  const { isDirty } = useFormState({ control });
+  const { isDirty, errors } = useFormState({ control });
+
+  const validateUsername = useRef(
+    debounce(
+      async (username: string, callback: (result: string | true) => void) => {
+        console.log("==========");
+        if (username === user.username) {
+          callback(true);
+          return;
+        }
+
+        try {
+          const res = await ProfileService.validateUsername(username);
+          console.log(res.status);
+          callback(res.status ? true : "Username is already taken");
+        } catch {
+          callback("Error checking username");
+        }
+      },
+      500,
+    ),
+  ).current;
 
   const handleButtonClick = (key: string) => {
     setVisibleInputs((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -83,12 +108,17 @@ const ProfileForm = () => {
       socials: formattedSocials,
     };
 
+    if (data.username === user.username) {
+      delete formattedData.username;
+    }
+
     try {
       await ProfileService.updateProfile(formattedData);
       dispatch(updateUserProfile(formattedData));
-      toast("Wohoo!", {
+      toast.success("Wohoo!", {
         description: "Your profile updated.",
       });
+      navigator(`/profile/${data.username}`);
     } catch (error: any) {
       console.error("Profile update failed:", error);
       toast.error("Oops!", {
@@ -167,8 +197,20 @@ const ProfileForm = () => {
               id="username"
               type="text"
               className="w-full border rounded-lg p-2 mt-1"
-              {...register("username")}
+              {...register("username", {
+                required: "Username is required",
+                validate: (value) =>
+                  new Promise((resolve) => {
+                    validateUsername(value, resolve);
+                  }),
+              })}
             />
+            {errors.username && (
+              <p className="text-sm text-red-500 mt-1">
+                {typeof errors.username?.message === "string" &&
+                  errors.username.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -177,8 +219,16 @@ const ProfileForm = () => {
               id="name"
               type="text"
               className="w-full border rounded-lg p-2 mt-1"
-              {...register("name")}
+              {...register("name", {
+                required: "Name is required",
+              })}
             />
+            {errors.name && (
+              <p className="text-sm text-red-500 mt-1">
+                {typeof errors.name?.message === "string" &&
+                  errors.name.message}
+              </p>
+            )}
           </div>
 
           <div>

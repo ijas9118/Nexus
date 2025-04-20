@@ -1,11 +1,16 @@
-import { FaGraduationCap } from "react-icons/fa6";
+import { FaBolt } from "react-icons/fa";
 
-const Mentor = () => {
+interface MentorProps {
+  className?: string;
+  size?: number;
+}
+
+const Mentor = ({ className = "", size = 24 }: MentorProps) => {
   return (
     <div>
-      <FaGraduationCap
-        size={24}
-        className="fill-blue-600 stroke-blue-600 dark:fill-blue-400 dark:stroke-blue-400"
+      <FaBolt
+        size={size}
+        className={`fill-amber-400 stroke-amber-400 dark:fill-amber-300 dark:stroke-amber-300 ${className}`}
       />
     </div>
   );
