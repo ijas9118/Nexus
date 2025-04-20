@@ -4,7 +4,7 @@ import { Label } from "@/components/atoms/label";
 import { Textarea } from "@/components/atoms/textarea";
 import ProfileService from "@/services/user/profileService";
 import { updateUserProfile } from "@/store/slices/authSlice";
-import { Edit, Link, Loader2 } from "lucide-react";
+import { Edit, Link, Loader2, X } from "lucide-react";
 import React, { useRef, useState } from "react";
 import { useForm, useFormState } from "react-hook-form";
 import {
@@ -38,6 +38,8 @@ const ProfileForm = () => {
   const user = useSelector((state: any) => state.auth.user);
   const { updateProfilePic, isUpdating } = useUpdateProfilePic();
   const [loading, setLoading] = useState(false);
+  const [skills, setSkills] = useState<string[]>(user.skills || []);
+  const [skillInput, setSkillInput] = useState("");
   const [visibleInputs, setVisibleInputs] = useState<Record<string, boolean>>(
     user.socials?.reduce(
       (acc: Record<string, boolean>, { platform }: { platform: string }) => {
@@ -51,7 +53,7 @@ const ProfileForm = () => {
   const navigator = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { register, handleSubmit, control } = useForm({
+  const { register, handleSubmit, control, setValue } = useForm({
     mode: "onChange",
     defaultValues: {
       username: user.username || "",
@@ -68,6 +70,7 @@ const ProfileForm = () => {
           },
           {},
         ) || {},
+      skills: user.skills || [],
     },
   });
   const { isDirty, errors } = useFormState({ control });
@@ -106,6 +109,7 @@ const ProfileForm = () => {
     const formattedData = {
       ...data,
       socials: formattedSocials,
+      skills,
     };
 
     if (data.username === user.username) {
@@ -150,6 +154,22 @@ const ProfileForm = () => {
     }
   };
 
+  const handleAddSkill = () => {
+    const newSkill = skillInput.trim();
+    if (newSkill && !skills.includes(newSkill)) {
+      const updatedSkills = [...skills, newSkill];
+      setSkills(updatedSkills);
+      setValue("skills", updatedSkills, { shouldDirty: true });
+    }
+    setSkillInput("");
+  };
+
+  const handleRemoveSkill = (skillToRemove: string) => {
+    const updatedSkills = skills.filter((skill) => skill !== skillToRemove);
+    setSkills(updatedSkills);
+    setValue("skills", updatedSkills, { shouldDirty: true });
+  };
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="flex-shrink-0 p-6">
@@ -188,7 +208,7 @@ const ProfileForm = () => {
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex-1 overflow-y-auto px-6"
+        className="flex-1 overflow-y-auto px-6 pb-8"
       >
         <div className="space-y-4">
           <div>
@@ -272,6 +292,46 @@ const ProfileForm = () => {
                   </div>
                 ) : null,
               )}
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor="skills">Skills</Label>
+            <div className="flex gap-2 mt-2">
+              <Input
+                id="skills"
+                type="text"
+                placeholder="Add a skill and press Enter"
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleAddSkill();
+                  }
+                }}
+              />
+              <Button type="button" onClick={handleAddSkill}>
+                Add
+              </Button>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-4">
+              {skills.map((skill) => (
+                <span
+                  key={skill}
+                  className="bg-muted px-3 py-1 rounded-full flex items-center gap-2"
+                >
+                  {skill}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveSkill(skill)}
+                    className="text-sm hover:text-red-500"
+                  >
+                    <X size={14} />
+                  </button>
+                </span>
+              ))}
             </div>
           </div>
 

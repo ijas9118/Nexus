@@ -22,6 +22,7 @@ interface ProfileHeaderProps {
     postsCount: number;
     totalLikes: number;
     totalViews: number;
+    skills: string[];
   };
   isFollowing: boolean;
   isConnected: boolean;
@@ -42,6 +43,7 @@ export default function ProfileHeader({
   const navigate = useNavigate();
 
   if (!profileUser) return <p>Loading profile...</p>;
+  console.log(profileUser);
 
   const isCurrentUser = profileUser.username === currentUser;
 
@@ -118,6 +120,22 @@ export default function ProfileHeader({
             )
           )}
         </div>
+
+        {profileUser.skills && profileUser.skills.length > 0 && (
+          <div>
+            <h3 className="text-xs font-bold text-muted-foreground">Skills</h3>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {profileUser.skills.map((skill, idx) => (
+                <span
+                  key={idx}
+                  className="bg-primary/10 text-primary text-xs font-medium px-3 py-1 rounded-full"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         {profileUser.socials && profileUser.socials.length > 0 && (
           <div className="">
