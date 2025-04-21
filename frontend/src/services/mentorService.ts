@@ -20,6 +20,17 @@ const MentorService = {
 
   rejectMentor: (mentorId: string) =>
     handleApi(() => api.patch(`/mentor/reject/${mentorId}`)),
+
+  getMentorEnums: () =>
+    handleApi(() =>
+      api.get<{
+        experienceLevels: string[];
+        expertiseAreas: { _id: string; value: string }[];
+        technologies: { _id: string; value: string }[];
+        mentorshipTypes: { _id: string; value: string }[];
+        targetAudiences: { _id: string; value: string }[];
+      }>("/mentor/enums"),
+    ),
 };
 
 export default MentorService;

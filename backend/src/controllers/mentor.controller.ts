@@ -5,6 +5,13 @@ import { TYPES } from '../di/types';
 import { IMentorService } from '../core/interfaces/services/IMentorService';
 import asyncHandler from 'express-async-handler';
 import { StatusCodes } from 'http-status-codes';
+import {
+  ExperienceLevel,
+  ExpertiseArea,
+  MentorshipType,
+  TargetAudience,
+  Technology,
+} from '@/core/types/entities/mentor';
 
 @injectable()
 export class MentorController implements IMentorController {
@@ -12,7 +19,6 @@ export class MentorController implements IMentorController {
 
   applyAsMentor = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
-    console.log('CONt', userId);
     const mentorData = req.body;
 
     const mentor = await this.mentorService.applyAsMentor(userId, mentorData);
@@ -46,5 +52,16 @@ export class MentorController implements IMentorController {
     const mentorId = req.params.mentorId;
     const mentor = await this.mentorService.getMentorDetails(mentorId);
     res.status(StatusCodes.OK).json(mentor);
+  });
+
+  getMentorEnums = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    console.log('adsfasdfasdfasdf');
+    res.json({
+      experienceLevels: Object.values(ExperienceLevel),
+      expertiseAreas: Object.values(ExpertiseArea),
+      mentorshipTypes: Object.values(MentorshipType),
+      targetAudiences: Object.values(TargetAudience),
+      technologies: Object.values(Technology),
+    });
   });
 }

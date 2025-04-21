@@ -24,9 +24,8 @@ import FileUpload from "./FileUpload";
 import React from "react";
 import { useMentorForm } from "@/context/MentorFormContext";
 import { useQuery } from "@tanstack/react-query";
-import { MentorConfigService } from "@/services/mentorConfigService";
-import { MentorshipConfig } from "@/types/mentor";
 import { formatLabel } from "@/utils";
+import MentorService from "@/services/mentorService";
 
 interface ExperienceFormProps {
   onBack: () => void;
@@ -39,19 +38,9 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
 }) => {
   const { formData, setFormData } = useMentorForm();
 
-  const { data: experienceLevels = [], isLoading: isLoadingLevels } = useQuery({
-    queryKey: ["experienceLevels"],
-    queryFn: () => MentorConfigService.getConfigsByCategory("experienceLevel"),
-  });
-
-  const { data: expertiseAreas = [], isLoading: isLoadingAreas } = useQuery({
-    queryKey: ["expertiseAreas"],
-    queryFn: () => MentorConfigService.getConfigsByCategory("expertiseArea"),
-  });
-
-  const { data: technologies = [], isLoading: isLoadingTechs } = useQuery({
-    queryKey: ["technologies"],
-    queryFn: () => MentorConfigService.getConfigsByCategory("technology"),
+  const { data: enums, isLoading } = useQuery({
+    queryKey: ["mentorEnums"],
+    queryFn: MentorService.getMentorEnums,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,13 +69,17 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
     value: string,
     checked: boolean,
   ) => {
-    console.log(value);
-
     setFormData((prev) => {
       const currentValues = prev.experience[field];
-      const updatedValues = checked
-        ? [...currentValues, value] // Add value if checked
-        : currentValues.filter((item) => item !== value); // Remove value if unchecked
+      let updatedValues = [...currentValues];
+
+      if (checked) {
+        // Add value if checked
+        updatedValues.push(value);
+      } else {
+        // Remove value if unchecked
+        updatedValues = updatedValues.filter((item) => item !== value);
+      }
 
       return {
         ...prev,
@@ -140,7 +133,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
 
         <div className="grid gap-2">
           <Label htmlFor="experience">Years of Professional Experience</Label>
-          {isLoadingLevels ? (
+          {isLoading ? (
             <div>Loading...</div>
           ) : (
             <Select
@@ -151,9 +144,9 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
                 <SelectValue placeholder="Select experience level" />
               </SelectTrigger>
               <SelectContent>
-                {experienceLevels.map((level: MentorshipConfig) => (
-                  <SelectItem key={level._id} value={level._id}>
-                    {level.value}
+                {enums?.experienceLevels.map((level: any, index: number) => (
+                  <SelectItem key={index} value={level}>
+                    {formatLabel(level)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -163,30 +156,28 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
 
         <div className="grid gap-2">
           <Label>Areas of Expertise</Label>
-          {isLoadingAreas ? (
+          {isLoading ? (
             <div>Loading...</div>
           ) : (
             <div className="grid grid-cols-2 gap-2">
-              {expertiseAreas.map((area: MentorshipConfig) => (
-                <div key={area._id} className="flex items-center space-x-2">
+              {enums?.expertiseAreas?.map((area: any, index: number) => (
+                <div key={index} className="flex items-center space-x-2">
                   <Checkbox
-                    id={`expertise-${area._id}`}
-                    checked={formData.experience.expertiseAreas.includes(
-                      area._id,
-                    )}
+                    id={`expertise-${area}`}
+                    checked={formData.experience.expertiseAreas.includes(area)}
                     onCheckedChange={(checked) =>
                       handleCheckboxChange(
                         "expertiseAreas",
-                        area._id,
+                        area,
                         checked === true,
                       )
                     }
                   />
                   <Label
-                    htmlFor={`expertise-${area._id}`}
+                    htmlFor={`expertise-${area}`}
                     className="text-sm font-normal"
                   >
-                    {formatLabel(area.value)}
+                    {formatLabel(area)}
                   </Label>
                 </div>
               ))}
@@ -196,30 +187,28 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
 
         <div className="grid gap-2">
           <Label>Technologies & Languages</Label>
-          {isLoadingTechs ? (
+          {isLoading ? (
             <div>Loading...</div>
           ) : (
             <div className="grid grid-cols-3 gap-2">
-              {technologies.map((tech: MentorshipConfig) => (
-                <div key={tech._id} className="flex items-center space-x-2">
+              {enums?.technologies?.map((tech: any, index: number) => (
+                <div key={index} className="flex items-center space-x-2">
                   <Checkbox
-                    id={`tech-${tech._id}`}
-                    checked={formData.experience.technologies.includes(
-                      tech._id,
-                    )}
+                    id={`tech-${tech}`}
+                    checked={formData.experience.technologies.includes(tech)}
                     onCheckedChange={(checked) =>
                       handleCheckboxChange(
                         "technologies",
-                        tech._id,
+                        tech,
                         checked === true,
                       )
                     }
                   />
                   <Label
-                    htmlFor={`tech-${tech._id}`}
+                    htmlFor={`tech-${tech}`}
                     className="text-sm font-normal"
                   >
-                    {formatLabel(tech.value)}
+                    {formatLabel(tech)}
                   </Label>
                 </div>
               ))}

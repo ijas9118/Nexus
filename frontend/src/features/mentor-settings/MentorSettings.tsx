@@ -1,93 +1,127 @@
-import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/atoms/button";
-import { Form } from "@/components/organisms/form";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/organisms/tabs";
-import { formSchema } from "./schema";
-import { ExperienceTab } from "./components/experience-tab";
-import { MentorshipTab } from "./components/mentorship-tab";
+// import { useState } from "react";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { useForm } from "react-hook-form";
+// import { z } from "zod";
+// import { Button } from "@/components/atoms/button";
+// import { Form } from "@/components/organisms/form";
+// import {
+//   Tabs,
+//   TabsContent,
+//   TabsList,
+//   TabsTrigger,
+// } from "@/components/organisms/tabs";
+// import { ExperienceTab } from "./components/experience-tab";
+// import { MentorshipTab } from "./components/mentorship-tab";
 
-export default function MentorSettingsPage() {
-  // Initialize form with default values from the provided data
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      experience: {
-        currentRole: "SDE II",
-        company: "Acme inc",
-        experienceLevel: "5-10",
-        expertiseAreas: ["frontend", "backend"],
-        technologies: ["react"],
-        bio: "asdadsf",
-      },
-      mentorshipDetails: {
-        mentorshipTypes: ["one-on-one", "interview-prep"],
-        targetAudiences: ["junior-developers"],
-        availabilityType: "weekend",
-        motivation: "asdff",
-      },
-    },
-  });
+// export default function MentorSettingsPage() {
+//   const formSchema = z.object({
+//     experience: z.object({
+//       currentRole: z.string().min(1, "Current role is required"),
+//       company: z.string().min(1, "Company is required"),
+//       experienceLevel: z.string(),
+//       expertiseAreas: z
+//         .array(z.string())
+//         .min(1, "Select at least one expertise area"),
+//       technologies: z
+//         .array(z.string())
+//         .min(1, "Select at least one technology"),
+//       bio: z.string().min(10, "Bio should be at least 10 characters"),
+//     }),
+//     mentorshipDetails: z.object({
+//       mentorshipTypes: z
+//         .array(z.string())
+//         .min(1, "Select at least one mentorship type"),
+//       targetAudiences: z
+//         .array(z.string())
+//         .min(1, "Select at least one target audience"),
+//       availabilityType: z.string(),
+//       motivation: z
+//         .string()
+//         .min(10, "Motivation should be at least 10 characters"),
+//     }),
+//   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+//   // Initialize form with default values from the provided data
+//   const form = useForm<z.infer<typeof formSchema>>({
+//     resolver: zodResolver(formSchema),
+//     defaultValues: {
+//       experience: {
+//         currentRole: "SDE II",
+//         company: "Acme inc",
+//         experienceLevel: "5-10",
+//         expertiseAreas: ["frontend", "backend"],
+//         technologies: ["react"],
+//         bio: "asdadsf",
+//       },
+//       mentorshipDetails: {
+//         mentorshipTypes: ["one-on-one", "interview-prep"],
+//         targetAudiences: ["junior-developers"],
+//         availabilityType: "weekend",
+//         motivation: "asdff",
+//       },
+//     },
+//   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true);
+//   const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log(values);
-      setIsSubmitting(false);
-    }, 1000);
-  }
+//   function onSubmit(values: z.infer<typeof formSchema>) {
+//     setIsSubmitting(true);
 
-  return (
-    <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 py-8 space-y-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">Mentor Settings</h1>
-        <p className="text-muted-foreground mt-2">
-          Update your professional information and mentorship preferences
-        </p>
-      </div>
+//     // Simulate API call
+//     setTimeout(() => {
+//       console.log(values);
+//       setIsSubmitting(false);
+//     }, 1000);
+//   }
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <Tabs defaultValue="experience" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="experience">
-                Professional Experience
-              </TabsTrigger>
-              <TabsTrigger value="mentorship">Mentorship Details</TabsTrigger>
-            </TabsList>
+//   return (
+//     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 py-8 space-y-6">
+//       <div className="mb-8">
+//         <h1 className="text-2xl font-bold tracking-tight">Mentor Settings</h1>
+//         <p className="text-muted-foreground mt-2">
+//           Update your professional information and mentorship preferences
+//         </p>
+//       </div>
 
-            {/* Professional Experience Tab */}
-            <TabsContent value="experience" className="space-y-6 pt-4">
-              <ExperienceTab control={form.control} />
-            </TabsContent>
+//       <Form {...form}>
+//         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+//           <Tabs defaultValue="experience" className="w-full">
+//             <TabsList className="grid w-full grid-cols-2">
+//               <TabsTrigger value="experience">
+//                 Professional Experience
+//               </TabsTrigger>
+//               <TabsTrigger value="mentorship">Mentorship Details</TabsTrigger>
+//             </TabsList>
 
-            {/* Mentorship Details Tab */}
-            <TabsContent value="mentorship" className="space-y-6 pt-4">
-              <MentorshipTab control={form.control} />
-            </TabsContent>
-          </Tabs>
+//             {/* Professional Experience Tab */}
+//             <TabsContent value="experience" className="space-y-6 pt-4">
+//               <ExperienceTab control={form.control} />
+//             </TabsContent>
 
-          <div className="flex justify-end gap-4">
-            <Button variant="outline" type="button">
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Saving..." : "Save Changes"}
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
-  );
-}
+//             {/* Mentorship Details Tab */}
+//             <TabsContent value="mentorship" className="space-y-6 pt-4">
+//               <MentorshipTab control={form.control} />
+//             </TabsContent>
+//           </Tabs>
+
+//           <div className="flex justify-end gap-4">
+//             <Button variant="outline" type="button">
+//               Cancel
+//             </Button>
+//             <Button type="submit" disabled={isSubmitting}>
+//               {isSubmitting ? "Saving..." : "Save Changes"}
+//             </Button>
+//           </div>
+//         </form>
+//       </Form>
+//     </div>
+//   );
+// }
+
+import React from "react";
+
+const MentorSettings = () => {
+  return <div>MentorSettings</div>;
+};
+
+export default MentorSettings;

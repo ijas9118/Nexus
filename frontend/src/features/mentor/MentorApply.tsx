@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import PersonalInfoForm from "./components/mentor-apply/PersonalInfoForm";
-import ExperienceForm from "./components/mentor-apply/ExperienceForm";
-import MentorshipDetailsForm from "./components/mentor-apply/MentorshipDetailsForm";
 import StepIndicator from "./components/mentor-apply/StepIndicator";
+import MentorshipDetailsForm from "./components/mentor-apply/MentorshipDetailsForm";
+import ExperienceForm from "./components/mentor-apply/ExperienceForm";
 
 const MentorApply = () => {
   const [step, setStep] = useState(1);

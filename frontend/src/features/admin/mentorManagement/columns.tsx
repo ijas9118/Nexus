@@ -13,7 +13,10 @@ import { Mentor } from "@/types/mentor";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-export const columns: ColumnDef<Mentor>[] = [
+export const columns = (
+  handleRowClick: (mentor: any) => void,
+  handleBlock: (mentor: any) => void,
+): ColumnDef<Mentor>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -84,10 +87,10 @@ export const columns: ColumnDef<Mentor>[] = [
       <div className="text-center">
         <Badge
           variant={
-            row.getValue("status") === "accepted" ? "default" : "outline"
+            row.getValue("status") === "approved" ? "default" : "outline"
           }
         >
-          {row.getValue("status") === "accepted" ? "Accepted" : "Pending"}
+          {row.getValue("status") === "approved" ? "Accepted" : "Pending"}
         </Badge>
       </div>
     ),
@@ -111,12 +114,22 @@ export const columns: ColumnDef<Mentor>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => console.log(mentor._id)}>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRowClick(mentor);
+              }}
+            >
               View
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => console.log(mentor._id)}>
-              Edit
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                handleBlock(mentor);
+              }}
+            >
+              Block
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

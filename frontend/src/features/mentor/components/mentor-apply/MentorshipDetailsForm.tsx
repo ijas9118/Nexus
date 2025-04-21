@@ -11,15 +11,12 @@ import { Checkbox } from "@/components/atoms/checkbox";
 import { Label } from "@/components/atoms/label";
 import { Textarea } from "@/components/atoms/textarea";
 import { Link } from "react-router-dom";
-import CheckboxGroup from "./CheckboxGroup";
 import { useMentorForm } from "@/context/MentorFormContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import MentorService from "@/services/mentorService";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/atoms/radio-group";
 import { Badge } from "@/components/atoms/badge";
-import { MentorConfigService } from "@/services/mentorConfigService";
-import { MentorshipConfig } from "@/types/mentor";
 import { formatLabel } from "@/utils";
 import React from "react";
 
@@ -40,16 +37,35 @@ export const TIME_SLOTS = [
 const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
   const { formData, setFormData } = useMentorForm();
 
-  const { data: mentorshipTypes = [], isLoading: isLoadingTypes } = useQuery({
-    queryKey: ["mentorshipTypes"],
-    queryFn: () => MentorConfigService.getConfigsByCategory("mentorshipType"),
+  const { data: enums, isLoading } = useQuery({
+    queryKey: ["mentorEnums"],
+    queryFn: MentorService.getMentorEnums,
   });
 
-  const { data: targetAudiences = [], isLoading: isLoadingAudiences } =
-    useQuery({
-      queryKey: ["targetAudiences"],
-      queryFn: () => MentorConfigService.getConfigsByCategory("targetAudience"),
+  const handleCheckboxChange = (
+    field: "mentorshipTypes" | "targetAudiences",
+    value: string,
+    checked: boolean,
+  ) => {
+    setFormData((prev) => {
+      const currentValues = prev.mentorshipDetails[field];
+      let updatedValues = [...currentValues];
+
+      if (checked) {
+        updatedValues.push(value);
+      } else {
+        updatedValues = updatedValues.filter((item) => item !== value);
+      }
+
+      return {
+        ...prev,
+        mentorshipDetails: {
+          ...prev.mentorshipDetails,
+          [field]: updatedValues,
+        },
+      };
     });
+  };
 
   const handleAvailabilityTypeChange = (value: string) => {
     setFormData((prev) => ({
@@ -92,26 +108,6 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
     },
   });
 
-  const handleMentorshipTypesChange = (selectedTypes: string[]) => {
-    setFormData((prev) => ({
-      ...prev,
-      mentorshipDetails: {
-        ...prev.mentorshipDetails,
-        mentorshipTypes: selectedTypes,
-      },
-    }));
-  };
-
-  const handleTargetAudiencesChange = (selectedAudiences: string[]) => {
-    setFormData((prev) => ({
-      ...prev,
-      mentorshipDetails: {
-        ...prev.mentorshipDetails,
-        targetAudiences: selectedAudiences,
-      },
-    }));
-  };
-
   const handleMotivationChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
@@ -126,6 +122,7 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
   };
 
   const handleSubmit = () => {
+    console.log(formData);
     mutation.mutate(formData);
   };
 
@@ -140,37 +137,69 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
           <Label>
             What type of mentorship are you interested in providing?
           </Label>
-          {isLoadingTypes ? (
+          {isLoading ? (
             <div>Loading...</div>
           ) : (
-            <CheckboxGroup
-              items={mentorshipTypes.map((item: MentorshipConfig) => ({
-                value: item._id,
-                label: formatLabel(item.value),
-              }))}
-              idPrefix="type"
-              columns={1}
-              value={formData.mentorshipDetails.mentorshipTypes}
-              onChange={handleMentorshipTypesChange}
-            />
+            <div className="grid gap-2">
+              {enums?.mentorshipTypes.map((type: any, index: number) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`mentorshipType-${type}`}
+                    checked={formData.mentorshipDetails.mentorshipTypes.includes(
+                      type,
+                    )}
+                    onCheckedChange={(checked) =>
+                      handleCheckboxChange(
+                        "mentorshipTypes",
+                        type,
+                        checked === true,
+                      )
+                    }
+                  />
+
+                  <Label
+                    htmlFor={`mentorshipType-${type}`}
+                    className="text-sm font-normal"
+                  >
+                    {formatLabel(type)}
+                  </Label>
+                </div>
+              ))}
+            </div>
           )}
         </div>
 
         <div className="grid gap-2">
           <Label>What is your target audience?</Label>
-          {isLoadingAudiences ? (
+          {isLoading ? (
             <div>Loading...</div>
           ) : (
-            <CheckboxGroup
-              items={targetAudiences.map((item: MentorshipConfig) => ({
-                value: item._id,
-                label: formatLabel(item.value),
-              }))}
-              idPrefix="audience"
-              columns={2}
-              value={formData.mentorshipDetails.targetAudiences}
-              onChange={handleTargetAudiencesChange}
-            />
+            <div className="grid grid-cols-2 gap-2">
+              {enums?.targetAudiences?.map((audience: any, index: number) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`audience-${audience}`}
+                    checked={formData.mentorshipDetails.targetAudiences.includes(
+                      audience,
+                    )}
+                    onCheckedChange={(checked) =>
+                      handleCheckboxChange(
+                        "targetAudiences",
+                        audience,
+                        checked === true,
+                      )
+                    }
+                  />
+
+                  <Label
+                    htmlFor={`audience-${audience}`}
+                    className="text-sm font-normal"
+                  >
+                    {formatLabel(audience)}
+                  </Label>
+                </div>
+              ))}
+            </div>
           )}
         </div>
 

@@ -1,8 +1,5 @@
-"use client";
-
 import type { Control } from "react-hook-form";
 import { Briefcase, Code, FileText } from "lucide-react";
-
 import {
   Card,
   CardContent,
@@ -27,8 +24,6 @@ import {
   SelectValue,
 } from "@/components/atoms/select";
 import { Textarea } from "@/components/atoms/textarea";
-
-import { experienceLevels, expertiseAreas, technologies } from "../schema";
 import { CardSelect } from "./card-select";
 import {
   useExperienceLevels,

@@ -8,7 +8,7 @@ const mentorController = container.get<IMentorController>(TYPES.MentorController
 
 const router = Router();
 
-router.post('/apply', authenticate(['admin', 'user']), mentorController.applyAsMentor);
+router.post('/apply', authenticate(['admin', 'user', 'premium']), mentorController.applyAsMentor);
 
 router.get(
   '/get-status',
@@ -23,5 +23,7 @@ router.get('/all', mentorController.getAllMentors);
 router.patch('/approve/:mentorId/:userId', authenticate(['admin']), mentorController.approveMentor);
 
 router.patch('/reject/:mentorId', authenticate(['admin']), mentorController.rejectMentor);
+
+router.get('/enums', mentorController.getMentorEnums);
 
 export default router;
