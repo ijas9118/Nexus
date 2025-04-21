@@ -13,6 +13,7 @@ import {
   CreditCard,
   Clock,
   Inbox,
+  Settings,
 } from "lucide-react";
 
 // Base sidebar items for all users
@@ -70,6 +71,11 @@ export const mentorItems = [
     title: "Payments",
     url: "/mentor/payments",
     icon: CreditCard,
+  },
+  {
+    title: "Settings",
+    url: "/mentor/settings",
+    icon: Settings,
   },
 ];
 
