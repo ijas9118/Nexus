@@ -43,7 +43,6 @@ export default function ProfileHeader({
   const navigate = useNavigate();
 
   if (!profileUser) return <p>Loading profile...</p>;
-  console.log(profileUser);
 
   const isCurrentUser = profileUser.username === currentUser;
 

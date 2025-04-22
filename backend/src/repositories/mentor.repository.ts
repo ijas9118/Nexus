@@ -17,7 +17,8 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
   };
 
   findMentorByUserId = async (userId: string): Promise<IMentor | null> => {
-    return await MentorModel.findOne({ userId })
+    return await this.model
+      .findOne({ userId })
       .populate('experience.experienceLevel')
       .populate('experience.expertiseAreas')
       .populate('experience.technologies')
@@ -29,18 +30,25 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
     mentorId: string,
     status: 'pending' | 'approved' | 'rejected'
   ): Promise<IMentor | null> {
-    return await MentorModel.findByIdAndUpdate(mentorId, { status }, { new: true });
+    return await this.model.findByIdAndUpdate(mentorId, { status }, { new: true });
   }
 
-  getAllMentors = async (): Promise<IMentor[] | null> => {
-    return await MentorModel.find().select('status createdAt userId').populate({
-      path: 'userId',
-      select: 'name email username profilePic',
-    });
+  getAllMentors = async (): Promise<IMentor[]> => {
+    return await this.model
+      .find()
+      .select('-updatedAt -__v')
+      .populate('userId', 'name email profilePic username')
+      .populate('experience.experienceLevel')
+      .populate('experience.expertiseAreas')
+      .populate('experience.technologies')
+      .populate('mentorshipDetails.mentorshipTypes')
+      .populate('mentorshipDetails.targetAudiences')
+      .lean();
   };
 
   getMentorDetails = async (mentorId: string): Promise<IMentor | null> => {
-    return await MentorModel.findById(mentorId)
+    return await this.model
+      .findById(mentorId)
       .populate('userId', 'name email profilePic username location') // 👈 pick what you need
       .populate('experience.experienceLevel')
       .populate('experience.expertiseAreas')

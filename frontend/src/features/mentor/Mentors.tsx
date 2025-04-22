@@ -2,7 +2,7 @@ import { Button } from "@/components/atoms/button";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { data, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import MentorFilters from "./components/MentorFilters";
 import SearchAndSort from "./components/SearchAndSort";
 import MentorCard from "./components/MentorCard";
@@ -20,81 +20,6 @@ export interface Mentor {
   mentees: number;
   sessions: number;
 }
-
-const mentors: Mentor[] = [
-  {
-    id: 1,
-    name: "John Smith",
-    title: "Senior Frontend Developer at TechCorp",
-    rating: 4,
-    reviews: 50,
-    skills: ["React", "TypeScript", "Node.js", "Next.js"],
-    description:
-      "I help developers master React and build performant web applications. Specializing in component architecture and state management.",
-    mentees: 15,
-    sessions: 8,
-  },
-  {
-    id: 2,
-    name: "Emily Johnson",
-    title: "Backend Architect at CloudSystems",
-    rating: 4.5,
-    reviews: 60,
-    skills: ["Python", "Django", "AWS", "Database Design"],
-    description:
-      "Backend specialist with 8+ years experience building scalable systems. I can help with architecture, performance, and best practices.",
-    mentees: 30,
-    sessions: 16,
-  },
-  {
-    id: 3,
-    name: "Michael Chen",
-    title: "Full Stack Engineer at StartupX",
-    rating: 4,
-    reviews: 70,
-    skills: ["JavaScript", "React", "Node.js", "GraphQL", "MongoDB"],
-    description:
-      "Full stack developer passionate about helping others grow. I provide practical guidance on building end-to-end applications.",
-    mentees: 45,
-    sessions: 24,
-  },
-  {
-    id: 4,
-    name: "Sarah Rodriguez",
-    title: "Mobile Developer & UX Specialist",
-    rating: 4.5,
-    reviews: 80,
-    skills: ["React Native", "iOS", "Android", "UI/UX", "Figma"],
-    description:
-      "Mobile developer with expertise in cross-platform solutions. I can help you build beautiful and functional mobile apps.",
-    mentees: 60,
-    sessions: 32,
-  },
-  {
-    id: 5,
-    name: "David Kim",
-    title: "Engineering Manager at BigTech",
-    rating: 4,
-    reviews: 90,
-    skills: ["System Design", "Team Leadership", "Agile", "Scaling"],
-    description:
-      "Tech leader focused on helping developers advance their careers and improve their technical decision-making.",
-    mentees: 75,
-    sessions: 40,
-  },
-  {
-    id: 6,
-    name: "Lisa Patel",
-    title: "DevOps Engineer at InfraTeam",
-    rating: 4.5,
-    reviews: 100,
-    skills: ["Kubernetes", "Docker", "CI/CD", "Cloud Architecture"],
-    description:
-      "DevOps expert specializing in containerization and automation. I can help streamline your development workflow.",
-    mentees: 90,
-    sessions: 48,
-  },
-];
 
 const Mentors = () => {
   const dispatch = useDispatch();
@@ -118,7 +43,16 @@ const Mentors = () => {
     staleTime: 1000 * 60 * 5, // optional: 5 minutes
   });
 
-  console.log(mentorStatus);
+  const {
+    data: mentors = [],
+    isLoading: isMentorListLoading,
+    isError: isMentorListError,
+  } = useQuery<any>({
+    queryKey: ["mentor-list"],
+    queryFn: () => MentorService.getAllMentors(),
+  });
+
+  console.log(mentors);
 
   if (isLoading) return <p>Loading mentor status...</p>;
   if (isError) return <p>Failed to load mentor status</p>;
@@ -155,16 +89,39 @@ const Mentors = () => {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-[1fr_3fr] mb-8">
-        <MentorFilters />
+      <div className="grid gap-6 md:grid-cols-[260px_1fr] mb-8">
+        <div className="h-screen sticky top-0 overflow-y-auto">
+          <MentorFilters />
+        </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 pb-10">
           <SearchAndSort />
 
           <div className="space-y-4">
-            {mentors.map((mentor) => (
-              <MentorCard key={mentor.id} mentor={mentor} />
-            ))}
+            {isMentorListLoading && (
+              <p className="text-sm text-muted-foreground">
+                Loading mentors...
+              </p>
+            )}
+
+            {isMentorListError && (
+              <p className="text-sm text-red-500">Failed to load mentors.</p>
+            )}
+
+            {!isMentorListLoading &&
+              !isMentorListError &&
+              mentors.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  No mentors available at the moment. Try again later!
+                </p>
+              )}
+
+            {!isMentorListLoading &&
+              !isMentorListError &&
+              mentors.length > 0 &&
+              mentors.map((mentor: any) => (
+                <MentorCard key={mentor._id} mentor={mentor} />
+              ))}
           </div>
         </div>
       </div>

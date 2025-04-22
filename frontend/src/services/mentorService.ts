@@ -25,10 +25,10 @@ const MentorService = {
     handleApi(() =>
       api.get<{
         experienceLevels: string[];
-        expertiseAreas: { _id: string; value: string }[];
-        technologies: { _id: string; value: string }[];
-        mentorshipTypes: { _id: string; value: string }[];
-        targetAudiences: { _id: string; value: string }[];
+        expertiseAreas: string[];
+        technologies: string[];
+        mentorshipTypes: string[];
+        targetAudiences: string[];
       }>("/mentor/enums"),
     ),
 };

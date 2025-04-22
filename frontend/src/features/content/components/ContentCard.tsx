@@ -85,8 +85,6 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
     navigate(`/profile/${username}`);
   };
 
-  console.log(props);
-
   return (
     <div className="w-full border-b py-6 hover:scale-[101%] transition-all">
       <div className="flex flex-col md:flex-row-reverse gap-6 items-start md:items-center">
