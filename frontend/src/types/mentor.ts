@@ -2,10 +2,15 @@ import { UserInterface } from "./user";
 
 export interface Mentor {
   _id: string;
-  name: string;
-  email: string;
-  specialization: string[];
-  status: string;
+  userId: {
+    name: string;
+    profilePic: string;
+  };
+  experience: {
+    currentRole: string;
+    expertiseAreas: string[];
+    bio: string;
+  };
 }
 
 export interface MentorFormData {

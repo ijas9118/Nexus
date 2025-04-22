@@ -8,18 +8,7 @@ import SearchAndSort from "./components/SearchAndSort";
 import MentorCard from "./components/MentorCard";
 import { useQuery } from "@tanstack/react-query";
 import MentorService from "@/services/mentorService";
-
-export interface Mentor {
-  id: number;
-  name: string;
-  title: string;
-  rating: number;
-  reviews: number;
-  skills: string[];
-  description: string;
-  mentees: number;
-  sessions: number;
-}
+import { Mentor } from "@/types/mentor";
 
 const Mentors = () => {
   const dispatch = useDispatch();
@@ -40,14 +29,14 @@ const Mentors = () => {
   } = useQuery({
     queryKey: ["mentor-status"],
     queryFn: () => MentorService.getStatus(),
-    staleTime: 1000 * 60 * 5, // optional: 5 minutes
+    staleTime: 1000 * 60 * 5,
   });
 
   const {
     data: mentors = [],
     isLoading: isMentorListLoading,
     isError: isMentorListError,
-  } = useQuery<any>({
+  } = useQuery({
     queryKey: ["mentor-list"],
     queryFn: () => MentorService.getAllMentors(),
   });
@@ -119,7 +108,7 @@ const Mentors = () => {
             {!isMentorListLoading &&
               !isMentorListError &&
               mentors.length > 0 &&
-              mentors.map((mentor: any) => (
+              mentors.map((mentor: Mentor) => (
                 <MentorCard key={mentor._id} mentor={mentor} />
               ))}
           </div>

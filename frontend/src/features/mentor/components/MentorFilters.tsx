@@ -60,11 +60,7 @@ const MentorFilters = () => {
         <Filter className="h-4 w-4" />
         <h3 className="font-medium">Filters</h3>
       </div>
-      <Accordion
-        type="multiple"
-        defaultValue={Object.keys(sectionTitles)}
-        className="w-full"
-      >
+      <Accordion type="multiple" defaultValue={[]} className="w-full">
         {data &&
           Object.entries(data).map(([key, values]) => {
             if (!(key in sectionTitles)) return null;

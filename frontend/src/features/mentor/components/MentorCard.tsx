@@ -1,10 +1,11 @@
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
 import { Card } from "@/components/molecules/card";
+import { Mentor } from "@/types/mentor";
 import { Calendar, Star, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const MentorCard = ({ mentor }: { mentor: any }) => {
+const MentorCard = ({ mentor }: { mentor: Mentor }) => {
   console.log(mentor);
   return (
     <Card className="overflow-hidden">
@@ -62,7 +63,7 @@ const MentorCard = ({ mentor }: { mentor: any }) => {
                 </Button>
               </Link>
               <Link
-                to={`/mentors/${mentor.id}/book`}
+                to={`/mentors/${mentor._id}/book`}
                 className="w-full sm:w-auto"
               >
                 <Button className="w-full sm:w-auto">Book Session</Button>

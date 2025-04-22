@@ -35,14 +35,17 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
 
   getAllMentors = async (): Promise<IMentor[]> => {
     return await this.model
-      .find()
-      .select('-updatedAt -__v')
-      .populate('userId', 'name email profilePic username')
-      .populate('experience.experienceLevel')
-      .populate('experience.expertiseAreas')
-      .populate('experience.technologies')
-      .populate('mentorshipDetails.mentorshipTypes')
-      .populate('mentorshipDetails.targetAudiences')
+      .find(
+        {},
+        {
+          _id: 1,
+          userId: 1,
+          'experience.currentRole': 1,
+          'experience.expertiseAreas': 1,
+          'experience.bio': 1,
+        }
+      )
+      .populate('userId', 'name profilePic email') // Only what's used
       .lean();
   };
 

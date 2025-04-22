@@ -1,6 +1,6 @@
 import { handleApi } from "@/utils/handleApi";
 import api from "./api";
-import { MentorApplication, MentorFormData } from "@/types/mentor";
+import { Mentor, MentorApplication, MentorFormData } from "@/types/mentor";
 
 const MentorService = {
   applyAsMentor: (formData: MentorFormData) =>
@@ -8,7 +8,7 @@ const MentorService = {
 
   getStatus: () => handleApi(() => api.get("/mentor/get-status")),
 
-  getAllMentors: () => handleApi(() => api.get("/mentor/all")),
+  getAllMentors: () => handleApi(() => api.get<Mentor[]>("/mentor/all")),
 
   getMentorDetails: (mentorId: string) =>
     handleApi(() =>
