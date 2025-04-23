@@ -6,6 +6,7 @@ export interface IMentorController {
   rejectMentor: RequestHandler;
   getStatus: RequestHandler;
   getAllMentors: RequestHandler;
+  getApprovedMentors: RequestHandler;
   getMentorDetails: RequestHandler;
   getMentorEnums: RequestHandler;
 }

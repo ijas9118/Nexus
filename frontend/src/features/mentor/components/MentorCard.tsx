@@ -62,12 +62,6 @@ const MentorCard = ({ mentor }: { mentor: Mentor }) => {
                   View Profile
                 </Button>
               </Link>
-              <Link
-                to={`/mentors/${mentor._id}/book`}
-                className="w-full sm:w-auto"
-              >
-                <Button className="w-full sm:w-auto">Book Session</Button>
-              </Link>
             </div>
           </div>
         </div>

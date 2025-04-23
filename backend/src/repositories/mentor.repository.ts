@@ -40,6 +40,23 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
         {
           _id: 1,
           userId: 1,
+          status: 1,
+          'experience.currentRole': 1,
+          'experience.expertiseAreas': 1,
+          'experience.bio': 1,
+        }
+      )
+      .populate('userId', 'name profilePic email') // Only what's used
+      .lean();
+  };
+
+  getApprovedMentors = async (): Promise<IMentor[]> => {
+    return await this.model
+      .find(
+        { status: 'approved' },
+        {
+          _id: 1,
+          userId: 1,
           'experience.currentRole': 1,
           'experience.expertiseAreas': 1,
           'experience.bio': 1,

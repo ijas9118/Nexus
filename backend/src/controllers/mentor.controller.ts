@@ -19,7 +19,11 @@ export class MentorController implements IMentorController {
 
   applyAsMentor = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
-    const mentorData = req.body;
+    const mentorData = {
+      personalInfo: req.body.personalInfo,
+      experience: req.body.experience,
+      mentorshipDetails: req.body.mentorshipDetails,
+    };
 
     const mentor = await this.mentorService.applyAsMentor(userId, mentorData);
     res.status(StatusCodes.CREATED).json({ success: true, data: mentor });
@@ -45,6 +49,11 @@ export class MentorController implements IMentorController {
 
   getAllMentors = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const mentors = await this.mentorService.getAllMentors();
+    res.status(StatusCodes.OK).json(mentors);
+  });
+
+  getApprovedMentors = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const mentors = await this.mentorService.getApprovedMentors();
     res.status(StatusCodes.OK).json(mentors);
   });
 

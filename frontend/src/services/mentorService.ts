@@ -8,7 +8,9 @@ const MentorService = {
 
   getStatus: () => handleApi(() => api.get("/mentor/get-status")),
 
-  getAllMentors: () => handleApi(() => api.get<Mentor[]>("/mentor/all")),
+  getAllMentors: () => handleApi(() => api.get<Mentor[]>("/mentor/admin/all")),
+
+  getApprovedMentors: () => handleApi(() => api.get<Mentor[]>("/mentor/all")),
 
   getMentorDetails: (mentorId: string) =>
     handleApi(() =>

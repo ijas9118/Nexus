@@ -37,7 +37,6 @@ export interface MentorFormData {
     mentorshipTypes: string[];
     targetAudiences: string[];
     availabilityType: string;
-    availableTimeSlots: string[];
     motivation: string;
   };
 }

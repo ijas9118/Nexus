@@ -23,7 +23,6 @@ export interface IMentor extends Document {
     mentorshipTypes: MentorshipType[];
     targetAudiences: TargetAudience[];
     availabilityType: 'weekdays' | 'weekend' | 'both';
-    availableTimeSlots: string[];
     motivation: string;
   };
   status: MentorStatus;
@@ -84,7 +83,6 @@ const MentorSchema: Schema = new Schema(
         enum: ['weekdays', 'weekend', 'both'],
         default: 'both',
       },
-      availableTimeSlots: { type: [String], required: true },
       motivation: { type: String, default: '' },
     },
     status: {

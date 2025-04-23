@@ -33,7 +33,6 @@ interface MentorDetails {
     mentorshipTypes: string[];
     targetAudiences: string[];
     availabilityType: string;
-    availableTimeSlots: string[];
     motivation: string;
   };
   status: string;
@@ -56,6 +55,7 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
   isLoading,
   isError,
 }) => {
+  console.log(mentorDetails);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -296,31 +296,6 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
                         Availability:
                       </strong>{" "}
                       {mentorDetails.mentorshipDetails.availabilityType}
-                    </div>
-                    <div>
-                      <strong className="font-medium text-foreground">
-                        Available Time Slots:
-                      </strong>{" "}
-                      <span className="flex flex-wrap gap-2">
-                        {mentorDetails.mentorshipDetails.availableTimeSlots
-                          .length > 0 ? (
-                          mentorDetails.mentorshipDetails.availableTimeSlots.map(
-                            (slot) => (
-                              <Badge
-                                key={slot}
-                                variant="default"
-                                className="hover:bg-muted transition-colors"
-                              >
-                                {slot}
-                              </Badge>
-                            ),
-                          )
-                        ) : (
-                          <span className="text-muted-foreground">
-                            Not specified
-                          </span>
-                        )}
-                      </span>
                     </div>
                     <div>
                       <strong className="font-medium text-foreground">

@@ -36,70 +36,38 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
   onBack,
   onContinue,
 }) => {
-  const { formData, setFormData } = useMentorForm();
+  const { form } = useMentorForm();
+  const {
+    register,
+    formState: { errors, isValid },
+    setValue,
+    watch,
+  } = form;
 
   const { data: enums, isLoading } = useQuery({
     queryKey: ["mentorEnums"],
     queryFn: MentorService.getMentorEnums,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      experience: {
-        ...prev.experience,
-        [id]: value,
-      },
-    }));
-  };
-
-  const handleExperienceLevelChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      experience: {
-        ...prev.experience,
-        experienceLevel: value,
-      },
-    }));
-  };
+  const expertiseAreas = watch("experience.expertiseAreas", []);
+  const technologies = watch("experience.technologies", []);
 
   const handleCheckboxChange = (
     field: "expertiseAreas" | "technologies",
     value: string,
     checked: boolean,
   ) => {
-    setFormData((prev) => {
-      const currentValues = prev.experience[field];
-      let updatedValues = [...currentValues];
+    const currentValues =
+      field === "expertiseAreas" ? expertiseAreas : technologies;
+    let updatedValues = [...currentValues];
 
-      if (checked) {
-        // Add value if checked
-        updatedValues.push(value);
-      } else {
-        // Remove value if unchecked
-        updatedValues = updatedValues.filter((item) => item !== value);
-      }
+    if (checked) {
+      updatedValues.push(value);
+    } else {
+      updatedValues = updatedValues.filter((item) => item !== value);
+    }
 
-      return {
-        ...prev,
-        experience: {
-          ...prev.experience,
-          [field]: updatedValues,
-        },
-      };
-    });
-  };
-
-  const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      experience: {
-        ...prev.experience,
-        bio: value,
-      },
-    }));
+    setValue(`experience.${field}`, updatedValues, { shouldValidate: true });
   };
 
   return (
@@ -116,9 +84,15 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
           <Input
             id="currentRole"
             placeholder="e.g. Senior Software Engineer"
-            value={formData.experience.currentRole}
-            onChange={handleChange}
+            {...register("experience.currentRole", {
+              required: "Current role is required",
+            })}
           />
+          {errors.experience?.currentRole && (
+            <p className="text-sm text-red-500">
+              {errors.experience.currentRole.message}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-2">
@@ -126,9 +100,15 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
           <Input
             id="company"
             placeholder="e.g. Acme Inc."
-            value={formData.experience.company}
-            onChange={handleChange}
+            {...register("experience.company", {
+              required: "Company is required",
+            })}
           />
+          {errors.experience?.company && (
+            <p className="text-sm text-red-500">
+              {errors.experience.company.message}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-2">
@@ -137,8 +117,12 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
             <div>Loading...</div>
           ) : (
             <Select
-              onValueChange={handleExperienceLevelChange}
-              value={formData.experience.experienceLevel}
+              onValueChange={(value) =>
+                setValue("experience.experienceLevel", value, {
+                  shouldValidate: true,
+                })
+              }
+              value={watch("experience.experienceLevel")}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select experience level" />
@@ -152,6 +136,11 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
               </SelectContent>
             </Select>
           )}
+          {errors.experience?.experienceLevel && (
+            <p className="text-sm text-red-500">
+              {errors.experience.experienceLevel.message}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-2">
@@ -164,7 +153,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
                 <div key={index} className="flex items-center space-x-2">
                   <Checkbox
                     id={`expertise-${area}`}
-                    checked={formData.experience.expertiseAreas.includes(area)}
+                    checked={expertiseAreas.includes(area)}
                     onCheckedChange={(checked) =>
                       handleCheckboxChange(
                         "expertiseAreas",
@@ -183,6 +172,11 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
               ))}
             </div>
           )}
+          {errors.experience?.expertiseAreas && (
+            <p className="text-sm text-red-500">
+              {errors.experience.expertiseAreas.message}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-2">
@@ -195,7 +189,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
                 <div key={index} className="flex items-center space-x-2">
                   <Checkbox
                     id={`tech-${tech}`}
-                    checked={formData.experience.technologies.includes(tech)}
+                    checked={technologies.includes(tech)}
                     onCheckedChange={(checked) =>
                       handleCheckboxChange(
                         "technologies",
@@ -214,6 +208,11 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
               ))}
             </div>
           )}
+          {errors.experience?.technologies && (
+            <p className="text-sm text-red-500">
+              {errors.experience.technologies.message}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-2">
@@ -222,12 +221,18 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
             id="bio"
             placeholder="Write a brief description of your professional experience and qualifications..."
             className="min-h-[150px]"
-            value={formData.experience.bio}
-            onChange={handleBioChange}
+            {...register("experience.bio", {
+              required: "Biography is required",
+            })}
           />
           <p className="text-sm text-muted-foreground">
             This will be displayed on your mentor profile.
           </p>
+          {errors.experience?.bio && (
+            <p className="text-sm text-red-500">
+              {errors.experience.bio.message}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-2">
@@ -239,7 +244,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
         <Button variant="outline" onClick={onBack}>
           Back
         </Button>
-        <Button onClick={onContinue}>
+        <Button onClick={onContinue} disabled={!isValid}>
           Continue
           <ArrowRight className="h-4 w-4 ml-2" />
         </Button>

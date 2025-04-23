@@ -1,4 +1,5 @@
-import { MentorStatus, PersonalInfo } from '@/core/types';
+import { PersonalInfo } from '@/core/types';
+import { MentorStatus } from '@/core/types/entities/mentor';
 import { IMentor } from '@/models/mentor.model';
 
 export interface IMentorService {
@@ -18,6 +19,8 @@ export interface IMentorService {
   getStatus(userId: string): Promise<MentorStatus | null>;
 
   getAllMentors(): Promise<IMentor[] | null>;
+
+  getApprovedMentors(): Promise<IMentor[] | null>;
 
   getMentorDetails(mentorId: string): Promise<IMentor | null>;
 }

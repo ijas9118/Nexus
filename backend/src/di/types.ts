@@ -58,4 +58,5 @@ export const TYPES = {
   PlanController: Symbol.for('PlanController'),
   PaymentController: Symbol.for('PaymentController'),
   SocketController: Symbol.for('SocketController'),
+  TimeSlotRepository: Symbol.for('TimeSlotRepository'),
 };

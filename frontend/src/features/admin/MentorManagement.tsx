@@ -5,32 +5,6 @@ import MentorService from "@/services/mentorService";
 import { useQuery } from "@tanstack/react-query";
 import { MentorDetailsDialog } from "./mentorManagement/components/MentorDetailsDialog";
 
-interface MentorDetails {
-  _id: string;
-  userId: {
-    name: string;
-    email: string;
-    username: string;
-    profilePic?: string;
-  };
-  experience: {
-    currentRole: string;
-    company: string;
-    experienceLevel: string;
-    expertiseAreas: string[];
-    technologies: string[];
-    bio: string;
-  };
-  mentorshipDetails: {
-    mentorshipTypes: string[];
-    targetAudiences: string[];
-    availabilityType: string;
-    motivation: string;
-  };
-  status: string;
-  createdAt: string;
-}
-
 const MentorManagement: FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedMentorId, setSelectedMentorId] = useState<string | null>(null);
@@ -62,10 +36,8 @@ const MentorManagement: FC = () => {
   } = useQuery({
     queryKey: ["mentor", selectedMentorId],
     queryFn: () => MentorService.getMentorDetails(selectedMentorId!),
-    enabled: !!selectedMentorId, // Only fetch when selectedMentorId is set
+    enabled: !!selectedMentorId,
   });
-
-  console.log(mentorDetails);
 
   const handleRowClick = (mentor: any) => {
     setSelectedMentorId(mentor._id);

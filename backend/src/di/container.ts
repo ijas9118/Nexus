@@ -127,6 +127,8 @@ import { IMentorService } from '@/core/interfaces/services/IMentorService';
 import { MentorService } from '@/services/mentor.service';
 import { IMentorRepository } from '@/core/interfaces/repositories/IMentorRepository';
 import { MentorRepository } from '@/repositories/mentor.repository';
+import { ITimeSlotRepository } from '@/core/interfaces/repositories/ITimeSlotRepository';
+import { TimeSlotRepository } from '@/repositories/timeslots.repository';
 
 const container = new Container();
 
@@ -202,5 +204,7 @@ container.bind<SocketController>(TYPES.SocketController).to(SocketController);
 container.bind<IMentorController>(TYPES.MentorController).to(MentorController);
 container.bind<IMentorService>(TYPES.MentorService).to(MentorService);
 container.bind<IMentorRepository>(TYPES.MentorRepository).to(MentorRepository);
+
+container.bind<ITimeSlotRepository>(TYPES.TimeSlotRepository).to(TimeSlotRepository);
 
 export { container };

@@ -38,7 +38,7 @@ const Mentors = () => {
     isError: isMentorListError,
   } = useQuery({
     queryKey: ["mentor-list"],
-    queryFn: () => MentorService.getAllMentors(),
+    queryFn: () => MentorService.getApprovedMentors(),
   });
 
   console.log(mentors);

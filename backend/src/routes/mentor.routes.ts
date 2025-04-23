@@ -18,7 +18,9 @@ router.get(
 
 router.get('/get-mentor-details/:mentorId', mentorController.getMentorDetails);
 
-router.get('/all', mentorController.getAllMentors);
+router.get('/all', mentorController.getApprovedMentors);
+
+router.get('/admin/all', mentorController.getAllMentors);
 
 router.patch('/approve/:mentorId/:userId', authenticate(['admin']), mentorController.approveMentor);
 
