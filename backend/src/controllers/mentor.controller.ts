@@ -64,7 +64,6 @@ export class MentorController implements IMentorController {
   });
 
   getMentorEnums = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    console.log('adsfasdfasdfasdf');
     res.json({
       experienceLevels: Object.values(ExperienceLevel),
       expertiseAreas: Object.values(ExpertiseArea),
@@ -72,5 +71,19 @@ export class MentorController implements IMentorController {
       targetAudiences: Object.values(TargetAudience),
       technologies: Object.values(Technology),
     });
+  });
+
+  updateAvailability = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { availabilityType } = req.body;
+    const status = await this.mentorService.updateAvailability(
+      req.user?._id as string,
+      availabilityType
+    );
+    res.status(StatusCodes.OK).json({ status });
+  });
+
+  getAvailability = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const availability = await this.mentorService.getAvailability(req.user?._id as string);
+    res.status(StatusCodes.OK).json(availability);
   });
 }

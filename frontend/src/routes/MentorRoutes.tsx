@@ -3,7 +3,7 @@ import MenteeRequests from "@/features/mentorDashboard/MenteeRequests";
 import MentorDashboard from "@/features/mentorDashboard/MentorDashboard";
 import MentorPayments from "@/features/mentorPayment/MentorPayments";
 import ScheduleCallsManagement from "@/features/mentorshipSchedule/ScheduleCallsManagement";
-import TimeSlotManagement from "@/features/mentorTimeslots/TimeSlotManagement";
+import TimeSlotManagement from "@/features/mentorAvailability/ManageAvailability";
 import Layout from "@/pages/Layout";
 import React from "react";
 import { Route, Routes } from "react-router-dom";

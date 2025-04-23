@@ -7,6 +7,7 @@ import { ThemeProvider } from "./components/theme/theme-provider";
 import NotFound from "./pages/NotFound";
 import store from "./store/store";
 import { refreshAccessToken } from "./store/slices/authSlice";
+import { ConfirmDialogProvider } from "./context/ConfirmDialogContext";
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -50,17 +51,19 @@ const App: React.FC = () => {
     );
   }
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/*" element={<UserRoutes />} />
-          <Route path="/mentor/*" element={<MentorRoutes />} />
-          <Route path="/admin/*" element={<AdminRoutes />} />
+    <ConfirmDialogProvider>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/*" element={<UserRoutes />} />
+            <Route path="/mentor/*" element={<MentorRoutes />} />
+            <Route path="/admin/*" element={<AdminRoutes />} />
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </ThemeProvider>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+    </ConfirmDialogProvider>
   );
 };
 

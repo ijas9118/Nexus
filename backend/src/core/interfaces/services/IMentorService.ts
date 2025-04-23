@@ -1,5 +1,5 @@
 import { PersonalInfo } from '@/core/types';
-import { MentorStatus } from '@/core/types/entities/mentor';
+import { AvailabilityType, MentorStatus } from '@/core/types/entities/mentor';
 import { IMentor } from '@/models/mentor.model';
 
 export interface IMentorService {
@@ -23,4 +23,8 @@ export interface IMentorService {
   getApprovedMentors(): Promise<IMentor[] | null>;
 
   getMentorDetails(mentorId: string): Promise<IMentor | null>;
+
+  updateAvailability(mentorId: string, availabilityType: AvailabilityType): Promise<boolean>;
+
+  getAvailability(mentorId: string): Promise<AvailabilityType | null>;
 }

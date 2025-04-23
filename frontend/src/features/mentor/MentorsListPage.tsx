@@ -1,7 +1,7 @@
 import { Button } from "@/components/atoms/button";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import MentorFilters from "./components/MentorFilters";
 import SearchAndSort from "./components/SearchAndSort";
@@ -9,9 +9,11 @@ import MentorCard from "./components/MentorCard";
 import { useQuery } from "@tanstack/react-query";
 import MentorService from "@/services/mentorService";
 import { Mentor } from "@/types/mentor";
+import { RootState } from "@/store/store";
 
 const Mentors = () => {
   const dispatch = useDispatch();
+  const currentUserId = useSelector((state: RootState) => state.auth.user?._id);
 
   useEffect(() => {
     dispatch(
@@ -37,8 +39,13 @@ const Mentors = () => {
     isLoading: isMentorListLoading,
     isError: isMentorListError,
   } = useQuery({
-    queryKey: ["mentor-list"],
-    queryFn: () => MentorService.getApprovedMentors(),
+    queryKey: ["mentor-list", currentUserId], // so cache is scoped per user
+    queryFn: async () => {
+      const allMentors = await MentorService.getApprovedMentors();
+      return allMentors.filter(
+        (mentor: Mentor) => mentor.userId._id !== currentUserId,
+      );
+    },
   });
 
   console.log(mentors);

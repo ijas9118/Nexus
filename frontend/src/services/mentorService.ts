@@ -1,6 +1,11 @@
 import { handleApi } from "@/utils/handleApi";
 import api from "./api";
-import { Mentor, MentorApplication, MentorFormData } from "@/types/mentor";
+import {
+  AvailabilityType,
+  Mentor,
+  MentorApplication,
+  MentorFormData,
+} from "@/types/mentor";
 
 const MentorService = {
   applyAsMentor: (formData: MentorFormData) =>
@@ -33,6 +38,12 @@ const MentorService = {
         targetAudiences: string[];
       }>("/mentor/enums"),
     ),
+
+  updateAvailability: (availabilityType: AvailabilityType) =>
+    handleApi(() => api.patch("/mentor/availability", { availabilityType })),
+
+  getAvailability: () =>
+    handleApi(() => api.get<AvailabilityType>("/mentor/availability")),
 };
 
 export default MentorService;

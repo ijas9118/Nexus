@@ -3,6 +3,7 @@ import { UserInterface } from "./user";
 export interface Mentor {
   _id: string;
   userId: {
+    _id: string;
     name: string;
     profilePic: string;
   };
@@ -63,4 +64,17 @@ export interface MentorApplication {
   status: "pending" | "approved" | "rejected";
   createdAt: string;
   updatedAt: string;
+}
+
+export type AvailabilityType = "weekdays" | "weekend" | "both";
+
+export interface TimeSlot {
+  _id: string;
+  mentorId: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  isBooked: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }

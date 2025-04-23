@@ -58,3 +58,5 @@ export enum TargetAudience {
 }
 
 export type MentorStatus = 'pending' | 'approved' | 'rejected';
+
+export type AvailabilityType = 'weekdays' | 'weekend' | 'both';
