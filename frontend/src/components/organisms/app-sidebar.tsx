@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/organisms/sidebar";
 import {
   DropdownMenu,
@@ -39,6 +40,7 @@ export function AppSidebar() {
   const user = useSelector((state: RootState) => state.auth.user);
   const items = getSidebarItems(user?.role as string);
   const dispatch = useDispatch();
+  const { state } = useSidebar();
 
   const handleMenuClick = (url: string, title: string) => {
     dispatch(
@@ -72,12 +74,12 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent className="no-scrollbar">
         <SidebarGroup>
-          <SidebarMenu>
-            <Button onClick={() => navigate("/addPost")}>
+          <SidebarMenuButton asChild onClick={() => navigate("/addPost")}>
+            <div className="bg-primary text-secondary">
               <Plus />
               <span>New Post</span>
-            </Button>
-          </SidebarMenu>
+            </div>
+          </SidebarMenuButton>
         </SidebarGroup>
 
         <Collapsible defaultOpen className="group/collapsible">
@@ -103,7 +105,9 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="h-fit">
-                  <Avatar className="rounded">
+                  <Avatar
+                    className={`rounded ${state === "collapsed" ? "-translate-x-3" : ""}`}
+                  >
                     <AvatarImage src={user?.profilePic} />
                     <AvatarFallback>{user?.name.slice(0, 2)}</AvatarFallback>
                   </Avatar>

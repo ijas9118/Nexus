@@ -1,9 +1,9 @@
 import { MentorFormData } from "@/types/mentor";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext } from "react";
+import { useForm, UseFormReturn } from "react-hook-form";
 
 interface MentorFormContextType {
-  formData: MentorFormData;
-  setFormData: React.Dispatch<React.SetStateAction<MentorFormData>>;
+  form: UseFormReturn<MentorFormData>;
 }
 
 const MentorFormContext = createContext<MentorFormContextType | undefined>(
@@ -13,37 +13,39 @@ const MentorFormContext = createContext<MentorFormContextType | undefined>(
 export const MentorFormProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [formData, setFormData] = useState<MentorFormData>({
-    personalInfo: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      location: "",
-      linkedin: "",
-      github: "",
-      profilePhoto: null,
+  const form = useForm<MentorFormData>({
+    defaultValues: {
+      personalInfo: {
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        location: "",
+        linkedin: "",
+        github: "",
+        profilePhoto: null,
+      },
+      experience: {
+        currentRole: "",
+        company: "",
+        experienceLevel: "",
+        expertiseAreas: [],
+        technologies: [],
+        bio: "",
+        resume: null,
+      },
+      mentorshipDetails: {
+        mentorshipTypes: [],
+        targetAudiences: [],
+        availabilityType: "",
+        motivation: "",
+      },
     },
-    experience: {
-      currentRole: "",
-      company: "",
-      experienceLevel: "",
-      expertiseAreas: [],
-      technologies: [],
-      bio: "",
-      resume: null,
-    },
-    mentorshipDetails: {
-      mentorshipTypes: [],
-      targetAudiences: [],
-      availabilityType: "",
-      availableTimeSlots: [],
-      motivation: "",
-    },
+    mode: "onChange", // Validate on change for real-time feedback
   });
 
   return (
-    <MentorFormContext.Provider value={{ formData, setFormData }}>
+    <MentorFormContext.Provider value={{ form }}>
       {children}
     </MentorFormContext.Provider>
   );

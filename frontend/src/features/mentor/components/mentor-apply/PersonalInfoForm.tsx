@@ -21,7 +21,12 @@ interface PersonalInfoFormProps {
 }
 
 const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
-  const { formData, setFormData } = useMentorForm();
+  const { form } = useMentorForm();
+  const {
+    register,
+    formState: { errors, isValid },
+    setValue,
+  } = form;
   const user = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
@@ -32,32 +37,15 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
       const findSocial = (platform: string) =>
         user.socials?.find((s) => s.platform === platform)?.url || "";
 
-      setFormData((prev) => ({
-        ...prev,
-        personalInfo: {
-          ...prev.personalInfo,
-          firstName,
-          lastName,
-          email: user.email || "",
-          location: user.location || "",
-          linkedin: findSocial("linkedin"),
-          github: findSocial("github"),
-          phone: user.phone || "",
-        },
-      }));
+      setValue("personalInfo.firstName", firstName);
+      setValue("personalInfo.lastName", lastName);
+      setValue("personalInfo.email", user.email || "");
+      setValue("personalInfo.location", user.location || "");
+      setValue("personalInfo.linkedin", findSocial("linkedin"));
+      setValue("personalInfo.github", findSocial("github"));
+      setValue("personalInfo.phone", user.phone || "");
     }
-  }, [user, setFormData]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      personalInfo: {
-        ...prev.personalInfo,
-        [id]: value,
-      },
-    }));
-  };
+  }, [user, setValue]);
 
   return (
     <Card>
@@ -72,18 +60,30 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
             <Input
               id="firstName"
               placeholder="Enter your first name"
-              value={formData.personalInfo.firstName}
-              onChange={handleChange}
+              {...register("personalInfo.firstName", {
+                required: "First name is required",
+              })}
             />
+            {errors.personalInfo?.firstName && (
+              <p className="text-sm text-red-500">
+                {errors.personalInfo.firstName.message}
+              </p>
+            )}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="lastName">Last Name</Label>
             <Input
               id="lastName"
               placeholder="Enter your last name"
-              value={formData.personalInfo.lastName}
-              onChange={handleChange}
+              {...register("personalInfo.lastName", {
+                required: "Last name is required",
+              })}
             />
+            {errors.personalInfo?.lastName && (
+              <p className="text-sm text-red-500">
+                {errors.personalInfo.lastName.message}
+              </p>
+            )}
           </div>
         </div>
 
@@ -93,9 +93,20 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
             id="email"
             type="email"
             placeholder="Enter your email address"
-            value={formData.personalInfo.email}
+            {...register("personalInfo.email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                message: "Invalid email address",
+              },
+            })}
             disabled
           />
+          {errors.personalInfo?.email && (
+            <p className="text-sm text-red-500">
+              {errors.personalInfo.email.message}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-2">
@@ -103,8 +114,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
           <Input
             id="phone"
             placeholder="Enter your phone number"
-            value={formData.personalInfo.phone}
-            onChange={handleChange}
+            {...register("personalInfo.phone")}
           />
         </div>
 
@@ -113,8 +123,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
           <Input
             id="location"
             placeholder="City, Country"
-            value={formData.personalInfo.location}
-            onChange={handleChange}
+            {...register("personalInfo.location")}
           />
         </div>
 
@@ -128,8 +137,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
               id="linkedin"
               placeholder="linkedin.com/in/yourprofile"
               className="rounded-l-none"
-              value={formData.personalInfo.linkedin}
-              onChange={handleChange}
+              {...register("personalInfo.linkedin")}
             />
           </div>
         </div>
@@ -144,8 +152,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
               id="github"
               placeholder="github.com/yourusername"
               className="rounded-l-none"
-              value={formData.personalInfo.github}
-              onChange={handleChange}
+              {...register("personalInfo.github")}
             />
           </div>
         </div>
@@ -156,7 +163,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button onClick={onContinue}>
+        <Button onClick={onContinue} disabled={!isValid}>
           Continue
           <ArrowRight className="h-4 w-4 ml-2" />
         </Button>

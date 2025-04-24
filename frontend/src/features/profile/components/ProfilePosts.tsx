@@ -27,8 +27,6 @@ export default function ProfilePosts() {
     staleTime: 1000 * 60 * 5, // Optional: cache it for 5 mins
   });
 
-  console.log(data);
-
   if (isLoading) return <p>Loading posts...</p>;
   if (isError) return <p>Something went wrong.</p>;
 

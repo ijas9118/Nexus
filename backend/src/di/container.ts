@@ -121,19 +121,19 @@ import { MessageRepository } from '@/repositories/message.repository';
 import { MessageService } from '@/services/message.service';
 import { SocketController } from '@/controllers/socket.controller';
 
-import { IMentorshipConfigRepository } from '@/core/interfaces/repositories/IMentorshipConfigRepository';
-import { MentorshipConfigRepository } from '@/repositories/mentorship-config.repository';
-import { IMentorshipConfigService } from '@/core/interfaces/services/IMentorshipConfigService';
-import { MentorshipConfigService } from '@/services/mentorship-config.service';
-import { IMentorshipConfigController } from '@/core/interfaces/controllers/IMentorshipConfigController';
-import { MentorshipConfigController } from '@/controllers/mentor-config.controller';
-
 import { IMentorController } from '@/core/interfaces/controllers/IMentorController';
 import { MentorController } from '@/controllers/mentor.controller';
 import { IMentorService } from '@/core/interfaces/services/IMentorService';
 import { MentorService } from '@/services/mentor.service';
 import { IMentorRepository } from '@/core/interfaces/repositories/IMentorRepository';
 import { MentorRepository } from '@/repositories/mentor.repository';
+
+import { ITimeSlotRepository } from '@/core/interfaces/repositories/ITimeSlotRepository';
+import { TimeSlotRepository } from '@/repositories/time-slot.repository';
+import { ITimeSlotService } from '@/core/interfaces/services/ITimeSlotService';
+import { TimeSlotService } from '@/services/time-slot.service';
+import { ITimeSlotController } from '@/core/interfaces/controllers/ITimeSlotController';
+import { TimeSlotController } from '@/controllers/time-slot.controller';
 
 const container = new Container();
 
@@ -206,16 +206,12 @@ container.bind<IMessageService>(TYPES.MessageService).to(MessageService);
 
 container.bind<SocketController>(TYPES.SocketController).to(SocketController);
 
-container
-  .bind<IMentorshipConfigRepository>(TYPES.MentorshipConfigRepository)
-  .to(MentorshipConfigRepository);
-container.bind<IMentorshipConfigService>(TYPES.MentorshipConfigService).to(MentorshipConfigService);
-container
-  .bind<IMentorshipConfigController>(TYPES.MentorshipConfigController)
-  .to(MentorshipConfigController);
-
 container.bind<IMentorController>(TYPES.MentorController).to(MentorController);
 container.bind<IMentorService>(TYPES.MentorService).to(MentorService);
 container.bind<IMentorRepository>(TYPES.MentorRepository).to(MentorRepository);
+
+container.bind<ITimeSlotRepository>(TYPES.TimeSlotRepository).to(TimeSlotRepository);
+container.bind<ITimeSlotService>(TYPES.TimeSlotService).to(TimeSlotService);
+container.bind<ITimeSlotController>(TYPES.TimeSlotController).to(TimeSlotController);
 
 export { container };

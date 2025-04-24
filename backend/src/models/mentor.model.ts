@@ -1,4 +1,11 @@
-import { MentorStatus } from '@/core/types';
+import {
+  ExperienceLevel,
+  ExpertiseArea,
+  MentorshipType,
+  MentorStatus,
+  TargetAudience,
+  Technology,
+} from '@/core/types/entities/mentor';
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 export interface IMentor extends Document {
@@ -6,17 +13,16 @@ export interface IMentor extends Document {
   experience: {
     currentRole: string;
     company: string;
-    experienceLevel: ObjectId;
-    expertiseAreas: ObjectId[];
-    technologies: ObjectId[];
+    experienceLevel: ExperienceLevel;
+    expertiseAreas: ExpertiseArea[];
+    technologies: Technology[];
     bio: string;
     resume?: string | null;
   };
   mentorshipDetails: {
-    mentorshipTypes: ObjectId[];
-    targetAudiences: ObjectId[];
+    mentorshipTypes: MentorshipType[];
+    targetAudiences: TargetAudience[];
     availabilityType: 'weekdays' | 'weekend' | 'both';
-    availableTimeSlots: string[];
     motivation: string;
   };
   status: MentorStatus;
@@ -36,21 +42,21 @@ const MentorSchema: Schema = new Schema(
       currentRole: { type: String, required: true },
       company: { type: String, required: true },
       experienceLevel: {
-        type: Schema.Types.ObjectId,
-        ref: 'MentorshipConfig',
+        type: String,
+        enum: Object.values(ExperienceLevel),
         required: true,
       },
       expertiseAreas: [
         {
-          type: Schema.Types.ObjectId,
-          ref: 'MentorshipConfig',
+          type: String,
+          enum: Object.values(ExpertiseArea),
           required: true,
         },
       ],
       technologies: [
         {
-          type: Schema.Types.ObjectId,
-          ref: 'MentorshipConfig',
+          type: String,
+          enum: Object.values(Technology),
           required: true,
         },
       ],
@@ -60,16 +66,16 @@ const MentorSchema: Schema = new Schema(
     mentorshipDetails: {
       mentorshipTypes: [
         {
-          type: Schema.Types.ObjectId,
-          ref: 'MentorshipConfig',
-          default: [],
+          type: String,
+          enum: Object.values(MentorshipType),
+          required: true,
         },
       ],
       targetAudiences: [
         {
-          type: Schema.Types.ObjectId,
-          ref: 'MentorshipConfig',
-          default: [],
+          type: String,
+          enum: Object.values(TargetAudience),
+          required: true,
         },
       ],
       availabilityType: {
@@ -77,7 +83,6 @@ const MentorSchema: Schema = new Schema(
         enum: ['weekdays', 'weekend', 'both'],
         default: 'both',
       },
-      availableTimeSlots: { type: [String], required: true },
       motivation: { type: String, default: '' },
     },
     status: {

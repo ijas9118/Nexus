@@ -1,4 +1,4 @@
-import { FaBolt } from "react-icons/fa";
+import { HiBadgeCheck } from "react-icons/hi";
 
 interface MentorProps {
   className?: string;
@@ -8,9 +8,9 @@ interface MentorProps {
 const Mentor = ({ className = "", size = 24 }: MentorProps) => {
   return (
     <div>
-      <FaBolt
+      <HiBadgeCheck
         size={size}
-        className={`fill-amber-400 stroke-amber-400 dark:fill-amber-300 dark:stroke-amber-300 ${className}`}
+        className={`fill-blue-500 stroke-blue-500 dark:fill-blue-400 dark:stroke-blue-400 ${className}`}
       />
     </div>
   );

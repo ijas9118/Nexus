@@ -32,7 +32,6 @@ export default function ProfilePage() {
       try {
         const data = await ProfileService.getUserProfile(username);
         setProfileUser(data);
-        console.log(data);
 
         if (currentUser !== data?._id) {
           const followingStatus = await checkIsFollowing(currentUser, data._id);

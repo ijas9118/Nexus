@@ -24,9 +24,8 @@ import FileUpload from "./FileUpload";
 import React from "react";
 import { useMentorForm } from "@/context/MentorFormContext";
 import { useQuery } from "@tanstack/react-query";
-import { MentorConfigService } from "@/services/mentorConfigService";
-import { MentorshipConfig } from "@/types/mentor";
 import { formatLabel } from "@/utils";
+import MentorService from "@/services/mentorService";
 
 interface ExperienceFormProps {
   onBack: () => void;
@@ -37,76 +36,38 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
   onBack,
   onContinue,
 }) => {
-  const { formData, setFormData } = useMentorForm();
+  const { form } = useMentorForm();
+  const {
+    register,
+    formState: { errors, isValid },
+    setValue,
+    watch,
+  } = form;
 
-  const { data: experienceLevels = [], isLoading: isLoadingLevels } = useQuery({
-    queryKey: ["experienceLevels"],
-    queryFn: () => MentorConfigService.getConfigsByCategory("experienceLevel"),
+  const { data: enums, isLoading } = useQuery({
+    queryKey: ["mentorEnums"],
+    queryFn: MentorService.getMentorEnums,
   });
 
-  const { data: expertiseAreas = [], isLoading: isLoadingAreas } = useQuery({
-    queryKey: ["expertiseAreas"],
-    queryFn: () => MentorConfigService.getConfigsByCategory("expertiseArea"),
-  });
-
-  const { data: technologies = [], isLoading: isLoadingTechs } = useQuery({
-    queryKey: ["technologies"],
-    queryFn: () => MentorConfigService.getConfigsByCategory("technology"),
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      experience: {
-        ...prev.experience,
-        [id]: value,
-      },
-    }));
-  };
-
-  const handleExperienceLevelChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      experience: {
-        ...prev.experience,
-        experienceLevel: value,
-      },
-    }));
-  };
+  const expertiseAreas = watch("experience.expertiseAreas", []);
+  const technologies = watch("experience.technologies", []);
 
   const handleCheckboxChange = (
     field: "expertiseAreas" | "technologies",
     value: string,
     checked: boolean,
   ) => {
-    console.log(value);
+    const currentValues =
+      field === "expertiseAreas" ? expertiseAreas : technologies;
+    let updatedValues = [...currentValues];
 
-    setFormData((prev) => {
-      const currentValues = prev.experience[field];
-      const updatedValues = checked
-        ? [...currentValues, value] // Add value if checked
-        : currentValues.filter((item) => item !== value); // Remove value if unchecked
+    if (checked) {
+      updatedValues.push(value);
+    } else {
+      updatedValues = updatedValues.filter((item) => item !== value);
+    }
 
-      return {
-        ...prev,
-        experience: {
-          ...prev.experience,
-          [field]: updatedValues,
-        },
-      };
-    });
-  };
-
-  const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      experience: {
-        ...prev.experience,
-        bio: value,
-      },
-    }));
+    setValue(`experience.${field}`, updatedValues, { shouldValidate: true });
   };
 
   return (
@@ -123,9 +84,15 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
           <Input
             id="currentRole"
             placeholder="e.g. Senior Software Engineer"
-            value={formData.experience.currentRole}
-            onChange={handleChange}
+            {...register("experience.currentRole", {
+              required: "Current role is required",
+            })}
           />
+          {errors.experience?.currentRole && (
+            <p className="text-sm text-red-500">
+              {errors.experience.currentRole.message}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-2">
@@ -133,97 +100,118 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
           <Input
             id="company"
             placeholder="e.g. Acme Inc."
-            value={formData.experience.company}
-            onChange={handleChange}
+            {...register("experience.company", {
+              required: "Company is required",
+            })}
           />
+          {errors.experience?.company && (
+            <p className="text-sm text-red-500">
+              {errors.experience.company.message}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-2">
           <Label htmlFor="experience">Years of Professional Experience</Label>
-          {isLoadingLevels ? (
+          {isLoading ? (
             <div>Loading...</div>
           ) : (
             <Select
-              onValueChange={handleExperienceLevelChange}
-              value={formData.experience.experienceLevel}
+              onValueChange={(value) =>
+                setValue("experience.experienceLevel", value, {
+                  shouldValidate: true,
+                })
+              }
+              value={watch("experience.experienceLevel")}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select experience level" />
               </SelectTrigger>
               <SelectContent>
-                {experienceLevels.map((level: MentorshipConfig) => (
-                  <SelectItem key={level._id} value={level._id}>
-                    {level.value}
+                {enums?.experienceLevels.map((level: any, index: number) => (
+                  <SelectItem key={index} value={level}>
+                    {formatLabel(level)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           )}
+          {errors.experience?.experienceLevel && (
+            <p className="text-sm text-red-500">
+              {errors.experience.experienceLevel.message}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-2">
           <Label>Areas of Expertise</Label>
-          {isLoadingAreas ? (
+          {isLoading ? (
             <div>Loading...</div>
           ) : (
             <div className="grid grid-cols-2 gap-2">
-              {expertiseAreas.map((area: MentorshipConfig) => (
-                <div key={area._id} className="flex items-center space-x-2">
+              {enums?.expertiseAreas?.map((area: any, index: number) => (
+                <div key={index} className="flex items-center space-x-2">
                   <Checkbox
-                    id={`expertise-${area._id}`}
-                    checked={formData.experience.expertiseAreas.includes(
-                      area._id,
-                    )}
+                    id={`expertise-${area}`}
+                    checked={expertiseAreas.includes(area)}
                     onCheckedChange={(checked) =>
                       handleCheckboxChange(
                         "expertiseAreas",
-                        area._id,
+                        area,
                         checked === true,
                       )
                     }
                   />
                   <Label
-                    htmlFor={`expertise-${area._id}`}
+                    htmlFor={`expertise-${area}`}
                     className="text-sm font-normal"
                   >
-                    {formatLabel(area.value)}
+                    {formatLabel(area)}
                   </Label>
                 </div>
               ))}
             </div>
           )}
+          {errors.experience?.expertiseAreas && (
+            <p className="text-sm text-red-500">
+              {errors.experience.expertiseAreas.message}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-2">
           <Label>Technologies & Languages</Label>
-          {isLoadingTechs ? (
+          {isLoading ? (
             <div>Loading...</div>
           ) : (
             <div className="grid grid-cols-3 gap-2">
-              {technologies.map((tech: MentorshipConfig) => (
-                <div key={tech._id} className="flex items-center space-x-2">
+              {enums?.technologies?.map((tech: any, index: number) => (
+                <div key={index} className="flex items-center space-x-2">
                   <Checkbox
-                    id={`tech-${tech._id}`}
-                    checked={formData.experience.technologies.includes(
-                      tech._id,
-                    )}
+                    id={`tech-${tech}`}
+                    checked={technologies.includes(tech)}
                     onCheckedChange={(checked) =>
                       handleCheckboxChange(
                         "technologies",
-                        tech._id,
+                        tech,
                         checked === true,
                       )
                     }
                   />
                   <Label
-                    htmlFor={`tech-${tech._id}`}
+                    htmlFor={`tech-${tech}`}
                     className="text-sm font-normal"
                   >
-                    {formatLabel(tech.value)}
+                    {formatLabel(tech)}
                   </Label>
                 </div>
               ))}
             </div>
+          )}
+          {errors.experience?.technologies && (
+            <p className="text-sm text-red-500">
+              {errors.experience.technologies.message}
+            </p>
           )}
         </div>
 
@@ -233,12 +221,18 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
             id="bio"
             placeholder="Write a brief description of your professional experience and qualifications..."
             className="min-h-[150px]"
-            value={formData.experience.bio}
-            onChange={handleBioChange}
+            {...register("experience.bio", {
+              required: "Biography is required",
+            })}
           />
           <p className="text-sm text-muted-foreground">
             This will be displayed on your mentor profile.
           </p>
+          {errors.experience?.bio && (
+            <p className="text-sm text-red-500">
+              {errors.experience.bio.message}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-2">
@@ -250,7 +244,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
         <Button variant="outline" onClick={onBack}>
           Back
         </Button>
-        <Button onClick={onContinue}>
+        <Button onClick={onContinue} disabled={!isValid}>
           Continue
           <ArrowRight className="h-4 w-4 ml-2" />
         </Button>

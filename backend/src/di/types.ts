@@ -16,7 +16,6 @@ export const TYPES = {
   ChatRepository: Symbol.for('ChatRepository'),
   GroupRepository: Symbol.for('GroupRepository'),
   MessageRepository: Symbol.for('MessageRepository'),
-  MentorshipConfigRepository: Symbol.for('MentorshipConfigRepository'),
 
   // Services
   UserService: Symbol.for('UserService'),
@@ -40,7 +39,6 @@ export const TYPES = {
   ChatService: Symbol.for('ChatService'),
   GroupService: Symbol.for('GroupService'),
   MessageService: Symbol.for('MessageService'),
-  MentorshipConfigService: Symbol.for('MentorshipConfigService'),
 
   // Controllers
   UserController: Symbol.for('UserController'),
@@ -60,5 +58,7 @@ export const TYPES = {
   PlanController: Symbol.for('PlanController'),
   PaymentController: Symbol.for('PaymentController'),
   SocketController: Symbol.for('SocketController'),
-  MentorshipConfigController: Symbol.for('MentorshipConfigController'),
+  TimeSlotRepository: Symbol.for('TimeSlotRepository'),
+  TimeSlotService: Symbol.for('TimeSlotService'),
+  TimeSlotController: Symbol.for('TimeSlotController'),
 };

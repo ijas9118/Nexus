@@ -10,80 +10,62 @@ import {
 import { Checkbox } from "@/components/atoms/checkbox";
 import { Label } from "@/components/atoms/label";
 import { Textarea } from "@/components/atoms/textarea";
-import { Link } from "react-router-dom";
-import CheckboxGroup from "./CheckboxGroup";
+import { Link, useNavigate } from "react-router-dom";
 import { useMentorForm } from "@/context/MentorFormContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import MentorService from "@/services/mentorService";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/atoms/radio-group";
-import { Badge } from "@/components/atoms/badge";
-import { MentorConfigService } from "@/services/mentorConfigService";
-import { MentorshipConfig } from "@/types/mentor";
 import { formatLabel } from "@/utils";
-import React from "react";
-
-export const TIME_SLOTS = [
-  "9:00 AM - 10:00 AM",
-  "10:00 AM - 11:00 AM",
-  "11:00 AM - 12:00 PM",
-  "12:00 PM - 1:00 PM",
-  "1:00 PM - 2:00 PM",
-  "2:00 PM - 3:00 PM",
-  "3:00 PM - 4:00 PM",
-  "4:00 PM - 5:00 PM",
-  "5:00 PM - 6:00 PM",
-  "6:00 PM - 7:00 PM",
-  "7:00 PM - 8:00 PM",
-];
+import { MentorFormData } from "@/types/mentor";
 
 const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
-  const { formData, setFormData } = useMentorForm();
+  const navigator = useNavigate();
 
-  const { data: mentorshipTypes = [], isLoading: isLoadingTypes } = useQuery({
-    queryKey: ["mentorshipTypes"],
-    queryFn: () => MentorConfigService.getConfigsByCategory("mentorshipType"),
+  const { form } = useMentorForm();
+  const {
+    register,
+    formState: { errors, isValid },
+    setValue,
+    watch,
+    handleSubmit,
+  } = form;
+
+  const { data: enums, isLoading } = useQuery({
+    queryKey: ["mentorEnums"],
+    queryFn: MentorService.getMentorEnums,
   });
 
-  const { data: targetAudiences = [], isLoading: isLoadingAudiences } =
-    useQuery({
-      queryKey: ["targetAudiences"],
-      queryFn: () => MentorConfigService.getConfigsByCategory("targetAudience"),
-    });
+  const mentorshipTypes = watch("mentorshipDetails.mentorshipTypes", []);
+  const targetAudiences = watch("mentorshipDetails.targetAudiences", []);
 
-  const handleAvailabilityTypeChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      mentorshipDetails: {
-        ...prev.mentorshipDetails,
-        availabilityType: value,
-      },
-    }));
-  };
+  const handleCheckboxChange = (
+    field: "mentorshipTypes" | "targetAudiences",
+    value: string,
+    checked: boolean,
+  ) => {
+    const currentValues =
+      field === "mentorshipTypes" ? mentorshipTypes : targetAudiences;
+    let updatedValues = [...currentValues];
 
-  const handleTimeSlotChange = (timeSlot: string) => {
-    setFormData((prev) => {
-      const currentTimeSlots = prev.mentorshipDetails.availableTimeSlots;
-      const updatedTimeSlots = currentTimeSlots.includes(timeSlot)
-        ? currentTimeSlots.filter((slot) => slot !== timeSlot) // Deselect if already selected
-        : [...currentTimeSlots, timeSlot]; // Select if not already selected
+    if (checked) {
+      updatedValues.push(value);
+    } else {
+      updatedValues = updatedValues.filter((item) => item !== value);
+    }
 
-      return {
-        ...prev,
-        mentorshipDetails: {
-          ...prev.mentorshipDetails,
-          availableTimeSlots: updatedTimeSlots,
-        },
-      };
+    setValue(`mentorshipDetails.${field}`, updatedValues, {
+      shouldValidate: true,
     });
   };
 
   const mutation = useMutation({
-    mutationFn: (data: typeof formData) => MentorService.applyAsMentor(data),
+    mutationFn: (data: MentorFormData) => MentorService.applyAsMentor(data),
     onSuccess: () => {
       toast("Application submitted", {
         description: "We've received your mentor application.",
       });
+      navigator("/mentors");
     },
     onError: () => {
       toast.error("Error", {
@@ -92,41 +74,8 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
     },
   });
 
-  const handleMentorshipTypesChange = (selectedTypes: string[]) => {
-    setFormData((prev) => ({
-      ...prev,
-      mentorshipDetails: {
-        ...prev.mentorshipDetails,
-        mentorshipTypes: selectedTypes,
-      },
-    }));
-  };
-
-  const handleTargetAudiencesChange = (selectedAudiences: string[]) => {
-    setFormData((prev) => ({
-      ...prev,
-      mentorshipDetails: {
-        ...prev.mentorshipDetails,
-        targetAudiences: selectedAudiences,
-      },
-    }));
-  };
-
-  const handleMotivationChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const { value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      mentorshipDetails: {
-        ...prev.mentorshipDetails,
-        motivation: value,
-      },
-    }));
-  };
-
-  const handleSubmit = () => {
-    mutation.mutate(formData);
+  const onSubmit = (data: MentorFormData) => {
+    mutation.mutate(data);
   };
 
   return (
@@ -140,45 +89,87 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
           <Label>
             What type of mentorship are you interested in providing?
           </Label>
-          {isLoadingTypes ? (
+          {isLoading ? (
             <div>Loading...</div>
           ) : (
-            <CheckboxGroup
-              items={mentorshipTypes.map((item: MentorshipConfig) => ({
-                value: item._id,
-                label: formatLabel(item.value),
-              }))}
-              idPrefix="type"
-              columns={1}
-              value={formData.mentorshipDetails.mentorshipTypes}
-              onChange={handleMentorshipTypesChange}
-            />
+            <div className="grid gap-2">
+              {enums?.mentorshipTypes.map((type: any, index: number) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`mentorshipType-${type}`}
+                    checked={mentorshipTypes.includes(type)}
+                    onCheckedChange={(checked) =>
+                      handleCheckboxChange(
+                        "mentorshipTypes",
+                        type,
+                        checked === true,
+                      )
+                    }
+                  />
+
+                  <Label
+                    htmlFor={`mentorshipType-${type}`}
+                    className="text-sm font-normal"
+                  >
+                    {formatLabel(type)}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          )}
+          {errors.mentorshipDetails?.mentorshipTypes && (
+            <p className="text-sm text-red-500">
+              {errors.mentorshipDetails.mentorshipTypes.message}
+            </p>
           )}
         </div>
 
         <div className="grid gap-2">
           <Label>What is your target audience?</Label>
-          {isLoadingAudiences ? (
+          {isLoading ? (
             <div>Loading...</div>
           ) : (
-            <CheckboxGroup
-              items={targetAudiences.map((item: MentorshipConfig) => ({
-                value: item._id,
-                label: formatLabel(item.value),
-              }))}
-              idPrefix="audience"
-              columns={2}
-              value={formData.mentorshipDetails.targetAudiences}
-              onChange={handleTargetAudiencesChange}
-            />
+            <div className="grid grid-cols-2 gap-2">
+              {enums?.targetAudiences?.map((audience: any, index: number) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`audience-${audience}`}
+                    checked={targetAudiences.includes(audience)}
+                    onCheckedChange={(checked) =>
+                      handleCheckboxChange(
+                        "targetAudiences",
+                        audience,
+                        checked === true,
+                      )
+                    }
+                  />
+
+                  <Label
+                    htmlFor={`audience-${audience}`}
+                    className="text-sm font-normal"
+                  >
+                    {formatLabel(audience)}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          )}
+          {errors.mentorshipDetails?.targetAudiences && (
+            <p className="text-sm text-red-500">
+              {errors.mentorshipDetails.targetAudiences.message}
+            </p>
           )}
         </div>
 
         <div className="grid gap-2">
           <Label>When are you available?</Label>
           <RadioGroup
-            value={formData.mentorshipDetails.availabilityType}
-            onValueChange={handleAvailabilityTypeChange}
+            value={watch("mentorshipDetails.availabilityType")}
+            onValueChange={(value) =>
+              setValue("mentorshipDetails.availabilityType", value, {
+                shouldValidate: true,
+              })
+            }
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="weekdays" id="weekdays" />
@@ -199,28 +190,11 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
               </Label>
             </div>
           </RadioGroup>
-        </div>
-
-        <div className="grid gap-4">
-          <Label>Select your available time slots</Label>
-          <div className="flex flex-wrap gap-2">
-            {TIME_SLOTS.map((timeSlot) => (
-              <Badge
-                key={timeSlot}
-                variant={
-                  formData.mentorshipDetails.availableTimeSlots.includes(
-                    timeSlot,
-                  )
-                    ? "default"
-                    : "outline"
-                }
-                className="cursor-pointer py-2 px-4"
-                onClick={() => handleTimeSlotChange(timeSlot)}
-              >
-                {timeSlot}
-              </Badge>
-            ))}
-          </div>
+          {errors.mentorshipDetails?.availabilityType && (
+            <p className="text-sm text-red-500">
+              {errors.mentorshipDetails.availabilityType.message}
+            </p>
+          )}
         </div>
 
         <div className="grid gap-2">
@@ -231,9 +205,15 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
             id="motivation"
             placeholder="Tell us why you're interested in mentoring and what you hope to achieve..."
             className="min-h-[100px]"
-            value={formData.mentorshipDetails.motivation}
-            onChange={handleMotivationChange}
+            {...register("mentorshipDetails.motivation", {
+              required: "Motivation is required",
+            })}
           />
+          {errors.mentorshipDetails?.motivation && (
+            <p className="text-sm text-red-500">
+              {errors.mentorshipDetails.motivation.message}
+            </p>
+          )}
         </div>
 
         <div className="flex items-center space-x-2">
@@ -254,7 +234,10 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
         <Button variant="outline" onClick={onBack}>
           Back
         </Button>
-        <Button onClick={handleSubmit} disabled={mutation.isPending}>
+        <Button
+          onClick={handleSubmit(onSubmit)}
+          disabled={!isValid || mutation.isPending}
+        >
           {mutation.isPending ? "Submitting..." : "Submit Application"}
         </Button>
       </CardFooter>

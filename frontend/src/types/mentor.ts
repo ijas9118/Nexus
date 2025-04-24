@@ -2,26 +2,17 @@ import { UserInterface } from "./user";
 
 export interface Mentor {
   _id: string;
-  name: string;
-  email: string;
-  specialization: string[];
-  status: string;
+  userId: {
+    _id: string;
+    name: string;
+    profilePic: string;
+  };
+  experience: {
+    currentRole: string;
+    expertiseAreas: string[];
+    bio: string;
+  };
 }
-
-export interface MentorshipConfig {
-  _id: string;
-  category: ConfigCategory | string;
-  value: string;
-  isActive: boolean;
-  createdAt: Date;
-}
-
-export type ConfigCategory =
-  | "mentorshipType"
-  | "targetAudience"
-  | "expertiseArea"
-  | "technology"
-  | "experienceLevel";
 
 export interface MentorFormData {
   personalInfo: {
@@ -47,7 +38,6 @@ export interface MentorFormData {
     mentorshipTypes: string[];
     targetAudiences: string[];
     availabilityType: string;
-    availableTimeSlots: string[];
     motivation: string;
   };
 }
@@ -58,15 +48,15 @@ export interface MentorApplication {
   experience: {
     currentRole: string;
     company: string;
-    experienceLevel: MentorshipConfig;
-    expertiseAreas: MentorshipConfig[];
-    technologies: MentorshipConfig[];
+    experienceLevel: string;
+    expertiseAreas: string[];
+    technologies: string[];
     bio: string;
     resume: string | null;
   };
   mentorshipDetails: {
-    mentorshipTypes: MentorshipConfig[];
-    targetAudiences: MentorshipConfig[];
+    mentorshipTypes: string[];
+    targetAudiences: string[];
     availabilityType: "weekdays" | "weekend" | "both";
     availableTimeSlots: string[];
     motivation: string;
@@ -74,4 +64,17 @@ export interface MentorApplication {
   status: "pending" | "approved" | "rejected";
   createdAt: string;
   updatedAt: string;
+}
+
+export type AvailabilityType = "weekdays" | "weekend" | "both";
+
+export interface TimeSlot {
+  _id: string;
+  mentorId: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  isBooked: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }

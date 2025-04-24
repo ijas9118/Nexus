@@ -17,7 +17,7 @@ import ContentDetails from "@/features/content/ContentDetails";
 import ProfilePage from "@/features/profile/Profile";
 import EditProfile from "@/features/profile/EditProfileLayout";
 import Following from "@/features/content/Following";
-import Mentors from "@/features/mentor/Mentors";
+import Mentors from "@/features/mentor/MentorsListPage";
 import MentorApply from "@/features/mentor/MentorApply";
 import MentorProfilePage from "@/features/mentor/MentorDetailPage";
 import BookSession from "@/features/mentor/BookSession";

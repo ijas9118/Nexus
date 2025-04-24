@@ -81,7 +81,7 @@ const MessageInput = ({ chatId, chatType }: MessageInputProps) => {
     return () => {
       socket.off("chatCreated", handleChatCreated);
     };
-  }, [socket, pendingChat, user, content, dispatch, chats]);
+  }, [socket, pendingChat, user, content, dispatch, chats, sendMessage]);
 
   return (
     <div className="px-2 py-2 border-t bg-primary-foreground flex items-center space-x-2">

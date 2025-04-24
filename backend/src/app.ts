@@ -21,7 +21,7 @@ import planRoutes from './routes/plan.routes';
 import paymentRoutes from './routes/payment.routes';
 import webhookRouter from './routes/webhook.routes';
 import chatRoutes from './routes/chat.routes';
-import mentorshipConfigRoutes from './routes/mentorship-config.routes';
+import timeSlotRoutes from './routes/time-slot.routes';
 
 const app = express();
 setupSwagger(app);
@@ -50,11 +50,11 @@ app.use('/api/content', contentRoutes);
 app.use('/api/squad', squadRouters);
 app.use('/api/user', userRoutes);
 app.use('/api/mentor', mentorRoutes);
+app.use('/api/mentor/time-slot', timeSlotRoutes);
 app.use('/api/followers', followerRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/chat', chatRoutes);
-app.use('/api/mentorship-config', mentorshipConfigRoutes);
 
 app.use(errorMiddleware);
 

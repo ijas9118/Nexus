@@ -1,5 +1,6 @@
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -31,12 +32,14 @@ const HeroSection = () => {
             Join a community built for your professional growth.
           </p>
           <div className="mt-10 flex items-center justify-center">
-            <Button
-              size="lg"
-              className="rounded-full px-8 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white dark:from-blue-800 dark:to-blue-900"
-            >
-              Get started
-            </Button>
+            <Link to="/myFeed">
+              <Button
+                size="lg"
+                className="rounded-full px-8 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white dark:from-blue-800 dark:to-blue-900"
+              >
+                Get started
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

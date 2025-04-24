@@ -5,6 +5,13 @@ import { TYPES } from '../di/types';
 import { IMentorService } from '../core/interfaces/services/IMentorService';
 import asyncHandler from 'express-async-handler';
 import { StatusCodes } from 'http-status-codes';
+import {
+  ExperienceLevel,
+  ExpertiseArea,
+  MentorshipType,
+  TargetAudience,
+  Technology,
+} from '@/core/types/entities/mentor';
 
 @injectable()
 export class MentorController implements IMentorController {
@@ -12,8 +19,11 @@ export class MentorController implements IMentorController {
 
   applyAsMentor = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
-    console.log('CONt', userId);
-    const mentorData = req.body;
+    const mentorData = {
+      personalInfo: req.body.personalInfo,
+      experience: req.body.experience,
+      mentorshipDetails: req.body.mentorshipDetails,
+    };
 
     const mentor = await this.mentorService.applyAsMentor(userId, mentorData);
     res.status(StatusCodes.CREATED).json({ success: true, data: mentor });
@@ -42,9 +52,38 @@ export class MentorController implements IMentorController {
     res.status(StatusCodes.OK).json(mentors);
   });
 
+  getApprovedMentors = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const mentors = await this.mentorService.getApprovedMentors();
+    res.status(StatusCodes.OK).json(mentors);
+  });
+
   getMentorDetails = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const mentorId = req.params.mentorId;
     const mentor = await this.mentorService.getMentorDetails(mentorId);
     res.status(StatusCodes.OK).json(mentor);
+  });
+
+  getMentorEnums = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    res.json({
+      experienceLevels: Object.values(ExperienceLevel),
+      expertiseAreas: Object.values(ExpertiseArea),
+      mentorshipTypes: Object.values(MentorshipType),
+      targetAudiences: Object.values(TargetAudience),
+      technologies: Object.values(Technology),
+    });
+  });
+
+  updateAvailability = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { availabilityType } = req.body;
+    const status = await this.mentorService.updateAvailability(
+      req.user?._id as string,
+      availabilityType
+    );
+    res.status(StatusCodes.OK).json({ status });
+  });
+
+  getAvailability = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const availability = await this.mentorService.getAvailability(req.user?._id as string);
+    res.status(StatusCodes.OK).json(availability);
   });
 }
