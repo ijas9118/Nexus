@@ -1,63 +1,39 @@
-import { useState, useEffect } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/molecules/card";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
-import { Trash2, Clock } from "lucide-react";
+import { Trash2, Clock, Loader2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { TimeSlot } from "@/types/mentor";
+import TimeSlotService from "@/services/TimeSlotService";
+import { Alert, AlertDescription } from "@/components/atoms/alert";
+import { AlertCircle } from "lucide-react";
+import { ScrollArea } from "@/components/organisms/scroll-area";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function TimeSlotList() {
-  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    fetchAllTimeSlots();
-  }, []);
+  // Fetch all time slots using useQuery
+  const {
+    data: timeSlots = [],
+    isLoading,
+    error,
+  } = useQuery<TimeSlot[]>({
+    queryKey: ["allTimeSlots"],
+    queryFn: () => TimeSlotService.getAllTimeSlots(), // Assume this method exists in TimeSlotService
+  });
 
-  const fetchAllTimeSlots = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/mentors/time-slots/all");
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch time slots");
-      }
-
-      const data = await response.json();
-      setTimeSlots(data);
-    } catch (err) {
-      setError("Error loading time slots. Please try again.");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDeleteTimeSlot = async (id: string) => {
-    setIsLoading(true);
-
-    try {
-      const response = await fetch(`/api/mentors/time-slots/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to delete time slot");
-      }
-
-      // Refresh time slots
-      fetchAllTimeSlots();
-    } catch (err: any) {
-      setError(err.message || "Error deleting time slot. Please try again.");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Mutation for deleting a time slot
+  const deleteTimeSlotMutation = useMutation({
+    mutationFn: (slotId: string) => TimeSlotService.deleteTimeSlot(slotId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allTimeSlots"] });
+    },
+    onError: (err: any) => {
+      console.error("Failed to delete time slot:", err);
+    },
+  });
 
   // Group time slots by date
   const groupedTimeSlots = timeSlots.reduce(
@@ -72,61 +48,201 @@ export default function TimeSlotList() {
     {} as Record<string, TimeSlot[]>,
   );
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        damping: 15,
+        stiffness: 300,
+        when: "beforeChildren",
+        staggerChildren: 0.1,
+      },
+    },
+    exit: {
+      opacity: 0,
+      y: -20,
+      transition: { duration: 0.2 },
+    },
+  };
+
+  const slotVariants = {
+    hidden: { opacity: 0, x: -10 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { type: "spring", damping: 12 },
+    },
+    exit: {
+      opacity: 0,
+      x: 15,
+      transition: { duration: 0.15 },
+    },
+  };
+
   if (isLoading && timeSlots.length === 0) {
-    return <p>Loading time slots...</p>;
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex flex-col items-center justify-center h-40 space-y-4"
+      >
+        <Loader2 className="h-8 w-8 text-primary animate-spin" />
+        <p className="text-muted-foreground animate-pulse">
+          Loading time slots...
+        </p>
+      </motion.div>
+    );
   }
 
   if (error) {
-    return <p className="text-destructive">{error}</p>;
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring" }}
+      >
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Error loading time slots:{" "}
+            {(error as Error).message || "Please try again."}
+          </AlertDescription>
+        </Alert>
+      </motion.div>
+    );
   }
 
   if (timeSlots.length === 0) {
-    return <p className="text-muted-foreground">No time slots found.</p>;
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, transition: { delay: 0.2 } }}
+      >
+        <div className="flex flex-col items-center justify-center h-40 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <Clock className="h-10 w-10 text-gray-400 mb-2" />
+          <p className="text-muted-foreground text-center">
+            No time slots found.
+          </p>
+        </div>
+      </motion.div>
+    );
   }
 
   return (
-    <div className="space-y-6">
-      {Object.entries(groupedTimeSlots)
-        .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
-        .map(([date, slots]) => (
-          <Card key={date} className="overflow-hidden">
-            <div className="bg-muted p-3 font-medium">
-              {format(parseISO(date), "EEEE, MMMM d, yyyy")}
-            </div>
-            <CardContent className="p-3">
-              <ul className="space-y-2">
-                {slots
-                  .sort((a, b) => a.startTime.localeCompare(b.startTime))
-                  .map((slot) => (
-                    <li
-                      key={slot._id}
-                      className="flex items-center justify-between p-2 border rounded-md"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                        <span>
-                          {slot.startTime} - {slot.endTime}
-                        </span>
-                        {slot.isBooked && (
-                          <Badge variant="secondary">Booked</Badge>
-                        )}
-                      </div>
-                      {!slot.isBooked && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeleteTimeSlot(slot._id)}
-                          disabled={isLoading}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      )}
-                    </li>
-                  ))}
-              </ul>
-            </CardContent>
-          </Card>
-        ))}
-    </div>
+    <ScrollArea className="h-[calc(100vh-370px)] w-full overflow-hidden">
+      <motion.div
+        className="space-y-6 px-1"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <AnimatePresence>
+          {Object.entries(groupedTimeSlots)
+            .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
+            .map(([date, slots], index) => (
+              <motion.div
+                key={date}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                custom={index}
+                layout
+              >
+                <Card className="overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <motion.div
+                    className="bg-muted px-3 py-2 text-sm font-medium"
+                    whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
+                  >
+                    {format(parseISO(date), "EEEE, MMMM d, yyyy")}
+                  </motion.div>
+                  <CardContent className="p-3">
+                    <motion.ul className="space-y-2">
+                      <AnimatePresence>
+                        {slots
+                          .sort((a, b) =>
+                            a.startTime.localeCompare(b.startTime),
+                          )
+                          .map((slot) => (
+                            <motion.li
+                              key={slot._id}
+                              variants={slotVariants}
+                              initial="hidden"
+                              animate="visible"
+                              exit="exit"
+                              layout
+                              className="flex items-center justify-between p-2 border rounded-md bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors duration-200"
+                            >
+                              <div className="flex items-center space-x-2">
+                                <motion.div
+                                  whileHover={{ rotate: 30 }}
+                                  transition={{
+                                    type: "spring",
+                                    stiffness: 500,
+                                  }}
+                                >
+                                  <Clock className="h-4 w-4 text-blue-500" />
+                                </motion.div>
+                                <span className="font-medium">
+                                  {slot.startTime} - {slot.endTime}
+                                </span>
+                                {slot.isBooked && (
+                                  <motion.div
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{ type: "spring" }}
+                                  >
+                                    <Badge
+                                      variant="secondary"
+                                      className="animate-pulse"
+                                    >
+                                      Booked
+                                    </Badge>
+                                  </motion.div>
+                                )}
+                              </div>
+                              {!slot.isBooked && (
+                                <motion.div
+                                  whileHover={{ scale: 1.1, rotate: 5 }}
+                                  whileTap={{ scale: 0.9 }}
+                                >
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() =>
+                                      deleteTimeSlotMutation.mutate(slot._id)
+                                    }
+                                    disabled={deleteTimeSlotMutation.isPending}
+                                    className="text-gray-500 hover:text-red-600 transition-colors duration-200"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </motion.div>
+                              )}
+                            </motion.li>
+                          ))}
+                      </AnimatePresence>
+                    </motion.ul>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+        </AnimatePresence>
+      </motion.div>
+    </ScrollArea>
   );
 }

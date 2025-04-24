@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -16,12 +15,12 @@ import { useMentorAvailability } from "../hooks/useMentorAvailability";
 
 interface AvailabilitySettingsProps {
   onDateChange?: (date: Date | undefined) => void;
+  selectedDate?: Date | undefined;
 }
-
 export default function AvailabilitySettings({
   onDateChange,
+  selectedDate,
 }: AvailabilitySettingsProps = {}) {
-  const [date, setDate] = useState<Date | undefined>(new Date());
   const {
     availabilityType,
     setAvailabilityType,
@@ -33,7 +32,6 @@ export default function AvailabilitySettings({
   } = useMentorAvailability();
 
   const handleDateChange = (newDate: Date | undefined) => {
-    setDate(newDate);
     if (onDateChange) {
       onDateChange(newDate);
     }
@@ -50,7 +48,7 @@ export default function AvailabilitySettings({
   };
 
   return (
-    <Card className="md:col-span-1">
+    <Card className="md:col-span-1 shadow-none rounded-md">
       <CardHeader>
         <CardTitle>Availability Settings</CardTitle>
         <CardDescription>
@@ -103,7 +101,7 @@ export default function AvailabilitySettings({
               <div className="flex items-center justify-start w-full">
                 <Calendar
                   mode="single"
-                  selected={date}
+                  selected={selectedDate}
                   onSelect={handleDateChange}
                   disabled={(date) =>
                     isBefore(date, startOfDay(new Date())) || disabledDays(date)

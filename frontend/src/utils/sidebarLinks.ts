@@ -48,7 +48,7 @@ const baseItems = [
 // Mentor-specific items
 export const mentorItems = [
   {
-    title: "Mentor Dashboard",
+    title: "Dashboard",
     url: "/mentor",
     icon: LayoutDashboard,
   },
@@ -58,8 +58,8 @@ export const mentorItems = [
     icon: Inbox,
   },
   {
-    title: "Time Slots",
-    url: "/mentor/time-slots",
+    title: "Availability",
+    url: "/mentor/availability",
     icon: Clock,
   },
   {

@@ -127,8 +127,13 @@ import { IMentorService } from '@/core/interfaces/services/IMentorService';
 import { MentorService } from '@/services/mentor.service';
 import { IMentorRepository } from '@/core/interfaces/repositories/IMentorRepository';
 import { MentorRepository } from '@/repositories/mentor.repository';
+
 import { ITimeSlotRepository } from '@/core/interfaces/repositories/ITimeSlotRepository';
-import { TimeSlotRepository } from '@/repositories/timeslots.repository';
+import { TimeSlotRepository } from '@/repositories/time-slot.repository';
+import { ITimeSlotService } from '@/core/interfaces/services/ITimeSlotService';
+import { TimeSlotService } from '@/services/time-slot.service';
+import { ITimeSlotController } from '@/core/interfaces/controllers/ITimeSlotController';
+import { TimeSlotController } from '@/controllers/time-slot.controller';
 
 const container = new Container();
 
@@ -206,5 +211,7 @@ container.bind<IMentorService>(TYPES.MentorService).to(MentorService);
 container.bind<IMentorRepository>(TYPES.MentorRepository).to(MentorRepository);
 
 container.bind<ITimeSlotRepository>(TYPES.TimeSlotRepository).to(TimeSlotRepository);
+container.bind<ITimeSlotService>(TYPES.TimeSlotService).to(TimeSlotService);
+container.bind<ITimeSlotController>(TYPES.TimeSlotController).to(TimeSlotController);
 
 export { container };

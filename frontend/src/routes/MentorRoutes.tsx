@@ -14,7 +14,7 @@ const MentorRoutes: React.FC = () => {
       <Route element={<Layout />}>
         <Route path="/" element={<MentorDashboard />} />
         <Route path="/requests" element={<MenteeRequests />} />
-        <Route path="/time-slots" element={<TimeSlotManagement />} />
+        <Route path="/availability" element={<TimeSlotManagement />} />
         <Route path="/scheduled-calls" element={<ScheduleCallsManagement />} />
         <Route path="/payments" element={<MentorPayments />} />
         <Route path="/settings" element={<MentorSettings />} />

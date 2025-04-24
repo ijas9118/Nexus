@@ -59,4 +59,6 @@ export const TYPES = {
   PaymentController: Symbol.for('PaymentController'),
   SocketController: Symbol.for('SocketController'),
   TimeSlotRepository: Symbol.for('TimeSlotRepository'),
+  TimeSlotService: Symbol.for('TimeSlotService'),
+  TimeSlotController: Symbol.for('TimeSlotController'),
 };
