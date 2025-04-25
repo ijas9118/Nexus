@@ -188,7 +188,17 @@ export const ChatList = () => {
       handleSelectChat(existingChat, "Chat");
     } else {
       // Set as active chat but don’t create until a message is sent
-      dispatch(setPendingChat({ userId: selectedUser._id }));
+      dispatch(
+        setPendingChat({
+          userId: selectedUser._id,
+          userDetails: {
+            userId: selectedUser._id,
+            name: selectedUser.name,
+            username: selectedUser.username,
+            profilePic: selectedUser.profilePic,
+          },
+        }),
+      );
     }
     setSearchTerm("");
     setShowDropdown(false);
