@@ -30,7 +30,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import NexusLogo from "@/components/icons/NexusLogo";
-import { Button } from "@/components/atoms/button";
 import CollapsibleComponent from "./CollapsibleComponent";
 import SquadSubmenu from "./SquadSubmenu";
 
