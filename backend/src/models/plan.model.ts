@@ -7,6 +7,7 @@ interface IPlan extends Document {
   interval: string;
   ctaText: string;
   highlights: string[];
+  icon: string;
   featured: boolean;
   isActive: boolean;
   createdAt: Date;
@@ -37,6 +38,10 @@ const PlanScheme = new Schema<IPlan>(
     },
     highlights: {
       type: [String],
+      required: true,
+    },
+    icon: {
+      type: String,
       required: true,
     },
     featured: {

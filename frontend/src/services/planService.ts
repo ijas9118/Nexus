@@ -1,37 +1,19 @@
-import { AxiosError } from "axios";
 import api from "./api";
 import { IPlan } from "@/types/plans";
+import { handleApi } from "@/utils/handleApi";
 
 const PlanService = {
-  createPlan: async (planData: IPlan) => {
-    try {
-      const response = await api.post("plans/", planData);
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        throw error.response?.data || error.message;
-      } else if (error instanceof Error) {
-        throw error.message;
-      } else {
-        throw "An unknown error occurred";
-      }
-    }
-  },
+  createPlan: (planData: IPlan) =>
+    handleApi(() => api.post("plans/", planData)),
 
-  getAllPlans: async () => {
-    try {
-      const response = await api.get("plans/");
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        throw error.response?.data || error.message;
-      } else if (error instanceof Error) {
-        throw error.message;
-      } else {
-        throw "An unknown error occurred";
-      }
-    }
-  },
+  getAllPlans: async () => handleApi(() => api.post("plans/")),
+
+  getPlanById: async (id: string) => handleApi(() => api.get(`plans/${id}`)),
+
+  updatePlan: async (id: string, planData: Partial<IPlan>) =>
+    handleApi(() => api.put(`plans/${id}`, planData)),
+
+  deletePlan: async (id: string) => handleApi(() => api.delete(`plans/${id}`)),
 };
 
 export default PlanService;

@@ -1,20 +1,13 @@
 import { Button } from "@/components/atoms/button";
 import { Separator } from "@/components/atoms/separator";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/organisms/dialog";
-import { Plus } from "lucide-react";
+import { Dialog, DialogTrigger } from "@/components/organisms/dialog";
+import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import PriceCard from "./subscription-plan/PricingCard";
 import { FireIcon, FlameIcon, SparkIcon } from "@/components/icons/PlanIcons";
+import PricingPlanForm from "./subscription-plan/PricingPlanForm";
 
 const SubscriptionPlan = () => {
-  const [editingPlan, setEditingPlan] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -30,27 +23,11 @@ const SubscriptionPlan = () => {
         <div className="flex items-center gap-4">
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditingPlan(null)}>
+              <Button>
                 <Plus className="h-4 w-4 mr-2" /> Add Plan
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingPlan ? "Edit Plan" : "Create New Plan"}
-                </DialogTitle>
-                <DialogDescription>
-                  {editingPlan
-                    ? "Update the details of your existing plan."
-                    : "Fill in the details to create a new pricing plan."}
-                </DialogDescription>
-              </DialogHeader>
-              {/* <PlanForm
-                plan={editingPlan}
-                onSave={handleSavePlan}
-                onCancel={() => setIsDialogOpen(false)}
-              /> */}
-            </DialogContent>
+            <PricingPlanForm onClose={() => setIsDialogOpen(false)} />
           </Dialog>
         </div>
       </div>
@@ -86,7 +63,7 @@ const SubscriptionPlan = () => {
         {/* Pro Plan */}
         <PriceCard
           tier="Flame"
-          description="For professional teams and businesses"
+          description="Grow the flame, burn brighter with every step."
           price="₹499"
           interval="6 months"
           ctaText="Fuel the Flame"
@@ -110,7 +87,7 @@ const SubscriptionPlan = () => {
         {/* Enterprise Plan */}
         <PriceCard
           tier="Fire"
-          description="For large teams with advanced needs"
+          description="Shape destiny with unstoppable fire."
           price="₹899"
           interval="yearly"
           ctaText="Command the Fire"
