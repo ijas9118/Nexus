@@ -1,9 +1,9 @@
+import { BaseService } from '@/core/abstracts/base.service';
+import { IPlanRepository } from '@/core/interfaces/repositories/IPlanRepository';
+import { IPlanService } from '@/core/interfaces/services/IPlanService';
+import { TYPES } from '@/di/types';
+import { IPlan } from '@/models/plan.model';
 import { inject, injectable } from 'inversify';
-import { BaseService } from '../core/abstracts/base.service';
-import { IPlanRepository } from '../core/interfaces/repositories/IPlanRepository';
-import { IPlanService } from '../core/interfaces/services/IPlanService';
-import { IPlan } from '../models/plan.model';
-import { TYPES } from '../di/types';
 
 @injectable()
 export class PlanService extends BaseService<IPlan> implements IPlanService {
@@ -11,10 +11,35 @@ export class PlanService extends BaseService<IPlan> implements IPlanService {
     super(planRepository);
   }
 
-  createPlan = async (planData: Partial<IPlan>): Promise<IPlan> => {
-    if ((planData.price as number) <= 0) {
-      throw new Error('Price must be greater than 0');
+  createPlan = async (data: Partial<IPlan>): Promise<IPlan> => {
+    const existingPlan = await this.planRepository.findOne({ tier: data.tier });
+    if (existingPlan) {
+      throw new Error('Plan with this tier already exists');
     }
-    return await this.planRepository.createPlan(planData);
+    return this.planRepository.create(data);
+  };
+
+  getAllPlans = async (): Promise<IPlan[]> => {
+    return this.planRepository.findActivePlans();
+  };
+
+  getPlanById = async (id: string): Promise<IPlan | null> => {
+    return this.planRepository.findById(id);
+  };
+
+  updatePlan = async (id: string, data: Partial<IPlan>): Promise<IPlan | null> => {
+    const existingPlan = await this.planRepository.findById(id);
+    if (!existingPlan) {
+      throw new Error('Plan not found');
+    }
+    return this.planRepository.update(id, { ...data, updatedAt: new Date() });
+  };
+
+  softDeletePlan = async (id: string): Promise<IPlan | null> => {
+    const existingPlan = await this.planRepository.findById(id);
+    if (!existingPlan) {
+      throw new Error('Plan not found');
+    }
+    return this.planRepository.softDelete(id);
   };
 }

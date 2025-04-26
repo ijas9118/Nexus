@@ -1,56 +1,56 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
-export interface IPlan extends Document {
-  name: string;
-  price: number;
-  interval: 'monthly' | 'yearly';
-  features: string[];
+interface IPlan extends Document {
+  tier: string;
   description: string;
-  activeSubscribers: number;
-  revenue: number;
-  conversionRate: number;
+  price: string;
+  interval: string;
+  ctaText: string;
+  highlights: string[];
+  featured: boolean;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
-
-const PlanSchema: Schema = new Schema(
+const PlanScheme = new Schema<IPlan>(
   {
-    name: {
+    tier: {
       type: String,
       required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    interval: {
-      type: String,
-      enum: ['monthly', 'yearly'],
-      required: true,
+      unique: true,
     },
     description: {
       type: String,
       required: true,
     },
-    features: {
+    price: {
+      type: String,
+      required: true,
+    },
+    interval: {
+      type: String,
+      required: true,
+    },
+    ctaText: {
+      type: String,
+      required: true,
+    },
+    highlights: {
       type: [String],
       required: true,
     },
-    activeSubscribers: {
-      type: Number,
-      default: 0,
+    featured: {
+      type: Boolean,
+      default: false,
     },
-    revenue: {
-      type: Number,
-      default: 0,
-    },
-    conversionRate: {
-      type: Number,
-      default: 0,
+    isActive: {
+      type: Boolean,
+      default: true,
     },
   },
   {
     timestamps: true,
   }
 );
-
-const PlanModel = mongoose.model<IPlan>('Plan', PlanSchema);
-export default PlanModel;
+const PlanModel = mongoose.model<IPlan>('Plan', PlanScheme);
+export { IPlan, PlanModel };
