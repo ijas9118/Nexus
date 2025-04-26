@@ -91,7 +91,9 @@ const ChatWindow = () => {
   if (pendingChat) {
     return (
       <div className="w-3/4 h-full flex flex-col">
-        <ChatHeader />
+        {pendingChat && (
+          <ChatHeader userDetails={pendingChat.userDetails} chatType="Chat" />
+        )}
         <div className="h-full flex items-center justify-center ">
           <p className="text-muted-foreground">
             Start a conversation with this user!
@@ -104,7 +106,12 @@ const ChatWindow = () => {
 
   return (
     <div className="w-3/4 h-full flex flex-col ">
-      <ChatHeader />
+      {activeChat && (
+        <ChatHeader
+          userDetails={activeChat.userDetails}
+          chatType={activeChat.type}
+        />
+      )}
       <div className="flex-1 w-full h-full">
         <ScrollArea className="h-[calc(100vh-200px)] px-2 sm:px-4 md:px-6">
           {activeChat &&

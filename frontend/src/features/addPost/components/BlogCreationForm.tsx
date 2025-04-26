@@ -52,6 +52,7 @@ export function BlogCreationForm() {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
+    mode: "onChange",
     defaultValues: {
       contentType: "blog",
       squad: "",
@@ -102,7 +103,28 @@ export function BlogCreationForm() {
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
   const progress = ((currentStep + 1) / steps.length) * 100;
 
-  console.log(isPremium);
+  const isStepValid = () => {
+    const values = form.getValues();
+    const errors = form.formState.errors;
+
+    if (currentStep === 0) {
+      return !!values.contentType && !errors.contentType;
+    }
+
+    if (currentStep === 1) {
+      return !!values.squad && !!values.title && !errors.squad && !errors.title;
+    }
+
+    if (currentStep === 2) {
+      if (values.contentType === "blog") {
+        return !!values.content && !errors.content;
+      } else {
+        return !!values.videoFile && !errors.videoFile;
+      }
+    }
+
+    return true;
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-10">
@@ -142,6 +164,7 @@ export function BlogCreationForm() {
                         thumbnailPreview={thumbnailPreview}
                         handleThumbnailChange={handleThumbnailChange}
                         squads={squads}
+                        setThumbnailPreview={setThumbnailPreview}
                       />
                     )}
 
@@ -186,7 +209,11 @@ export function BlogCreationForm() {
                     Back
                   </Button>
                   {currentStep < steps.length - 1 ? (
-                    <Button type="button" onClick={nextStep}>
+                    <Button
+                      type="button"
+                      onClick={nextStep}
+                      disabled={!isStepValid()}
+                    >
                       Continue
                       <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>

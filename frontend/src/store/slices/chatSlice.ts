@@ -16,7 +16,10 @@ interface ChatState {
   chats: Chat[];
   groups: Group[];
   messages: { [key: string]: Message[] }; // chatId -> messages
-  pendingChat: { userId: string } | null;
+  pendingChat: {
+    userId: string;
+    userDetails: ActiveChat["userDetails"];
+  } | null;
   activeChat: ActiveChat | null;
 }
 
@@ -130,9 +133,18 @@ const chatSlice = createSlice({
       }
     },
 
-    setPendingChat(state, action: PayloadAction<{ userId: string }>) {
-      state.pendingChat = action.payload;
-      state.activeChat = null; // Clear active chat when setting a pending chat
+    setPendingChat(
+      state,
+      action: PayloadAction<{
+        userId: string;
+        userDetails: ActiveChat["userDetails"];
+      }>,
+    ) {
+      state.pendingChat = {
+        userId: action.payload.userId,
+        userDetails: action.payload.userDetails,
+      };
+      state.activeChat = null;
     },
   },
 });

@@ -27,6 +27,7 @@ interface BasicDetailsFormProps {
   thumbnailPreview: string | null;
   handleThumbnailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   squads: { _id: string; name: string }[];
+  setThumbnailPreview: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const BasicDetailsForm: React.FC<BasicDetailsFormProps> = ({
@@ -34,6 +35,7 @@ const BasicDetailsForm: React.FC<BasicDetailsFormProps> = ({
   thumbnailPreview,
   handleThumbnailChange,
   squads,
+  setThumbnailPreview,
 }) => {
   const isPremium = useSelector(
     (state: RootState) => state.auth.user?.isPremium ?? false,
@@ -120,12 +122,22 @@ const BasicDetailsForm: React.FC<BasicDetailsFormProps> = ({
                   </div>
                 </label>
                 {thumbnailPreview && (
-                  <div className="relative aspect-video rounded-lg overflow-hidden border">
+                  <div className="relative aspect-video rounded-lg overflow-hidden border group">
                     <img
-                      src={thumbnailPreview || "/placeholder.svg"}
+                      src={thumbnailPreview}
                       alt="Thumbnail preview"
                       className="object-cover w-full h-full"
                     />
+                    <button
+                      type="button"
+                      className="absolute top-2 right-2 bg-black bg-opacity-50 text-white rounded px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => {
+                        setThumbnailPreview(null);
+                        form.setValue("thumbnail", undefined);
+                      }}
+                    >
+                      Remove
+                    </button>
                   </div>
                 )}
               </div>

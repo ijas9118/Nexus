@@ -25,6 +25,7 @@ import { MentorFormProvider } from "@/context/MentorFormContext";
 import AddPost from "@/features/addPost/AddPost";
 import Chat from "@/features/chat/Chat";
 import NotificationsPage from "@/features/notification/NotificationsPage";
+import PremiumDashboard from "@/features/premium-dashboard/PremiumDashboard";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -43,6 +44,7 @@ const UserRoutes: React.FC = () => {
             <Route path="addPost" element={<AddPost />} />
             <Route path="bookmark" element={<Bookmark />} />
             <Route path="getPremium" element={<GetPremium />} />
+            <Route path="premium" element={<PremiumDashboard />} />
             <Route path="mentors" element={<Mentors />} />
             <Route path="mentors/apply" element={<MentorApply />} />
             <Route path="mentors/:mentorId" element={<MentorProfilePage />} />
