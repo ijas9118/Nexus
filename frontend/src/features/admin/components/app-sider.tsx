@@ -53,7 +53,7 @@ const interactionItems = [
 ];
 
 const revenueItems = [
-  { title: "Subscription", url: "subscription", icon: CreditCard },
+  { title: "Pricing Plans", url: "plans", icon: CreditCard },
   { title: "Payment", url: "payment", icon: IndianRupee },
 ];
 

@@ -1,81 +1,101 @@
-import { Check, Pencil, Trash2 } from "lucide-react";
-import { Button } from "@/components/atoms/button";
+import React from "react";
+import { Check, Pencil, Trash } from "lucide-react";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
+  CardTitle,
 } from "@/components/molecules/card";
+import { Button } from "@/components/atoms/button";
 import { Badge } from "@/components/atoms/badge";
 
-const PricingCard = ({ plan, onEdit, onDelete }) => {
+interface PriceCardProps {
+  tier?: string;
+  description?: string;
+  price?: string;
+  interval?: string;
+  ctaText?: string;
+  highlights?: string[];
+  featured?: boolean;
+  logo?: React.ReactNode;
+  isAdminView?: boolean; // <- New
+  onEdit?: () => void; // <- New
+  onDelete?: () => void;
+}
+
+export default function PriceCard({
+  tier,
+  description,
+  price,
+  interval,
+  ctaText,
+  highlights,
+  featured = false,
+  logo = null,
+  isAdminView,
+  onEdit,
+  onDelete,
+}: PriceCardProps) {
   return (
-    <div className="flex justify-center p-6">
-      <Card className="w-80 overflow-hidden border-0 shadow-xl bg-gradient-to-br from-background/70 to-background/40 backdrop-blur-sm relative">
-        {/* Glossy effect overlay */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-primary/10 pointer-events-none" />
-        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(to_bottom,transparent_20%,black_60%)] pointer-events-none" />
-
-        {/* Light reflections for glossy effect */}
-        <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-2xl" />
-        <div className="absolute -bottom-16 -left-16 w-40 h-40 bg-primary/5 rounded-full blur-xl" />
-
-        <div className="z-50 absolute top-2 right-2 flex gap-1">
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8"
-            onClick={() => onEdit(plan)}
-          >
-            <Pencil className="h-4 w-4" />
-          </Button>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8 text-destructive"
-            onClick={() => onDelete(plan.id)}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+    <Card
+      className={`relative group w-full max-w-sm transition-all flex flex-col ${featured ? "border-primary shadow-lg" : "border-border"}  max-h-[600px]`}
+    >
+      {featured && (
+        <div className="absolute -top-3 left-0 right-0 mx-auto w-max">
+          <Badge className="bg-primary text-white px-4 py-1 rounded-full shadow-md">
+            Recommended
+          </Badge>
         </div>
-
-        <CardHeader className="pb-3 relative">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-xl">{plan.name}</h3>
-            {plan.featured && (
-              <Badge
-                variant="secondary"
-                className="bg-primary text-primary-foreground"
-              >
-                {plan.badge || "PRO"}
-              </Badge>
-            )}
+      )}
+      <CardHeader className="relative">
+        {isAdminView && (
+          <div className="absolute top-2 opacity-0 group-hover:opacity-100 transition-all duration-300 right-2 flex gap-2">
+            <Button variant="ghost" size="icon" onClick={onEdit}>
+              <Pencil className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={onDelete}>
+              <Trash className="h-4 w-4" />
+            </Button>
           </div>
-          <div className="mt-2">
-            <span className="text-4xl font-bold">${plan.price}</span>
-            <span className="text-muted-foreground ml-1">{plan.interval}</span>
-          </div>
-        </CardHeader>
+        )}
+        {logo && <div className="mb-4">{logo}</div>}
 
-        <CardContent className="space-y-4 relative">
-          {plan.features.map((feature, index) => (
-            <div key={index} className="flex items-center">
-              <div className="flex-shrink-0 mr-3">
-                <Check className="h-5 w-5 text-primary" />
-              </div>
-              <p className="text-sm text-muted-foreground">{feature}</p>
-            </div>
-          ))}
-        </CardContent>
-
-        <CardFooter className="pt-4 relative">
-          <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg">
-            {plan.buttonText || "Upgrade Plan"}
-          </Button>
-        </CardFooter>
-      </Card>
-    </div>
+        <CardTitle className="text-2xl font-bold">{tier}</CardTitle>
+        <CardDescription className="text-gray-500">
+          {description}
+        </CardDescription>
+        <div className="mt-4">
+          <span className="text-3xl font-bold">{price}</span>
+          {interval && <span className="text-gray-500 ml-1">/ {interval}</span>}
+        </div>
+      </CardHeader>
+      <CardContent className="flex-1">
+        <div className=" space-y-4">
+          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+            Features
+          </h3>
+          <ul className="space-y-3">
+            {highlights?.map((item, index) => (
+              <li key={`highlight-${index}`} className="flex items-start">
+                <span className="mr-3 mt-1">
+                  <Check className="h-5 w-5 text-emerald-400 dark:text-emerald-600" />
+                </span>
+                <span className="text-muted-foreground text-sm">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Button
+          className={`w-full ${featured ? "bg-primary" : ""}`}
+          variant={featured ? "default" : "outline"}
+        >
+          {ctaText}
+        </Button>
+      </CardFooter>
+    </Card>
   );
-};
-
-export default PricingCard;
+}

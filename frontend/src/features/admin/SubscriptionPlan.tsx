@@ -1,16 +1,6 @@
 import { Button } from "@/components/atoms/button";
 import { Separator } from "@/components/atoms/separator";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/molecules/alert-dialog";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -20,93 +10,13 @@ import {
 } from "@/components/organisms/dialog";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import PricingCard from "./subscription-plan/PricingCard";
-import { PlanForm } from "./subscription-plan/PricingForm";
+import PriceCard from "./subscription-plan/PricingCard";
+import { FireIcon, FlameIcon, SparkIcon } from "@/components/icons/PlanIcons";
 
 const SubscriptionPlan = () => {
-  const [plans, setPlans] = useState([
-    {
-      id: 1,
-      name: "Starter Plan",
-      price: "29.00",
-      interval: "/month",
-      features: [
-        "Manage up to 1,000 contacts",
-        "Basic customer management",
-        "Limited automation features",
-        "Standard reporting",
-      ],
-      buttonText: "Get Started",
-      featured: false,
-    },
-    {
-      id: 2,
-      name: "Growth Plan",
-      price: "79.00",
-      interval: "/month",
-      features: [
-        "Manage up to 10,000 contacts",
-        "Advanced customer management",
-        "Full workflow automation",
-        "Real-time reporting and analytics",
-        "Collaborative team features",
-      ],
-      buttonText: "Upgrade Plan",
-      featured: true,
-      badge: "PRO",
-    },
-
-    {
-      id: 3,
-      name: "Enterprise Plan",
-      price: "199.00",
-      interval: "/month",
-      features: [
-        "Unlimited contacts",
-        "Premium customer management",
-        "Advanced automation workflows",
-        "Custom reporting and analytics",
-        "Dedicated support team",
-        "API access",
-      ],
-      buttonText: "Contact Sales",
-      featured: true,
-      badge: "ENTERPRISE",
-    },
-  ]);
   const [editingPlan, setEditingPlan] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [planToDelete, setPlanToDelete] = useState(null);
 
-  const handleSavePlan = (planData) => {
-    if (editingPlan) {
-      // Edit existing plan
-      setPlans(plans.map((p) => (p.id === planData.id ? planData : p)));
-    } else {
-      // Add new plan
-      setPlans([...plans, planData]);
-    }
-    setIsDialogOpen(false);
-    setEditingPlan(null);
-  };
-
-  const handleEditPlan = (plan: any) => {
-    console.log("========");
-    setEditingPlan(plan);
-    setIsDialogOpen(true);
-  };
-
-  const handleDeletePlan = (planId: any) => {
-    setPlanToDelete(planId);
-    setDeleteDialogOpen(true);
-  };
-
-  const confirmDelete = () => {
-    setPlans(plans.filter((p) => p.id !== planToDelete));
-    setDeleteDialogOpen(false);
-    setPlanToDelete(null);
-  };
   return (
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-18 py-8">
       <div className="flex justify-between items-center mb-8">
@@ -135,11 +45,11 @@ const SubscriptionPlan = () => {
                     : "Fill in the details to create a new pricing plan."}
                 </DialogDescription>
               </DialogHeader>
-              <PlanForm
+              {/* <PlanForm
                 plan={editingPlan}
                 onSave={handleSavePlan}
                 onCancel={() => setIsDialogOpen(false)}
-              />
+              /> */}
             </DialogContent>
           </Dialog>
         </div>
@@ -147,37 +57,81 @@ const SubscriptionPlan = () => {
 
       <Separator className="my-6" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center">
-        {plans.map((plan) => (
-          <PricingCard
-            key={plan.id}
-            plan={plan}
-            onEdit={handleEditPlan}
-            onDelete={handleDeletePlan}
-          />
-        ))}
-      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {/* Free Plan */}
+        <PriceCard
+          tier="Spark"
+          description="Begin your legend. One spark starts the fire."
+          price="₹99"
+          interval="month"
+          ctaText="Light the Spark"
+          logo={<SparkIcon />}
+          highlights={[
+            "Full access to premium blogs and exclusive videos",
+            "Create your own premium content and share your genius",
+            "Join premium squads — find your tribe, sharpen your craft",
+            "Participate in monthly competitions and earn Nexus Points",
+            "Top 5 scorers win real cash rewards every month",
+          ]}
+          isAdminView={true}
+          onEdit={() => {
+            setIsDialogOpen(true);
+          }}
+          onDelete={() => {
+            // Handle delete logic here
+            console.log("Deleting Spark plan...");
+          }}
+        />
 
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              selected pricing plan.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        {/* Pro Plan */}
+        <PriceCard
+          tier="Flame"
+          description="For professional teams and businesses"
+          price="₹499"
+          interval="6 months"
+          ctaText="Fuel the Flame"
+          logo={<FlameIcon />}
+          isAdminView={true}
+          highlights={[
+            "Everything in Starter — but locked in for a full 6 months at a killer deal",
+            "Bonus: Extra 5% Nexus Points boost in competitions",
+            "Exclusive invites to secret squad events and content jams",
+          ]}
+          featured={true}
+          onEdit={() => {
+            setIsDialogOpen(true);
+          }}
+          onDelete={() => {
+            // Handle delete logic here
+            console.log("Deleting Spark plan...");
+          }}
+        />
+
+        {/* Enterprise Plan */}
+        <PriceCard
+          tier="Fire"
+          description="For large teams with advanced needs"
+          price="₹899"
+          interval="yearly"
+          ctaText="Command the Fire"
+          logo={<FireIcon />}
+          isAdminView={true}
+          highlights={[
+            "All Starter and Ascend benefits, supercharged",
+            "Bonus: Extra 10% Nexus Points boost every month",
+            "Priority listing in squads and competitions",
+            "Special badge: “Nexus Founder” on your profile",
+            "Annual Grand Draw Entry (big prizes, real hype)",
+          ]}
+          onEdit={() => {
+            setIsDialogOpen(true);
+          }}
+          onDelete={() => {
+            // Handle delete logic here
+            console.log("Deleting Spark plan...");
+          }}
+        />
+      </div>
     </div>
   );
 };

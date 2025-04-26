@@ -31,7 +31,7 @@ const AdminRoutes: React.FC = () => {
           <Route path="contents" element={<ContentManagement />} />
           <Route path="contents/:contentId" element={<ContentDetail />} />
           <Route path="payment" element={<PaymentManagement />} />
-          <Route path="plan" element={<PricingCard />} />
+          <Route path="plans" element={<PricingCard />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />
