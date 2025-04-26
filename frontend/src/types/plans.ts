@@ -1,11 +1,12 @@
 export interface IPlan {
   _id?: string;
-  name: string;
-  price: number;
+  tier: string;
   description: string;
-  interval: "monthly" | "yearly";
-  features: string[];
-  activeSubscribers?: number;
-  revenue?: number;
-  conversionRate?: number;
+  price: number;
+  interval: string;
+  ctaText: string;
+  highlights: string[];
+  logo: string;
+  featured: boolean;
+  isActive?: boolean;
 }

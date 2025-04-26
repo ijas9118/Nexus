@@ -3,11 +3,11 @@ import mongoose, { Schema, Document } from 'mongoose';
 interface IPlan extends Document {
   tier: string;
   description: string;
-  price: string;
+  price: number;
   interval: string;
   ctaText: string;
   highlights: string[];
-  icon: string;
+  logo: string;
   featured: boolean;
   isActive: boolean;
   createdAt: Date;
@@ -25,7 +25,7 @@ const PlanScheme = new Schema<IPlan>(
       required: true,
     },
     price: {
-      type: String,
+      type: Number,
       required: true,
     },
     interval: {
@@ -40,7 +40,7 @@ const PlanScheme = new Schema<IPlan>(
       type: [String],
       required: true,
     },
-    icon: {
+    logo: {
       type: String,
       required: true,
     },
