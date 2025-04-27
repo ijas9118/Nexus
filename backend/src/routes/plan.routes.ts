@@ -9,7 +9,7 @@ const planController = container.get<PlanController>(TYPES.PlanController);
 const router = Router();
 
 // Get all plans
-router.get('/', authenticate(['admin', 'user', 'premium', 'mentor']), planController.getAllPlans);
+router.get('/', planController.getAllPlans);
 
 // Get a single plan by ID
 router.get(

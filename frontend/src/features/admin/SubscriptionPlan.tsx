@@ -3,12 +3,13 @@ import { Separator } from "@/components/atoms/separator";
 import { Dialog, DialogTrigger } from "@/components/organisms/dialog";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import PriceCard from "./subscription-plan/PricingCard";
+import PriceCard from "../../components/organisms/PricingCard";
 import { FireIcon, FlameIcon, SparkIcon } from "@/components/icons/PlanIcons";
 import PricingPlanForm from "./subscription-plan/PricingPlanForm";
 import { useQuery } from "@tanstack/react-query";
 import PlanService from "@/services/planService";
 import { IPlan } from "@/types/plans";
+import { getPlanLogo } from "@/utils/planLogo";
 
 const SubscriptionPlan = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -62,15 +63,7 @@ const SubscriptionPlan = () => {
             price={`₹${plan.price}`}
             interval={plan.interval}
             ctaText={plan.ctaText}
-            logo={
-              plan.logo === "spark" ? (
-                <SparkIcon />
-              ) : plan.logo === "flame" ? (
-                <FlameIcon />
-              ) : (
-                <FireIcon />
-              )
-            }
+            logo={getPlanLogo(plan.logo)}
             highlights={plan.highlights}
             isAdminView={true}
             featured={plan.featured}

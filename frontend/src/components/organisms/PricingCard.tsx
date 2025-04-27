@@ -12,15 +12,15 @@ import { Button } from "@/components/atoms/button";
 import { Badge } from "@/components/atoms/badge";
 
 interface PriceCardProps {
-  tier?: string;
-  description?: string;
-  price?: string;
-  interval?: string;
-  ctaText?: string;
-  highlights?: string[];
-  featured?: boolean;
-  logo?: React.ReactNode;
-  isAdminView?: boolean; // <- New
+  tier: string;
+  description: string;
+  price: string;
+  interval: string;
+  ctaText: string;
+  highlights: string[];
+  featured: boolean;
+  logo: React.ReactNode;
+  isAdminView: boolean; // <- New
   onEdit?: () => void; // <- New
   onDelete?: () => void;
 }
@@ -44,7 +44,7 @@ export default function PriceCard({
     >
       {featured && (
         <div className="absolute -top-3 left-0 right-0 mx-auto w-max">
-          <Badge className="bg-primary text-white px-4 py-1 rounded-full shadow-md">
+          <Badge className="bg-primary px-4 py-1 rounded-full shadow-md">
             Recommended
           </Badge>
         </div>

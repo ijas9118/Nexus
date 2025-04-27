@@ -5,8 +5,12 @@ import { Rocket, Send, Users, Zap } from "lucide-react";
 import Navbar from "@/components/organisms/Navbar";
 import TestimonialsCarousel from "@/components/organisms/TestimonialsCarousel";
 import SectionHeader from "@/components/organisms/SectionHeader";
-import PricingCardsSection from "@/components/organisms/PricingCardsSection";
 import Footer from "@/components/organisms/Footer";
+import { useQuery } from "@tanstack/react-query";
+import { IPlan } from "@/types/plans";
+import PlanService from "@/services/planService";
+import PriceCard from "@/components/organisms/PricingCard";
+import { getPlanLogo } from "@/utils/planLogo";
 
 const testimonials = [
   {
@@ -53,45 +57,16 @@ const testimonials = [
   },
 ];
 
-export const plans = [
-  {
-    name: "Basic",
-    price: "0",
-    period: "",
-    features: [
-      "Access to public blogs and videos",
-      "Join and participate in tech squads",
-      "Connect with other users",
-      "Bookmark blogs and videos for later",
-      "Chat and video call with connected users",
-    ],
-  },
-  {
-    name: "Premium 💎",
-    price: "499",
-    period: "/month",
-    features: [
-      "Everything in the Basic Plan +",
-      "Access exclusive blogs and videos from mentors",
-      "Directly connect with mentors for guidance",
-      "Join premium tech squads for specialised topics",
-    ],
-    popular: true,
-  },
-  {
-    name: "Premium 💎",
-    price: "4,999",
-    period: "/year",
-    saving: "Save ₹989",
-    features: [
-      "Everything in the Monthly Plan +",
-      "Free mentor session every quarter",
-      "Early access to new platform features",
-    ],
-  },
-];
-
 const Home = () => {
+  const {
+    data: plans,
+    isLoading,
+    isError,
+  } = useQuery<IPlan[]>({
+    queryKey: ["plans"],
+    queryFn: PlanService.getAllPlans,
+  });
+
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -164,7 +139,28 @@ const Home = () => {
             description="Unlock Nexus Premium to access exclusive content, connect with mentors, and join specialised tech squads. Choose the plan that fits your journey and grow professionally!"
           />
 
-          <PricingCardsSection plans={plans} />
+          {isLoading ? (
+            <div>Loading...</div>
+          ) : isError ? (
+            <div>Something went wrong. Probably the server had a bad day.</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {plans?.map((plan) => (
+                <PriceCard
+                  key={plan._id}
+                  tier={plan.tier}
+                  description={plan.description}
+                  price={`₹${plan.price}`}
+                  interval={plan.interval}
+                  ctaText={plan.ctaText}
+                  highlights={plan.highlights || []}
+                  featured={plan.featured || false}
+                  logo={getPlanLogo(plan.logo)}
+                  isAdminView={false}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
