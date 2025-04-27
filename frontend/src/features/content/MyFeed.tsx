@@ -94,6 +94,7 @@ export default function MyFeed() {
             contentType={item.contentType}
             heading={item.title}
             date={item.date}
+            content={item.content}
             likes={item.likes}
             commentCount={item.commentCount}
             squad={item.squad}

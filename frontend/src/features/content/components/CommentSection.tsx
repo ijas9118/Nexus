@@ -8,8 +8,6 @@ interface CommentSectionProps {
 export default function CommentSection({ contentId }: CommentSectionProps) {
   const { data: comments, isLoading, error } = useComments(contentId);
 
-  console.log(comments);
-
   if (isLoading)
     return <div className="text-center py-4">Loading comments...</div>;
   if (error)

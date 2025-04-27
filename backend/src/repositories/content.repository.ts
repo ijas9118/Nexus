@@ -8,6 +8,7 @@ import { IFollowersRepository } from '../core/interfaces/repositories/IFollowers
 import UserFollowModel from '../models/followers.model';
 import CustomError from '@/utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
+import { UserRole } from '@/core/types/global/user-role';
 
 @injectable()
 export class ContentRepository extends BaseRepository<IContent> implements IContentRepository {
@@ -17,16 +18,14 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
     super(ContentModel);
   }
 
-  async findContent(id: string, role: string): Promise<IContent | null> {
+  async findContent(id: string, role: UserRole): Promise<IContent | null> {
     const contentIdObj = new Types.ObjectId(id);
 
     const result = await ContentModel.findById(contentIdObj)
       .populate('squad', 'name')
       .populate('author', 'name profilePic role username');
 
-    console.log(result);
-
-    if (result?.isPremium && role !== 'premium') {
+    if (result?.isPremium && role === 'user') {
       throw new CustomError(
         'This content is available for premium members only',
         StatusCodes.PAYMENT_REQUIRED

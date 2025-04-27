@@ -4,7 +4,6 @@ import { Dialog, DialogTrigger } from "@/components/organisms/dialog";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import PriceCard from "../../components/organisms/PricingCard";
-import { FireIcon, FlameIcon, SparkIcon } from "@/components/icons/PlanIcons";
 import PricingPlanForm from "./subscription-plan/PricingPlanForm";
 import { useQuery } from "@tanstack/react-query";
 import PlanService from "@/services/planService";

@@ -21,6 +21,7 @@ import {
   AlertDialogTitle,
 } from "@/components/molecules/alert-dialog";
 import CommentModal from "./comment/CommentModal";
+import { extractTextFromHtml } from "@/utils/htmlToText";
 
 interface ContentCardProps {
   id: string;
@@ -31,6 +32,7 @@ interface ContentCardProps {
   date: string;
   likes: number;
   commentCount: number;
+  content: string;
   squad: { name: string; _id: string };
   isPremium: boolean;
   image: string;
@@ -126,6 +128,12 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
             <Badge variant="squad" className="cursor-pointer my-4">
               @{props.squad.name}
             </Badge>
+
+            {props.contentType === "blog" && (
+              <p className="text-muted-foreground text-sm mb-6">
+                {extractTextFromHtml(props.content)}
+              </p>
+            )}
 
             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
               <span>{props.date}</span>
