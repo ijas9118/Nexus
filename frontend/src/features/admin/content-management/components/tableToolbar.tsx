@@ -8,7 +8,6 @@ import {
 } from "@/components/organisms/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/atoms/button";
-import { FacetedFilter } from "./faceted-filter";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -28,27 +27,6 @@ export function DataTableToolbar<TData>({
           }
           className="max-w-xs"
         />
-        {table.getColumn("status") && (
-          <FacetedFilter
-            column={table.getColumn("status")}
-            title="Status"
-            options={[
-              { label: "Premium", value: "Premium" },
-              { label: "Free", value: "Free" },
-            ]}
-          />
-        )}
-
-        {table.getColumn("verified") && (
-          <FacetedFilter
-            column={table.getColumn("verified")}
-            title="Verified"
-            options={[
-              { label: "Verified", value: "Verified" },
-              { label: "Not Verified", value: "Not Verified" },
-            ]}
-          />
-        )}
       </div>
       <div className="flex items-center space-x-2">
         <DropdownMenu>

@@ -2,10 +2,12 @@ import { FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ContentService } from "@/services/admin/contentService";
 import ContentStats from "./content-management/components/ContentStats";
-import { DataTable } from "./category-management/components/data-table";
+import { DataTable } from "./content-management/components/data-table";
 import { columns } from "./content-management/columns";
+import { useNavigate } from "react-router-dom";
 
 const ContentManagement: FC = () => {
+  const navigator = useNavigate();
   const {
     data: contents,
     isLoading,
@@ -15,6 +17,10 @@ const ContentManagement: FC = () => {
     queryFn: ContentService.getAllContents,
   });
 
+  const handleRowClick = (content: any) => {
+    navigator(`/admin/contents/${content._id}`);
+  };
+
   if (isLoading) return <p>Loading contents...</p>;
   if (error) return <p>Error loading contents: {error.message}</p>;
 
@@ -23,7 +29,11 @@ const ContentManagement: FC = () => {
       <h1 className="text-3xl font-semibold mb-6">Content Management</h1>
 
       <ContentStats />
-      <DataTable columns={columns()} data={contents || []} />
+      <DataTable
+        columns={columns()}
+        data={contents || []}
+        onRowClick={handleRowClick}
+      />
     </div>
   );
 };

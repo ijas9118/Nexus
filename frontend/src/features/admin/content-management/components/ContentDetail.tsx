@@ -21,6 +21,8 @@ import {
   XCircle,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { BiDownvote, BiUpvote } from "react-icons/bi";
+import dayjs from "dayjs";
 
 const ContentDetail = () => {
   const params = useParams();
@@ -36,6 +38,8 @@ const ContentDetail = () => {
     queryKey: ["content", contentId],
     queryFn: () => ContentService.getContentById(contentId),
   });
+
+  console.log(content);
 
   const { mutate: verifyContent, isPending: isVerifying } = useMutation({
     mutationFn: (contentId: string) => ContentService.verifyContent(contentId),
@@ -65,20 +69,20 @@ const ContentDetail = () => {
 
   return (
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-18 py-8">
+      <Button
+        variant="ghost"
+        onClick={() => {
+          navigate(-1);
+        }}
+        className="mr-4"
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Back
+      </Button>
       <div className="flex items-center mb-6">
-        <Button
-          variant="ghost"
-          onClick={() => {
-            navigate("/admin/contents");
-          }}
-          className="mr-4"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back
-        </Button>
         <h1 className="text-2xl font-bold">Content Details</h1>
 
-        {!content.isVerified && (
+        {!content.isVerified ? (
           <Button
             variant="outline"
             className="ml-auto"
@@ -86,6 +90,10 @@ const ContentDetail = () => {
             disabled={isVerifying}
           >
             {isVerifying ? "Verifying..." : "Verify Content"}
+          </Button>
+        ) : (
+          <Button variant="destructive" className="ml-auto">
+            Disable
           </Button>
         )}
       </div>
@@ -95,30 +103,13 @@ const ContentDetail = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl">{content.title}</CardTitle>
-              <div className="flex space-x-2">
-                <Badge variant={content.isPremium ? "default" : "outline"}>
-                  {content.isPremium ? "Premium" : "Free"}
-                </Badge>
-                <Badge
-                  variant={content.isVerified ? "default" : "outline"}
-                  className={
-                    content.isVerified
-                      ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
-                      : "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100"
-                  }
-                >
-                  {content.isVerified ? "Verified" : "Not Verified"}
-                </Badge>
-              </div>
+              <Badge variant={content.isPremium ? "default" : "outline"}>
+                {content.isPremium ? "Premium" : "Free"}
+              </Badge>
             </div>
             <CardDescription className="flex items-center">
               <Calendar className="mr-2 h-4 w-4" />
-              {new Date(content.createdAt).toLocaleDateString()}
-              {content.createdAt !== content.updatedAt && (
-                <span className="ml-2 text-xs text-muted-foreground">
-                  (Updated: {new Date(content.updatedAt).toLocaleDateString()})
-                </span>
-              )}
+              {dayjs(content.createdAt).format("DD MMMM, YYYY")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -178,20 +169,12 @@ const ContentDetail = () => {
                 <div>
                   <h3 className="font-medium">{content.author.name}</h3>
                   <p className="text-sm text-muted-foreground">
-                    {content.author.email || "No email provided"}
+                    {content.author.username}
                   </p>
                 </div>
               </div>
               <Separator className="my-4" />
               <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Username
-                  </span>
-                  <span className="text-sm font-medium">
-                    {content.userName}
-                  </span>
-                </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Squad</span>
                   <span className="text-sm font-medium">
@@ -241,30 +224,49 @@ const ContentDetail = () => {
           </Card>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="p-4">
               <CardTitle>Engagement Metrics</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="flex flex-col items-center p-3 bg-muted rounded-md">
-                  <Heart className="h-5 w-5 text-red-500 mb-1" />
-                  <span className="text-xl font-bold">{content.likeCount}</span>
-                  <span className="text-xs text-muted-foreground">Likes</span>
+            <CardContent className="p-3 pt-0">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex flex-col items-center p-2 bg-muted rounded-md">
+                  <div className="flex gap-1 items-center">
+                    <BiUpvote className="text-emerald-500" />
+                    <span className="text-sm font-bold">
+                      {content.upvoteCount}
+                    </span>
+                  </div>
+                  <span className="text-xs text-muted-foreground">Upvotes</span>
                 </div>
-                <div className="flex flex-col items-center p-3 bg-muted rounded-md">
-                  <MessageSquare className="h-5 w-5 text-blue-500 mb-1" />
-                  <span className="text-xl font-bold">
-                    {content.commentCount}
+                <div className="flex flex-col items-center p-2 bg-muted rounded-md">
+                  <div className="flex gap-1 items-center">
+                    <BiDownvote className=" text-pink-500" />
+                    <span className="text-sm font-bold">
+                      {content.downvoteCount}
+                    </span>
+                  </div>
+                  <span className="text-xs text-muted-foreground">
+                    Downvotes
                   </span>
+                </div>
+                <div className="flex flex-col items-center p-2 bg-muted rounded-md">
+                  <div className="flex gap-1 items-center">
+                    <MessageSquare className="h-4 text-blue-500" />
+                    <span className="text-sm font-bold">
+                      {content.commentCount}
+                    </span>
+                  </div>
                   <span className="text-xs text-muted-foreground">
                     Comments
                   </span>
                 </div>
-                <div className="flex flex-col items-center p-3 bg-muted rounded-md">
-                  <Bookmark className="h-5 w-5 text-purple-500 mb-1" />
-                  <span className="text-xl font-bold">
-                    {content.bookmarkCount}
-                  </span>
+                <div className="flex flex-col items-center p-2 bg-muted rounded-md">
+                  <div className="flex gap-1 items-center">
+                    <Bookmark className="h-4 text-purple-500" />
+                    <span className="text-sm font-bold">
+                      {content.bookmarkCount}
+                    </span>
+                  </div>
                   <span className="text-xs text-muted-foreground">
                     Bookmarks
                   </span>

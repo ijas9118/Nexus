@@ -97,7 +97,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
         <div className="flex-1 flex flex-col w-full justify-between cursor-pointer">
           <div onClick={() => handleCardClick(props.id)}>
             <div
-              className="flex items-center gap-3 mb-2"
+              className="flex items-center gap-3 mb-2 w-fit p-2 rounded-lg hover:bg-muted duration-300 transition-all"
               onClick={(e) => {
                 e.stopPropagation();
                 handleUserClick(props.username);
