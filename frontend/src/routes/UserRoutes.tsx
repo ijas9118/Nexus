@@ -15,7 +15,6 @@ import Connections from "@/features/profile/Connections";
 import History from "@/features/content/History";
 import ContentDetails from "@/features/content/ContentDetails";
 import ProfilePage from "@/features/profile/Profile";
-import EditProfile from "@/features/profile/EditProfileLayout";
 import Following from "@/features/content/Following";
 import Mentors from "@/features/mentor/MentorsListPage";
 import MentorApply from "@/features/mentor/MentorApply";
@@ -26,6 +25,9 @@ import AddPost from "@/features/addPost/AddPost";
 import Chat from "@/features/chat/Chat";
 import NotificationsPage from "@/features/notification/NotificationsPage";
 import PremiumDashboard from "@/features/premium-dashboard/PremiumDashboard";
+import PaymentPage from "@/features/payment/PaymentPage";
+import Unauthorized from "@/pages/Unauthorized";
+import EditProfileLayout from "@/features/profile/EditProfileLayout";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -37,14 +39,22 @@ const UserRoutes: React.FC = () => {
         <Route path="/login/reset-password" element={<ResetPassword />} />
 
         <Route path="/" element={<Layout />}>
-          <Route element={<ProtectedRoute requiredRole="user" />}>
+          <Route
+            element={
+              <ProtectedRoute requiredRoles={["user", "mentor", "premium"]} />
+            }
+          >
             <Route path="myFeed" element={<MyFeed />} />
             <Route path="profile/:username" element={<ProfilePage />} />
-            <Route path="profile/edit" element={<EditProfile />} />
+            <Route path="profile/edit" element={<EditProfileLayout />} />
             <Route path="addPost" element={<AddPost />} />
             <Route path="bookmark" element={<Bookmark />} />
-            <Route path="getPremium" element={<GetPremium />} />
-            <Route path="premium" element={<PremiumDashboard />} />
+            <Route element={<ProtectedRoute requiredRoles={["user"]} />}>
+              <Route path="getPremium" element={<GetPremium />} />
+            </Route>
+            <Route element={<ProtectedRoute requiredRoles={["premium"]} />}>
+              <Route path="premium" element={<PremiumDashboard />} />
+            </Route>
             <Route path="mentors" element={<Mentors />} />
             <Route path="mentors/apply" element={<MentorApply />} />
             <Route path="mentors/:mentorId" element={<MentorProfilePage />} />
@@ -57,8 +67,10 @@ const UserRoutes: React.FC = () => {
             <Route path="following" element={<Following />} />
             <Route path="notification" element={<NotificationsPage />} />
           </Route>
+          <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="*" element={<NotFound />} />
+        <Route path="/payment" element={<PaymentPage />} />
       </Routes>
     </MentorFormProvider>
   );

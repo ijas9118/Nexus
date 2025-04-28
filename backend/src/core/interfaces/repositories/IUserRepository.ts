@@ -15,4 +15,5 @@ export interface IUserRepository extends BaseRepository<IUser> {
   findByGithubId(githubId: string): Promise<IUser | null>;
   getUserByUsername(username: string): Promise<IUser | null>;
   getUserIdByUsername(username: string): Promise<string | null>;
+  updatePremiumStatus(userId: string, isPremium: boolean): Promise<IUser | null>;
 }

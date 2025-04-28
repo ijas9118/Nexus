@@ -16,6 +16,8 @@ export const TYPES = {
   ChatRepository: Symbol.for('ChatRepository'),
   GroupRepository: Symbol.for('GroupRepository'),
   MessageRepository: Symbol.for('MessageRepository'),
+  SubscriptionRepository: Symbol.for('SubscriptionRepository'),
+  PaymentRepository: Symbol.for('PaymentRepository'),
 
   // Services
   UserService: Symbol.for('UserService'),

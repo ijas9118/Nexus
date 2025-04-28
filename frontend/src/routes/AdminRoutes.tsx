@@ -14,14 +14,14 @@ import CommentManagement from "@/features/admin/CommentManagement";
 import ContentDetail from "@/features/admin/content-management/components/ContentDetail";
 import PaymentManagement from "@/features/admin/PaymentManagement";
 import ContentManagement from "@/features/admin/ContentManagement";
-import PricingCard from "@/features/admin/SubscriptionPlan";
+import SubscriptionPlan from "@/features/admin/SubscriptionPlan";
 
 const AdminRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<AdminLayout />}>
-        <Route element={<ProtectedRoute requiredRole="admin" />}>
+        <Route element={<ProtectedRoute requiredRoles={["admin"]} />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="users" element={<UserManagement />} />
           <Route path="category" element={<CategoryManagement />} />
@@ -31,10 +31,10 @@ const AdminRoutes: React.FC = () => {
           <Route path="contents" element={<ContentManagement />} />
           <Route path="contents/:contentId" element={<ContentDetail />} />
           <Route path="payment" element={<PaymentManagement />} />
-          <Route path="plans" element={<PricingCard />} />
+          <Route path="plans" element={<SubscriptionPlan />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Route>
-      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

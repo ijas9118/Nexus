@@ -10,8 +10,14 @@ import PlanService from "@/services/planService";
 import { IPlan } from "@/types/plans";
 import PriceCard from "../../components/organisms/PricingCard";
 import { getPlanLogo } from "@/utils/planLogo";
+import PaymentService from "@/services/paymentService";
+import { toast } from "sonner";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 export default function PremiumPage() {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const email = user?.email || "";
   const {
     data: plans,
     isLoading,
@@ -20,6 +26,18 @@ export default function PremiumPage() {
     queryKey: ["plans"],
     queryFn: PlanService.getAllPlans,
   });
+
+  const handleCTAClick = async (plan: IPlan) => {
+    try {
+      const sessionUrl = await PaymentService.createSession(plan, email);
+
+      window.location.href = sessionUrl;
+    } catch (error) {
+      console.error("Payment failed:", error);
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-12 max-w-6xl space-y-20">
       <Hero />
@@ -39,7 +57,7 @@ export default function PremiumPage() {
         ) : isError ? (
           <div>Something went wrong. Probably the server had a bad day.</div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 justify-center">
             {plans?.map((plan) => (
               <PriceCard
                 key={plan._id}
@@ -52,6 +70,7 @@ export default function PremiumPage() {
                 featured={plan.featured || false}
                 logo={getPlanLogo(plan.logo)}
                 isAdminView={false}
+                onCTAClick={() => handleCTAClick(plan)}
               />
             ))}
           </div>

@@ -23,6 +23,7 @@ interface PriceCardProps {
   isAdminView: boolean; // <- New
   onEdit?: () => void; // <- New
   onDelete?: () => void;
+  onCTAClick?: () => void;
 }
 
 export default function PriceCard({
@@ -37,6 +38,7 @@ export default function PriceCard({
   isAdminView,
   onEdit,
   onDelete,
+  onCTAClick,
 }: PriceCardProps) {
   return (
     <Card
@@ -90,6 +92,7 @@ export default function PriceCard({
       </CardContent>
       <CardFooter>
         <Button
+          onClick={!isAdminView ? onCTAClick : undefined}
           className={`w-full ${featured ? "bg-primary" : ""}`}
           variant={featured ? "default" : "outline"}
         >

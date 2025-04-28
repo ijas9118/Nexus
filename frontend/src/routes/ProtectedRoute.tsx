@@ -2,26 +2,35 @@ import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { UserRoles } from "@/types/user";
 
 interface ProtectedRouteProps {
-  requiredRole?: "user" | "mentor" | "admin";
+  requiredRoles: UserRoles[];
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
-  const { accessToken, status } = useSelector((state: RootState) => state.auth);
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRoles }) => {
+  const { accessToken, status, user } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
   if (status === "loading") {
     return (
-      <div className="container mx-auto px-8 py-8 flex h-screen justify-center items-center">
-        Loading...
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-9 w-9 border-4 border-gray-200 border-t-blue-500"></div>
       </div>
     );
   }
 
-  if (!accessToken && requiredRole === "admin")
-    return <Navigate to="/admin/login" />;
   if (!accessToken) {
-    return <Navigate to="/login" />;
+    return requiredRoles.includes("admin") ? (
+      <Navigate to="/admin/login" replace />
+    ) : (
+      <Navigate to="/login" replace />
+    );
+  }
+
+  if (requiredRoles && !requiredRoles.includes(user?.role as UserRoles)) {
+    return <Navigate to="/unauthorized" replace />;
   }
 
   return <Outlet />;

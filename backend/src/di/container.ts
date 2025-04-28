@@ -135,6 +135,11 @@ import { VoteService } from '@/services/vote.service';
 import { IVoteController } from '@/core/interfaces/controllers/IVoteController';
 import { VoteController } from '@/controllers/vote.controller';
 
+import { ISubscriptionRepository } from '@/core/interfaces/services/ISubscriptionRepository';
+import { SubscriptionRepository } from '@/repositories/subscription.repository';
+import { IPaymentRepository } from '@/core/interfaces/repositories/IPaymentRepository';
+import { PaymentRepository } from '@/repositories/payment.repository';
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -194,6 +199,7 @@ container.bind<IPlanController>(TYPES.PlanController).to(PlanController);
 
 container.bind<IPaymentService>(TYPES.PaymentService).to(PaymentServce);
 container.bind<IPaymentController>(TYPES.PaymentController).to(PaymentController);
+container.bind<IPaymentRepository>(TYPES.PaymentRepository).to(PaymentRepository);
 
 container.bind<IChatRepository>(TYPES.ChatRepository).to(ChatRepository);
 container.bind<IChatService>(TYPES.ChatService).to(ChatService);
@@ -213,5 +219,7 @@ container.bind<IMentorRepository>(TYPES.MentorRepository).to(MentorRepository);
 container.bind<ITimeSlotRepository>(TYPES.TimeSlotRepository).to(TimeSlotRepository);
 container.bind<ITimeSlotService>(TYPES.TimeSlotService).to(TimeSlotService);
 container.bind<ITimeSlotController>(TYPES.TimeSlotController).to(TimeSlotController);
+
+container.bind<ISubscriptionRepository>(TYPES.SubscriptionRepository).to(SubscriptionRepository);
 
 export { container };

@@ -88,4 +88,8 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     const user = await this.findOne({ username });
     return user ? user._id.toString() : null;
   };
+
+  async updatePremiumStatus(userId: string, isPremium: boolean): Promise<IUser | null> {
+    return this.findByIdAndUpdate(userId, { isPremium, role: 'premium' });
+  }
 }

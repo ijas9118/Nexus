@@ -7,17 +7,25 @@ import TimeSlotManagement from "@/features/mentorAvailability/ManageAvailability
 import Layout from "@/pages/Layout";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import NotFoundPage from "@/pages/NotFound";
+import ProtectedRoute from "./ProtectedRoute";
 
 const MentorRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<MentorDashboard />} />
-        <Route path="/requests" element={<MenteeRequests />} />
-        <Route path="/availability" element={<TimeSlotManagement />} />
-        <Route path="/scheduled-calls" element={<ScheduleCallsManagement />} />
-        <Route path="/payments" element={<MentorPayments />} />
-        <Route path="/settings" element={<MentorSettings />} />
+      <Route element={<ProtectedRoute requiredRoles={["mentor"]} />}>
+        <Route element={<Layout />}>
+          <Route path="/" element={<MentorDashboard />} />
+          <Route path="/requests" element={<MenteeRequests />} />
+          <Route path="/availability" element={<TimeSlotManagement />} />
+          <Route
+            path="/scheduled-calls"
+            element={<ScheduleCallsManagement />}
+          />
+          <Route path="/payments" element={<MentorPayments />} />
+          <Route path="/settings" element={<MentorSettings />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
       </Route>
     </Routes>
   );

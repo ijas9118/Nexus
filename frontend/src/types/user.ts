@@ -3,7 +3,7 @@ export interface UserInterface {
   name: string;
   email: string;
   username: string;
-  role: "user" | "mentor" | "admin";
+  role: "user" | "mentor" | "admin" | "premium";
   bio?: string;
   profilePic?: string;
   followers?: number;
@@ -15,3 +15,5 @@ export interface UserInterface {
   location: string;
   phone: string;
 }
+
+export type UserRoles = "user" | "mentor" | "admin" | "premium";

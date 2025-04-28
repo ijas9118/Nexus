@@ -13,7 +13,7 @@ const paymentController = container.get<IPaymentController>(TYPES.PaymentControl
 router.post(
   '/create-checkout-session',
   authenticate(['user', 'premium', 'mentor']),
-  validateRequest(checkoutSessionSchema),
+  // validateRequest(checkoutSessionSchema),
   paymentController.checkoutSession
 );
 

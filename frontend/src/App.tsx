@@ -21,32 +21,8 @@ const App: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <div
-          className="spinner"
-          style={{
-            border: "4px solid rgba(0, 0, 0, 0.1)",
-            width: "36px",
-            height: "36px",
-            borderRadius: "50%",
-            borderTopColor: "#3498db",
-            animation: "spin 1s ease-in-out infinite",
-          }}
-        ></div>
-        <style>
-          {`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-            }
-            `}
-        </style>
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-9 w-9 border-4 border-gray-200 border-t-blue-500"></div>
       </div>
     );
   }
@@ -58,8 +34,6 @@ const App: React.FC = () => {
             <Route path="/*" element={<UserRoutes />} />
             <Route path="/mentor/*" element={<MentorRoutes />} />
             <Route path="/admin/*" element={<AdminRoutes />} />
-
-            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
