@@ -9,28 +9,50 @@ import UserFollowModel from '../models/followers.model';
 import CustomError from '@/utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
 import { UserRole } from '@/core/types/global/user-role';
+import { IVoteRepository } from '@/core/interfaces/repositories/IVoteRepository';
 
 @injectable()
 export class ContentRepository extends BaseRepository<IContent> implements IContentRepository {
   constructor(
-    @inject(TYPES.FollowersRepository) private followersRepository: IFollowersRepository
+    @inject(TYPES.FollowersRepository) private followersRepository: IFollowersRepository,
+    @inject(TYPES.VoteRepository) private voteRepo: IVoteRepository
   ) {
     super(ContentModel);
   }
 
-  async findContent(id: string, role: UserRole): Promise<IContent | null> {
+  async findContent(id: string, role: UserRole, userId?: string): Promise<any> {
     const contentIdObj = new Types.ObjectId(id);
 
-    const result = await ContentModel.findById(contentIdObj)
+    const result = (await this.model
+      .findById(contentIdObj)
       .populate('squad', 'name')
-      .populate('author', 'name profilePic role username');
+      .populate('author', 'name profilePic role username')
+      .lean()) as IContent & { isUpvoted?: boolean; isDownvoted?: boolean };
 
-    if (result?.isPremium && role === 'user') {
+    if (!result) {
+      return null;
+    }
+
+    if (result.isPremium && role === 'user') {
       throw new CustomError(
         'This content is available for premium members only',
         StatusCodes.PAYMENT_REQUIRED
       );
     }
+
+    if (userId) {
+      const vote = await this.voteRepo.findOne({
+        contentId: contentIdObj,
+        userId: new Types.ObjectId(userId),
+      });
+
+      result.isUpvoted = vote?.voteType === 'upvote' || false;
+      result.isDownvoted = vote?.voteType === 'downvote' || false;
+    } else {
+      result.isUpvoted = false;
+      result.isDownvoted = false;
+    }
+
     return result;
   }
 
@@ -58,7 +80,7 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       },
       {
         $lookup: {
-          from: 'likes',
+          from: 'votes',
           let: { contentId: '$_id' },
           pipeline: [
             {
@@ -72,7 +94,7 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
               },
             },
           ],
-          as: 'userLike',
+          as: 'userVote',
         },
       },
       {
@@ -110,7 +132,46 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       },
       {
         $addFields: {
-          isLiked: { $gt: [{ $size: '$userLike' }, 0] },
+          isUpvoted: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: '$userVote',
+                        as: 'vote',
+                        cond: { $eq: ['$$vote.voteType', 'upvote'] },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+          isDownvoted: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: '$userVote',
+                        as: 'vote',
+                        cond: { $eq: ['$$vote.voteType', 'downvote'] },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
           isBookmarked: { $gt: [{ $size: '$userBookmark' }, 0] },
           username: '$authorInfo.username',
           profilePic: '$authorInfo.profilePic',
@@ -122,7 +183,7 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       },
       {
         $project: {
-          userLike: 0,
+          userVote: 0,
           userBookmark: 0,
           authorInfo: 0,
           squadInfo: 0,

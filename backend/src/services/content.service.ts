@@ -25,8 +25,8 @@ export class ContentService extends BaseService<IContent> implements IContentSer
     return createdContent;
   }
 
-  async getContentById(id: string, role: string): Promise<IContent | null> {
-    return this.contentRepository.findContent(id, role);
+  async getContentById(id: string, role: string, userId: string): Promise<IContent | null> {
+    return this.contentRepository.findContent(id, role, userId);
   }
 
   async getAllContent(userId: string, page: number, limit: number): Promise<IContent[]> {

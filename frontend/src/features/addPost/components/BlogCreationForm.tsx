@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import { Card, CardContent } from "@/components/molecules/card";
 import { ContentPreview } from "./ContentPreview";
@@ -199,13 +199,14 @@ export function BlogCreationForm() {
                   </motion.div>
                 </AnimatePresence>
 
-                <div className="flex justify-between pt-4">
+                <div className="flex justify-end gap-3 pt-4">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={prevStep}
                     disabled={currentStep === 0}
                   >
+                    <ChevronLeft className="mr-2" />
                     Back
                   </Button>
                   {currentStep < steps.length - 1 ? (
@@ -215,7 +216,7 @@ export function BlogCreationForm() {
                       disabled={!isStepValid()}
                     >
                       Continue
-                      <ChevronRight className="ml-2 h-4 w-4" />
+                      <ChevronRight className="ml-2" />
                     </Button>
                   ) : (
                     <Button type="submit" disabled={isSubmitting}>

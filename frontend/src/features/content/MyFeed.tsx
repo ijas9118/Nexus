@@ -37,6 +37,8 @@ export default function MyFeed() {
     initialPageParam: 1,
   });
 
+  console.log(data);
+
   const feedContent = data?.pages.flatMap((page) => page.contents) || [];
 
   const filteredContent = feedContent
@@ -95,12 +97,14 @@ export default function MyFeed() {
             heading={item.title}
             date={item.date}
             content={item.content}
-            likes={item.likes}
+            upvoteCount={item.upvoteCount}
+            downvoteCount={item.downvoteCount}
             commentCount={item.commentCount}
             squad={item.squad}
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
-            isLiked={item.isLiked}
+            isUpvoted={item.isUpvoted}
+            isDownvoted={item.isDownvoted}
             isBookmarked={item.isBookmarked}
             username={item.username}
             profilePic={item.profilePic}

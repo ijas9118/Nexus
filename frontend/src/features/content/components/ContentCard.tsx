@@ -2,10 +2,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
 import { bookmarkContent } from "@/services/user/bookmarkService";
-import { likeContent } from "@/services/user/likeService";
-import { Bookmark, Share2 } from "lucide-react";
+import { Bookmark, MessageCircle, Share2 } from "lucide-react";
 import React, { useState } from "react";
-import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Premium from "@/components/icons/Premium";
 import { useSelector } from "react-redux";
@@ -20,8 +18,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/molecules/alert-dialog";
-import CommentModal from "./comment/CommentModal";
 import { extractTextFromHtml } from "@/utils/htmlToText";
+import {
+  BiDownvote,
+  BiSolidDownvote,
+  BiSolidUpvote,
+  BiUpvote,
+} from "react-icons/bi";
 
 interface ContentCardProps {
   id: string;
@@ -30,41 +33,27 @@ interface ContentCardProps {
   contentType: string;
   heading: string;
   date: string;
-  likes: number;
+  upvoteCount: number;
+  downvoteCount: number;
   commentCount: number;
   content: string;
   squad: { name: string; _id: string };
   isPremium: boolean;
   image: string;
-  isLiked: boolean;
+  isUpvoted: boolean;
+  isDownvoted: boolean;
   isBookmarked: boolean;
   username: string;
   profilePic: string;
 }
 
 const ContentCard: React.FC<ContentCardProps> = (props) => {
-  const [likes, setLikes] = useState<number>(props.likes);
-  const [isLiked, setIsLiked] = useState<boolean>(props.isLiked);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(props.isBookmarked);
   const isPremium = useSelector(
     (state: RootState) => state.auth.user?.isPremium,
   );
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
-
-  const handleLike = async (id: string) => {
-    try {
-      setIsLiked((prev) => !prev);
-      setLikes(isLiked ? likes - 1 : likes + 1);
-      const updatedContent = await likeContent(id);
-      if (!updatedContent || updatedContent.likeCount === undefined) {
-        setLikes(isLiked ? likes + 1 : likes - 1);
-      }
-    } catch (error) {
-      setIsLiked((prev) => !prev);
-      console.error("Failed to like content", error);
-    }
-  };
 
   const handleBookmark = async (id: string) => {
     try {
@@ -86,6 +75,8 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
   const handleUserClick = (username: string) => {
     navigate(`/profile/${username}`);
   };
+
+  const netScore = props.upvoteCount - props.downvoteCount;
 
   return (
     <div className="w-full border-b py-6 hover:scale-[101%] transition-all">
@@ -138,28 +129,43 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
               <span>{props.date}</span>
               <span>•</span>
-              <Badge variant="secondary" className="text-muted-foreground">
+              <Badge
+                variant="secondary"
+                className="text-muted-foreground capitalize"
+              >
                 {props.contentType}
               </Badge>
             </div>
           </div>
 
           <div className="flex items-center justify-around md:justify-start gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-2 text-neutral-600 hover:text-slate-600 dark:text-neutral-400 hover:dark:text-slate-400"
-              onClick={() => handleLike(props.id)}
+            <div
+              className="border border-muted flex items-center rounded-lg overflow-hidden gap-2"
+              onClick={() => handleCardClick(props.id)}
             >
-              {isLiked ? (
-                <FaThumbsUp className="h-5 w-5" />
-              ) : (
-                <FaRegThumbsUp className="h-5 w-5" />
-              )}
-              <span>{likes}</span>
-            </Button>
-
-            <CommentModal contentId={props.id} />
+              <button className="py-2 px-3">
+                {props.isUpvoted ? (
+                  <BiSolidUpvote className="text-emerald-400 dark:text-emerald-500" />
+                ) : (
+                  <BiUpvote className="text-muted-foreground" />
+                )}
+              </button>
+              <div className="text-sm text-muted-foreground">{netScore}</div>
+              <button className="py-2 px-3">
+                {props.isDownvoted ? (
+                  <BiSolidDownvote className="text-pink-400 dark:text-pink-500" />
+                ) : (
+                  <BiDownvote className="text-muted-foreground" />
+                )}
+              </button>
+            </div>
+            <div
+              className="flex gap-2 items-center px-2"
+              onClick={() => handleCardClick(props.id)}
+            >
+              <MessageCircle className="h-4 w-4" />
+              10
+            </div>
 
             <Button
               variant="ghost"

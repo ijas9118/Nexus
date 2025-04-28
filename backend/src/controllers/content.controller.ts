@@ -38,8 +38,9 @@ export class ContentController implements IContentController {
 
   getContent = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const role = req.user?.role as string;
+    const userId = req.user?._id as string;
 
-    const content = await this.contentService.getContentById(req.params.id, role);
+    const content = await this.contentService.getContentById(req.params.id, role, userId);
 
     if (!content) {
       throw new CustomError('Content not found', StatusCodes.NOT_FOUND);

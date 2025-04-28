@@ -22,13 +22,6 @@ import { IAdminRepository } from '../core/interfaces/repositories/IAdminReposito
 import { AdminRepository } from '../repositories/admin.repository';
 import { AdminAuthService } from '../services/admin/admin.auth.service';
 
-import { ILikesRepository } from '../core/interfaces/repositories/ILikesRepository';
-import { LikesRepository } from '../repositories/likes.repository';
-import { ILikeService } from '../core/interfaces/services/ILikeService';
-import { LikeService } from '../services/like.service';
-import { ILikesController } from '../core/interfaces/controllers/ILikesController';
-import { LikesController } from '../controllers/likes.controller';
-
 import { IBookmarkRepository } from '../core/interfaces/repositories/IBookmarnRepository';
 import { BookmarkRepository } from '../repositories/bookmark.repository';
 import { IBookmarkService } from '../core/interfaces/services/IBookmarkService';
@@ -135,6 +128,13 @@ import { TimeSlotService } from '@/services/time-slot.service';
 import { ITimeSlotController } from '@/core/interfaces/controllers/ITimeSlotController';
 import { TimeSlotController } from '@/controllers/time-slot.controller';
 
+import { IVoteRepository } from '@/core/interfaces/repositories/IVoteRepository';
+import { VoteRepository } from '@/repositories/votes.repository';
+import { IVoteService } from '@/core/interfaces/services/IVoteService';
+import { VoteService } from '@/services/vote.service';
+import { IVoteController } from '@/core/interfaces/controllers/IVoteController';
+import { VoteController } from '@/controllers/vote.controller';
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -156,9 +156,9 @@ container.bind<IContentRepository>(TYPES.ContentRepository).to(ContentRepository
 container.bind<IContentService>(TYPES.ContentService).to(ContentService);
 container.bind<IContentController>(TYPES.ContentController).to(ContentController);
 
-container.bind<ILikesRepository>(TYPES.LikesRepository).to(LikesRepository);
-container.bind<ILikeService>(TYPES.LikesService).to(LikeService);
-container.bind<ILikesController>(TYPES.LikesController).to(LikesController);
+container.bind<IVoteRepository>(TYPES.VoteRepository).to(VoteRepository);
+container.bind<IVoteService>(TYPES.VoteService).to(VoteService);
+container.bind<IVoteController>(TYPES.VoteController).to(VoteController);
 
 container.bind<IBookmarkRepository>(TYPES.BookmarkRepository).to(BookmarkRepository);
 container.bind<IBookmarkService>(TYPES.BookmarkService).to(BookmarkService);

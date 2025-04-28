@@ -1,6 +1,6 @@
 import { IBookmarkController } from '@/core/interfaces/controllers/IBookmarkController';
 import { IContentController } from '@/core/interfaces/controllers/IContentController';
-import { ILikesController } from '@/core/interfaces/controllers/ILikesController';
+import { IVoteController } from '@/core/interfaces/controllers/IVoteController';
 import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
 import { authenticate } from '@/middlewares/auth.middleware';
@@ -10,7 +10,7 @@ import { Router } from 'express';
 
 const router = Router();
 const contentController = container.get<IContentController>(TYPES.ContentController);
-const likesController = container.get<ILikesController>(TYPES.LikesController);
+const voteController = container.get<IVoteController>(TYPES.VoteController);
 const bookmarkController = container.get<IBookmarkController>(TYPES.BookmarkController);
 
 router.get(
@@ -53,11 +53,18 @@ router.get(
   contentController.getContent
 );
 
+// Route to vote on content (upvote/downvote)
 router.post(
-  '/:id/like',
-  authenticate(['user', 'premium', 'mentor']),
-  validateRequest(toggleSchema),
-  likesController.toggleLike
+  '/vote',
+  authenticate(['user', 'admin', 'premium', 'mentor']),
+  voteController.voteContent
+);
+
+// Route to get all votes by user
+router.get(
+  '/user-votes',
+  authenticate(['user', 'admin', 'premium', 'mentor']),
+  voteController.getUserVotes
 );
 
 export default router;

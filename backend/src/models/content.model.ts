@@ -7,13 +7,13 @@ export interface IContent extends Document {
   contentType: string;
   title: string;
   date: string;
-  likes: number;
+  upvoteCount: number;
+  downvoteCount: number;
   squad: mongoose.Types.ObjectId;
   isPremium: boolean;
   thumbnailUrl: string;
   videoUrl: string;
   content: string;
-  likeCount: number;
   commentCount: number;
   bookmarkCount: number;
   isVerified: boolean;
@@ -47,7 +47,11 @@ const ContentSchema: Schema = new Schema(
       type: String,
       required: true,
     },
-    likes: {
+    upvoteCount: {
+      type: Number,
+      default: 0,
+    },
+    downvoteCount: {
       type: Number,
       default: 0,
     },
@@ -72,10 +76,6 @@ const ContentSchema: Schema = new Schema(
       required: function (this: { contentType: string }) {
         return this.contentType === 'blog';
       },
-    },
-    likeCount: {
-      type: Number,
-      default: 0,
     },
     commentCount: {
       type: Number,

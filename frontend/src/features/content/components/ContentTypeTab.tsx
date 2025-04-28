@@ -24,8 +24,8 @@ const ContentTypeTab: React.FC<ContentTypeTabProps> = ({
       >
         <TabsList>
           <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="Blog">Blogs</TabsTrigger>
-          <TabsTrigger value="Video">Videos</TabsTrigger>
+          <TabsTrigger value="blog">Blogs</TabsTrigger>
+          <TabsTrigger value="video">Videos</TabsTrigger>
         </TabsList>
       </Tabs>
     </div>
