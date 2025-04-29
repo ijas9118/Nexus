@@ -69,6 +69,16 @@ const PricingPlanForm = ({ onClose }: PricingPlanFormProps) => {
     { name: "Fire", component: FireIcon, value: "fire" },
   ];
 
+  const calculateDurationInDays = (interval: string): number => {
+    const match = interval
+      .toLowerCase()
+      .trim()
+      .match(/^(\d+)?\s*(month|months)$/);
+    if (!match) return 0;
+    const numMonths = match[1] ? parseInt(match[1], 10) : 1;
+    return numMonths * 30; // Same logic as backend
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -113,6 +123,14 @@ const PricingPlanForm = ({ onClose }: PricingPlanFormProps) => {
       return "Valid price is required";
     if (!formData.description) return "Description is required";
     if (!formData.billingInterval) return "Billing interval is required";
+
+    const intervalMatch = formData.billingInterval
+      .toLowerCase()
+      .trim()
+      .match(/^(\d+)?\s*(month|months)$/);
+    if (!intervalMatch)
+      return "Invalid interval format. Use 'month' or '<number> months'";
+
     if (!formData.buttonText) return "Button text is required";
     if (!formData.icon) return "Plan icon is required";
     if (formData.features.some((f) => !f)) return "All features must be filled";
@@ -240,6 +258,13 @@ const PricingPlanForm = ({ onClose }: PricingPlanFormProps) => {
                 value={formData.billingInterval}
                 onChange={handleInputChange}
               />
+              {/* Display calculated days */}
+              {formData.billingInterval && (
+                <p className="text-sm text-muted-foreground">
+                  Duration: {calculateDurationInDays(formData.billingInterval)}{" "}
+                  days
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="buttonText">Button Text</Label>

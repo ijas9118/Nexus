@@ -5,7 +5,7 @@ import { CLIENT_URL, STRIPE_WEBHOOK_SECRET } from '../utils/constants';
 import Stripe from 'stripe';
 import { IUserRepository } from '@/core/interfaces/repositories/IUserRepository';
 import { IPaymentRepository } from '@/core/interfaces/repositories/IPaymentRepository';
-import { ISubscriptionRepository } from '@/core/interfaces/services/ISubscriptionRepository';
+import { ISubscriptionRepository } from '@/core/interfaces/repositories/ISubscriptionRepository';
 import { TYPES } from '@/di/types';
 
 @injectable()

@@ -135,10 +135,15 @@ import { VoteService } from '@/services/vote.service';
 import { IVoteController } from '@/core/interfaces/controllers/IVoteController';
 import { VoteController } from '@/controllers/vote.controller';
 
-import { ISubscriptionRepository } from '@/core/interfaces/services/ISubscriptionRepository';
-import { SubscriptionRepository } from '@/repositories/subscription.repository';
 import { IPaymentRepository } from '@/core/interfaces/repositories/IPaymentRepository';
 import { PaymentRepository } from '@/repositories/payment.repository';
+
+import { ISubscriptionRepository } from '@/core/interfaces/repositories/ISubscriptionRepository';
+import { SubscriptionRepository } from '@/repositories/subscription.repository';
+import { ISubscriptionService } from '@/core/interfaces/services/ISubscriptionService';
+import { SubscriptionService } from '@/services/subscription.service';
+import { ISubscriptionController } from '@/core/interfaces/controllers/ISubscriptionController';
+import { SubscriptionController } from '@/controllers/subscription.controller';
 
 const container = new Container();
 
@@ -221,5 +226,7 @@ container.bind<ITimeSlotService>(TYPES.TimeSlotService).to(TimeSlotService);
 container.bind<ITimeSlotController>(TYPES.TimeSlotController).to(TimeSlotController);
 
 container.bind<ISubscriptionRepository>(TYPES.SubscriptionRepository).to(SubscriptionRepository);
+container.bind<ISubscriptionService>(TYPES.SubscriptionService).to(SubscriptionService);
+container.bind<ISubscriptionController>(TYPES.SubscriptionController).to(SubscriptionController);
 
 export { container };

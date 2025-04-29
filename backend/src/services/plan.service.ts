@@ -16,6 +16,10 @@ export class PlanService extends BaseService<IPlan> implements IPlanService {
     if (existingPlan) {
       throw new Error('Plan with this tier already exists');
     }
+    // Ensure interval is provided
+    if (!data.interval) {
+      throw new Error('Interval is required');
+    }
     return this.planRepository.create(data);
   };
 
