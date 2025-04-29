@@ -7,6 +7,7 @@ import { IUserRepository } from '@/core/interfaces/repositories/IUserRepository'
 import { IPaymentRepository } from '@/core/interfaces/repositories/IPaymentRepository';
 import { ISubscriptionRepository } from '@/core/interfaces/repositories/ISubscriptionRepository';
 import { TYPES } from '@/di/types';
+import CustomError from '@/utils/CustomError';
 
 @injectable()
 export class PaymentServce implements IPaymentService {
@@ -23,6 +24,16 @@ export class PaymentServce implements IPaymentService {
     customerId: string,
     email: string
   ): Promise<string> => {
+    const currentSubscription =
+      await this.subscriptionRepository.getUserCurrentSubscription(customerId);
+    if (
+      currentSubscription &&
+      typeof currentSubscription.planId !== 'string' &&
+      currentSubscription.planId._id.toString() === planId
+    ) {
+      throw new Error('User is already subscribed to this plan with an active subscription.');
+    }
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       customer_email: email,
@@ -116,7 +127,7 @@ export class PaymentServce implements IPaymentService {
 
     endDate.setMonth(endDate.getMonth() + 1);
 
-    const subscription = await this.subscriptionRepository.createSubscription({
+    await this.subscriptionRepository.createSubscription({
       userId: metadata.customerId,
       planId: metadata.planId,
       paymentId: payment._id as string,

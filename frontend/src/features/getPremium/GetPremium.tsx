@@ -34,9 +34,9 @@ export default function PremiumPage() {
       const sessionUrl = await PaymentService.createSession(plan, email);
 
       window.location.href = sessionUrl;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Payment failed:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error(error.message || "Something went wrong. Please try again.");
     }
   };
 

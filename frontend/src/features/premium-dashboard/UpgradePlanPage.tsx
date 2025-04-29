@@ -4,13 +4,20 @@ import PlanService from "@/services/planService";
 import { IPlan } from "@/types/plans";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
-import { useState } from "react";
 import { motion } from "framer-motion";
 import PriceCard from "@/components/organisms/PricingCard";
 import { getPlanLogo } from "@/utils/planLogo";
+import SubscriptionService from "@/services/subscriptionService";
+import { useConfirmDialog } from "@/context/ConfirmDialogContext";
+import PaymentService from "@/services/paymentService";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { toast } from "sonner";
 
 export default function UpgradePlanPage() {
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const { showConfirm } = useConfirmDialog();
+  const user = useSelector((state: RootState) => state.auth.user);
+  const email = user?.email || "";
 
   const {
     data: plans,
@@ -21,10 +28,35 @@ export default function UpgradePlanPage() {
     queryFn: PlanService.getAllPlans,
   });
 
-  const handlePlanSelect = (planId: string) => {
-    setSelectedPlan(planId);
+  const { data: subscription } = useQuery({
+    queryKey: ["subscription"],
+    queryFn: SubscriptionService.getCurrentSubscription,
+  });
+
+  const handlePlanSelect = async (plan: IPlan) => {
+    if (
+      subscription?.planId._id === plan._id &&
+      subscription?.status === "active"
+    ) {
+      showConfirm({
+        title: "Already Subscribed",
+        description: "You're already subscribed to this plan. Enjoy the perks!",
+        confirmLabel: "OK",
+        cancelLabel: "",
+      });
+      return;
+    }
+    try {
+      const sessionUrl = await PaymentService.createSession(plan, email);
+
+      window.location.href = sessionUrl;
+    } catch (error: any) {
+      console.error("Payment failed:", error);
+      toast.error(error.message || "Something went wrong. Please try again.");
+    }
+
     // Here you would typically navigate to checkout or confirm the selection
-    console.log(`Selected plan: ${planId}`);
+    console.log(`Selected plan: ${plan._id}`);
   };
 
   const containerVariants = {
@@ -120,7 +152,7 @@ export default function UpgradePlanPage() {
               featured={plan.featured}
               logo={getPlanLogo(plan.logo)}
               isAdminView={false}
-              onCTAClick={() => handlePlanSelect(plan._id as string)}
+              onCTAClick={() => handlePlanSelect(plan)}
             />
           </motion.div>
         ))}

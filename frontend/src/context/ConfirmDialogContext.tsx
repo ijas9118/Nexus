@@ -62,9 +62,11 @@ export const ConfirmDialogProvider = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleCancel}>
-              {options.cancelLabel || "Cancel"}
-            </AlertDialogCancel>
+            {options.cancelLabel && (
+              <AlertDialogCancel onClick={handleCancel}>
+                {options.cancelLabel || "Cancel"}
+              </AlertDialogCancel>
+            )}
             <AlertDialogAction onClick={handleConfirm}>
               {options.confirmLabel || "Continue"}
             </AlertDialogAction>

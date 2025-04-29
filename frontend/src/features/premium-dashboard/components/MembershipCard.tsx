@@ -1,5 +1,3 @@
-import { format } from "date-fns";
-import { Sparkles } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -29,6 +27,7 @@ export default function MembershipCard({
   const totalDays = end.diff(start, "day");
   const remainingDays = end.diff(today, "day");
   const usedDays = totalDays - remainingDays;
+
   console.log(totalDays, remainingDays, usedDays);
   const progressPercent = Math.min(
     100,
@@ -80,9 +79,9 @@ export default function MembershipCard({
               Membership Period
             </div>
             <div className="text-sm font-medium">
-              {remainingDays > 0
-                ? `${remainingDays} of ${subscription?.planId.durationInDays} days remaining`
-                : `Expired (0 out of ${subscription?.planId.durationInDays} days)`}
+              {usedDays < totalDays
+                ? `Used: ${usedDays}/${subscription?.planId.durationInDays}`
+                : `Expired (used full ${subscription?.planId.durationInDays} days)`}
             </div>
           </div>
           <Progress value={progressPercent} className="h-2" />
