@@ -4,7 +4,6 @@ import UserRoutes from "./routes/UserRoutes";
 import MentorRoutes from "./routes/MentorRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
 import { ThemeProvider } from "./components/theme/theme-provider";
-import NotFound from "./pages/NotFound";
 import store from "./store/store";
 import { refreshAccessToken } from "./store/slices/authSlice";
 import { ConfirmDialogProvider } from "./context/ConfirmDialogContext";

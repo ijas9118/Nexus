@@ -12,6 +12,11 @@ const PaymentService = {
         email,
       }),
     ),
+
+  verifySession: (sessionId: string) =>
+    handleApi(() =>
+      api.get<{ success: boolean }>(`/payment/verify-session/${sessionId}`),
+    ),
 };
 
 export default PaymentService;

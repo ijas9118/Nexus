@@ -17,4 +17,10 @@ router.post(
   paymentController.checkoutSession
 );
 
+router.get(
+  '/verify-session/:sessionId',
+  authenticate(['user', 'mentor', 'premium']),
+  paymentController.verifySession
+);
+
 export default router;

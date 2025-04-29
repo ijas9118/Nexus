@@ -9,4 +9,6 @@ export interface IPaymentService {
     email: string
   ): Promise<string>;
   webhookHandler(bodyData: any, signature: string): Promise<void>;
+
+  verifyCheckoutSession(sessionId: string): Promise<boolean>;
 }

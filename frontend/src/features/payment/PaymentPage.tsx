@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 import SuccessPage from "./SuccessPage";
 import CancelPage from "./CancelPage";
 
@@ -7,16 +7,17 @@ const PaymentPage = () => {
   const queryParams = new URLSearchParams(location.search);
   const success = queryParams.get("success");
   const canceled = queryParams.get("canceled");
+  const sessionId = queryParams.get("session_id");
 
-  if (success === "true") {
-    return <SuccessPage />;
+  if (success === "true" && sessionId) {
+    return <SuccessPage sessionId={sessionId} />;
   }
 
   if (canceled === "true") {
     return <CancelPage />;
   }
 
-  return <div>Invalid payment status</div>;
+  return <Navigate to="/unauthorized" replace />;
 };
 
 export default PaymentPage;

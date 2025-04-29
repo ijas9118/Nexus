@@ -38,12 +38,12 @@ const UserRoutes: React.FC = () => {
         <Route path="/login/forgot-password" element={<ForgotPassword />} />
         <Route path="/login/reset-password" element={<ResetPassword />} />
 
-        <Route path="/" element={<Layout />}>
-          <Route
-            element={
-              <ProtectedRoute requiredRoles={["user", "mentor", "premium"]} />
-            }
-          >
+        <Route
+          element={
+            <ProtectedRoute requiredRoles={["user", "mentor", "premium"]} />
+          }
+        >
+          <Route path="/" element={<Layout />}>
             <Route path="myFeed" element={<MyFeed />} />
             <Route path="profile/:username" element={<ProfilePage />} />
             <Route path="profile/edit" element={<EditProfileLayout />} />
@@ -66,9 +66,9 @@ const UserRoutes: React.FC = () => {
             <Route path="content/:id" element={<ContentDetails />} />
             <Route path="following" element={<Following />} />
             <Route path="notification" element={<NotificationsPage />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
-          <Route path="/unauthorized" element={<Unauthorized />} />
-          <Route path="*" element={<NotFound />} />
         </Route>
         <Route path="/payment" element={<PaymentPage />} />
       </Routes>

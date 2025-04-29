@@ -67,6 +67,13 @@ export class PaymentServce implements IPaymentService {
     }
   };
 
+  async verifyCheckoutSession(sessionId: string): Promise<boolean> {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    // Check for completed status
+    return session.payment_status === 'paid' && session.status === 'complete';
+  }
+
   private async handleCheckoutSessionCompleted(session: Stripe.Checkout.Session): Promise<void> {
     const {
       metadata,

@@ -4,12 +4,13 @@ import { useDispatch } from "react-redux";
 import { clearUser } from "@/store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { logout } from "@/services/user/authService";
+import PaymentService from "@/services/paymentService";
 
-const SuccessPage = () => {
+const SuccessPage = ({ sessionId }: { sessionId: string }) => {
   const [countdown, setCountdown] = useState(10);
+  const [isSessionValid, setIsSessionValid] = useState<boolean | null>(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
 
   // Custom hook for logout functionality
   const logoutUser = async () => {
@@ -25,19 +26,39 @@ const SuccessPage = () => {
   };
 
   useEffect(() => {
-    if (countdown > 0) {
+    const verifySession = async () => {
+      try {
+        const response = await PaymentService.verifySession(sessionId);
+        if (response.success) {
+          setIsSessionValid(true);
+        } else {
+          navigate("/unauthorized");
+        }
+      } catch (error) {
+        console.error("Session validation failed:", error);
+        navigate("/unauthorized");
+      }
+    };
+
+    verifySession();
+  }, [sessionId, navigate]);
+
+  useEffect(() => {
+    if (isSessionValid && countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
-    } else if (countdown === 0) {
+    } else if (isSessionValid && countdown === 0) {
       logoutUser();
     }
+  }, [countdown, isSessionValid]);
 
-    return () => {
-      window.removeEventListener("popstate", () => {
-        window.history.pushState(null, "", window.location.pathname);
-      });
-    };
-  }, [countdown]);
+  if (isSessionValid === null) {
+    return (
+      <div className="text-center mt-20">Verifying your payment... ⏳</div>
+    );
+  }
+
+  if (!isSessionValid) return null;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -131,7 +152,7 @@ const SuccessPage = () => {
             {/* Success Icon/Animation */}
             <motion.div className="mx-auto w-32 h-32 mb-8 relative">
               <motion.div
-                className="absolute inset-0 bg-green-100 rounded-full"
+                className="absolute inset-0  rounded-full"
                 variants={circleVariants}
                 initial="hidden"
                 animate="visible"

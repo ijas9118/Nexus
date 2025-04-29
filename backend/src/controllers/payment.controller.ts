@@ -29,4 +29,16 @@ export class PaymentController implements IPaymentController {
     await this.paymentService.webhookHandler(req.body, signature);
     res.status(StatusCodes.OK).json({ received: true });
   });
+
+  verifySession = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { sessionId } = req.params;
+
+    if (!sessionId || typeof sessionId !== 'string') {
+      res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Missing sessionId' });
+      return;
+    }
+
+    const isValid = await this.paymentService.verifyCheckoutSession(sessionId);
+    res.status(StatusCodes.OK).json({ success: isValid });
+  });
 }
