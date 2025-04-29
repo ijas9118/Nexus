@@ -27,6 +27,8 @@ export default function PremiumPage() {
     queryFn: PlanService.getAllPlans,
   });
 
+  console.log(plans);
+
   const handleCTAClick = async (plan: IPlan) => {
     try {
       const sessionUrl = await PaymentService.createSession(plan, email);

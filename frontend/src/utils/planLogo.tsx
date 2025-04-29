@@ -1,14 +1,14 @@
 import { SparkIcon, FlameIcon, FireIcon } from "@/components/icons/PlanIcons";
 
-export function getPlanLogo(logoKey?: string) {
+export function getPlanLogo(logoKey?: string, className?: string) {
   switch (logoKey) {
     case "spark":
-      return <SparkIcon />;
+      return <SparkIcon className={className} />;
     case "flame":
-      return <FlameIcon />;
+      return <FlameIcon className={className} />;
     case "fire":
-      return <FireIcon />;
+      return <FireIcon className={className} />;
     default:
-      return null; // or a nice default icon if you want
+      return null; // or return a default icon component with className
   }
 }

@@ -28,6 +28,7 @@ import PremiumDashboard from "@/features/premium-dashboard/PremiumDashboard";
 import PaymentPage from "@/features/payment/PaymentPage";
 import Unauthorized from "@/pages/Unauthorized";
 import EditProfileLayout from "@/features/profile/EditProfileLayout";
+import UpgradePlanPage from "@/features/premium-dashboard/UpgradePlanPage";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -54,6 +55,7 @@ const UserRoutes: React.FC = () => {
             </Route>
             <Route element={<ProtectedRoute requiredRoles={["premium"]} />}>
               <Route path="premium" element={<PremiumDashboard />} />
+              <Route path="premium/upgrade" element={<UpgradePlanPage />} />
             </Route>
             <Route path="mentors" element={<Mentors />} />
             <Route path="mentors/apply" element={<MentorApply />} />
