@@ -145,6 +145,11 @@ import { SubscriptionService } from '@/services/subscription.service';
 import { ISubscriptionController } from '@/core/interfaces/controllers/ISubscriptionController';
 import { SubscriptionController } from '@/controllers/subscription.controller';
 
+import { IContentViewService } from '@/core/interfaces/services/IContentViewService';
+import { ContentViewService } from '@/services/content-view.service';
+import { IContentViewRepository } from '@/core/interfaces/repositories/IContentViewRepository';
+import { ContentViewRepository } from '@/repositories/content-view.repository';
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -228,5 +233,8 @@ container.bind<ITimeSlotController>(TYPES.TimeSlotController).to(TimeSlotControl
 container.bind<ISubscriptionRepository>(TYPES.SubscriptionRepository).to(SubscriptionRepository);
 container.bind<ISubscriptionService>(TYPES.SubscriptionService).to(SubscriptionService);
 container.bind<ISubscriptionController>(TYPES.SubscriptionController).to(SubscriptionController);
+
+container.bind<IContentViewService>(TYPES.ContentViewService).to(ContentViewService);
+container.bind<IContentViewRepository>(TYPES.ContentViewRepository).to(ContentViewRepository);
 
 export { container };

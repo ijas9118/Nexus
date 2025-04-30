@@ -1,5 +1,10 @@
 import { Button } from "@/components/atoms/button";
-import { BookmarkIcon, MessageCircleIcon, ShareIcon } from "lucide-react";
+import {
+  BookmarkIcon,
+  EyeIcon,
+  MessageCircleIcon,
+  ShareIcon,
+} from "lucide-react";
 import {
   BiDownvote,
   BiSolidDownvote,
@@ -13,6 +18,7 @@ interface InteractionBarProps {
   upvoteCount: number;
   downvoteCount: number;
   commentCount: number;
+  viewCount: number;
   onUpvote: () => void;
   onDownvote: () => void;
 }
@@ -23,6 +29,7 @@ export const InteractionBar = ({
   upvoteCount,
   downvoteCount,
   commentCount,
+  viewCount,
   onUpvote,
   onDownvote,
 }: InteractionBarProps) => (
@@ -58,6 +65,14 @@ export const InteractionBar = ({
         <span>{commentCount}</span>
         <span>Comments</span>
       </Button>
+      <div className="flex items-center gap-2">
+        <EyeIcon className="h-4 w-4" />
+        <span className="text-sm">
+          {viewCount === 0
+            ? "No views yet"
+            : `${viewCount} ${viewCount === 1 ? "view" : "views"}`}
+        </span>
+      </div>
     </div>
     <div className="flex items-center gap-2">
       <Button variant="ghost" size="sm" className="flex items-center gap-2">

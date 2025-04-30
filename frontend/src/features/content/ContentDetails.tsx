@@ -121,6 +121,7 @@ export default function ContentDetails() {
     );
   }
 
+  console.log(content);
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl h-screen">
       <ContentHeader content={content} />
@@ -130,6 +131,7 @@ export default function ContentDetails() {
         upvoteCount={content.upvoteCount ?? 0}
         downvoteCount={content.downvoteCount ?? 0}
         commentCount={content.commentCount ?? 0}
+        viewCount={content.viewCount ?? 0}
         onUpvote={handleUpvote}
         onDownvote={handleDownvote}
       />

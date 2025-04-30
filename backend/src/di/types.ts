@@ -1,6 +1,3 @@
-import { SubscriptionController } from '@/controllers/subscription.controller';
-import { SubscriptionService } from '@/services/subscription.service';
-
 export const TYPES = {
   // Repositories
   UserRepository: Symbol.for('UserRepository'),
@@ -21,6 +18,7 @@ export const TYPES = {
   MessageRepository: Symbol.for('MessageRepository'),
   SubscriptionRepository: Symbol.for('SubscriptionRepository'),
   PaymentRepository: Symbol.for('PaymentRepository'),
+  ContentViewRepository: Symbol.for('ContentViewRepository'),
 
   // Services
   UserService: Symbol.for('UserService'),
@@ -45,6 +43,7 @@ export const TYPES = {
   GroupService: Symbol.for('GroupService'),
   MessageService: Symbol.for('MessageService'),
   SubscriptionService: Symbol.for('SubscriptionService'),
+  ContentViewService: Symbol.for('ContentViewService'),
 
   // Controllers
   UserController: Symbol.for('UserController'),

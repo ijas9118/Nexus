@@ -21,21 +21,15 @@ export default function MyFeed() {
     );
   }, [dispatch]);
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
-    queryKey: ["feedContent"],
-    queryFn: getAllContent,
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.nextPage ? allPages.length + 1 : undefined;
-    },
-    initialPageParam: 1,
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useInfiniteQuery({
+      queryKey: ["feedContent"],
+      queryFn: getAllContent,
+      getNextPageParam: (lastPage, allPages) => {
+        return lastPage.nextPage ? allPages.length + 1 : undefined;
+      },
+      initialPageParam: 1,
+    });
 
   console.log(data);
 
@@ -108,6 +102,7 @@ export default function MyFeed() {
             isBookmarked={item.isBookmarked}
             username={item.username}
             profilePic={item.profilePic}
+            viewCount={item.viewCount}
           />
         ))}
       </div>

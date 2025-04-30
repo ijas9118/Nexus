@@ -230,4 +230,8 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       .populate('squad', 'name')
       .exec();
   };
+
+  incrementViewCount = async (contentId: string): Promise<void> => {
+    await this.model.findByIdAndUpdate(contentId, { $inc: { viewCount: 1 } });
+  };
 }

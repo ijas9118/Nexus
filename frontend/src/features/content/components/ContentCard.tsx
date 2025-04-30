@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
 import { bookmarkContent } from "@/services/user/bookmarkService";
-import { Bookmark, MessageCircle, Share2 } from "lucide-react";
+import { Bookmark, EyeIcon, MessageCircle, Share2 } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Premium from "@/components/icons/Premium";
@@ -45,6 +45,7 @@ interface ContentCardProps {
   isBookmarked: boolean;
   username: string;
   profilePic: string;
+  viewCount: number;
 }
 
 const ContentCard: React.FC<ContentCardProps> = (props) => {
@@ -186,6 +187,14 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
             >
               <Share2 className="h-5 w-5" />
             </Button>
+            <div className="flex gap-2 items-center px-2 text-muted-foreground text-sm">
+              <EyeIcon className="h-4 w-4" />
+              <span>
+                {!props.viewCount
+                  ? "No views yet"
+                  : `${props.viewCount} ${props.viewCount === 1 ? "view" : "views"}`}
+              </span>
+            </div>
           </div>
         </div>
       </div>

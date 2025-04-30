@@ -5,12 +5,14 @@ import { IContent } from '../models/content.model';
 import { BaseService } from '../core/abstracts/base.service';
 import { IContentRepository } from '../core/interfaces/repositories/IContentRepository';
 import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
+import { IContentViewService } from '@/core/interfaces/services/IContentViewService';
 
 @injectable()
 export class ContentService extends BaseService<IContent> implements IContentService {
   constructor(
     @inject(TYPES.ContentRepository) private contentRepository: IContentRepository,
-    @inject(TYPES.UserRepository) private userRepository: IUserRepository
+    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
+    @inject(TYPES.ContentViewService) private viewService: IContentViewService
   ) {
     super(contentRepository);
   }
@@ -26,7 +28,13 @@ export class ContentService extends BaseService<IContent> implements IContentSer
   }
 
   async getContentById(id: string, role: string, userId: string): Promise<IContent | null> {
-    return this.contentRepository.findContent(id, role, userId);
+    const content = await this.contentRepository.findContent(id, role, userId);
+
+    if (content && userId) {
+      await this.viewService.handleContentView(userId, id);
+    }
+
+    return content;
   }
 
   async getAllContent(userId: string, page: number, limit: number): Promise<IContent[]> {

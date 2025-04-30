@@ -16,6 +16,7 @@ export interface IContent extends Document {
   content: string;
   commentCount: number;
   bookmarkCount: number;
+  viewCount: number;
   isVerified: boolean;
 }
 
@@ -82,6 +83,10 @@ const ContentSchema: Schema = new Schema(
       default: 0,
     },
     bookmarkCount: {
+      type: Number,
+      default: 0,
+    },
+    viewCount: {
       type: Number,
       default: 0,
     },

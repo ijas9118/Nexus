@@ -16,7 +16,6 @@ import {
   Calendar,
   CheckCircle,
   Eye,
-  Heart,
   MessageSquare,
   XCircle,
 } from "lucide-react";
