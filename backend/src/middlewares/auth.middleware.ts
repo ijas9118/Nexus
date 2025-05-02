@@ -8,6 +8,7 @@ interface IUser {
   name: string;
   email: string;
   role: UserRole;
+  mentorId?: string;
 }
 
 declare module 'express-serve-static-core' {

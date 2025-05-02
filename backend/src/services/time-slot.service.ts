@@ -1,26 +1,35 @@
+import { IMentorService } from '@/core/interfaces/services/IMentorService';
 import { ITimeSlotService } from '@/core/interfaces/services/ITimeSlotService';
+import { TYPES } from '@/di/types';
 import { ITimeSlot } from '@/models/timeslots.model';
 import { TimeSlotRepository } from '@/repositories/time-slot.repository';
+import CustomError from '@/utils/CustomError';
+import dayjs from 'dayjs';
+import { inject, injectable } from 'inversify';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
+@injectable()
 export class TimeSlotService implements ITimeSlotService {
-  private timeSlotRepository: TimeSlotRepository;
+  constructor(
+    @inject(TYPES.TimeSlotRepository) private timeSlotRepository: TimeSlotRepository,
+    @inject(TYPES.MentorService) private mentorService: IMentorService
+  ) {}
 
-  constructor() {
-    this.timeSlotRepository = new TimeSlotRepository();
-  }
-
-  async addTimeSlot(mentorId: string, date: Date, startTime: string): Promise<ITimeSlot> {
-    // Validate startTime format (HH:mm)
-    if (!/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(startTime)) {
-      throw new Error('Invalid start time format. Use HH:mm.');
+  async addTimeSlot(mentorId: string, date: Date, startTime12Hr: string): Promise<ITimeSlot> {
+    const mentor = await this.mentorService.getMentorDetails(mentorId);
+    if (!mentor) {
+      throw new CustomError('Mentor not found. Please make sure you are a registered mentor.');
     }
 
-    // Calculate endTime (1 hour later)
-    const [hours, minutes] = startTime.split(':').map(Number);
-    const endHours = (hours + 1) % 24;
-    const endTime = `${endHours.toString().padStart(2, '0')}:${minutes
-      .toString()
-      .padStart(2, '0')}`;
+    // Validate 12-hour format with AM/PM
+    const parsedStart = dayjs(startTime12Hr, 'hh:mm A');
+    if (!parsedStart.isValid()) {
+      throw new CustomError('Invalid start time format. Use hh:mm AM/PM.');
+    }
+
+    const startTime = parsedStart.format('hh:mm A');
+    const endTime = parsedStart.add(1, 'hour').format('hh:mm A');
 
     const timeSlotData: Partial<ITimeSlot> = {
       mentorId,
@@ -52,7 +61,7 @@ export class TimeSlotService implements ITimeSlotService {
     return await this.timeSlotRepository.findByMentorAndDate(mentorId, date);
   }
 
-  async getAllTimeSlots(mentorId: string): Promise<ITimeSlot[]> {
-    return await this.timeSlotRepository.find({ mentorId });
+  async getAllTimeSlots(mentorId: string): Promise<Record<string, ITimeSlot[]>> {
+    return await this.timeSlotRepository.getAllTimeSlotsGroupedByDate(mentorId);
   }
 }

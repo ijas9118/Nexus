@@ -22,6 +22,7 @@ export interface LoginResponseDto {
   socials: [{ platform: string; url: string }];
   role: UserRole;
   username?: string;
+  mentorId?: string;
   isPremium: boolean;
   googleId?: string;
   githubId?: string;

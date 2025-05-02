@@ -38,7 +38,6 @@ export enum Technology {
 
 export enum MentorshipType {
   ONE_ON_ONE = '1-on-1',
-  GROUP = 'group',
   CAREER_GUIDANCE = 'career-guidance',
   MOCK_INTERVIEW = 'mock-interview',
   PORTFOLIO_REVIEW = 'portfolio-review',

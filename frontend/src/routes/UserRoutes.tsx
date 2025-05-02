@@ -19,7 +19,6 @@ import Following from "@/features/content/Following";
 import Mentors from "@/features/mentor/MentorsListPage";
 import MentorApply from "@/features/mentor/MentorApply";
 import MentorProfilePage from "@/features/mentor/MentorDetailPage";
-import BookSession from "@/features/mentor/BookSession";
 import { MentorFormProvider } from "@/context/MentorFormContext";
 import AddPost from "@/features/addPost/AddPost";
 import Chat from "@/features/chat/Chat";
@@ -29,6 +28,7 @@ import PaymentPage from "@/features/payment/PaymentPage";
 import Unauthorized from "@/pages/Unauthorized";
 import EditProfileLayout from "@/features/profile/EditProfileLayout";
 import UpgradePlanPage from "@/features/premium-dashboard/UpgradePlanPage";
+import BookingPage from "@/features/mentor/BookingPage";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -60,7 +60,7 @@ const UserRoutes: React.FC = () => {
             <Route path="mentors" element={<Mentors />} />
             <Route path="mentors/apply" element={<MentorApply />} />
             <Route path="mentors/:mentorId" element={<MentorProfilePage />} />
-            <Route path="mentors/:mentorId/book" element={<BookSession />} />
+            <Route path="mentors/:mentorId/book" element={<BookingPage />} />
             <Route path="squads" element={<Squads />} />
             <Route path="chat" element={<Chat />} />
             <Route path="connections" element={<Connections />} />

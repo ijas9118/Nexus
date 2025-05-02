@@ -14,7 +14,7 @@ const TimeSlotSchema: Schema = new Schema(
   {
     mentorId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'Mentor',
       required: true,
     },
     date: {

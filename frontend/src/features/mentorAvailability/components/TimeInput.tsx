@@ -10,44 +10,45 @@ import {
 } from "@/components/atoms/select";
 
 interface TimeInputProps {
-  value?: string;
+  value?: string; // Expected format: "hh:mm AM/PM"
   onChange: (time: string) => void;
-  min?: string;
-  max?: string;
   disabled?: boolean;
 }
 
 const TimeInput: FC<TimeInputProps> = ({
   value = "",
   onChange,
-  min = "09:00",
-  max = "21:00",
   disabled = false,
 }) => {
-  // Parse the initial value (HH:MM format)
-  const [hour, setHour] = useState(value ? value.split(":")[0] : "");
-  const [minute, setMinute] = useState(value ? value.split(":")[1] : "");
+  const [hour, setHour] = useState("");
+  const [minute, setMinute] = useState("");
+  const [period, setPeriod] = useState<"AM" | "PM">("AM");
 
-  // Parse min and max constraints
-  const minHour = parseInt(min.split(":")[0]);
-  const maxHour = parseInt(max.split(":")[0]);
-
-  // Available hours based on constraints
-  const availableHours = Array.from({ length: maxHour - minHour + 1 }, (_, i) =>
-    String(i + minHour).padStart(2, "0"),
-  );
-
-  // Available minutes (by default: 00, 15, 30, 45)
-  const availableMinutes = ["00", "15", "30", "45"];
-
-  // Update parent component when hour or minute changes
+  // Parse the initial value
   useEffect(() => {
-    if (hour && minute) {
-      onChange(`${hour}:${minute}`);
+    if (value) {
+      const [time, ampm] = value.split(" ");
+      const [h, m] = time.split(":");
+      setHour(h);
+      setMinute(m);
+      setPeriod(ampm as "AM" | "PM");
     }
-  }, [hour, minute, onChange]);
+  }, [value]);
 
-  // Animation variants
+  // Available values
+  const hours = Array.from({ length: 12 }, (_, i) =>
+    String(i + 1).padStart(2, "0"),
+  ); // 01 to 12
+  const minutes = ["00", "15", "30", "45"];
+  const periods: ("AM" | "PM")[] = ["AM", "PM"];
+
+  // Fire onChange when any of the values change
+  useEffect(() => {
+    if (hour && minute && period) {
+      onChange(`${hour}:${minute} ${period}`);
+    }
+  }, [hour, minute, period, onChange]);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -85,11 +86,11 @@ const TimeInput: FC<TimeInputProps> = ({
       <div className="flex items-center">
         <motion.div variants={itemVariants}>
           <Select value={hour} onValueChange={setHour} disabled={disabled}>
-            <SelectTrigger className="w-[80px] bg-transparent border-0 focus:ring-transparent font-medium">
+            <SelectTrigger className="w-[70px] bg-transparent border-0 focus:ring-transparent font-medium">
               <SelectValue placeholder="Hour" />
             </SelectTrigger>
             <SelectContent>
-              {availableHours.map((h) => (
+              {hours.map((h) => (
                 <SelectItem key={h} value={h}>
                   {h}
                 </SelectItem>
@@ -107,11 +108,11 @@ const TimeInput: FC<TimeInputProps> = ({
 
         <motion.div variants={itemVariants}>
           <Select value={minute} onValueChange={setMinute} disabled={disabled}>
-            <SelectTrigger className="w-[80px] bg-transparent border-0 focus:ring-transparent font-medium">
+            <SelectTrigger className="w-[70px] bg-transparent border-0 focus:ring-transparent font-medium">
               <SelectValue placeholder="Min" />
             </SelectTrigger>
             <SelectContent>
-              {availableMinutes.map((m) => (
+              {minutes.map((m) => (
                 <SelectItem key={m} value={m}>
                   {m}
                 </SelectItem>
@@ -119,18 +120,26 @@ const TimeInput: FC<TimeInputProps> = ({
             </SelectContent>
           </Select>
         </motion.div>
-      </div>
 
-      <motion.div
-        className="flex items-center justify-center text-xs text-muted-foreground font-medium ml-1 px-2 py-1"
-        variants={itemVariants}
-      >
-        {hour && minute ? (
-          <span className="bg-blue-100 dark:bg-blue-800/40 text-blue-800 dark:text-blue-200 px-4 py-1 rounded-full">
-            {parseInt(hour) >= 12 ? "PM" : "AM"}
-          </span>
-        ) : null}
-      </motion.div>
+        <motion.div variants={itemVariants}>
+          <Select
+            value={period}
+            onValueChange={(val) => setPeriod(val as "AM" | "PM")}
+            disabled={disabled}
+          >
+            <SelectTrigger className="w-[70px] bg-transparent border-0 focus:ring-transparent font-medium">
+              <SelectValue placeholder="AM/PM" />
+            </SelectTrigger>
+            <SelectContent>
+              {periods.map((p) => (
+                <SelectItem key={p} value={p}>
+                  {p}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </motion.div>
+      </div>
     </motion.div>
   );
 };

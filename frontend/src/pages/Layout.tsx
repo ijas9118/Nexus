@@ -29,6 +29,9 @@ import {
   TooltipTrigger,
 } from "@/components/molecules/tooltip";
 import Mentor from "@/components/icons/Mentor";
+import { useTheme } from "@/components/theme/theme-provider";
+import NPDark from "@/components/icons/NPDark";
+import NPLight from "@/components/icons/NPLight";
 
 export default function Layout() {
   const navigate = useNavigate();
@@ -37,6 +40,8 @@ export default function Layout() {
     (state: RootState) => state.breadcrumb.breadcrumbs,
   );
   const user = useSelector((state: RootState) => state.auth.user);
+
+  const { theme } = useTheme();
 
   return (
     <SidebarProvider>
@@ -73,6 +78,11 @@ export default function Layout() {
             </div>
             <div className="flex items-center gap-4">
               <ModeToggle />
+              {theme === "dark" ? (
+                <NPDark className="h-7 w-8" />
+              ) : (
+                <NPLight className="h-7 w-8" />
+              )}
               {user?.isPremium && user.role === "mentor" ? (
                 <TooltipProvider>
                   <Tooltip>

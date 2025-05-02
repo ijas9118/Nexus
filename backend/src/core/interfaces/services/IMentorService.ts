@@ -27,4 +27,6 @@ export interface IMentorService {
   updateAvailability(mentorId: string, availabilityType: AvailabilityType): Promise<boolean>;
 
   getAvailability(mentorId: string): Promise<AvailabilityType | null>;
+
+  getMentorByUserId(userId: string): Promise<IMentor | null>;
 }

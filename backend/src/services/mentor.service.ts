@@ -108,4 +108,8 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
     const result = await this.findOne({ userId: mentorId });
     return result?.mentorshipDetails?.availabilityType || null;
   };
+
+  getMentorByUserId = async (userId: string): Promise<IMentor | null> => {
+    return await this.findOne({ userId });
+  };
 }

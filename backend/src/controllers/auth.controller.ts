@@ -17,6 +17,7 @@ import { CLIENT_URL } from '@/utils/constants';
 import { Profile } from 'passport-google-oauth20';
 import { Profile as GitHubProfile } from 'passport-github2';
 import { UserRole } from '@/core/types/global/user-role';
+import { IMentorService } from '@/core/interfaces/services/IMentorService';
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -24,7 +25,8 @@ export class AuthController implements IAuthController {
     @inject(TYPES.AuthService) private authService: IAuthService,
     @inject(TYPES.OTPService) private otpService: IOTPService,
     @inject(TYPES.EmailService) private emailService: IEmailService,
-    @inject(TYPES.TokenService) private tokenService: ITokenService
+    @inject(TYPES.TokenService) private tokenService: ITokenService,
+    @inject(TYPES.MentorService) private mentorService: IMentorService
   ) {}
 
   // Register a new user and send OTP to email
@@ -95,6 +97,7 @@ export class AuthController implements IAuthController {
       _id: user._id.toString(),
       name: user.name,
       email: user.email,
+      mentorId: user.mentorId,
       role: user.role as UserRole,
     });
 
@@ -143,41 +146,46 @@ export class AuthController implements IAuthController {
       throw new CustomError('Invalid token', StatusCodes.FORBIDDEN);
     }
 
-    if (decodedToken.user.role === 'admin') {
-      const accessToken = generateAccessToken({
-        _id: decodedToken.user._id,
-        name: decodedToken.user.name,
-        email: decodedToken.user.email,
-        role: decodedToken.user.role,
-      });
+    const { _id, name, email, role } = decodedToken.user;
 
+    if (role === 'admin') {
+      const accessToken = generateAccessToken({ _id, name, email, role });
       res.status(StatusCodes.OK).json({ accessToken, decodedToken });
       return;
     }
 
-    const user = await this.authService.getUserByRoleAndId(
-      decodedToken.user.role,
-      decodedToken.user._id
-    );
+    const user = await this.authService.getUserByRoleAndId(role, _id);
 
     if (!user) {
       clearRefreshTokenCookie(res);
       throw new CustomError('User not found', StatusCodes.NOT_FOUND);
     }
 
-    // if (user.status === 'Blocked') {
-    //   clearRefreshTokenCookie(res);
-    //   throw new CustomError('User is blocked', StatusCodes.FORBIDDEN);
-    // }
-
-    const accessToken = generateAccessToken({
+    const payload: any = {
       _id: user._id.toString(),
       name: user.name,
       email: user.email,
-      role: decodedToken.user.role,
-    });
+      role,
+    };
 
-    res.status(StatusCodes.OK).json({ accessToken, user });
+    let fullUser = user.toObject ? user.toObject() : user;
+
+    // 🧙 If mentor, include mentorId
+    if (role === 'mentor') {
+      const mentor = await this.mentorService.getMentorByUserId(user._id.toString());
+      if (!mentor) {
+        clearRefreshTokenCookie(res);
+        throw new CustomError('Mentor profile not found', StatusCodes.NOT_FOUND);
+      }
+
+      const mentorWithId = mentor as { _id: string };
+      payload['mentorId'] = mentor._id;
+      fullUser = { ...fullUser, mentorId: mentorWithId._id.toString() };
+    }
+
+    const accessToken = generateAccessToken(payload);
+
+    res.status(StatusCodes.OK).json({ accessToken, user: fullUser });
   });
 
   handleGoogleUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {

@@ -3,11 +3,12 @@ import api from "./api";
 import { TimeSlot } from "@/types/mentor";
 
 const TimeSlotService = {
-  addTimeSlot: (date: string, startTime: string) =>
+  addTimeSlot: (date: string, startTime: string, mentorId: string) =>
     handleApi(() =>
       api.post<TimeSlot>("/mentor/time-slot", {
         date,
         startTime,
+        mentorId,
       }),
     ),
 
@@ -22,7 +23,7 @@ const TimeSlotService = {
     ),
 
   getAllTimeSlots: () =>
-    handleApi(() => api.get<TimeSlot[]>("/mentor/time-slot")),
+    handleApi(() => api.get<Record<string, TimeSlot[]>>("/mentor/time-slot")),
 };
 
 export default TimeSlotService;

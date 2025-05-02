@@ -10,6 +10,7 @@ export default function MentorAvailabilityPage() {
   const handleDateChange = (date: Date | undefined) => {
     setSelectedDate(date);
   };
+
   return (
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 py-8 space-y-">
       <h1 className="text-2xl font-bold mb-8">Manage Your Availability</h1>

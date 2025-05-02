@@ -12,10 +12,14 @@ import CustomError from '../../utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
 import { UsernameGenerator } from '../../utils/usernameGenerator.util';
 import { IUser } from '../../models/user.model';
+import { IMentorService } from '@/core/interfaces/services/IMentorService';
 
 @injectable()
 export class AuthService implements IAuthService {
-  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {}
+  constructor(
+    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
+    @inject(TYPES.MentorService) private mentorService: IMentorService
+  ) {}
 
   private generateDummyPassword(): string {
     return Math.random().toString(36).slice(-8); // Simple random string; enhance as needed
@@ -69,6 +73,14 @@ export class AuthService implements IAuthService {
 
     const userObj = user.toObject();
     delete userObj.password;
+
+    if (user.role === 'mentor') {
+      const mentor = await this.mentorService.getMentorByUserId(user._id.toString());
+      if (mentor) {
+        const mentorWithId = mentor as { _id: string };
+        userObj.mentorId = mentorWithId._id.toString();
+      }
+    }
 
     return userObj as LoginResponseDto;
   }

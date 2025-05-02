@@ -14,6 +14,7 @@ export interface UserInterface {
   isPremium: boolean;
   location: string;
   phone: string;
+  mentorId?: string;
 }
 
 export type UserRoles = "user" | "mentor" | "admin" | "premium";
