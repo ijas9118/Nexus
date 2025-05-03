@@ -1,6 +1,5 @@
 import { Alert, AlertDescription } from "@/components/atoms/alert";
 import { Badge } from "@/components/atoms/badge";
-import { Button } from "@/components/atoms/button";
 import { Card, CardContent } from "@/components/molecules/card";
 import TimeSlotService from "@/services/TimeSlotService";
 import { TimeSlot } from "@/types/mentor";

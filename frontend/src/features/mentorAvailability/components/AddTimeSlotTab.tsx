@@ -8,7 +8,7 @@ import TimeSlotService from "@/services/TimeSlotService";
 import { Button } from "@/components/atoms/button";
 import { Label } from "@/components/atoms/label";
 import { Alert, AlertDescription } from "@/components/atoms/alert";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Loader2, X } from "lucide-react";
 import TimeInput from "./TimeInput";
 import TimeSlotListByDate from "./TimeSlotListByDate";
 import { TimeSlot } from "@/types/mentor";
@@ -44,7 +44,12 @@ export default function AddTimeSlotTab({
       setError(null);
     },
     onError: (err: unknown) => {
-      setError(err instanceof Error ? err.message : "Failed to add time slot");
+      // Handle the error based on its structure
+      if (err && typeof err === "object" && "message" in err) {
+        setError((err as { message: string }).message);
+      } else {
+        setError("Failed to add time slot");
+      }
     },
   });
 
@@ -81,9 +86,20 @@ export default function AddTimeSlotTab({
           exit={{ opacity: 0, y: -10 }}
           transition={{ type: "spring", stiffness: 500 }}
         >
-          <Alert variant="destructive" className="mb-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
+          <Alert variant="destructive" className="mb-4 ">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute top-2 right-2 p-1"
+              onClick={() => setError(null)}
+              aria-label="Close alert"
+            >
+              <X className="h-4 w-4" />
+            </Button>
           </Alert>
         </motion.div>
       )}

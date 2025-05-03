@@ -3,9 +3,7 @@ import AvailabilitySettings from "./components/AvailabilitySettings";
 import TimeSlotManagement from "./components/TimeSlotManagement";
 
 export default function MentorAvailabilityPage() {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date(),
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
   const handleDateChange = (date: Date | undefined) => {
     setSelectedDate(date);

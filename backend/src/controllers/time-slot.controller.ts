@@ -16,11 +16,11 @@ export class TimeSlotController implements ITimeSlotController {
     const mentorId = req.user?.mentorId;
 
     if (!mentorId) {
-      throw new CustomError('Mentor ID is required.');
+      throw new CustomError('Mentor ID is required.', StatusCodes.BAD_REQUEST);
     }
 
     if (!date || !startTime) {
-      throw new CustomError('Date and start time are required.');
+      throw new CustomError('Date and start time are required.', StatusCodes.BAD_REQUEST);
     }
 
     const timeSlot = await this.timeSlotService.addTimeSlot(mentorId, new Date(date), startTime);
@@ -32,7 +32,7 @@ export class TimeSlotController implements ITimeSlotController {
     const mentorId = req.user?.mentorId;
 
     if (!mentorId) {
-      throw new CustomError('Mentor ID is required.');
+      throw new CustomError('Mentor ID is required.', StatusCodes.BAD_REQUEST);
     }
 
     const timeSlot = await this.timeSlotService.deleteTimeSlot(mentorId, slotId);
@@ -44,11 +44,11 @@ export class TimeSlotController implements ITimeSlotController {
     const mentorId = req.user?.mentorId;
 
     if (!mentorId) {
-      throw new CustomError('Mentor ID is required.');
+      throw new CustomError('Mentor ID is required.', StatusCodes.BAD_REQUEST);
     }
 
     if (!date) {
-      throw new CustomError('Date is required.');
+      throw new CustomError('Date is required.', StatusCodes.BAD_REQUEST);
     }
 
     const timeSlots = await this.timeSlotService.getTimeSlotsByMentorAndDate(
@@ -62,7 +62,7 @@ export class TimeSlotController implements ITimeSlotController {
     const mentorId = req.user?.mentorId;
 
     if (!mentorId) {
-      throw new CustomError('Mentor ID is required.');
+      throw new CustomError('Mentor ID is required.', StatusCodes.BAD_REQUEST);
     }
 
     const timeSlots = await this.timeSlotService.getAllTimeSlots(mentorId);
@@ -73,7 +73,7 @@ export class TimeSlotController implements ITimeSlotController {
     const mentorId = req.user?.mentorId;
 
     if (!mentorId) {
-      throw new CustomError('Mentor ID is required.');
+      throw new CustomError('Mentor ID is required.', StatusCodes.BAD_REQUEST);
     }
 
     const timeSlots = await this.timeSlotService.getBookedTimeSlots(mentorId);
