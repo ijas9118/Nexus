@@ -5,4 +5,5 @@ export interface ITimeSlotController {
   getAllTimeSlots: RequestHandler;
   getTimeSlotsByDate: RequestHandler;
   deleteTimeSlot: RequestHandler;
+  getBookedTimeSlots: RequestHandler;
 }

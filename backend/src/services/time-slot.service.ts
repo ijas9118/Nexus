@@ -64,4 +64,8 @@ export class TimeSlotService implements ITimeSlotService {
   async getAllTimeSlots(mentorId: string): Promise<Record<string, ITimeSlot[]>> {
     return await this.timeSlotRepository.getAllTimeSlotsGroupedByDate(mentorId);
   }
+
+  async getBookedTimeSlots(mentorId: string): Promise<Record<string, ITimeSlot[]>> {
+    return await this.timeSlotRepository.getBookedTimeSlots(mentorId);
+  }
 }

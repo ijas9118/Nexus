@@ -12,5 +12,6 @@ router.post('/', authenticate(['mentor']), timeSlotController.addTimeSlot);
 router.delete('/:slotId', authenticate(['mentor']), timeSlotController.deleteTimeSlot);
 router.get('/by-date', authenticate(['mentor']), timeSlotController.getTimeSlotsByDate);
 router.get('/', authenticate(['mentor']), timeSlotController.getAllTimeSlots);
+router.get('/booked-time-slot', authenticate(['mentor']), timeSlotController.getBookedTimeSlots);
 
 export default router;

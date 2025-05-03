@@ -24,6 +24,11 @@ const TimeSlotService = {
 
   getAllTimeSlots: () =>
     handleApi(() => api.get<Record<string, TimeSlot[]>>("/mentor/time-slot")),
+
+  getBookedTimeSlots: () =>
+    handleApi(() =>
+      api.get<Record<string, TimeSlot[]>>("/mentor/time-slot/booked-time-slot"),
+    ),
 };
 
 export default TimeSlotService;
