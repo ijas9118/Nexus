@@ -10,6 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
+import MentorService from "@/services/mentorService";
+import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Calendar, Clock, Info } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
@@ -42,6 +44,17 @@ const BookingPage = () => {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [bookingReason, setBookingReason] = useState<string>("");
+
+  const {
+    data: mentorshipTyps,
+    isError,
+    isLoading,
+  } = useQuery({
+    queryKey: ["mentor-detail"],
+    queryFn: () => MentorService.getMentorshipTypes(mentorId as string),
+  });
+
+  console.log(mentorshipTyps);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

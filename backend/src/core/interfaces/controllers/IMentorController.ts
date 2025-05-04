@@ -11,4 +11,5 @@ export interface IMentorController {
   getMentorEnums: RequestHandler;
   updateAvailability: RequestHandler;
   getAvailability: RequestHandler;
+  getMentorshipTypes: RequestHandler;
 }

@@ -60,4 +60,8 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
   async findOneAndDelete(filter: FilterQuery<T>): Promise<T | null> {
     return this.model.findOneAndDelete(filter);
   }
+
+  async softDelete(id: Types.ObjectId | string): Promise<T | null> {
+    return this.model.findByIdAndUpdate(id, { isActive: false }, { new: true });
+  }
 }

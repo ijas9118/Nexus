@@ -1,13 +1,7 @@
 import { Badge } from "@/components/atoms/badge";
 import MentorService from "@/services/mentorService";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Briefcase,
-  CalendarClock,
-  CalendarDays,
-  CheckCircle,
-  Clock,
-} from "lucide-react";
+import { Briefcase, CalendarClock, CheckCircle, Clock } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { MentorStats } from "./components/mentor-datail/mentor-stats";
 import {
@@ -36,6 +30,8 @@ const MentorDetailPage = () => {
     queryKey: ["mentor-detail"],
     queryFn: () => MentorService.getMentorDetails(mentorId as string),
   });
+
+  console.log(mentorData);
 
   if (isLoading) return <p>Loading...</p>;
   if (isError || !mentorData) return <p>Error fetching mentor</p>;
@@ -205,18 +201,6 @@ const MentorDetailPage = () => {
                     : "Available on weekdays"}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {mentorData.mentorshipDetails.availableTimeSlots.map(
-                    (slot) => (
-                      <div key={slot} className="flex items-center gap-2">
-                        <CalendarDays className="w-4 h-4 text-muted-foreground" />
-                        <span>{slot}</span>
-                      </div>
-                    ),
-                  )}
-                </div>
-              </CardContent>
             </Card>
           </TabsContent>
         </Tabs>

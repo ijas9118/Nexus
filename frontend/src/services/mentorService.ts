@@ -44,6 +44,9 @@ const MentorService = {
 
   getAvailability: () =>
     handleApi(() => api.get<AvailabilityType>("/mentor/availability")),
+
+  getMentorshipTypes: (mentorId: string) =>
+    handleApi(() => api.get(`/mentor/${mentorId}/mentorship-types`)),
 };
 
 export default MentorService;

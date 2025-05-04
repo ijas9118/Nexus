@@ -36,4 +36,10 @@ router.patch(
 
 router.get('/availability', authenticate(['admin', 'mentor']), mentorController.getAvailability);
 
+router.get(
+  '/:mentorId/mentorship-types',
+  authenticate(['admin', 'mentor', 'premium', 'user']),
+  mentorController.getMentorshipTypes
+);
+
 export default router;

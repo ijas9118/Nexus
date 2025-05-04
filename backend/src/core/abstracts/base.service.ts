@@ -1,14 +1,15 @@
 import { Document, FilterQuery, Types } from 'mongoose';
 import { IBaseRepository } from '../interfaces/repositories/IBaseRepository';
+import { IBaseService } from '../interfaces/services/IBaseService';
 
-export abstract class BaseService<T extends Document> {
+export abstract class BaseService<T extends Document> implements IBaseService<T> {
   constructor(protected repository: IBaseRepository<T>) {}
 
   async create(data: Partial<T>): Promise<T> {
     return this.repository.create(data);
   }
 
-  async findById(id: Types.ObjectId): Promise<T | null> {
+  async findById(id: Types.ObjectId | string): Promise<T | null> {
     return this.repository.findById(id);
   }
 
@@ -20,11 +21,15 @@ export abstract class BaseService<T extends Document> {
     return this.repository.find(conditions);
   }
 
-  async update(id: Types.ObjectId, data: Partial<T>): Promise<T | null> {
+  async update(id: Types.ObjectId | string, data: Partial<T>): Promise<T | null> {
     return this.repository.update(id, data);
   }
 
-  async delete(id: Types.ObjectId): Promise<T | null> {
+  async delete(id: Types.ObjectId | string): Promise<T | null> {
     return this.repository.delete(id);
+  }
+
+  async softDelete(id: Types.ObjectId | string): Promise<T | null> {
+    return this.repository.softDelete(id);
   }
 }

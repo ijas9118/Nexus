@@ -150,6 +150,12 @@ import { ContentViewService } from '@/services/content-view.service';
 import { IContentViewRepository } from '@/core/interfaces/repositories/IContentViewRepository';
 import { ContentViewRepository } from '@/repositories/content-view.repository';
 
+import { IMentorshipTypeController } from '@/core/interfaces/controllers/IMentorshipTypeController';
+import { MentorshipTypeController } from '@/controllers/mentorship-type.controller';
+import { IMentorshipTypeService } from '@/core/interfaces/services/IMentorshipTypeService';
+import { MentorshipTypeService } from '@/services/mentorship-type.service';
+import { MentorshipTypeRepository } from '@/repositories/mentorship-type.repository';
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -236,5 +242,11 @@ container.bind<ISubscriptionController>(TYPES.SubscriptionController).to(Subscri
 
 container.bind<IContentViewService>(TYPES.ContentViewService).to(ContentViewService);
 container.bind<IContentViewRepository>(TYPES.ContentViewRepository).to(ContentViewRepository);
+
+container
+  .bind<IMentorshipTypeController>(TYPES.MentorshipTypeController)
+  .to(MentorshipTypeController);
+container.bind<IMentorshipTypeService>(TYPES.MentorshipTypeService).to(MentorshipTypeService);
+container.bind(TYPES.MentorshipTypeRepository).to(MentorshipTypeRepository);
 
 export { container };
