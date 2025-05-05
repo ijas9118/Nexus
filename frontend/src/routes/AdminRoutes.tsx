@@ -17,6 +17,7 @@ import ContentManagement from "@/features/admin/ContentManagement";
 import SubscriptionPlan from "@/features/admin/SubscriptionPlan";
 import MentorshipTypeSettings from "@/features/admin/MentorshipTypeSettings";
 import ForbiddenPage from "@/pages/Unauthorized";
+import MentorMetadataPage from "@/features/admin/MentorMetadata";
 
 const AdminRoutes: React.FC = () => {
   return (
@@ -35,6 +36,7 @@ const AdminRoutes: React.FC = () => {
           <Route path="payment" element={<PaymentManagement />} />
           <Route path="plans" element={<SubscriptionPlan />} />
           <Route path="mentorship-type" element={<MentorshipTypeSettings />} />
+          <Route path="mentor-meta-data" element={<MentorMetadataPage />} />
           <Route path="unauthorized" element={<ForbiddenPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>

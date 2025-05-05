@@ -24,6 +24,7 @@ import chatRoutes from './routes/chat.routes';
 import timeSlotRoutes from './routes/time-slot.routes';
 import subscriptionRoutes from './routes/subscription.routes';
 import mentorshipTypeRoutes from './routes/mentorship-type.routes';
+import mentorMetadataRoutes from './routes/mentor-metadata.routes';
 
 const app = express();
 setupSwagger(app);
@@ -54,6 +55,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/mentor', mentorRoutes);
 app.use('/api/mentor/time-slot', timeSlotRoutes);
 app.use('/api/mentorship-type', mentorshipTypeRoutes);
+app.use('/api/mentor-metadata', mentorMetadataRoutes);
 app.use('/api/followers', followerRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/payment', paymentRoutes);

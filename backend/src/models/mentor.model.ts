@@ -1,10 +1,4 @@
-import {
-  ExperienceLevel,
-  ExpertiseArea,
-  MentorStatus,
-  TargetAudience,
-  Technology,
-} from '@/core/types/entities/mentor';
+import { MentorStatus, TargetAudience } from '@/core/types/entities/mentor';
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 export interface IMentor extends Document {
@@ -12,9 +6,9 @@ export interface IMentor extends Document {
   experience: {
     currentRole: string;
     company: string;
-    experienceLevel: ExperienceLevel;
-    expertiseAreas: ExpertiseArea[];
-    technologies: Technology[];
+    experienceLevel: ObjectId;
+    expertiseAreas: ObjectId[];
+    technologies: ObjectId[];
     bio: string;
     resume?: string | null;
   };
@@ -41,21 +35,21 @@ const MentorSchema: Schema = new Schema(
       currentRole: { type: String, required: true },
       company: { type: String, required: true },
       experienceLevel: {
-        type: String,
-        enum: Object.values(ExperienceLevel),
+        type: Schema.Types.ObjectId,
+        ref: 'MentorMetadata',
         required: true,
       },
       expertiseAreas: [
         {
-          type: String,
-          enum: Object.values(ExpertiseArea),
+          type: Schema.Types.ObjectId,
+          ref: 'MentorMetadata',
           required: true,
         },
       ],
       technologies: [
         {
-          type: String,
-          enum: Object.values(Technology),
+          type: Schema.Types.ObjectId,
+          ref: 'MentorMetadata',
           required: true,
         },
       ],

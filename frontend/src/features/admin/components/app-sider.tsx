@@ -21,7 +21,6 @@ import {
 import {
   Atom,
   Bell,
-  ChartColumn,
   ChevronUp,
   Compass,
   CreditCard,
@@ -30,10 +29,10 @@ import {
   Layers,
   LayoutDashboard,
   MessageCircleMore,
-  SettingsIcon,
   Users,
   Plus,
   Leaf,
+  Database,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import CollapsibleComponent from "@/components/organisms/CollapsibleComponent";
@@ -57,10 +56,9 @@ const revenueItems = [
   { title: "Payment", url: "payment", icon: IndianRupee },
 ];
 
-const otherItems = [
-  { title: "Analytics", url: "analytics", icon: ChartColumn },
+const mentorSettings = [
   { title: "Mentorship Type", url: "mentorship-type", icon: Leaf },
-  { title: "Settings", url: "settings", icon: SettingsIcon },
+  { title: "Mentor Meta Data", url: "mentor-meta-data", icon: Database },
 ];
 
 const AdminAppSidebar = () => {
@@ -113,7 +111,10 @@ const AdminAppSidebar = () => {
         </Collapsible>
 
         <Collapsible defaultOpen className="group/collapsible">
-          <CollapsibleComponent title="Others" items={otherItems} />
+          <CollapsibleComponent
+            title="Mentor Settings"
+            items={mentorSettings}
+          />
         </Collapsible>
       </SidebarContent>
 

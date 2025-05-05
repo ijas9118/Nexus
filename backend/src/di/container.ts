@@ -155,6 +155,12 @@ import { MentorshipTypeController } from '@/controllers/mentorship-type.controll
 import { IMentorshipTypeService } from '@/core/interfaces/services/IMentorshipTypeService';
 import { MentorshipTypeService } from '@/services/mentorship-type.service';
 import { MentorshipTypeRepository } from '@/repositories/mentorship-type.repository';
+import { MentorMetadataRepository } from '@/repositories/mentor-metadata.repository';
+import { MentorMetadataService } from '@/services/mentor-metadata.service';
+import { MentorMetadataController } from '@/controllers/mentor-metadata.controller';
+import { IMentorMetadataRepository } from '@/core/interfaces/repositories/IMentorMetadataRepository';
+import { IMentorMetadataService } from '@/core/interfaces/services/IMentorMetadataService';
+import { IMentorMetadataController } from '@/core/interfaces/controllers/IMentorMetadataController';
 
 const container = new Container();
 
@@ -248,5 +254,13 @@ container
   .to(MentorshipTypeController);
 container.bind<IMentorshipTypeService>(TYPES.MentorshipTypeService).to(MentorshipTypeService);
 container.bind(TYPES.MentorshipTypeRepository).to(MentorshipTypeRepository);
+
+container
+  .bind<IMentorMetadataRepository>(TYPES.MentorMetadataRepository)
+  .to(MentorMetadataRepository);
+container.bind<IMentorMetadataService>(TYPES.MentorMetadataService).to(MentorMetadataService);
+container
+  .bind<IMentorMetadataController>(TYPES.MentorMetadataController)
+  .to(MentorMetadataController);
 
 export { container };
