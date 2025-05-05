@@ -33,6 +33,7 @@ import {
   SettingsIcon,
   Users,
   Plus,
+  Leaf,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import CollapsibleComponent from "@/components/organisms/CollapsibleComponent";
@@ -58,6 +59,7 @@ const revenueItems = [
 
 const otherItems = [
   { title: "Analytics", url: "analytics", icon: ChartColumn },
+  { title: "Mentorship Type", url: "mentorship-type", icon: Leaf },
   { title: "Settings", url: "settings", icon: SettingsIcon },
 ];
 

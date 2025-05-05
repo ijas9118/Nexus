@@ -63,6 +63,8 @@ export default function ForbiddenPage() {
     navigate(previousPath);
   };
 
+  console.log("=========");
+
   return (
     <div className="h-full bg-gradient-to-b from-muted-foreground/5 to-muted-foreground/15 flex items-center justify-center p-4">
       <motion.div

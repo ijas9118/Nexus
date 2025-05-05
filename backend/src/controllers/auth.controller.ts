@@ -150,7 +150,7 @@ export class AuthController implements IAuthController {
 
     if (role === 'admin') {
       const accessToken = generateAccessToken({ _id, name, email, role });
-      res.status(StatusCodes.OK).json({ accessToken, decodedToken });
+      res.status(StatusCodes.OK).json({ accessToken, user: decodedToken.user });
       return;
     }
 

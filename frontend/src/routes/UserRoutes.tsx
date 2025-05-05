@@ -25,10 +25,10 @@ import Chat from "@/features/chat/Chat";
 import NotificationsPage from "@/features/notification/NotificationsPage";
 import PremiumDashboard from "@/features/premium-dashboard/PremiumDashboard";
 import PaymentPage from "@/features/payment/PaymentPage";
-import Unauthorized from "@/pages/Unauthorized";
 import EditProfileLayout from "@/features/profile/EditProfileLayout";
 import UpgradePlanPage from "@/features/premium-dashboard/UpgradePlanPage";
 import BookingPage from "@/features/mentor/BookingPage";
+import ForbiddenPage from "@/pages/Unauthorized";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -68,7 +68,7 @@ const UserRoutes: React.FC = () => {
             <Route path="content/:id" element={<ContentDetails />} />
             <Route path="following" element={<Following />} />
             <Route path="notification" element={<NotificationsPage />} />
-            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="/unauthorized" element={<ForbiddenPage />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>

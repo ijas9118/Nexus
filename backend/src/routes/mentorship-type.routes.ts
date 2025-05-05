@@ -11,7 +11,11 @@ const mentorshipTypeController = container.get<IMentorshipTypeController>(
 const router = Router();
 
 // Get all mentorship types
-router.get('/', mentorshipTypeController.getAll);
+router.get(
+  '/',
+  authenticate(['admin', 'user', 'premium', 'mentor']),
+  mentorshipTypeController.getAll
+);
 
 // Get a single mentorship type by ID
 router.get(
@@ -28,5 +32,8 @@ router.put('/:id', authenticate(['admin']), mentorshipTypeController.update);
 
 // Delete (soft delete) a mentorship type by ID
 router.delete('/:id', authenticate(['admin']), mentorshipTypeController.delete);
+
+// Restore a soft-deleted mentorship type by ID
+router.patch('/:id/restore', authenticate(['admin']), mentorshipTypeController.restore);
 
 export default router;

@@ -15,6 +15,8 @@ import ContentDetail from "@/features/admin/content-management/components/Conten
 import PaymentManagement from "@/features/admin/PaymentManagement";
 import ContentManagement from "@/features/admin/ContentManagement";
 import SubscriptionPlan from "@/features/admin/SubscriptionPlan";
+import MentorshipTypeSettings from "@/features/admin/MentorshipTypeSettings";
+import ForbiddenPage from "@/pages/Unauthorized";
 
 const AdminRoutes: React.FC = () => {
   return (
@@ -32,6 +34,8 @@ const AdminRoutes: React.FC = () => {
           <Route path="contents/:contentId" element={<ContentDetail />} />
           <Route path="payment" element={<PaymentManagement />} />
           <Route path="plans" element={<SubscriptionPlan />} />
+          <Route path="mentorship-type" element={<MentorshipTypeSettings />} />
+          <Route path="unauthorized" element={<ForbiddenPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Route>

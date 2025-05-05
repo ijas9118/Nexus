@@ -32,4 +32,8 @@ export abstract class BaseService<T extends Document> implements IBaseService<T>
   async softDelete(id: Types.ObjectId | string): Promise<T | null> {
     return this.repository.softDelete(id);
   }
+
+  async restore(id: Types.ObjectId | string): Promise<T | null> {
+    return this.repository.restore(id);
+  }
 }

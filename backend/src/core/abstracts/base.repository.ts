@@ -64,4 +64,8 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
   async softDelete(id: Types.ObjectId | string): Promise<T | null> {
     return this.model.findByIdAndUpdate(id, { isActive: false }, { new: true });
   }
+
+  async restore(id: Types.ObjectId | string): Promise<T | null> {
+    return this.model.findByIdAndUpdate(id, { isActive: true }, { new: true });
+  }
 }

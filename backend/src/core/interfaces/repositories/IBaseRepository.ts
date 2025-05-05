@@ -17,4 +17,5 @@ export interface IBaseRepository<T> {
   findOneAndDelete(filter: FilterQuery<T>): Promise<T | null>;
 
   softDelete(id: Types.ObjectId | string): Promise<T | null>;
+  restore(id: Types.ObjectId | string): Promise<T | null>;
 }

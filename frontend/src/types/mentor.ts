@@ -78,3 +78,10 @@ export interface TimeSlot {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type MentorshipTypeData = {
+  _id?: string;
+  name: string;
+  description: string;
+  isActive: boolean;
+};

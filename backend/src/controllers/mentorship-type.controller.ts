@@ -4,9 +4,10 @@ import { IMentorshipTypeService } from '@/core/interfaces/services/IMentorshipTy
 import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '@/di/types';
+import { IMentorshipTypeController } from '@/core/interfaces/controllers/IMentorshipTypeController';
 
 @injectable()
-export class MentorshipTypeController {
+export class MentorshipTypeController implements IMentorshipTypeController {
   constructor(@inject(TYPES.MentorshipTypeService) private service: IMentorshipTypeService) {}
 
   create = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -19,8 +20,14 @@ export class MentorshipTypeController {
     res.status(StatusCodes.OK).json(mentorshipType);
   });
 
-  getAll = asyncHandler(async (_req: Request, res: Response): Promise<void> => {
-    const mentorshipTypes = await this.service.getAllMentorshipTypes();
+  getAll = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const isAdmin = req.user?.role === 'admin';
+    const includeAll = isAdmin && req.query.all === 'true';
+
+    const mentorshipTypes = includeAll
+      ? await this.service.getAllMentorshipTypes({ includeInactive: true })
+      : await this.service.getAllMentorshipTypes();
+
     res.status(StatusCodes.OK).json(mentorshipTypes);
   });
 
@@ -31,6 +38,11 @@ export class MentorshipTypeController {
 
   delete = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     await this.service.deleteMentorshipType(req.params.id);
+    res.status(StatusCodes.NO_CONTENT).send();
+  });
+
+  restore = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    await this.service.restoreMentorshipType(req.params.id);
     res.status(StatusCodes.NO_CONTENT).send();
   });
 }

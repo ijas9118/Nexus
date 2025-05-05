@@ -6,4 +6,5 @@ export interface IMentorshipTypeController {
   getAll: RequestHandler;
   update: RequestHandler;
   delete: RequestHandler;
+  restore: RequestHandler;
 }

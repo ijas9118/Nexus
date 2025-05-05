@@ -44,7 +44,10 @@ export class MentorshipTypeService
     return type;
   }
 
-  async getAllMentorshipTypes(): Promise<IMentorshipType[]> {
+  async getAllMentorshipTypes(options?: { includeInactive?: boolean }): Promise<IMentorshipType[]> {
+    if (options?.includeInactive) {
+      return this.find({});
+    }
     return this.find({ isActive: true });
   }
 
@@ -55,6 +58,15 @@ export class MentorshipTypeService
       description: string;
     }>
   ): Promise<IMentorshipType> {
+    const typeToUpdate = await this.findById(id);
+
+    if (!typeToUpdate || !typeToUpdate.isActive) {
+      throw new CustomError(
+        'Cannot update inactive or non-existent mentorship type',
+        StatusCodes.NOT_FOUND
+      );
+    }
+
     if (data.name) {
       const existingType = await this.repository.findOne({
         name: data.name,
@@ -69,7 +81,7 @@ export class MentorshipTypeService
     }
 
     const updatedType = await this.update(id, data);
-    if (!updatedType || !updatedType.isActive) {
+    if (!updatedType) {
       throw new CustomError('Mentorship type not found', StatusCodes.NOT_FOUND);
     }
     return updatedType;
@@ -77,6 +89,13 @@ export class MentorshipTypeService
 
   async deleteMentorshipType(id: string): Promise<void> {
     const type = await this.softDelete(id);
+    if (!type) {
+      throw new CustomError('Mentorship type not found', StatusCodes.NOT_FOUND);
+    }
+  }
+
+  async restoreMentorshipType(id: string): Promise<void> {
+    const type = await this.restore(id);
     if (!type) {
       throw new CustomError('Mentorship type not found', StatusCodes.NOT_FOUND);
     }

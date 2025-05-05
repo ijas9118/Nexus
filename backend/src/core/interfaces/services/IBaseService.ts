@@ -8,4 +8,5 @@ export interface IBaseService<T extends Document> {
   update(id: Types.ObjectId | string, data: Partial<T>): Promise<T | null>;
   delete(id: Types.ObjectId | string): Promise<T | null>;
   softDelete(id: Types.ObjectId | string): Promise<T | null>;
+  restore(id: Types.ObjectId | string): Promise<T | null>;
 }
