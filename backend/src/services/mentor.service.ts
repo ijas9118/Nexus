@@ -3,9 +3,10 @@ import { IMentorRepository } from '@/core/interfaces/repositories/IMentorReposit
 import { IUserRepository } from '@/core/interfaces/repositories/IUserRepository';
 import { IMentorService } from '@/core/interfaces/services/IMentorService';
 import { PersonalInfo } from '@/core/types';
-import { AvailabilityType, MentorshipType, MentorStatus } from '@/core/types/entities/mentor';
+import { AvailabilityType, MentorStatus } from '@/core/types/entities/mentor';
 import { TYPES } from '@/di/types';
 import { IMentor } from '@/models/mentor.model';
+import { IMentorshipType } from '@/models/mentorship-type.model';
 import CustomError from '@/utils/CustomError';
 import { inject, injectable } from 'inversify';
 
@@ -113,13 +114,19 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
     return await this.findOne({ userId });
   };
 
-  getMentorshipTypes = async (mentorId: string): Promise<MentorshipType[] | null> => {
+  getMentorshipTypes = async (mentorId: string): Promise<IMentorshipType[]> => {
     const mentor = await this.mentorRepository.getMentorDetails(mentorId);
-    console.log(mentor, mentorId);
+
     if (!mentor) {
-      return null;
+      throw new CustomError('Mentor not found.');
     }
 
-    return mentor.mentorshipDetails?.mentorshipTypes || null;
+    const mentorshipTypes = mentor.mentorshipDetails?.mentorshipTypes;
+
+    if (!mentorshipTypes || mentorshipTypes.length === 0) {
+      return [];
+    }
+
+    return mentorshipTypes as unknown as IMentorshipType[];
   };
 }

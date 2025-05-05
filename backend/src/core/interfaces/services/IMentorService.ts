@@ -1,6 +1,7 @@
 import { PersonalInfo } from '@/core/types';
 import { AvailabilityType, MentorshipType, MentorStatus } from '@/core/types/entities/mentor';
 import { IMentor } from '@/models/mentor.model';
+import { IMentorshipType } from '@/models/mentorship-type.model';
 
 export interface IMentorService {
   applyAsMentor(
@@ -30,5 +31,5 @@ export interface IMentorService {
 
   getMentorByUserId(userId: string): Promise<IMentor | null>;
 
-  getMentorshipTypes(mentorId: string): Promise<MentorshipType[] | null>;
+  getMentorshipTypes(mentorId: string): Promise<IMentorshipType[]>;
 }

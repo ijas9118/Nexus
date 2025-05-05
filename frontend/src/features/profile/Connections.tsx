@@ -24,7 +24,7 @@ const Connections = () => {
       setLoading(true);
       try {
         // const data = await getAllConnections();
-        // setConnections(data);
+        setConnections([]);
 
         const pendingRequests = await getPendingRequests();
         setRequests(pendingRequests);

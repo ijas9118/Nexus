@@ -75,7 +75,8 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
       .populate('experience.expertiseAreas')
       .populate('experience.technologies')
       .populate('mentorshipDetails.mentorshipTypes')
-      .populate('mentorshipDetails.targetAudiences');
+      .populate('mentorshipDetails.targetAudiences')
+      .lean();
   };
 
   updateAvailability = async (

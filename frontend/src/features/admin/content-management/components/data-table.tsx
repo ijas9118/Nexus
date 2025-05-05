@@ -22,7 +22,6 @@ import {
 import React from "react";
 import { DataTableToolbar } from "./tableToolbar";
 import { DataTablePagination } from "./tablePagination";
-import { useNavigate } from "react-router-dom";
 
 interface DataTableProps<TData extends { _id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,7 +41,6 @@ export function DataTable<TData extends { _id: string }, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const navigate = useNavigate();
 
   const table = useReactTable({
     data,

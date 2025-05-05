@@ -80,14 +80,18 @@ export default function Following() {
             contentType={item.contentType}
             heading={item.title}
             date={item.date}
-            likes={item.likes}
-            comments={item.comments}
             squad={item.squad}
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
-            isLiked={item.isLiked}
             isBookmarked={item.isBookmarked}
             username={item.username}
+            upvoteCount={0}
+            downvoteCount={0}
+            commentCount={0}
+            content={""}
+            isUpvoted={false}
+            isDownvoted={false}
+            viewCount={0}
           />
         ))}
       </div>

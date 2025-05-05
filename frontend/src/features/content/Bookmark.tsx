@@ -48,15 +48,19 @@ export default function Bookmark() {
             contentType={item.contentType}
             heading={item.title}
             date={item.date}
-            likes={item.likes}
-            comments={item.comments}
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
-            isLiked={item.isLiked}
             isBookmarked={item.isBookmarked}
             username={item.userName}
             squad={item.squad}
             profilePic={item.profilePic}
+            upvoteCount={0}
+            downvoteCount={0}
+            commentCount={0}
+            content={""}
+            isUpvoted={false}
+            isDownvoted={false}
+            viewCount={0}
           />
         ))}
       </div>

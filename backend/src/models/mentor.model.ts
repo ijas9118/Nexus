@@ -1,7 +1,6 @@
 import {
   ExperienceLevel,
   ExpertiseArea,
-  MentorshipType,
   MentorStatus,
   TargetAudience,
   Technology,
@@ -20,7 +19,7 @@ export interface IMentor extends Document {
     resume?: string | null;
   };
   mentorshipDetails: {
-    mentorshipTypes: MentorshipType[];
+    mentorshipTypes: ObjectId[];
     targetAudiences: TargetAudience[];
     availabilityType: 'weekdays' | 'weekend' | 'both';
     motivation: string;
@@ -66,8 +65,8 @@ const MentorSchema: Schema = new Schema(
     mentorshipDetails: {
       mentorshipTypes: [
         {
-          type: String,
-          enum: Object.values(MentorshipType),
+          type: Schema.Types.ObjectId,
+          ref: 'MentorshipType',
           required: true,
         },
       ],

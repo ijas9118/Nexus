@@ -4,6 +4,7 @@ import { LoginResponseDto } from '../../dtos/responses/auth/loginResponse.dto';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../di/types';
 import { IAdminRepository } from '../../core/interfaces/repositories/IAdminRepository';
+import { UserRole } from '@/core/types/global/user-role';
 
 @injectable()
 export class AdminAuthService {
@@ -14,7 +15,12 @@ export class AdminAuthService {
     return !!user;
   }
 
-  async login(loginDto: LoginDto): Promise<LoginResponseDto | null> {
+  async login(loginDto: LoginDto): Promise<{
+    _id: string;
+    name: string;
+    email: string;
+    role: UserRole;
+  } | null> {
     const { email, password } = loginDto;
     const user = await this.adminRepository.findByEmail(email);
     if (!user) {
@@ -27,10 +33,10 @@ export class AdminAuthService {
     }
 
     return {
-      _id: user._id,
+      _id: user._id.toString(),
       name: user.name,
       email: user.email,
-      role: user.role,
+      role: user.role as UserRole,
     };
   }
 }

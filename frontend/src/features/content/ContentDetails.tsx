@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Separator } from "@/components/atoms/separator";
 import CommentSection from "@/features/content/components/CommentSection";
-import RelatedContent from "@/features/content/components/RelatedContent";
+// import RelatedContent from "@/features/content/components/RelatedContent";
 import { useContent } from "./hooks/useContent";
 import { ContentLoadingSkeleton } from "./components/ContentLoadingSkeleton";
 import { ContentHeader } from "./components/ContentHeader";

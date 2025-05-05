@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
 export interface IBookmarkController {
-  toggleBookmark: RequestHandler;
+  // toggleBookmark: RequestHandler;
   getAllBookmarks: RequestHandler;
 }

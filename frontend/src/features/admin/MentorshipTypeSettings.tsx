@@ -27,6 +27,8 @@ export default function MentorshipTypesPage() {
     queryFn: () => MentorshipTypeService.getAllTypes(true),
   });
 
+  console.log(mentorshipTypes);
+
   const handleCreateNew = () => {
     setEditingType(null);
     setOpen(true);

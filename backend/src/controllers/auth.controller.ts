@@ -89,8 +89,6 @@ export class AuthController implements IAuthController {
     const loginDto: LoginDto = req.body;
     const user = await this.authService.login(loginDto);
 
-    console.log(user);
-
     setRefreshTokenCookie(res, { _id: user._id.toString(), role: user.role as UserRole });
 
     const accessToken = generateAccessToken({

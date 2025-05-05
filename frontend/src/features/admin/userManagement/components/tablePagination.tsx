@@ -1,12 +1,5 @@
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/atoms/select";
 import { Table } from "@tanstack/react-table";
 import {
   ChevronLeft,
