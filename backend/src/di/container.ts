@@ -155,12 +155,20 @@ import { MentorshipTypeController } from '@/controllers/mentorship-type.controll
 import { IMentorshipTypeService } from '@/core/interfaces/services/IMentorshipTypeService';
 import { MentorshipTypeService } from '@/services/mentorship-type.service';
 import { MentorshipTypeRepository } from '@/repositories/mentorship-type.repository';
+
 import { MentorMetadataRepository } from '@/repositories/mentor-metadata.repository';
 import { MentorMetadataService } from '@/services/mentor-metadata.service';
 import { MentorMetadataController } from '@/controllers/mentor-metadata.controller';
 import { IMentorMetadataRepository } from '@/core/interfaces/repositories/IMentorMetadataRepository';
 import { IMentorMetadataService } from '@/core/interfaces/services/IMentorMetadataService';
 import { IMentorMetadataController } from '@/core/interfaces/controllers/IMentorMetadataController';
+
+import { ITargetAudienceRepository } from '@/core/interfaces/repositories/ITargetAudienceRepository';
+import { TargetAudienceRepository } from '@/repositories/targetAudience.repository';
+import { ITargetAudienceService } from '@/core/interfaces/services/ITargetAudienceService';
+import { TargetAudienceService } from '@/services/targetAudience.service';
+import { ITargetAudienceController } from '@/core/interfaces/controllers/ITargetAudienceController';
+import { TargetAudienceController } from '@/controllers/targetAudience.controller';
 
 const container = new Container();
 
@@ -262,5 +270,13 @@ container.bind<IMentorMetadataService>(TYPES.MentorMetadataService).to(MentorMet
 container
   .bind<IMentorMetadataController>(TYPES.MentorMetadataController)
   .to(MentorMetadataController);
+
+container
+  .bind<ITargetAudienceRepository>(TYPES.TargetAudienceRepository)
+  .to(TargetAudienceRepository);
+container.bind<ITargetAudienceService>(TYPES.TargetAudienceService).to(TargetAudienceService);
+container
+  .bind<ITargetAudienceController>(TYPES.TargetAudienceController)
+  .to(TargetAudienceController);
 
 export { container };

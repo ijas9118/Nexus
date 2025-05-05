@@ -21,6 +21,7 @@ export const TYPES = {
   ContentViewRepository: Symbol.for('ContentViewRepository'),
   MentorshipTypeRepository: Symbol.for('MentorshipTypeRepository'),
   MentorMetadataRepository: Symbol.for('MentorMetadataRepository'),
+  TargetAudienceRepository: Symbol.for('TargetAudienceRepository'),
 
   // Services
   UserService: Symbol.for('UserService'),
@@ -48,6 +49,7 @@ export const TYPES = {
   ContentViewService: Symbol.for('ContentViewService'),
   MentorshipTypeService: Symbol.for('MentorshipTypeService'),
   MentorMetadataService: Symbol.for('MentorMetadataService'),
+  TargetAudienceService: Symbol.for('TargetAudienceService'),
 
   // Controllers
   UserController: Symbol.for('UserController'),
@@ -73,4 +75,5 @@ export const TYPES = {
   SubscriptionController: Symbol.for('SubscriptionController'),
   MentorshipTypeController: Symbol.for('MentorshipTypeController'),
   MentorMetadataController: Symbol.for('MentorMetadataController'),
+  TargetAudienceController: Symbol.for('TargetAudienceController'),
 };

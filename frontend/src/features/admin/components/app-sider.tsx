@@ -33,6 +33,7 @@ import {
   Plus,
   Leaf,
   Database,
+  Target,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import CollapsibleComponent from "@/components/organisms/CollapsibleComponent";
@@ -59,6 +60,7 @@ const revenueItems = [
 const mentorSettings = [
   { title: "Mentorship Type", url: "mentorship-type", icon: Leaf },
   { title: "Mentor Meta Data", url: "mentor-meta-data", icon: Database },
+  { title: "Target Audience", url: "target-audience", icon: Target },
 ];
 
 const AdminAppSidebar = () => {
