@@ -14,7 +14,7 @@ export interface IMentor extends Document {
   };
   mentorshipDetails: {
     mentorshipTypes: ObjectId[];
-    targetAudiences: TargetAudience[];
+    targetAudiences: ObjectId[];
     availabilityType: 'weekdays' | 'weekend' | 'both';
     motivation: string;
   };
@@ -67,7 +67,7 @@ const MentorSchema: Schema = new Schema(
       targetAudiences: [
         {
           type: String,
-          enum: Object.values(TargetAudience),
+          ref: 'TargetAudience',
           required: true,
         },
       ],

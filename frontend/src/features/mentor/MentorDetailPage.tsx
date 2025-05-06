@@ -19,6 +19,7 @@ import {
 } from "@/components/molecules/card";
 import { ReviewsSection } from "./components/mentor-datail/reviews-section";
 import { Button } from "@/components/atoms/button";
+import { ExpertiseArea, TargetAudience, Technology } from "@/types/mentor";
 
 const MentorDetailPage = () => {
   const { mentorId } = useParams<{ mentorId: string }>();
@@ -66,11 +67,17 @@ const MentorDetailPage = () => {
               </span>
             </div>
             <div className="flex flex-wrap gap-2 mt-3">
-              {mentorData.experience.expertiseAreas.map((area) => (
-                <Badge key={area} variant="secondary" className="capitalize">
-                  {area.replace("-", " ")}
-                </Badge>
-              ))}
+              {mentorData.experience.expertiseAreas.map(
+                (area: ExpertiseArea) => (
+                  <Badge
+                    key={area._id}
+                    variant="secondary"
+                    className="capitalize"
+                  >
+                    {area.name}
+                  </Badge>
+                ),
+              )}
             </div>
           </div>
         </div>
@@ -119,13 +126,12 @@ const MentorDetailPage = () => {
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5 text-muted-foreground" />
                   <p>
-                    {mentorData.experience.experienceLevel} years of experience
+                    {mentorData.experience.experienceLevel.label} years of
+                    experience
                   </p>
                 </div>
               </CardContent>
             </Card>
-
-            <ReviewsSection />
           </TabsContent>
 
           <TabsContent value="expertise" className="space-y-4 mt-4">
@@ -135,11 +141,13 @@ const MentorDetailPage = () => {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {mentorData.experience.expertiseAreas.map((area) => (
-                    <Badge key={area} className="capitalize px-3 py-1">
-                      {area.replace("-", " ")}
-                    </Badge>
-                  ))}
+                  {mentorData.experience.expertiseAreas.map(
+                    (area: ExpertiseArea) => (
+                      <Badge key={area._id} className="capitalize px-3 py-1">
+                        {area.name}
+                      </Badge>
+                    ),
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -150,12 +158,14 @@ const MentorDetailPage = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {mentorData.experience.technologies.map((tech) => (
-                    <div key={tech} className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      <span className="capitalize">{tech}</span>
-                    </div>
-                  ))}
+                  {mentorData.experience.technologies.map(
+                    (tech: Technology) => (
+                      <div key={tech._id} className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        <span className="capitalize">{tech.name}</span>
+                      </div>
+                    ),
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -178,13 +188,13 @@ const MentorDetailPage = () => {
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {mentorData.mentorshipDetails.targetAudiences.map(
-                    (audience) => (
+                    (audience: TargetAudience) => (
                       <Badge
-                        key={audience}
+                        key={audience._id}
                         variant="outline"
                         className="capitalize"
                       >
-                        {audience.replace("-", " ")}
+                        {audience.name}
                       </Badge>
                     ),
                   )}
@@ -196,14 +206,20 @@ const MentorDetailPage = () => {
               <CardHeader>
                 <CardTitle>Availability</CardTitle>
                 <CardDescription>
-                  {mentorData.mentorshipDetails.availabilityType === "weekend"
-                    ? "Available on weekends"
-                    : "Available on weekdays"}
+                  {
+                    {
+                      weekdays: "Available on weekdays",
+                      weekends: "Available on weekends",
+                      both: "Available on weekdays and weekends",
+                    }[mentorData.mentorshipDetails.availabilityType]
+                  }
                 </CardDescription>
               </CardHeader>
             </Card>
           </TabsContent>
         </Tabs>
+
+        <ReviewsSection />
       </div>
     </div>
   );

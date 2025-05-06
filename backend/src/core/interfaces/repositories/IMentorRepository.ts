@@ -19,4 +19,25 @@ export interface IMentorRepository extends BaseRepository<IMentor> {
   getMentorDetails(mentorId: string): Promise<IMentor | null>;
 
   updateAvailability(mentorId: string, availabilityType: AvailabilityType): Promise<boolean>;
+
+  updateMentorExperience(
+    userId: string,
+    experienceData: {
+      currentRole: string;
+      company: string;
+      experienceLevel: string;
+      expertiseAreas: string[];
+      technologies: string[];
+      bio: string;
+      resume?: string | null;
+    }
+  ): Promise<IMentor | null>;
+
+  updateMentorshipDetails(
+    userId: string,
+    mentorshipDetailsData: {
+      mentorshipTypes: string[];
+      targetAudiences: string[];
+    }
+  ): Promise<IMentor | null>;
 }

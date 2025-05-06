@@ -6,7 +6,6 @@ import { Calendar, Star, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const MentorCard = ({ mentor }: { mentor: Mentor }) => {
-  console.log(mentor);
   return (
     <Card className="overflow-hidden">
       <div className="md:flex">
@@ -36,9 +35,9 @@ const MentorCard = ({ mentor }: { mentor: Mentor }) => {
 
           <div className="mb-4">
             <div className="flex flex-wrap gap-2 mb-3">
-              {mentor.experience.expertiseAreas.map((skill: string) => (
-                <Badge key={skill} variant="secondary">
-                  {skill}
+              {mentor.experience.expertiseAreas.map((skill: any) => (
+                <Badge key={skill._id} variant="secondary">
+                  {skill.name}
                 </Badge>
               ))}
             </div>

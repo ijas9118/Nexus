@@ -95,7 +95,7 @@ export default function MentorSettings() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="p-6">
-                    <ExperienceForm mentorData={mentorData} />
+                    <ExperienceForm experience={mentorData?.experience} />
                   </CardContent>
                 </TabsContent>
 

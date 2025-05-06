@@ -93,4 +93,35 @@ export class MentorController implements IMentorController {
     );
     res.status(StatusCodes.OK).json(mentorshipTypes);
   });
+
+  updateMentorExperience = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
+    const experienceData = {
+      currentRole: req.body.currentRole,
+      company: req.body.company,
+      experienceLevel: req.body.experienceLevel,
+      expertiseAreas: req.body.expertiseAreas,
+      technologies: req.body.technologies,
+      bio: req.body.bio,
+      resume: req.body.resume,
+    };
+
+    const updatedMentor = await this.mentorService.updateMentorExperience(userId, experienceData);
+    console.log(experienceData, updatedMentor);
+    res.status(StatusCodes.OK).json({ success: true, data: updatedMentor });
+  });
+
+  updateMentorshipDetails = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
+    const mentorshipDetailsData = {
+      mentorshipTypes: req.body.mentorshipTypes,
+      targetAudiences: req.body.targetAudiences,
+    };
+
+    const updatedMentor = await this.mentorService.updateMentorshipDetails(
+      userId,
+      mentorshipDetailsData
+    );
+    res.status(StatusCodes.OK).json({ success: true, data: updatedMentor });
+  });
 }

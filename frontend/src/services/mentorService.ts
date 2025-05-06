@@ -18,9 +18,7 @@ const MentorService = {
   getApprovedMentors: () => handleApi(() => api.get<Mentor[]>("/mentor/all")),
 
   getMentorDetails: (mentorId: string) =>
-    handleApi(() =>
-      api.get<MentorApplication>(`/mentor/get-mentor-details/${mentorId}`),
-    ),
+    handleApi(() => api.get<Mentor>(`/mentor/get-mentor-details/${mentorId}`)),
 
   approveMentor: (mentorId: string, userId: string) =>
     handleApi(() => api.patch(`/mentor/approve/${mentorId}/${userId}`)),
@@ -47,6 +45,21 @@ const MentorService = {
 
   getMentorshipTypes: (mentorId: string) =>
     handleApi(() => api.get(`/mentor/${mentorId}/mentorship-types`)),
+
+  updateMentorExperience: (data: {
+    currentRole: string;
+    company: string;
+    experienceLevel: string;
+    expertiseAreas: string[];
+    technologies: string[];
+    bio: string;
+    resume?: string;
+  }) => handleApi(() => api.put("/mentor/experience", data)),
+
+  updateMentorshipDetails: (data: {
+    mentorshipTypes: string[];
+    targetAudiences: string[];
+  }) => handleApi(() => api.put("/mentor/mentorship-details", data)),
 };
 
 export default MentorService;

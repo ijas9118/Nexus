@@ -129,4 +129,55 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
 
     return mentorshipTypes as unknown as IMentorshipType[];
   };
+
+  updateMentorExperience = async (
+    userId: string,
+    experienceData: {
+      currentRole: string;
+      company: string;
+      experienceLevel: string;
+      expertiseAreas: string[];
+      technologies: string[];
+      bio: string;
+      resume?: string | null;
+    }
+  ): Promise<IMentor> => {
+    const mentor = await this.mentorRepository.findMentorByUserId(userId);
+    if (!mentor) {
+      throw new CustomError('Mentor not found.');
+    }
+
+    const updatedMentor = await this.mentorRepository.updateMentorExperience(
+      userId,
+      experienceData
+    );
+    if (!updatedMentor) {
+      throw new CustomError('Failed to update mentor experience.');
+    }
+
+    return updatedMentor;
+  };
+
+  updateMentorshipDetails = async (
+    userId: string,
+    mentorshipDetailsData: {
+      mentorshipTypes: string[];
+      targetAudiences: string[];
+    }
+  ): Promise<IMentor> => {
+    const mentor = await this.mentorRepository.findMentorByUserId(userId);
+    if (!mentor) {
+      throw new CustomError('Mentor not found.');
+    }
+
+    const updatedMentor = await this.mentorRepository.updateMentorshipDetails(
+      userId,
+      mentorshipDetailsData
+    );
+    if (!updatedMentor) {
+      throw new CustomError('Failed to update mentorship details.');
+    }
+
+    return updatedMentor;
+  };
 }

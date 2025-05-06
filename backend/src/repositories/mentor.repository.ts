@@ -47,7 +47,7 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
           'experience.bio': 1,
         }
       )
-      .populate('userId', 'name profilePic email') // Only what's used
+      .populate('userId', 'name profilePic email')
       .lean();
   };
 
@@ -63,7 +63,8 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
           'experience.bio': 1,
         }
       )
-      .populate('userId', 'name profilePic email') // Only what's used
+      .populate('userId', 'name profilePic email')
+      .populate('experience.expertiseAreas')
       .lean();
   };
 
@@ -93,5 +94,65 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
     );
     console.log(availabilityType, mentorId);
     return !!result;
+  };
+
+  updateMentorExperience = async (
+    userId: string,
+    experienceData: {
+      currentRole: string;
+      company: string;
+      experienceLevel: string;
+      expertiseAreas: string[];
+      technologies: string[];
+      bio: string;
+      resume?: string | null;
+    }
+  ): Promise<IMentor | null> => {
+    return await this.model
+      .findOneAndUpdate(
+        { userId },
+        {
+          $set: {
+            'experience.currentRole': experienceData.currentRole,
+            'experience.company': experienceData.company,
+            'experience.experienceLevel': experienceData.experienceLevel,
+            'experience.expertiseAreas': experienceData.expertiseAreas,
+            'experience.technologies': experienceData.technologies,
+            'experience.bio': experienceData.bio,
+            'experience.resume': experienceData.resume,
+          },
+        },
+        { new: true }
+      )
+      .populate('experience.experienceLevel')
+      .populate('experience.expertiseAreas')
+      .populate('experience.technologies')
+      .populate('mentorshipDetails.mentorshipTypes')
+      .populate('mentorshipDetails.targetAudiences');
+  };
+
+  updateMentorshipDetails = async (
+    userId: string,
+    mentorshipDetailsData: {
+      mentorshipTypes: string[];
+      targetAudiences: string[];
+    }
+  ): Promise<IMentor | null> => {
+    return await this.model
+      .findOneAndUpdate(
+        { userId },
+        {
+          $set: {
+            'mentorshipDetails.mentorshipTypes': mentorshipDetailsData.mentorshipTypes,
+            'mentorshipDetails.targetAudiences': mentorshipDetailsData.targetAudiences,
+          },
+        },
+        { new: true }
+      )
+      .populate('experience.experienceLevel')
+      .populate('experience.expertiseAreas')
+      .populate('experience.technologies')
+      .populate('mentorshipDetails.mentorshipTypes')
+      .populate('mentorshipDetails.targetAudiences');
   };
 }

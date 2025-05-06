@@ -1,5 +1,5 @@
 import { PersonalInfo } from '@/core/types';
-import { AvailabilityType, MentorshipType, MentorStatus } from '@/core/types/entities/mentor';
+import { AvailabilityType, MentorStatus } from '@/core/types/entities/mentor';
 import { IMentor } from '@/models/mentor.model';
 import { IMentorshipType } from '@/models/mentorship-type.model';
 
@@ -32,4 +32,25 @@ export interface IMentorService {
   getMentorByUserId(userId: string): Promise<IMentor | null>;
 
   getMentorshipTypes(mentorId: string): Promise<IMentorshipType[]>;
+
+  updateMentorExperience(
+    userId: string,
+    experienceData: {
+      currentRole: string;
+      company: string;
+      experienceLevel: string;
+      expertiseAreas: string[];
+      technologies: string[];
+      bio: string;
+      resume?: string | null;
+    }
+  ): Promise<IMentor>;
+
+  updateMentorshipDetails(
+    userId: string,
+    mentorshipDetailsData: {
+      mentorshipTypes: string[];
+      targetAudiences: string[];
+    }
+  ): Promise<IMentor>;
 }

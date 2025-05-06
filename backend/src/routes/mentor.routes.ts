@@ -42,4 +42,16 @@ router.get(
   mentorController.getMentorshipTypes
 );
 
+router.put(
+  '/experience',
+  authenticate(['admin', 'mentor']),
+  mentorController.updateMentorExperience
+);
+
+router.put(
+  '/mentorship-details',
+  authenticate(['admin', 'mentor']),
+  mentorController.updateMentorshipDetails
+);
+
 export default router;

@@ -39,7 +39,7 @@ const Mentors = () => {
     isLoading: isMentorListLoading,
     isError: isMentorListError,
   } = useQuery({
-    queryKey: ["mentor-list", currentUserId], // so cache is scoped per user
+    queryKey: ["mentor-list", currentUserId],
     queryFn: async () => {
       const allMentors = await MentorService.getApprovedMentors();
       return allMentors.filter(
