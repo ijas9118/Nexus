@@ -28,7 +28,7 @@ export function SearchFilterBar({
           placeholder={searchPlaceholder}
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-9 border-stone-200 focus-visible:ring-amber-500"
+          className="pl-9"
         />
       </div>
       <div className="flex items-center space-x-2">
@@ -36,7 +36,6 @@ export function SearchFilterBar({
           id="toggle-filter"
           checked={showInactive}
           onCheckedChange={onShowInactiveChange}
-          className="data-[state=checked]:bg-amber-700"
         />
         <Label htmlFor="toggle-filter" className="text-sm">
           {toggleLabel}

@@ -17,11 +17,11 @@ export function PageHeader({ title, description, action }: PageHeaderProps) {
     <CardHeader className="pb-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <CardTitle className="text-3xl font-serif tracking-tight">
+          <CardTitle className="text-3xl font-sans tracking-normal">
             {title}
           </CardTitle>
           {description && (
-            <CardDescription className="text-muted-foreground mt-1">
+            <CardDescription className="text-muted-foreground my-1">
               {description}
             </CardDescription>
           )}

@@ -19,14 +19,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/atoms/radio-group";
 import { toast } from "sonner";
 import { MultiSelect } from "./multi-select";
 import MentorshipTypeService from "@/services/mentorshipTypeService";
-
-// Target audience options from the enum
-const targetAudienceOptions = [
-  { value: "STUDENTS", label: "Students" },
-  { value: "JUNIOR_DEVELOPERS", label: "Junior Developers" },
-  { value: "CAREER_CHANGERS", label: "Career Changers" },
-  { value: "SENIOR_DEVELOPERS", label: "Senior Developers" },
-];
+import TargetAudienceService, {
+  TargetAudienceData,
+} from "@/services/targetAudienceService";
 
 // Mock service for updating mentor
 const updateMentorshipDetails = async (data: any) => {
@@ -70,8 +65,13 @@ export default function MentorshipDetailsForm({
     queryFn: () => MentorshipTypeService.getAllTypes(),
   });
 
-  console.log(mentorshipTypes);
+  // Fetch mentorship types
+  const { data: targetAudiences = [] } = useQuery({
+    queryKey: ["targetAudience"],
+    queryFn: () => TargetAudienceService.getAll(),
+  });
 
+  console.log(targetAudiences);
   // Set up mutation
   const mutation = useMutation({
     mutationFn: updateMentorshipDetails,
@@ -146,7 +146,12 @@ export default function MentorshipDetailsForm({
               <FormControl>
                 <MultiSelect
                   selected={field.value}
-                  options={targetAudienceOptions}
+                  options={targetAudiences.map(
+                    (audience: TargetAudienceData) => ({
+                      value: audience._id,
+                      label: audience.name,
+                    }),
+                  )}
                   onChange={field.onChange}
                   placeholder="Select target audiences"
                 />

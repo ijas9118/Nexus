@@ -72,7 +72,7 @@ export function AudienceFormDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-xl font-serif">{title}</DialogTitle>
+          <DialogTitle className="text-xl font-sans">{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -87,7 +87,6 @@ export function AudienceFormDialog({
                 setFormData({ ...formData, name: e.target.value })
               }
               placeholder="Enter audience name"
-              className="border-stone-200"
             />
           </div>
           <div className="flex items-center space-x-2">
@@ -97,7 +96,6 @@ export function AudienceFormDialog({
               onCheckedChange={(checked) =>
                 setFormData({ ...formData, isActive: checked })
               }
-              className="data-[state=checked]:bg-amber-700"
             />
             <Label htmlFor="active-status" className="text-sm">
               Active
@@ -105,18 +103,10 @@ export function AudienceFormDialog({
           </div>
         </div>
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            className="border-stone-200"
-          >
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            className="bg-amber-700 hover:bg-amber-800 text-white"
-          >
+          <Button onClick={handleSubmit} disabled={isSubmitting}>
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -29,9 +29,9 @@ export function AudienceTable({
   return (
     <div className="rounded-md border overflow-hidden">
       <Table>
-        <TableHeader className="bg-stone-50">
+        <TableHeader className="bg-muted/60">
           <TableRow>
-            <TableHead className="w-[50%]">Name</TableHead>
+            <TableHead className="">Name</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Created</TableHead>
             <TableHead className="text-right">Actions</TableHead>
@@ -39,7 +39,7 @@ export function AudienceTable({
         </TableHeader>
         <TableBody>
           {audiences.map((audience) => (
-            <TableRow key={audience._id} className="hover:bg-stone-50/50">
+            <TableRow key={audience._id} className="hover:bg-muted-50/50">
               <TableCell className="font-medium">{audience.name}</TableCell>
               <TableCell>
                 {audience.isActive ? (
@@ -49,7 +49,7 @@ export function AudienceTable({
                 ) : (
                   <Badge
                     variant="outline"
-                    className="text-stone-500 border-stone-300"
+                    className="text-pink-500 border-pink-300"
                   >
                     Inactive
                   </Badge>
@@ -64,9 +64,9 @@ export function AudienceTable({
                     variant="outline"
                     size="icon"
                     onClick={() => onEdit(audience)}
-                    className="h-8 w-8 border-stone-200"
+                    className="h-8 w-8"
                   >
-                    <Pencil className="h-4 w-4 text-amber-700" />
+                    <Pencil className="h-4 w-4 text-teal-700" />
                     <span className="sr-only">Edit</span>
                   </Button>
 
@@ -75,9 +75,9 @@ export function AudienceTable({
                       variant="outline"
                       size="icon"
                       onClick={() => onDelete(audience)}
-                      className="h-8 w-8 border-stone-200"
+                      className="h-8 w-8"
                     >
-                      <Trash2 className="h-4 w-4 text-rose-600" />
+                      <Trash2 className="h-4 w-4 text-pink-600" />
                       <span className="sr-only">Delete</span>
                     </Button>
                   ) : (
@@ -85,7 +85,7 @@ export function AudienceTable({
                       variant="outline"
                       size="icon"
                       onClick={() => onRestore(audience)}
-                      className="h-8 w-8 border-stone-200"
+                      className="h-8 w-8"
                     >
                       <RefreshCw className="h-4 w-4 text-emerald-600" />
                       <span className="sr-only">Restore</span>

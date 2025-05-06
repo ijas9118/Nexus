@@ -12,14 +12,14 @@ interface EmptyStateProps {
 
 export function EmptyState({ message, action, icon }: EmptyStateProps) {
   return (
-    <div className="text-center py-12 border rounded-lg bg-stone-50">
+    <div className="text-center py-12 border rounded-lg bg-muted/60">
       {icon && <div className="mb-4">{icon}</div>}
       <p className="text-muted-foreground">{message}</p>
       {action && (
         <Button
           variant="link"
           onClick={action.onClick}
-          className="mt-2 text-amber-700"
+          className="mt-2 text-teal-700 dark:text-teal-500"
         >
           {action.label}
         </Button>

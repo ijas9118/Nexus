@@ -203,17 +203,14 @@ export default function TargetAudiencesPage() {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-7xl">
-      <Card className="border-0 shadow-lg bg-gradient-to-r from-stone-50 to-white">
+    <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 py-8">
+      <Card className="border-0 shadow-lg">
         <PageHeader
           title="Target Audiences"
           description="Manage your target audience segments"
           action={
-            <Button
-              onClick={() => setIsCreateDialogOpen(true)}
-              className="bg-amber-700 hover:bg-amber-800 text-white"
-            >
-              <Plus className="mr-2 h-4 w-4" />
+            <Button onClick={() => setIsCreateDialogOpen(true)}>
+              <Plus className="mr-2" />
               Create New Audience
             </Button>
           }
@@ -230,7 +227,7 @@ export default function TargetAudiencesPage() {
 
           {loading ? (
             <div className="flex justify-center items-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-amber-700" />
+              <Loader2 className="h-8 w-8 animate-spin text-blue-700" />
             </div>
           ) : filteredAudiences.length === 0 ? (
             <EmptyState
