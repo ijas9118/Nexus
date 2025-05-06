@@ -30,7 +30,6 @@ export interface Mentor {
   mentorshipDetails: {
     mentorshipTypes: MentorshipType[];
     targetAudiences: TargetAudience[]; // If you have models for audiences, replace string with a dedicated type
-    availabilityType: "weekdays" | "weekends" | "both"; // You can expand this based on actual options
     motivation: string;
   };
   status: "pending" | "approved" | "rejected"; // inferred from your data
@@ -62,6 +61,7 @@ export interface MentorshipType {
   _id: string;
   name: string;
   description: string;
+  defaultPrice: number;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -98,7 +98,6 @@ export interface MentorFormData {
   mentorshipDetails: {
     mentorshipTypes: string[];
     targetAudiences: string[];
-    availabilityType: string;
     motivation: string;
   };
 }
@@ -118,7 +117,6 @@ export interface MentorApplication {
   mentorshipDetails: {
     mentorshipTypes: string[];
     targetAudiences: string[];
-    availabilityType: "weekdays" | "weekend" | "both";
     availableTimeSlots: string[];
     motivation: string;
   };
@@ -126,8 +124,6 @@ export interface MentorApplication {
   createdAt: string;
   updatedAt: string;
 }
-
-export type AvailabilityType = "weekdays" | "weekend" | "both";
 
 export interface TimeSlot {
   _id: string;
@@ -144,5 +140,6 @@ export type MentorshipTypeData = {
   _id?: string;
   name: string;
   description: string;
+  defaultPrice: number;
   isActive: boolean;
 };

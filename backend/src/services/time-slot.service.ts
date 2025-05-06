@@ -26,20 +26,7 @@ export class TimeSlotService implements ITimeSlotService {
       );
     }
 
-    // Validate availability type
     const slotDate = dayjs(date);
-    const isWeekend = slotDate.day() === 0 || slotDate.day() === 6; // 0 = Sunday, 6 = Saturday
-    const availabilityType = mentor.mentorshipDetails.availabilityType;
-
-    if (
-      (availabilityType === 'weekdays' && isWeekend) ||
-      (availabilityType === 'weekend' && !isWeekend)
-    ) {
-      throw new CustomError(
-        `Selected date does not match your availability (${availabilityType}).`,
-        StatusCodes.BAD_REQUEST
-      );
-    }
 
     // Validate 12-hour format with AM/PM
     const parsedStart = dayjs(startTime12Hr, 'hh:mm A');

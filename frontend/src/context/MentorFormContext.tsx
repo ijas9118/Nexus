@@ -37,7 +37,6 @@ export const MentorFormProvider: React.FC<{ children: React.ReactNode }> = ({
       mentorshipDetails: {
         mentorshipTypes: [],
         targetAudiences: [],
-        availabilityType: "",
         motivation: "",
       },
     },

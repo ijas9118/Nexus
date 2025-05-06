@@ -32,6 +32,12 @@ const formSchema = z.object({
   description: z.string().min(10, {
     message: "Description must be at least 10 characters.",
   }),
+  defaultPrice: z
+    .number({
+      required_error: "Default price is required",
+      invalid_type_error: "Default price must be a number",
+    })
+    .min(0, { message: "Price must be a non-negative number" }),
   isActive: z.boolean().default(true),
 });
 
@@ -53,6 +59,7 @@ export function MentorshipTypeDialog({
     defaultValues: {
       name: "",
       description: "",
+      defaultPrice: 0,
     },
   });
 
@@ -61,11 +68,13 @@ export function MentorshipTypeDialog({
       form.reset({
         name: initialData.name,
         description: initialData.description,
+        defaultPrice: initialData.defaultPrice ?? 0,
       });
     } else {
       form.reset({
         name: "",
         description: "",
+        defaultPrice: 0,
       });
     }
   }, [initialData, form, open]);
@@ -141,6 +150,33 @@ export function MentorshipTypeDialog({
                       </FormItem>
                     )}
                   />
+
+                  {/* Default Price Field */}
+                  <FormField
+                    control={form.control}
+                    name="defaultPrice"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Default Price (₹)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(parseFloat(e.target.value))
+                            }
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          The base price for this mentorship type.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <DialogFooter>
                     <Button
                       type="button"

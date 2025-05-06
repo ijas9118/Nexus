@@ -1,5 +1,4 @@
 import { BaseRepository } from '@/core/abstracts/base.repository';
-import { AvailabilityType } from '@/core/types/entities/mentor';
 import { IMentor } from '@/models/mentor.model';
 
 export interface IMentorRepository extends BaseRepository<IMentor> {
@@ -17,8 +16,6 @@ export interface IMentorRepository extends BaseRepository<IMentor> {
   getApprovedMentors(): Promise<IMentor[] | null>;
 
   getMentorDetails(mentorId: string): Promise<IMentor | null>;
-
-  updateAvailability(mentorId: string, availabilityType: AvailabilityType): Promise<boolean>;
 
   updateMentorExperience(
     userId: string,

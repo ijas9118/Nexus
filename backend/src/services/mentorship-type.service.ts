@@ -51,11 +51,26 @@ export class MentorshipTypeService
     return this.find({ isActive: true });
   }
 
+  async deleteMentorshipType(id: string): Promise<void> {
+    const type = await this.softDelete(id);
+    if (!type) {
+      throw new CustomError('Mentorship type not found', StatusCodes.NOT_FOUND);
+    }
+  }
+
+  async restoreMentorshipType(id: string): Promise<void> {
+    const type = await this.restore(id);
+    if (!type) {
+      throw new CustomError('Mentorship type not found', StatusCodes.NOT_FOUND);
+    }
+  }
+
   async updateMentorshipType(
     id: string,
     data: Partial<{
       name: string;
       description: string;
+      defaultPrice: number;
     }>
   ): Promise<IMentorshipType> {
     const typeToUpdate = await this.findById(id);
@@ -80,24 +95,15 @@ export class MentorshipTypeService
       }
     }
 
+    if (data.defaultPrice !== undefined && data.defaultPrice < 0) {
+      throw new CustomError('Price cannot be negative', StatusCodes.BAD_REQUEST);
+    }
+
     const updatedType = await this.update(id, data);
     if (!updatedType) {
       throw new CustomError('Mentorship type not found', StatusCodes.NOT_FOUND);
     }
+
     return updatedType;
-  }
-
-  async deleteMentorshipType(id: string): Promise<void> {
-    const type = await this.softDelete(id);
-    if (!type) {
-      throw new CustomError('Mentorship type not found', StatusCodes.NOT_FOUND);
-    }
-  }
-
-  async restoreMentorshipType(id: string): Promise<void> {
-    const type = await this.restore(id);
-    if (!type) {
-      throw new CustomError('Mentorship type not found', StatusCodes.NOT_FOUND);
-    }
   }
 }

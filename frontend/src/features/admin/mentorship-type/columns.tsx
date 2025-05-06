@@ -1,5 +1,3 @@
-"use client";
-
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Edit, Trash, RefreshCw } from "lucide-react";
 import { Button } from "@/components/atoms/button";
@@ -49,7 +47,7 @@ export const columns = ({
     cell: ({ row }) => {
       return (
         <div
-          className="max-w-[500px] truncate"
+          className="max-w-[300px] truncate"
           title={row.getValue("description")}
         >
           {row.getValue("description")}
@@ -57,6 +55,15 @@ export const columns = ({
       );
     },
   },
+  {
+    accessorKey: "defaultPrice",
+    header: "Price",
+    cell: ({ row }) => {
+      const price = row.getValue("defaultPrice") as number;
+      return <div className="w-[100px]">₹{price.toLocaleString("en-IN")}</div>;
+    },
+  },
+
   {
     accessorKey: "isActive",
     header: "Status",

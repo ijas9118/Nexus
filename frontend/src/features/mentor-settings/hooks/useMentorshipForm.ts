@@ -22,7 +22,7 @@ interface UseMentorshipFormProps {
   mentorData: {
     mentorshipDetails?: {
       mentorshipTypes?: Array<{ _id: string }>;
-      targetAudiences?: string[];
+      targetAudiences?: Array<{ _id: string }>;
     };
   };
 }
@@ -51,7 +51,10 @@ export const useMentorshipForm = ({ mentorData }: UseMentorshipFormProps) => {
         mentorData?.mentorshipDetails?.mentorshipTypes?.map(
           (type) => type._id,
         ) || [],
-      targetAudiences: mentorData?.mentorshipDetails?.targetAudiences || [],
+      targetAudiences:
+        mentorData?.mentorshipDetails?.targetAudiences?.map(
+          (type) => type._id,
+        ) || [],
     },
   });
 

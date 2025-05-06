@@ -28,14 +28,6 @@ router.patch('/reject/:mentorId', authenticate(['admin']), mentorController.reje
 
 router.get('/enums', mentorController.getMentorEnums);
 
-router.patch(
-  '/availability',
-  authenticate(['mentor', 'admin']),
-  mentorController.updateAvailability
-);
-
-router.get('/availability', authenticate(['admin', 'mentor']), mentorController.getAvailability);
-
 router.get(
   '/:mentorId/mentorship-types',
   authenticate(['admin', 'mentor', 'premium', 'user']),

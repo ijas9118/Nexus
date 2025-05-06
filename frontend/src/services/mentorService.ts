@@ -1,11 +1,6 @@
 import { handleApi } from "@/utils/handleApi";
 import api from "./api";
-import {
-  AvailabilityType,
-  Mentor,
-  MentorApplication,
-  MentorFormData,
-} from "@/types/mentor";
+import { Mentor, MentorFormData, MentorshipType } from "@/types/mentor";
 
 const MentorService = {
   applyAsMentor: (formData: MentorFormData) =>
@@ -37,14 +32,10 @@ const MentorService = {
       }>("/mentor/enums"),
     ),
 
-  updateAvailability: (availabilityType: AvailabilityType) =>
-    handleApi(() => api.patch("/mentor/availability", { availabilityType })),
-
-  getAvailability: () =>
-    handleApi(() => api.get<AvailabilityType>("/mentor/availability")),
-
   getMentorshipTypes: (mentorId: string) =>
-    handleApi(() => api.get(`/mentor/${mentorId}/mentorship-types`)),
+    handleApi(() =>
+      api.get<MentorshipType[]>(`/mentor/${mentorId}/mentorship-types`),
+    ),
 
   updateMentorExperience: (data: {
     currentRole: string;

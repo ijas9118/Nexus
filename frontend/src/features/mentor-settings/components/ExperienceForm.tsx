@@ -31,8 +31,6 @@ export default function ExperienceForm({ experience }: { experience: any }) {
     onSubmit,
   } = useExperienceForm(experience);
 
-  console.log(experience);
-
   return (
     <Form {...form}>
       <form onSubmit={onSubmit} className="space-y-8">

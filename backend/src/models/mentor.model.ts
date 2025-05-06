@@ -1,4 +1,4 @@
-import { MentorStatus, TargetAudience } from '@/core/types/entities/mentor';
+import { MentorStatus } from '@/core/types/entities/mentor';
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 export interface IMentor extends Document {
@@ -15,7 +15,6 @@ export interface IMentor extends Document {
   mentorshipDetails: {
     mentorshipTypes: ObjectId[];
     targetAudiences: ObjectId[];
-    availabilityType: 'weekdays' | 'weekend' | 'both';
     motivation: string;
   };
   status: MentorStatus;
@@ -71,11 +70,6 @@ const MentorSchema: Schema = new Schema(
           required: true,
         },
       ],
-      availabilityType: {
-        type: String,
-        enum: ['weekdays', 'weekend', 'both'],
-        default: 'both',
-      },
       motivation: { type: String, default: '' },
     },
     status: {

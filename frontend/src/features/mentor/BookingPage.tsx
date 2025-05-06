@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/molecules/card";
 import MentorService from "@/services/mentorService";
+import { MentorshipType } from "@/types/mentor";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Calendar, Clock, Info } from "lucide-react";
 import type React from "react";
@@ -19,15 +20,15 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 // Mentorship types with their details (removed duration)
-const mentorshipTypes = [
-  { id: "1-on-1", name: "1-on-1 Session", price: 50 },
-  { id: "career-guidance", name: "Career Guidance", price: 60 },
-  { id: "mock-interview", name: "Mock Interview", price: 75 },
-  { id: "portfolio-review", name: "Portfolio Review", price: 65 },
-  { id: "resume-review", name: "Resume Review", price: 40 },
-  { id: "code-review", name: "Code Review", price: 70 },
-  { id: "technical-mentoring", name: "Technical Mentoring", price: 80 },
-];
+// const mentorshipTypes = [
+//   { id: "1-on-1", name: "1-on-1 Session", price: 50 },
+//   { id: "career-guidance", name: "Career Guidance", price: 60 },
+//   { id: "mock-interview", name: "Mock Interview", price: 75 },
+//   { id: "portfolio-review", name: "Portfolio Review", price: 65 },
+//   { id: "resume-review", name: "Resume Review", price: 40 },
+//   { id: "code-review", name: "Code Review", price: 70 },
+//   { id: "technical-mentoring", name: "Technical Mentoring", price: 80 },
+// ];
 
 // Sample data for available timeslots
 const availableTimeslots: Record<string, string[]> = {
@@ -46,15 +47,13 @@ const BookingPage = () => {
   const [bookingReason, setBookingReason] = useState<string>("");
 
   const {
-    data: mentorshipTyps,
+    data: mentorshipTypes = [],
     isError,
     isLoading,
   } = useQuery({
-    queryKey: ["mentor-detail"],
+    queryKey: ["mentorMentorshipTypes"],
     queryFn: () => MentorService.getMentorshipTypes(mentorId as string),
   });
-
-  console.log(mentorshipTyps);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,10 +73,6 @@ const BookingPage = () => {
         "Your booking request has been sent to the mentor for confirmation.",
     });
   };
-
-  const selectedTypeDetails = mentorshipTypes.find(
-    (type) => type.id === selectedType,
-  );
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
@@ -102,21 +97,21 @@ const BookingPage = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {mentorshipTypes.map((type) => {
-                const isSelected = selectedType === type.id;
+              {mentorshipTypes.map((type: MentorshipType) => {
+                const isSelected = selectedType === type._id;
                 return (
                   <div
-                    key={type.id}
+                    key={type._id}
                     className={`border rounded-lg p-4 cursor-pointer transition-colors ${
                       isSelected
                         ? "border-primary bg-primary/5"
                         : "border-border hover:bg-muted"
                     }`}
-                    onClick={() => setSelectedType(type.id)}
+                    onClick={() => setSelectedType(type._id)}
                   >
                     <div className="flex h-full items-center justify-between mb-2">
                       <h3 className="text-md font-semibold">{type.name}</h3>
-                      <span>₹{type.price}</span>
+                      <span>₹{type.defaultPrice}</span>
                     </div>
                   </div>
                 );
@@ -203,7 +198,7 @@ const BookingPage = () => {
         )}
 
         {/* Booking Details */}
-        {selectedTypeDetails && (
+        {/* {selectedTypeDetails && (
           <Card>
             <CardHeader>
               <CardTitle>Booking Details</CardTitle>
@@ -268,7 +263,7 @@ const BookingPage = () => {
               </Button>
             </CardFooter>
           </Card>
-        )}
+        )} */}
       </form>
     </div>
   );

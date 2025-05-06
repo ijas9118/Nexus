@@ -58,8 +58,8 @@ export const mentorItems = [
     icon: Inbox,
   },
   {
-    title: "Availability",
-    url: "/mentor/availability",
+    title: "Time Slots",
+    url: "/mentor/time-slots",
     icon: Clock,
   },
   {

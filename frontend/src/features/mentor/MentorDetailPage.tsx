@@ -174,15 +174,6 @@ const MentorDetailPage = () => {
           <TabsContent value="mentorship" className="space-y-4 mt-4">
             <Card>
               <CardHeader>
-                <CardTitle>Mentorship Approach</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>{mentorData.mentorshipDetails.motivation}</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
                 <CardTitle>Target Audience</CardTitle>
               </CardHeader>
               <CardContent>
@@ -200,21 +191,6 @@ const MentorDetailPage = () => {
                   )}
                 </div>
               </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Availability</CardTitle>
-                <CardDescription>
-                  {
-                    {
-                      weekdays: "Available on weekdays",
-                      weekends: "Available on weekends",
-                      both: "Available on weekdays and weekends",
-                    }[mentorData.mentorshipDetails.availabilityType]
-                  }
-                </CardDescription>
-              </CardHeader>
             </Card>
           </TabsContent>
         </Tabs>

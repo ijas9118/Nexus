@@ -1,36 +1,27 @@
 import { handleApi } from "@/utils/handleApi";
 import api from "./api";
-
-export interface TargetAudienceData {
-  _id: string;
-  name: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+import { TargetAudience } from "@/types/mentor";
 
 const TargetAudienceService = {
   // Get all target audiences
   getAll: (includeInactive = false) => {
     const query = includeInactive ? "?all=true" : "";
     return handleApi(() =>
-      api.get<TargetAudienceData[]>(`/target-audiences${query}`),
+      api.get<TargetAudience[]>(`/target-audiences${query}`),
     );
   },
 
   // Get one by ID
   getById: (id: string) =>
-    handleApi(() => api.get<TargetAudienceData>(`/target-audiences/${id}`)),
+    handleApi(() => api.get<TargetAudience>(`/target-audiences/${id}`)),
 
   // Create new target audience
-  create: (data: Partial<TargetAudienceData>) =>
-    handleApi(() => api.post<TargetAudienceData>("/target-audiences", data)),
+  create: (data: Partial<TargetAudience>) =>
+    handleApi(() => api.post<TargetAudience>("/target-audiences", data)),
 
   // Update existing target audience
-  update: (id: string, data: Partial<TargetAudienceData>) =>
-    handleApi(() =>
-      api.put<TargetAudienceData>(`/target-audiences/${id}`, data),
-    ),
+  update: (id: string, data: Partial<TargetAudience>) =>
+    handleApi(() => api.put<TargetAudience>(`/target-audiences/${id}`, data)),
 
   // Soft delete target audience
   softDelete: (id: string) =>

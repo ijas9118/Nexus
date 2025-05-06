@@ -73,20 +73,6 @@ export class MentorController implements IMentorController {
     });
   });
 
-  updateAvailability = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const { availabilityType } = req.body;
-    const status = await this.mentorService.updateAvailability(
-      req.user?._id as string,
-      availabilityType
-    );
-    res.status(StatusCodes.OK).json({ status });
-  });
-
-  getAvailability = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const availability = await this.mentorService.getAvailability(req.user?._id as string);
-    res.status(StatusCodes.OK).json(availability);
-  });
-
   getMentorshipTypes = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const mentorshipTypes = await this.mentorService.getMentorshipTypes(
       req.params.mentorId as string

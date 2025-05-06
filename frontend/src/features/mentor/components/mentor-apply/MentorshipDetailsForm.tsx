@@ -162,42 +162,6 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
         </div>
 
         <div className="grid gap-2">
-          <Label>When are you available?</Label>
-          <RadioGroup
-            value={watch("mentorshipDetails.availabilityType")}
-            onValueChange={(value) =>
-              setValue("mentorshipDetails.availabilityType", value, {
-                shouldValidate: true,
-              })
-            }
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="weekdays" id="weekdays" />
-              <Label htmlFor="weekdays" className="text-sm font-normal">
-                Weekdays
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="weekend" id="weekend" />
-              <Label htmlFor="weekend" className="text-sm font-normal">
-                Weekend
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="both" id="both" />
-              <Label htmlFor="both" className="text-sm font-normal">
-                Both
-              </Label>
-            </div>
-          </RadioGroup>
-          {errors.mentorshipDetails?.availabilityType && (
-            <p className="text-sm text-red-500">
-              {errors.mentorshipDetails.availabilityType.message}
-            </p>
-          )}
-        </div>
-
-        <div className="grid gap-2">
           <Label htmlFor="motivation">
             Why do you want to become a mentor?
           </Label>

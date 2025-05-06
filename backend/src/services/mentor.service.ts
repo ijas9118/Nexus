@@ -3,7 +3,7 @@ import { IMentorRepository } from '@/core/interfaces/repositories/IMentorReposit
 import { IUserRepository } from '@/core/interfaces/repositories/IUserRepository';
 import { IMentorService } from '@/core/interfaces/services/IMentorService';
 import { PersonalInfo } from '@/core/types';
-import { AvailabilityType, MentorStatus } from '@/core/types/entities/mentor';
+import { MentorStatus } from '@/core/types/entities/mentor';
 import { TYPES } from '@/di/types';
 import { IMentor } from '@/models/mentor.model';
 import { IMentorshipType } from '@/models/mentorship-type.model';
@@ -96,18 +96,6 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
 
   getMentorDetails = async (mentorId: string): Promise<IMentor | null> => {
     return await this.mentorRepository.getMentorDetails(mentorId);
-  };
-
-  updateAvailability = async (
-    mentorId: string,
-    availabilityType: AvailabilityType
-  ): Promise<boolean> => {
-    return await this.mentorRepository.updateAvailability(mentorId, availabilityType);
-  };
-
-  getAvailability = async (mentorId: string): Promise<AvailabilityType | null> => {
-    const result = await this.findOne({ userId: mentorId });
-    return result?.mentorshipDetails?.availabilityType || null;
   };
 
   getMentorByUserId = async (userId: string): Promise<IMentor | null> => {

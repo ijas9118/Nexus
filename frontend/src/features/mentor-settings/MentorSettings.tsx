@@ -31,8 +31,6 @@ export default function MentorSettings() {
     enabled: !!user?.mentorId,
   });
 
-  console.log(mentorData);
-
   return (
     <div className="container mx-auto px-4 py-10 max-w-6xl">
       <div className="space-y-8">

@@ -32,7 +32,6 @@ interface MentorDetails {
   mentorshipDetails: {
     mentorshipTypes: string[];
     targetAudiences: string[];
-    availabilityType: string;
     motivation: string;
   };
   status: string;
@@ -290,12 +289,6 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
                           ),
                         )}
                       </span>
-                    </div>
-                    <div>
-                      <strong className="font-medium text-foreground">
-                        Availability:
-                      </strong>{" "}
-                      {mentorDetails.mentorshipDetails.availabilityType}
                     </div>
                     <div>
                       <strong className="font-medium text-foreground">

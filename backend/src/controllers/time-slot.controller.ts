@@ -79,4 +79,15 @@ export class TimeSlotController implements ITimeSlotController {
     const timeSlots = await this.timeSlotService.getBookedTimeSlots(mentorId);
     res.status(StatusCodes.OK).json(timeSlots);
   });
+
+  getMentorTimeSlots = asyncHandler(async (req: Request, res: Response) => {
+    const mentorId = req.params.mentorId as string;
+
+    if (!mentorId) {
+      throw new CustomError('Mentor ID is required.', StatusCodes.BAD_REQUEST);
+    }
+
+    const timeSlots = await this.timeSlotService.getBookedTimeSlots(mentorId);
+    res.status(StatusCodes.OK).json(timeSlots);
+  });
 }

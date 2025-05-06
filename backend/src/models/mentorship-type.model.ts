@@ -4,6 +4,7 @@ export interface IMentorshipType extends Document {
   name: string;
   description: string;
   isActive: boolean;
+  defaultPrice: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,6 +24,12 @@ const MentorshipTypeSchema: Schema = new Schema(
     isActive: {
       type: Boolean,
       default: true,
+    },
+    defaultPrice: {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0,
     },
   },
   {

@@ -9,8 +9,6 @@ export interface IMentorController {
   getApprovedMentors: RequestHandler;
   getMentorDetails: RequestHandler;
   getMentorEnums: RequestHandler;
-  updateAvailability: RequestHandler;
-  getAvailability: RequestHandler;
   getMentorshipTypes: RequestHandler;
   updateMentorExperience: RequestHandler;
   updateMentorshipDetails: RequestHandler;

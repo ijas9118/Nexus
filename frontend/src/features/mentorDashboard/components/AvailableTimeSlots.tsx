@@ -18,7 +18,7 @@ const AvailableTimeSlots = () => {
   return (
     <Card className="col-span-4">
       <CardHeader>
-        <CardTitle>Time Slot Availability</CardTitle>
+        <CardTitle>Time Slot</CardTitle>
         <CardDescription>
           Your current availability for mentorship
         </CardDescription>
