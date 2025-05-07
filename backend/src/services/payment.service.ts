@@ -7,7 +7,6 @@ import { IUserRepository } from '@/core/interfaces/repositories/IUserRepository'
 import { IPaymentRepository } from '@/core/interfaces/repositories/IPaymentRepository';
 import { ISubscriptionRepository } from '@/core/interfaces/repositories/ISubscriptionRepository';
 import { TYPES } from '@/di/types';
-import CustomError from '@/utils/CustomError';
 
 @injectable()
 export class PaymentServce implements IPaymentService {

@@ -13,10 +13,10 @@ router.delete('/:slotId', authenticate(['mentor']), timeSlotController.deleteTim
 router.get('/by-date', authenticate(['mentor']), timeSlotController.getTimeSlotsByDate);
 router.get('/', authenticate(['mentor']), timeSlotController.getAllTimeSlots);
 router.get('/booked-time-slot', authenticate(['mentor']), timeSlotController.getBookedTimeSlots);
-// router.get(
-//   '/:mentorId',
-//   authenticate(['mentor', 'user', 'premium', 'admin']),
-//   timeSlotController.getMentorTimeSlots
-// );
+router.get(
+  '/:mentorId',
+  authenticate(['mentor', 'user', 'premium', 'admin']),
+  timeSlotController.getMentorTimeSlots
+);
 
 export default router;

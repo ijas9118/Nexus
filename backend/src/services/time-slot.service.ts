@@ -134,4 +134,15 @@ export class TimeSlotService implements ITimeSlotService {
   async getBookedTimeSlots(mentorId: string): Promise<Record<string, ITimeSlot[]>> {
     return await this.timeSlotRepository.getBookedTimeSlots(mentorId);
   }
+
+  async getMentorTimeSlots(mentorId: string): Promise<Record<string, ITimeSlot[]>> {
+    // Validate mentor existence
+    const mentor = await this.mentorService.getMentorDetails(mentorId);
+    if (!mentor) {
+      throw new CustomError('Mentor not found.', StatusCodes.BAD_REQUEST);
+    }
+
+    // Get unbooked time slots for the next 7 days
+    return await this.timeSlotRepository.getUnbookedTimeSlotsForNext7Days(mentorId);
+  }
 }

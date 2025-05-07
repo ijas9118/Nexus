@@ -30,7 +30,7 @@ export default function SelectDate({
       <CardHeader>
         <CardTitle>Pick a Day</CardTitle>
         <CardDescription>
-          Set your availability for one of the upcoming 7 days
+          Set your availability for the upcoming 7 days
         </CardDescription>
       </CardHeader>
 

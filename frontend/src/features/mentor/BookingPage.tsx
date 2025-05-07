@@ -1,4 +1,3 @@
-import { Alert, AlertDescription } from "@/components/atoms/alert";
 import { Button } from "@/components/atoms/button";
 import { Label } from "@/components/atoms/label";
 import { Textarea } from "@/components/atoms/textarea";
@@ -11,32 +10,14 @@ import {
   CardTitle,
 } from "@/components/molecules/card";
 import MentorService from "@/services/mentorService";
+import TimeSlotService from "@/services/TimeSlotService";
 import { MentorshipType } from "@/types/mentor";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, Calendar, Clock, Info } from "lucide-react";
+import { Calendar, Clock, Info } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-
-// Mentorship types with their details (removed duration)
-// const mentorshipTypes = [
-//   { id: "1-on-1", name: "1-on-1 Session", price: 50 },
-//   { id: "career-guidance", name: "Career Guidance", price: 60 },
-//   { id: "mock-interview", name: "Mock Interview", price: 75 },
-//   { id: "portfolio-review", name: "Portfolio Review", price: 65 },
-//   { id: "resume-review", name: "Resume Review", price: 40 },
-//   { id: "code-review", name: "Code Review", price: 70 },
-//   { id: "technical-mentoring", name: "Technical Mentoring", price: 80 },
-// ];
-
-// Sample data for available timeslots
-const availableTimeslots: Record<string, string[]> = {
-  "2025-04-23": ["12:01", "12:15", "13:30", "20:47"],
-  "2025-04-25": ["13:30", "18:50", "19:30", "20:53", "21:53"],
-  "2025-04-26": ["10:00"],
-  "2025-04-30": ["10:30"],
-};
 
 const BookingPage = () => {
   const { mentorId } = useParams<{ mentorId: string }>();
@@ -51,8 +32,24 @@ const BookingPage = () => {
     isError,
     isLoading,
   } = useQuery({
-    queryKey: ["mentorMentorshipTypes"],
+    queryKey: ["mentorMentorshipTypes", mentorId],
     queryFn: () => MentorService.getMentorshipTypes(mentorId as string),
+    enabled: !!mentorId,
+  });
+
+  const {
+    data: timeslots = {},
+    isLoading: isTimeslotLoading,
+    isError: isTimeslotError,
+  } = useQuery({
+    queryKey: ["mentorTimeslots", mentorId],
+    queryFn: () => TimeSlotService.getMentorTimeSlots(mentorId as string),
+    enabled: !!mentorId,
+    select: (data) => {
+      return Object.fromEntries(
+        Object.entries(data).filter(([_, slots]) => slots.length > 0),
+      );
+    },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -62,7 +59,7 @@ const BookingPage = () => {
       mentorId,
       mentorshipType: selectedType,
       date: selectedDate,
-      time: selectedTime,
+      timeSlot: selectedTime,
       reason: bookingReason,
     };
 
@@ -73,6 +70,25 @@ const BookingPage = () => {
         "Your booking request has been sent to the mentor for confirmation.",
     });
   };
+
+  const selectedTypeDetails = mentorshipTypes.find(
+    (type) => type._id === selectedType,
+  );
+
+  // Find the selected time slot to get the startTime
+  const selectedTimeSlot =
+    selectedDate && selectedTime
+      ? timeslots[selectedDate]?.find((slot) => slot._id === selectedTime)
+      : null;
+
+  // Format the selected date for display
+  const formattedSelectedDate = selectedDate
+    ? new Date(selectedDate).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "";
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
@@ -96,27 +112,37 @@ const BookingPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {mentorshipTypes.map((type: MentorshipType) => {
-                const isSelected = selectedType === type._id;
-                return (
-                  <div
-                    key={type._id}
-                    className={`border rounded-lg p-4 cursor-pointer transition-colors ${
-                      isSelected
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:bg-muted"
-                    }`}
-                    onClick={() => setSelectedType(type._id)}
-                  >
-                    <div className="flex h-full items-center justify-between mb-2">
-                      <h3 className="text-md font-semibold">{type.name}</h3>
-                      <span>₹{type.defaultPrice}</span>
+            {isLoading ? (
+              <p className="text-muted-foreground">
+                Loading mentorship types...
+              </p>
+            ) : isError ? (
+              <p className="text-red-500">
+                Failed to load mentorship types. Please try again.
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {mentorshipTypes.map((type: MentorshipType) => {
+                  const isSelected = selectedType === type._id;
+                  return (
+                    <div
+                      key={type._id}
+                      className={`border rounded-lg p-4 cursor-pointer transition-colors ${
+                        isSelected
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:bg-muted"
+                      }`}
+                      onClick={() => setSelectedType(type._id)}
+                    >
+                      <div className="flex h-full items-center justify-between mb-2">
+                        <h3 className="text-md font-semibold">{type.name}</h3>
+                        <span>₹{type.defaultPrice}</span>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -132,43 +158,53 @@ const BookingPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {Object.keys(availableTimeslots).map((date) => {
-                const formattedDate = new Date(date).toLocaleDateString(
-                  "en-US",
-                  {
-                    month: "short",
-                    day: "numeric",
-                    weekday: "short",
-                  },
-                );
+            {isTimeslotLoading ? (
+              <p className="text-muted-foreground">
+                Loading available dates...
+              </p>
+            ) : isTimeslotError ? (
+              <p className="text-red-500">
+                Failed to load timeslots. Please refresh the page.
+              </p>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                {Object.keys(timeslots).map((date) => {
+                  const formattedDate = new Date(date).toLocaleDateString(
+                    "en-US",
+                    {
+                      month: "short",
+                      day: "numeric",
+                      weekday: "short",
+                    },
+                  );
 
-                return (
-                  <div
-                    key={date}
-                    className={`p-3 border rounded-md text-center cursor-pointer transition-colors hover:bg-accent ${
-                      selectedDate === date
-                        ? "border-primary bg-primary/10"
-                        : "border-border"
-                    }`}
-                    onClick={() => {
-                      setSelectedDate(date);
-                      setSelectedTime("");
-                    }}
-                  >
-                    <p className="font-medium">{formattedDate}</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {availableTimeslots[date].length} slots
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
+                  return (
+                    <div
+                      key={date}
+                      className={`p-3 border rounded-md text-center cursor-pointer transition-colors hover:bg-accent ${
+                        selectedDate === date
+                          ? "border-primary bg-primary/10"
+                          : "border-border"
+                      }`}
+                      onClick={() => {
+                        setSelectedDate(date);
+                        setSelectedTime("");
+                      }}
+                    >
+                      <p className="font-medium">{formattedDate}</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {timeslots[date].length} slots
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </CardContent>
         </Card>
 
         {/* Time Selection - Only shown if date is selected */}
-        {selectedDate && (
+        {selectedDate && timeslots[selectedDate]?.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -179,17 +215,17 @@ const BookingPage = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
-                {availableTimeslots[selectedDate].map((time) => (
+                {timeslots[selectedDate].map((slot) => (
                   <div
-                    key={time}
+                    key={slot._id}
                     className={`p-2 border rounded-md text-center cursor-pointer transition-colors hover:bg-accent ${
-                      selectedTime === time
+                      selectedTime === slot._id
                         ? "border-primary bg-primary/10"
                         : "border-border"
                     }`}
-                    onClick={() => setSelectedTime(time)}
+                    onClick={() => setSelectedTime(slot._id)}
                   >
-                    {time}
+                    {slot.startTime}
                   </div>
                 ))}
               </div>
@@ -198,7 +234,7 @@ const BookingPage = () => {
         )}
 
         {/* Booking Details */}
-        {/* {selectedTypeDetails && (
+        {selectedTypeDetails && (
           <Card>
             <CardHeader>
               <CardTitle>Booking Details</CardTitle>
@@ -217,20 +253,24 @@ const BookingPage = () => {
                 <div className="space-y-1">
                   <p className="text-sm font-medium">Price</p>
                   <p className="text-sm text-muted-foreground">
-                    ${selectedTypeDetails.price}
+                    ₹{selectedTypeDetails.defaultPrice}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium">Date</p>
+                  <p className="text-sm text-muted-foreground">
+                    {formattedSelectedDate}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium">Time</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedTimeSlot
+                      ? selectedTimeSlot.startTime
+                      : "Not selected"}
                   </p>
                 </div>
               </div>
-
-              <Alert className="bg-muted/50 border-blue-500 text-blue-600 dark:text-blue-300 dark:border-blue-400">
-                <div className="flex items-center gap-5">
-                  <AlertTriangle className="stroke-blue-500 dark:stroke-blue-300" />
-                  <AlertDescription>
-                    Full payment is required to confirm your booking. No refunds
-                    will be provided if you disconnect before the session ends.
-                  </AlertDescription>
-                </div>
-              </Alert>
 
               <div className="space-y-2">
                 <Label htmlFor="reason">Reason for Booking</Label>
@@ -263,7 +303,7 @@ const BookingPage = () => {
               </Button>
             </CardFooter>
           </Card>
-        )} */}
+        )}
       </form>
     </div>
   );

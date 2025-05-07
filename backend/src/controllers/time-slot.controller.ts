@@ -87,7 +87,7 @@ export class TimeSlotController implements ITimeSlotController {
       throw new CustomError('Mentor ID is required.', StatusCodes.BAD_REQUEST);
     }
 
-    const timeSlots = await this.timeSlotService.getBookedTimeSlots(mentorId);
+    const timeSlots = await this.timeSlotService.getMentorTimeSlots(mentorId);
     res.status(StatusCodes.OK).json(timeSlots);
   });
 }

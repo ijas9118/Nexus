@@ -122,4 +122,59 @@ export class TimeSlotRepository extends BaseRepository<ITimeSlot> implements ITi
 
     return sortedGrouped;
   }
+
+  async getUnbookedTimeSlotsForNext7Days(mentorId: string): Promise<Record<string, ITimeSlot[]>> {
+    const now = dayjs();
+    const startDate = now.startOf('day').toDate();
+    const endDate = now.add(7, 'day').endOf('day').toDate();
+
+    const slots = await this.find({
+      mentorId,
+      isBooked: false,
+      date: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    });
+
+    const grouped: Record<string, ITimeSlot[]> = {};
+
+    for (const slot of slots) {
+      const slotDateTime = dayjs(
+        `${slot.date.toISOString().split('T')[0]} ${slot.startTime}`,
+        'YYYY-MM-DD hh:mm A'
+      );
+
+      // Skip slots before now
+      if (slotDateTime.isBefore(now)) {
+        continue;
+      }
+
+      const dateKey = slot.date.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+
+      if (!grouped[dateKey]) {
+        grouped[dateKey] = [];
+      }
+
+      grouped[dateKey].push(slot);
+    }
+
+    // Sort time slots within each date
+    for (const date in grouped) {
+      grouped[date].sort((a, b) => {
+        const parseTime = (time: string) => dayjs(time, 'hh:mm A').valueOf();
+        return parseTime(a.startTime) - parseTime(b.startTime);
+      });
+    }
+
+    // Sort date groups
+    const sortedGrouped: Record<string, ITimeSlot[]> = {};
+    Object.keys(grouped)
+      .sort() // '2025-05-07' before '2025-05-08'
+      .forEach((date) => {
+        sortedGrouped[date] = grouped[date];
+      });
+
+    return sortedGrouped;
+  }
 }

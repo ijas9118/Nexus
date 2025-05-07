@@ -10,4 +10,6 @@ export interface ITimeSlotService {
   getAllTimeSlots(mentorId: string): Promise<Record<string, ITimeSlot[]>>;
 
   getBookedTimeSlots(mentorId: string): Promise<Record<string, ITimeSlot[]>>;
+
+  getMentorTimeSlots(mentorId: string): Promise<Record<string, ITimeSlot[]>>;
 }
