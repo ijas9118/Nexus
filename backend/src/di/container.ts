@@ -170,6 +170,16 @@ import { TargetAudienceService } from '@/services/targetAudience.service';
 import { ITargetAudienceController } from '@/core/interfaces/controllers/ITargetAudienceController';
 import { TargetAudienceController } from '@/controllers/targetAudience.controller';
 
+import { IBookingRepository } from '@/core/interfaces/repositories/IBookingRepository';
+import { BookingRepository } from '@/repositories/ booking.repository';
+
+import { IBookingPaymentRepository } from '@/core/interfaces/repositories/IBookingPaymentRepository';
+import { BookingPaymentRepository } from '@/repositories/bookingPayment.repository';
+import { IBookingPaymentService } from '@/core/interfaces/services/IBookingPaymentService';
+import { BookingPaymentService } from '@/services/bookingPayment.service';
+import { IBookingPaymentController } from '@/core/interfaces/controllers/IBookingPaymentController';
+import { BookingPaymentController } from '@/controllers/bookingPayment.controller';
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -278,5 +288,15 @@ container.bind<ITargetAudienceService>(TYPES.TargetAudienceService).to(TargetAud
 container
   .bind<ITargetAudienceController>(TYPES.TargetAudienceController)
   .to(TargetAudienceController);
+
+container.bind<IBookingRepository>(TYPES.BookingRepository).to(BookingRepository);
+
+container
+  .bind<IBookingPaymentRepository>(TYPES.BookingPaymentRepository)
+  .to(BookingPaymentRepository);
+container.bind<IBookingPaymentService>(TYPES.BookingPaymentService).to(BookingPaymentService);
+container
+  .bind<IBookingPaymentController>(TYPES.BookingPaymentController)
+  .to(BookingPaymentController);
 
 export { container };

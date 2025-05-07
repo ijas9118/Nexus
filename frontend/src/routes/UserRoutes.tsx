@@ -29,6 +29,7 @@ import EditProfileLayout from "@/features/profile/EditProfileLayout";
 import UpgradePlanPage from "@/features/premium-dashboard/UpgradePlanPage";
 import BookingPage from "@/features/mentor/BookingPage";
 import ForbiddenPage from "@/pages/Unauthorized";
+import BookingStatus from "@/features/booking/BookingStatus";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -73,6 +74,7 @@ const UserRoutes: React.FC = () => {
           </Route>
         </Route>
         <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/booking" element={<BookingStatus />} />
       </Routes>
     </MentorFormProvider>
   );

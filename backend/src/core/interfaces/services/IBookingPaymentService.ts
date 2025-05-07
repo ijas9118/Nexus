@@ -1,0 +1,13 @@
+export interface IBookingPaymentService {
+  checkoutSession(
+    mentorId: string,
+    mentorshipType: string,
+    date: string,
+    timeSlot: string,
+    reason: string,
+    customerId: string,
+    email: string
+  ): Promise<string>;
+  webhookHandler(bodyData: Buffer, signature: string): Promise<void>;
+  verifyCheckoutSession(sessionId: string): Promise<boolean>;
+}

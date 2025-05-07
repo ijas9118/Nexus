@@ -9,18 +9,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
+import BookingPaymentService from "@/services/bookingPaymentService";
 import MentorService from "@/services/mentorService";
 import TimeSlotService from "@/services/TimeSlotService";
+import { RootState } from "@/store/store";
 import { MentorshipType } from "@/types/mentor";
 import { useQuery } from "@tanstack/react-query";
 import { Calendar, Clock, Info } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const BookingPage = () => {
   const { mentorId } = useParams<{ mentorId: string }>();
+  const user = useSelector((state: RootState) => state.auth.user);
+  const email = user?.email || "";
 
   const [selectedType, setSelectedType] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<string>("");
@@ -52,23 +57,32 @@ const BookingPage = () => {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!email) {
+      toast.error("Please log in to proceed with the booking.");
+      return;
+    }
+
     const bookingData = {
-      mentorId,
+      mentorId: mentorId as string,
       mentorshipType: selectedType,
       date: selectedDate,
       timeSlot: selectedTime,
       reason: bookingReason,
+      email,
     };
 
-    console.log("Booking data:", bookingData);
-
-    toast.success("Booking request submitted", {
-      description:
-        "Your booking request has been sent to the mentor for confirmation.",
-    });
+    try {
+      const sessionUrl = await BookingPaymentService.createSession(bookingData);
+      window.location.href = sessionUrl;
+    } catch (error: any) {
+      console.error("Booking payment failed:", error);
+      toast.error(
+        error.message || "Failed to initiate payment. Please try again.",
+      );
+    }
   };
 
   const selectedTypeDetails = mentorshipTypes.find(

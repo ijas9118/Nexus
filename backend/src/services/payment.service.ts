@@ -7,13 +7,15 @@ import { IUserRepository } from '@/core/interfaces/repositories/IUserRepository'
 import { IPaymentRepository } from '@/core/interfaces/repositories/IPaymentRepository';
 import { ISubscriptionRepository } from '@/core/interfaces/repositories/ISubscriptionRepository';
 import { TYPES } from '@/di/types';
+import { IBookingPaymentService } from '@/core/interfaces/services/IBookingPaymentService';
 
 @injectable()
 export class PaymentServce implements IPaymentService {
   constructor(
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
     @inject(TYPES.PaymentRepository) private paymentRepository: IPaymentRepository,
-    @inject(TYPES.SubscriptionRepository) private subscriptionRepository: ISubscriptionRepository
+    @inject(TYPES.SubscriptionRepository) private subscriptionRepository: ISubscriptionRepository,
+    @inject(TYPES.BookingPaymentService) private bookingPaymentService: IBookingPaymentService
   ) {}
 
   checkoutSession = async (
@@ -53,6 +55,7 @@ export class PaymentServce implements IPaymentService {
         planId,
         customerId,
         tier,
+        type: 'subscription',
       },
     });
 
@@ -68,8 +71,16 @@ export class PaymentServce implements IPaymentService {
 
     switch (event.type) {
       case 'checkout.session.completed': {
-        const session = event.data.object;
-        await this.handleCheckoutSessionCompleted(session);
+        const session = event.data.object as Stripe.Checkout.Session;
+        const metadata = session.metadata;
+
+        if (metadata?.type === 'booking') {
+          await this.bookingPaymentService.webhookHandler(bodyData, signature);
+        } else if (metadata?.type === 'subscription') {
+          await this.handleCheckoutSessionCompleted(session);
+        } else {
+          console.log('Unknown checkout session type');
+        }
         break;
       }
       default:
