@@ -13,12 +13,12 @@ interface BookingData {
 const BookingPaymentService = {
   createSession: (bookingData: BookingData) =>
     handleApi<string>(() =>
-      api.post("/booking/create-booking-checkout-session", bookingData),
+      api.post("/booking-payment/create-booking-checkout-session", bookingData),
     ),
 
   verifySession: (sessionId: string) =>
     handleApi<{ success: boolean }>(() =>
-      api.get(`/booking/verify-booking-session/${sessionId}`),
+      api.get(`/booking-payment/verify-booking-session/${sessionId}`),
     ),
 };
 

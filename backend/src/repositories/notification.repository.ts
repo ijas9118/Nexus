@@ -24,8 +24,6 @@ export class NotificationRepository
       .sort({ createdAt: -1 })
       .exec();
 
-    console.log(notification);
-
     return notification;
   }
 

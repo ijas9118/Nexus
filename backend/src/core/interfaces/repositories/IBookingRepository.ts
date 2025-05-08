@@ -1,7 +1,10 @@
+import { BaseRepository } from '@/core/abstracts/base.repository';
 import { IBooking } from '@/models/booking.model';
 
-export interface IBookingRepository {
+export interface IBookingRepository extends BaseRepository<IBooking> {
   createBooking(data: Partial<IBooking>): Promise<IBooking>;
   findById(id: string): Promise<IBooking | null>;
-  update(id: string, data: Partial<IBooking>): Promise<IBooking | null>;
+  getUpcomingBookings(): Promise<IBooking[]>;
+  getCompletedBookings(): Promise<IBooking[]>;
+  getFilteredBookings(date?: Date, mentorshipTypeId?: string): Promise<IBooking[]>;
 }

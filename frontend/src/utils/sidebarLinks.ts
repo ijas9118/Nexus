@@ -48,16 +48,6 @@ const baseItems = [
 // Mentor-specific items
 export const mentorItems = [
   {
-    title: "Dashboard",
-    url: "/mentor",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Mentee Requests",
-    url: "/mentor/requests",
-    icon: Inbox,
-  },
-  {
     title: "Time Slots",
     url: "/mentor/time-slots",
     icon: Clock,

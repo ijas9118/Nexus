@@ -172,6 +172,10 @@ import { TargetAudienceController } from '@/controllers/targetAudience.controlle
 
 import { IBookingRepository } from '@/core/interfaces/repositories/IBookingRepository';
 import { BookingRepository } from '@/repositories/ booking.repository';
+import { IBookingService } from '@/core/interfaces/services/IBookingService';
+import { BookingService } from '@/services/booking.service';
+import { IBookingController } from '@/core/interfaces/controllers/IBookingController';
+import { BookingController } from '@/controllers/booking.controller';
 
 import { IBookingPaymentRepository } from '@/core/interfaces/repositories/IBookingPaymentRepository';
 import { BookingPaymentRepository } from '@/repositories/bookingPayment.repository';
@@ -304,6 +308,8 @@ container
   .to(TargetAudienceController);
 
 container.bind<IBookingRepository>(TYPES.BookingRepository).to(BookingRepository);
+container.bind<IBookingService>(TYPES.BookingService).to(BookingService);
+container.bind<IBookingController>(TYPES.BookingController).to(BookingController);
 
 container
   .bind<IBookingPaymentRepository>(TYPES.BookingPaymentRepository)

@@ -1,0 +1,13 @@
+import { IBooking } from '@/models/booking.model';
+
+export interface IBookingService {
+  getUpcomingBookings(): Promise<IBooking[]>;
+  getCompletedBookings(): Promise<IBooking[]>;
+  rescheduleBooking(
+    bookingId: string,
+    newTimeSlotId: string,
+    newBookingDate: Date
+  ): Promise<IBooking>;
+  getFilteredBookings(date?: Date, mentorshipTypeId?: string): Promise<IBooking[]>;
+  confirmBooking(bookingId: string): Promise<IBooking>;
+}

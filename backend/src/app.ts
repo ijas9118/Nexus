@@ -26,6 +26,7 @@ import subscriptionRoutes from './routes/subscription.routes';
 import mentorshipTypeRoutes from './routes/mentorship-type.routes';
 import mentorMetadataRoutes from './routes/mentor-metadata.routes';
 import targetAudienceRoutes from './routes/targetAudience.routes';
+import bookingPaymentRoutes from './routes/bookingPayment.routes';
 import bookingRoutes from './routes/booking.routes';
 import notificationTypeRoutes from './routes/notificationType.routes';
 import notificationRoutes from './routes/notification.routes';
@@ -66,7 +67,8 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/subscription', subscriptionRoutes);
 app.use('/api/target-audiences', targetAudienceRoutes);
-app.use('/api/booking', bookingRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/booking-payment', bookingPaymentRoutes);
 app.use('/api/notification-types', notificationTypeRoutes);
 app.use('/api/notifications', notificationRoutes);
 

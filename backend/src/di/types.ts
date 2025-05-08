@@ -118,6 +118,8 @@ export const TYPES = {
 
   // Booking
   BookingRepository: Symbol.for('BookingRepository'),
+  BookingService: Symbol.for('BookingService'),
+  BookingController: Symbol.for('BookingController'),
 
   // Booking Payment
   BookingPaymentRepository: Symbol.for('BookingPaymentRepository'),

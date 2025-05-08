@@ -8,14 +8,17 @@ import dayjs from 'dayjs';
 import { inject, injectable } from 'inversify';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { StatusCodes } from 'http-status-codes';
+import { BaseService } from '@/core/abstracts/base.service';
 dayjs.extend(customParseFormat);
 
 @injectable()
-export class TimeSlotService implements ITimeSlotService {
+export class TimeSlotService extends BaseService<ITimeSlot> implements ITimeSlotService {
   constructor(
     @inject(TYPES.TimeSlotRepository) private timeSlotRepository: TimeSlotRepository,
     @inject(TYPES.MentorService) private mentorService: IMentorService
-  ) {}
+  ) {
+    super(timeSlotRepository);
+  }
 
   async addTimeSlot(mentorId: string, date: Date, startTime12Hr: string): Promise<ITimeSlot> {
     const mentor = await this.mentorService.getMentorDetails(mentorId);
@@ -144,5 +147,34 @@ export class TimeSlotService implements ITimeSlotService {
 
     // Get unbooked time slots for the next 7 days
     return await this.timeSlotRepository.getUnbookedTimeSlotsForNext7Days(mentorId);
+  }
+
+  async bookTimeSlot(slotId: string, mentorId: string): Promise<ITimeSlot> {
+    // Find the time slot by ID and mentorId
+    const timeSlot = await this.timeSlotRepository.findById(slotId);
+    if (!timeSlot) {
+      throw new CustomError('Time slot not found.', StatusCodes.NOT_FOUND);
+    }
+
+    // Verify the time slot belongs to the mentor
+    if (timeSlot.mentorId.toString() !== mentorId) {
+      throw new CustomError(
+        'Time slot does not belong to the specified mentor.',
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    // Check if the time slot is already booked
+    if (timeSlot.isBooked) {
+      throw new CustomError('Time slot is already booked.', StatusCodes.CONFLICT);
+    }
+
+    // Mark the time slot as booked
+    timeSlot.isBooked = true;
+    const updatedTimeSlot = await this.timeSlotRepository.update(slotId, { isBooked: true });
+    if (!updatedTimeSlot) {
+      throw new CustomError('Failed to update the time slot.', StatusCodes.NOT_FOUND);
+    }
+    return updatedTimeSlot;
   }
 }

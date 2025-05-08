@@ -33,10 +33,8 @@ import NPDark from "@/components/icons/NPDark";
 import NPLight from "@/components/icons/NPLight";
 import NotificationService from "@/services/notificationService";
 import { setUnreadCount } from "@/store/slices/notificationSlice";
-import {
-  NotificationsDropdown,
-  type Notification,
-} from "@/components/organisms/notifications-dropdown";
+import { NotificationsDropdown } from "@/components/organisms/notifications-dropdown";
+import { INotification } from "@/types/notification";
 
 export default function Layout() {
   const navigate = useNavigate();
@@ -49,7 +47,7 @@ export default function Layout() {
   const unreadCount = useSelector(
     (state: RootState) => state.notification.unreadCount,
   );
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<INotification[]>([]);
 
   const { theme } = useTheme();
 

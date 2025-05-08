@@ -1,24 +1,22 @@
 import { Router } from 'express';
-import { authenticate } from '@/middlewares/auth.middleware';
 import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
-import { IBookingPaymentController } from '@/core/interfaces/controllers/IBookingPaymentController';
+import { IBookingController } from '@/core/interfaces/controllers/IBookingController';
+import { authenticate } from '@/middlewares/auth.middleware';
 
 const router = Router();
-const bookingPaymentController = container.get<IBookingPaymentController>(
-  TYPES.BookingPaymentController
-);
 
-router.post(
-  '/create-booking-checkout-session',
-  authenticate(['user', 'premium']),
-  bookingPaymentController.checkoutSession
-);
+const bookingController = container.get<IBookingController>(TYPES.BookingController);
 
-router.get(
-  '/verify-booking-session/:sessionId',
-  authenticate(['user', 'premium']),
-  bookingPaymentController.verifySession
+router.get('/upcoming', authenticate(['mentor']), bookingController.getUpcomingBookings);
+router.get('/completed', authenticate(['mentor']), bookingController.getCompletedBookings);
+router.patch(
+  '/:bookingId/reschedule',
+  authenticate(['mentor']),
+  bookingController.rescheduleBooking
 );
+router.get('/filter', authenticate(['mentor']), bookingController.getFilteredBookings);
+
+router.patch('/:bookingId/confirm', authenticate(['mentor']), bookingController.confirmBooking);
 
 export default router;

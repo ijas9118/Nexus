@@ -17,4 +17,11 @@ export interface UserInterface {
   mentorId?: string;
 }
 
+export interface IUser {
+  _id: string;
+  name: string;
+  username: string;
+  profilePic: string;
+}
+
 export type UserRoles = "user" | "mentor" | "admin" | "premium";

@@ -10,6 +10,7 @@ import { IBookingPaymentService } from '@/core/interfaces/services/IBookingPayme
 import { v4 as uuidv4 } from 'uuid';
 import { INotificationService } from '@/core/interfaces/services/INotificationService';
 import { IMentorRepository } from '@/core/interfaces/repositories/IMentorRepository';
+import { ITimeSlotService } from '@/core/interfaces/services/ITimeSlotService';
 
 @injectable()
 export class BookingPaymentService implements IBookingPaymentService {
@@ -20,7 +21,8 @@ export class BookingPaymentService implements IBookingPaymentService {
     @inject(TYPES.MentorshipTypeRepository)
     private mentorshipTypeRepository: MentorshipTypeRepository,
     @inject(TYPES.NotificationService) private notificationService: INotificationService,
-    @inject(TYPES.MentorRepository) private mentorRepository: IMentorRepository
+    @inject(TYPES.MentorRepository) private mentorRepository: IMentorRepository,
+    @inject(TYPES.TimeSlotService) private timeSlotService: ITimeSlotService
   ) {}
 
   async checkoutSession(
@@ -67,6 +69,7 @@ export class BookingPaymentService implements IBookingPaymentService {
         bookingId: booking._id.toString(),
         mentorId,
         mentorshipType,
+        mentorshipTypeName: mentorship.name,
         customerId,
         type: 'booking',
       },
@@ -116,12 +119,15 @@ export class BookingPaymentService implements IBookingPaymentService {
       !metadata?.customerId ||
       !amount_total ||
       !currency ||
+      !metadata.mentorshipTypeName ||
       !payment_intent ||
       !customer_details?.email ||
       !customer_details?.name
     ) {
       throw new Error('Missing required metadata or session details');
     }
+
+    await this.timeSlotService.bookTimeSlot(metadata.timeSlot, metadata.mentorId);
 
     await this.bookingPaymentRepository.createBookingPayment({
       userId: metadata.customerId,
@@ -154,7 +160,7 @@ export class BookingPaymentService implements IBookingPaymentService {
       notificationTypeId,
       mentor.userId.toString(),
       'New Booking Confirmed',
-      `A new mentorship session has been booked by ${customer_details.name} for ${metadata.mentorshipType}. Please check your schedule and prepare for the session.`
+      `A new mentorship session has been booked by ${customer_details.name} for ${metadata.mentorshipTypeName}. Please check your schedule and prepare for the session.`
     );
   }
 }
