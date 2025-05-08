@@ -179,6 +179,12 @@ import { IBookingPaymentService } from '@/core/interfaces/services/IBookingPayme
 import { BookingPaymentService } from '@/services/bookingPayment.service';
 import { IBookingPaymentController } from '@/core/interfaces/controllers/IBookingPaymentController';
 import { BookingPaymentController } from '@/controllers/bookingPayment.controller';
+import { INotificationTypeRepository } from '@/core/interfaces/repositories/INotificationTypeRepository';
+import { NotificationTypeRepository } from '@/repositories/notificationType.repository';
+import { INotificationTypeService } from '@/core/interfaces/services/INotificationTypeService';
+import { NotificationTypeService } from '@/services/notificationType.service';
+import { INotificationTypeController } from '@/core/interfaces/controllers/INotificationTypeController';
+import { NotificationTypeController } from '@/controllers/notificationType.controller';
 
 const container = new Container();
 
@@ -298,5 +304,13 @@ container.bind<IBookingPaymentService>(TYPES.BookingPaymentService).to(BookingPa
 container
   .bind<IBookingPaymentController>(TYPES.BookingPaymentController)
   .to(BookingPaymentController);
+
+container
+  .bind<INotificationTypeRepository>(TYPES.NotificationTypeRepository)
+  .to(NotificationTypeRepository);
+container.bind<INotificationTypeService>(TYPES.NotificationTypeService).to(NotificationTypeService);
+container
+  .bind<INotificationTypeController>(TYPES.NotificationTypeController)
+  .to(NotificationTypeController);
 
 export { container };

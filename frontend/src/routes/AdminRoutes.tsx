@@ -19,6 +19,7 @@ import MentorshipTypeSettings from "@/features/admin/MentorshipTypeSettings";
 import ForbiddenPage from "@/pages/Unauthorized";
 import MentorMetadataPage from "@/features/admin/MentorMetadata";
 import TargetAudiencesPage from "@/features/admin/TargetAudienceManagement";
+import NotificationTypesPage from "@/features/admin/NotificationTypesPage";
 
 const AdminRoutes: React.FC = () => {
   return (
@@ -39,6 +40,7 @@ const AdminRoutes: React.FC = () => {
           <Route path="mentorship-type" element={<MentorshipTypeSettings />} />
           <Route path="mentor-meta-data" element={<MentorMetadataPage />} />
           <Route path="target-audience" element={<TargetAudiencesPage />} />
+          <Route path="notification-type" element={<NotificationTypesPage />} />
           <Route path="unauthorized" element={<ForbiddenPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>

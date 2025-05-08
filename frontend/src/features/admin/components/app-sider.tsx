@@ -49,7 +49,7 @@ const mainItem = [
 
 const interactionItems = [
   { title: "Comments", url: "comments", icon: MessageCircleMore },
-  { title: "Notification", url: "notification", icon: Bell },
+  { title: "Notification Types", url: "notification-type", icon: Bell },
 ];
 
 const revenueItems = [

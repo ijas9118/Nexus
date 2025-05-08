@@ -124,6 +124,11 @@ export const TYPES = {
   BookingPaymentService: Symbol.for('BookingPaymentService'),
   BookingPaymentController: Symbol.for('BookingPaymentController'),
 
+  // Notification Type
+  NotificationTypeRepository: Symbol.for('NotificationTypeRepository'),
+  NotificationTypeService: Symbol.for('NotificationTypeService'),
+  NotificationTypeController: Symbol.for('NotificationTypeController'),
+
   // Miscellaneous / Utilities
   OTPService: Symbol.for('IOTPService'),
   EmailService: Symbol.for('IEmailService'),
