@@ -31,33 +31,10 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { ScrollArea } from "./scroll-area";
-
-// Define the notification type
-export interface NotificationType {
-  _id: string;
-  name: string;
-  description: string;
-  icon: string;
-  iconColor: string;
-  roles: string[];
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-// Define the notification interface
-export interface Notification {
-  _id: string;
-  notificationTypeId: string | NotificationType;
-  recipientId: string;
-  heading: string;
-  message: string;
-  read: boolean;
-  createdAt: string;
-}
+import { INotification } from "@/types/notification";
 
 interface NotificationsDropdownProps {
-  notifications: Notification[];
+  notifications: INotification[];
   unreadCount: number;
   onMarkAsRead: (notificationId: string) => Promise<void>;
   onDelete: (notificationId: string) => Promise<void>;

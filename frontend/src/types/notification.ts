@@ -10,9 +10,16 @@ export interface NotificationTypeData {
   updatedAt: string;
 }
 
+export interface NotificationType {
+  _id: string;
+  name: string;
+  icon: string;
+  iconColor: string;
+}
+
 export interface INotification {
   _id: string;
-  notificationTypeId: string;
+  notificationTypeId: NotificationType;
   recipientId: string;
   heading: string;
   message: string;
