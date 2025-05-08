@@ -179,12 +179,20 @@ import { IBookingPaymentService } from '@/core/interfaces/services/IBookingPayme
 import { BookingPaymentService } from '@/services/bookingPayment.service';
 import { IBookingPaymentController } from '@/core/interfaces/controllers/IBookingPaymentController';
 import { BookingPaymentController } from '@/controllers/bookingPayment.controller';
+
 import { INotificationTypeRepository } from '@/core/interfaces/repositories/INotificationTypeRepository';
 import { NotificationTypeRepository } from '@/repositories/notificationType.repository';
 import { INotificationTypeService } from '@/core/interfaces/services/INotificationTypeService';
 import { NotificationTypeService } from '@/services/notificationType.service';
 import { INotificationTypeController } from '@/core/interfaces/controllers/INotificationTypeController';
 import { NotificationTypeController } from '@/controllers/notificationType.controller';
+
+import { NotificationRepository } from '@/repositories/notification.repository';
+import { INotificationRepository } from '@/core/interfaces/repositories/INotificationRepository';
+import { INotificationService } from '@/core/interfaces/services/INotificationService';
+import { INotificationController } from '@/core/interfaces/controllers/INotificationController';
+import { NotificationService } from '@/services/notification.service';
+import { NotificationController } from '@/controllers/notification.controller';
 
 const container = new Container();
 
@@ -312,5 +320,9 @@ container.bind<INotificationTypeService>(TYPES.NotificationTypeService).to(Notif
 container
   .bind<INotificationTypeController>(TYPES.NotificationTypeController)
   .to(NotificationTypeController);
+
+container.bind<INotificationRepository>(TYPES.NotificationRepository).to(NotificationRepository);
+container.bind<INotificationService>(TYPES.NotificationService).to(NotificationService);
+container.bind<INotificationController>(TYPES.NotificationController).to(NotificationController);
 
 export { container };

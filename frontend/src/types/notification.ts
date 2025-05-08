@@ -9,3 +9,13 @@ export interface NotificationTypeData {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface INotification {
+  _id: string;
+  notificationTypeId: string;
+  recipientId: string;
+  heading: string;
+  message: string;
+  read: boolean;
+  createdAt: string;
+}

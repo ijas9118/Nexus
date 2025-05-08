@@ -8,6 +8,7 @@ import { TYPES } from '@/di/types';
 import { MentorshipTypeRepository } from '@/repositories/mentorship-type.repository';
 import { IBookingPaymentService } from '@/core/interfaces/services/IBookingPaymentService';
 import { v4 as uuidv4 } from 'uuid';
+import { INotificationService } from '@/core/interfaces/services/INotificationService';
 
 @injectable()
 export class BookingPaymentService implements IBookingPaymentService {
@@ -16,7 +17,9 @@ export class BookingPaymentService implements IBookingPaymentService {
     @inject(TYPES.BookingPaymentRepository)
     private bookingPaymentRepository: IBookingPaymentRepository,
     @inject(TYPES.MentorshipTypeRepository)
-    private mentorshipTypeRepository: MentorshipTypeRepository
+    private mentorshipTypeRepository: MentorshipTypeRepository,
+    @inject(TYPES.NotificationService)
+    private notificationService: INotificationService
   ) {}
 
   async checkoutSession(
@@ -137,5 +140,15 @@ export class BookingPaymentService implements IBookingPaymentService {
     const meetUrl = `${CLIENT_URL}/meeting/${meetToken}`;
 
     await this.bookingRepository.update(metadata.bookingId, { meetUrl });
+
+    const notificationTypeId =
+      await this.notificationService.getNotificationTypeIdByName('New Booking Request');
+
+    await this.notificationService.createForUser(
+      notificationTypeId,
+      metadata.mentorId,
+      'New Booking Confirmed',
+      `A new mentorship session has been booked by ${customer_details.name} for ${metadata.mentorshipType}. Please check your schedule and prepare for the session.`
+    );
   }
 }

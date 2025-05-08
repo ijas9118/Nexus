@@ -129,6 +129,11 @@ export const TYPES = {
   NotificationTypeService: Symbol.for('NotificationTypeService'),
   NotificationTypeController: Symbol.for('NotificationTypeController'),
 
+  // Notification
+  NotificationRepository: Symbol.for('NotificationRepository'),
+  NotificationService: Symbol.for('NotificationService'),
+  NotificationController: Symbol.for('NotificationController'),
+
   // Miscellaneous / Utilities
   OTPService: Symbol.for('IOTPService'),
   EmailService: Symbol.for('IEmailService'),
