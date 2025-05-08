@@ -18,11 +18,15 @@ export class NotificationRepository
     if (read !== undefined) {
       filter.read = read;
     }
-    return this.model
-      .find(filter)
+    const notification = await this.model
+      .find({ recipientId: userId })
       .populate('notificationTypeId', 'name icon iconColor')
       .sort({ createdAt: -1 })
       .exec();
+
+    console.log(notification);
+
+    return notification;
   }
 
   async markAsRead(id: Types.ObjectId | string): Promise<INotification | null> {

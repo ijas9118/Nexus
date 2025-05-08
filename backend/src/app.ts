@@ -28,6 +28,7 @@ import mentorMetadataRoutes from './routes/mentor-metadata.routes';
 import targetAudienceRoutes from './routes/targetAudience.routes';
 import bookingRoutes from './routes/booking.routes';
 import notificationTypeRoutes from './routes/notificationType.routes';
+import notificationRoutes from './routes/notification.routes';
 
 const app = express();
 setupSwagger(app);
@@ -67,6 +68,7 @@ app.use('/api/subscription', subscriptionRoutes);
 app.use('/api/target-audiences', targetAudienceRoutes);
 app.use('/api/booking', bookingRoutes);
 app.use('/api/notification-types', notificationTypeRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.use(errorMiddleware);
 

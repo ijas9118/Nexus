@@ -16,10 +16,9 @@ import {
   SidebarTrigger,
 } from "@/components/organisms/sidebar";
 import useLogout from "@/hooks/useLogout";
-import { RootState } from "@/store/store";
-import { Bell } from "lucide-react";
-import React from "react";
-import { useSelector } from "react-redux";
+import type { RootState } from "@/store/store";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import Premium from "@/components/icons/Premium";
 import {
@@ -32,16 +31,72 @@ import Mentor from "@/components/icons/Mentor";
 import { useTheme } from "@/components/theme/theme-provider";
 import NPDark from "@/components/icons/NPDark";
 import NPLight from "@/components/icons/NPLight";
+import NotificationService from "@/services/notificationService";
+import { setUnreadCount } from "@/store/slices/notificationSlice";
+import {
+  NotificationsDropdown,
+  type Notification,
+} from "@/components/organisms/notifications-dropdown";
 
 export default function Layout() {
   const navigate = useNavigate();
   const logoutUser = useLogout();
+  const dispatch = useDispatch();
   const breadcrumbs = useSelector(
     (state: RootState) => state.breadcrumb.breadcrumbs,
   );
   const user = useSelector((state: RootState) => state.auth.user);
+  const unreadCount = useSelector(
+    (state: RootState) => state.notification.unreadCount,
+  );
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const { theme } = useTheme();
+
+  useEffect(() => {
+    if (user?._id) {
+      const fetchUnreadNotifications = async () => {
+        try {
+          const response = await NotificationService.getUserNotifications(
+            user._id,
+            false,
+          );
+          setNotifications(response);
+          dispatch(setUnreadCount(response.length));
+        } catch (error) {
+          console.error("Failed to fetch unread notifications:", error);
+        }
+      };
+      fetchUnreadNotifications();
+    }
+  }, [user?._id, dispatch]);
+
+  const handleMarkAsRead = async (notificationId: string) => {
+    try {
+      await NotificationService.markAsRead(notificationId);
+      // Update local state
+      setNotifications((prev) => prev.filter((n) => n._id !== notificationId));
+      dispatch(setUnreadCount(unreadCount - 1));
+    } catch (error) {
+      console.error("Failed to mark notification as read:", error);
+    }
+  };
+
+  const handleDeleteNotification = async (notificationId: string) => {
+    try {
+      await NotificationService.delete(notificationId);
+      // Update local state
+      const notification = notifications.find((n) => n._id === notificationId);
+      setNotifications((prev) => prev.filter((n) => n._id !== notificationId));
+
+      // Only decrement unread count if the notification was unread
+      if (notification && !notification.read) {
+        dispatch(setUnreadCount(unreadCount - 1));
+      }
+    } catch (error) {
+      console.error("Failed to delete notification:", error);
+    }
+  };
 
   return (
     <SidebarProvider>
@@ -106,7 +161,14 @@ export default function Layout() {
                   </Tooltip>
                 </TooltipProvider>
               ) : null}
-              <Bell />
+
+              <NotificationsDropdown
+                notifications={notifications}
+                unreadCount={unreadCount}
+                onMarkAsRead={handleMarkAsRead}
+                onDelete={handleDeleteNotification}
+              />
+
               <Button
                 className="hidden md:block"
                 variant="outline"

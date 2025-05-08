@@ -58,6 +58,7 @@ export class NotificationService
   }
 
   async getUserNotifications(userId: string, read?: boolean): Promise<INotification[]> {
+    console.log(userId);
     return this.repository.findByUserId(userId, read);
   }
 
