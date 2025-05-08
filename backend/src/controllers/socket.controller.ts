@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 @injectable()
 export class SocketController {
   private userSocketMap: Map<string, string> = new Map();
+  private videoRoomUsers: Map<string, { userId: string; peerId: string }[]> = new Map();
 
   constructor(
     @inject(TYPES.ChatService) private chatService: IChatService,
@@ -27,7 +28,6 @@ export class SocketController {
       // Store user socket mapping
       this.userSocketMap.set(userId, socket.id);
       console.log(`User connected: ${userId} with socket ID: ${socket.id}`);
-      console.log('Current connected users:', Array.from(this.userSocketMap.entries()));
 
       // Join user to their chats and groups
       this.joinUserRooms(userId, socket);
@@ -35,7 +35,16 @@ export class SocketController {
       // Emit user's socket ID to themselves
       socket.emit('me', socket.id);
 
-      // Chat events
+      // Video call events
+      socket.on('join-video-room', ({ roomId, peerId }) => {
+        this.handleJoinVideoRoom(userId, roomId, peerId, socket, io);
+      });
+
+      socket.on('leave-video-room', ({ roomId }) => {
+        this.handleLeaveVideoRoom(userId, roomId, socket, io);
+      });
+
+      // Existing chat events (unchanged)
       socket.on('createChat', (otherUserId: string) =>
         this.handleCreateChat(userId, otherUserId, socket, io)
       );
@@ -74,6 +83,64 @@ export class SocketController {
       // Handle disconnection
       socket.on('disconnect', () => this.handleDisconnect(userId, socket));
     });
+  }
+
+  private async handleJoinVideoRoom(
+    userId: string,
+    roomId: string,
+    peerId: string,
+    socket: Socket,
+    io: SocketIOServer
+  ): Promise<void> {
+    try {
+      // Join the socket room
+      socket.join(roomId);
+
+      // Initialize room if it doesn't exist
+      if (!this.videoRoomUsers.has(roomId)) {
+        this.videoRoomUsers.set(roomId, []);
+      }
+
+      // Add user to room
+      const roomUsers = this.videoRoomUsers.get(roomId)!;
+      roomUsers.push({ userId, peerId });
+      this.videoRoomUsers.set(roomId, roomUsers);
+
+      // Notify other users in the room
+      socket.to(roomId).emit('user-joined', { peerId });
+
+      // Send current room users to the joining user
+      socket.emit('room-users', { users: roomUsers.filter((user) => user.userId !== userId) });
+    } catch (error) {
+      socket.emit('error', (error as Error).message);
+    }
+  }
+
+  private async handleLeaveVideoRoom(
+    userId: string,
+    roomId: string,
+    socket: Socket,
+    io: SocketIOServer
+  ): Promise<void> {
+    try {
+      socket.leave(roomId);
+
+      // Remove user from room
+      const roomUsers = this.videoRoomUsers.get(roomId);
+      if (roomUsers) {
+        const updatedUsers = roomUsers.filter((user) => user.userId !== userId);
+        if (updatedUsers.length === 0) {
+          this.videoRoomUsers.delete(roomId);
+        } else {
+          this.videoRoomUsers.set(roomId, updatedUsers);
+        }
+
+        // Notify remaining users
+        io.to(roomId).emit('user-disconnected', { userId });
+      }
+    } catch (error) {
+      socket.emit('error', (error as Error).message);
+    }
   }
 
   private async joinUserRooms(userId: string, socket: Socket): Promise<void> {
@@ -152,9 +219,8 @@ export class SocketController {
       if (data.chatType === 'Chat') {
         const existingChat = await this.chatService
           .findById(new mongoose.Types.ObjectId(data.chatId))
-          .catch(() => null); // Handle invalid ObjectId gracefully
+          .catch(() => null);
         if (!existingChat) {
-          // Assume chatId is a user ID; create a new chat
           const chat = await this.chatService.createChat(userId, data.chatId);
           actualChatId = chat._id.toString();
           socket.join(actualChatId);
@@ -194,7 +260,6 @@ export class SocketController {
   ): Promise<void> {
     try {
       await this.messageService.addReaction(userId, messageId, reaction, io);
-      // No need to emit here since MessageService already emits 'messageReaction'
     } catch (error) {
       io.to(this.userSocketMap.get(userId) || '').emit('error', (error as Error).message);
     }
@@ -207,7 +272,6 @@ export class SocketController {
   ): Promise<void> {
     try {
       await this.messageService.removeReaction(userId, messageId, io);
-      // No need to emit here since MessageService already emits 'reactionRemoved'
     } catch (error) {
       io.to(this.userSocketMap.get(userId) || '').emit('error', (error as Error).message);
     }
@@ -220,7 +284,6 @@ export class SocketController {
   ): Promise<void> {
     try {
       await this.messageService.deleteMessage(userId, messageId, io);
-      // No need to emit here since MessageService already emits 'messageDeleted'
     } catch (error) {
       io.to(this.userSocketMap.get(userId) || '').emit('error', (error as Error).message);
     }
@@ -234,7 +297,6 @@ export class SocketController {
   ): Promise<void> {
     try {
       await this.messageService.markMessagesAsRead(userId, chatId, chatType, io);
-      // No need to emit here since MessageService already emits 'messagesRead'
     } catch (error) {
       io.to(this.userSocketMap.get(userId) || '').emit('error', (error as Error).message);
     }
@@ -242,6 +304,16 @@ export class SocketController {
 
   private handleDisconnect(userId: string, socket: Socket): void {
     this.userSocketMap.delete(userId);
+    // Clean up video rooms
+    this.videoRoomUsers.forEach((users, roomId) => {
+      const updatedUsers = users.filter((user) => user.userId !== userId);
+      if (updatedUsers.length === 0) {
+        this.videoRoomUsers.delete(roomId);
+      } else {
+        this.videoRoomUsers.set(roomId, updatedUsers);
+        socket.to(roomId).emit('user-disconnected', { userId });
+      }
+    });
     console.log(`User disconnected: ${userId}`);
   }
 }

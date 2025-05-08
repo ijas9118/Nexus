@@ -1,6 +1,6 @@
 import MentorSettings from "@/features/mentor-settings/MentorSettings";
 import MentorPayments from "@/features/mentorPayment/MentorPayments";
-import ScheduleCallsManagement from "@/features/mentorshipBooking/BookingsPage";
+import ScheduleCallsManagement from "@/features/mentorshipBookings/BookingsPage";
 import Layout from "@/pages/Layout";
 import React from "react";
 import { Route, Routes } from "react-router-dom";

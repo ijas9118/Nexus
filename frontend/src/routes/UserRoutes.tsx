@@ -30,6 +30,7 @@ import UpgradePlanPage from "@/features/premium-dashboard/UpgradePlanPage";
 import BookingPage from "@/features/mentor/BookingPage";
 import ForbiddenPage from "@/pages/Unauthorized";
 import BookingStatus from "@/features/booking/BookingStatus";
+import VideoCallPage from "@/features/videoCall/VideoCallPage";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -62,6 +63,7 @@ const UserRoutes: React.FC = () => {
             <Route path="mentors/apply" element={<MentorApply />} />
             <Route path="mentors/:mentorId" element={<MentorProfilePage />} />
             <Route path="mentors/:mentorId/book" element={<BookingPage />} />
+            <Route path="meeting/:meetId/" element={<VideoCallPage />} />
             <Route path="squads" element={<Squads />} />
             <Route path="chat" element={<Chat />} />
             <Route path="connections" element={<Connections />} />
