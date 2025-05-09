@@ -65,7 +65,7 @@ export function BookingCard({ booking, onActionComplete }: BookingCardProps) {
 
   const handleJoinMeet = () => {
     if (booking.meetUrl) {
-      window.open(booking.meetUrl, "_blank");
+      window.open(booking.meetUrl, "_self");
     } else {
       toast.error("Meeting link is not available");
     }
