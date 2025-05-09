@@ -20,7 +20,7 @@ export default function SuccessPage() {
             </p>
           </div>
 
-          <div className="bg-blue-50 rounded-xl p-6 mb-8">
+          {/* <div className="bg-blue-50 rounded-xl p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
               Booking Details
             </h2>
@@ -44,7 +44,7 @@ export default function SuccessPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="flex flex-col md:flex-row gap-4 mt-8">
             <Link to="/myFeed" className="flex-1">

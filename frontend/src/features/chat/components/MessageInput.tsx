@@ -2,7 +2,7 @@ import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { useSocket } from "@/hooks/useSocket";
 import { RootState } from "@/store/store";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveChat, setChats } from "@/store/slices/chatSlice"; // Import relevant actions
 
@@ -19,19 +19,19 @@ const MessageInput = ({ chatId, chatType }: MessageInputProps) => {
   const { pendingChat, chats } = useSelector((state: RootState) => state.chat);
 
   // Function to send a message
-  const sendMessage = (
-    targetChatId: string,
-    targetChatType: "Chat" | "Group",
-  ) => {
-    if (socket && content.trim() && user) {
-      socket.emit("sendMessage", {
-        chatId: targetChatId,
-        chatType: targetChatType,
-        content,
-      });
-      setContent("");
-    }
-  };
+  const sendMessage = useCallback(
+    (targetChatId: string, targetChatType: "Chat" | "Group") => {
+      if (socket && content.trim() && user) {
+        socket.emit("sendMessage", {
+          chatId: targetChatId,
+          chatType: targetChatType,
+          content,
+        });
+        setContent("");
+      }
+    },
+    [content, socket, user],
+  );
 
   // Handle sending logic
   const handleSend = () => {

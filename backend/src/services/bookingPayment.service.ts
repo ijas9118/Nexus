@@ -58,7 +58,7 @@ export class BookingPaymentService implements IBookingPaymentService {
           price_data: {
             currency: 'inr',
             product_data: { name: mentorship.name },
-            unit_amount: mentorship.defaultPrice * 100,
+            unit_amount: (mentorship.defaultPrice + 20) * 100,
           },
           quantity: 1,
         },

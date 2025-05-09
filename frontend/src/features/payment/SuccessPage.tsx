@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { clearUser } from "@/store/slices/authSlice";
@@ -13,7 +13,7 @@ const SuccessPage = ({ sessionId }: { sessionId: string }) => {
   const dispatch = useDispatch();
 
   // Custom hook for logout functionality
-  const logoutUser = async () => {
+  const logoutUser = useCallback(async () => {
     try {
       const result = await logout();
       if (result.success) {
@@ -23,7 +23,7 @@ const SuccessPage = ({ sessionId }: { sessionId: string }) => {
     } catch (error) {
       console.error("Logout failed:", error);
     }
-  };
+  }, [dispatch, navigate]);
 
   useEffect(() => {
     const verifySession = async () => {
@@ -50,7 +50,7 @@ const SuccessPage = ({ sessionId }: { sessionId: string }) => {
     } else if (isSessionValid && countdown === 0) {
       logoutUser();
     }
-  }, [countdown, isSessionValid]);
+  }, [countdown, isSessionValid, logoutUser]);
 
   if (isSessionValid === null) {
     return (

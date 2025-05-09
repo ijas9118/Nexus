@@ -289,6 +289,16 @@ const BookingPage = () => {
                       : "Not selected"}
                   </p>
                 </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium">Platform Fee</p>
+                  <p className="text-sm text-muted-foreground">₹20</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium">Total</p>
+                  <p className="text-sm text-muted-foreground">
+                    ₹{selectedTypeDetails.defaultPrice + 20}
+                  </p>
+                </div>
               </div>
 
               <div className="space-y-2">

@@ -7,6 +7,7 @@ import { Route, Routes } from "react-router-dom";
 import NotFoundPage from "@/pages/NotFound";
 import ProtectedRoute from "./ProtectedRoute";
 import MentorAvailabilityPage from "@/features/mentor-timeslots/ManageTimeslots";
+import WalletPage from "@/features/wallet/WalletPage";
 
 const MentorRoutes: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const MentorRoutes: React.FC = () => {
           />
           <Route path="/payments" element={<MentorPayments />} />
           <Route path="/settings" element={<MentorSettings />} />
+          <Route path="/wallet" element={<WalletPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Route>
