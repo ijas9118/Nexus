@@ -27,6 +27,8 @@ export interface IMentorService {
 
   getMentorByUserId(userId: string): Promise<IMentor | null>;
 
+  getUserIdByMentorId(mentorId: string): Promise<string>;
+
   getMentorshipTypes(mentorId: string): Promise<IMentorshipType[]>;
 
   updateMentorExperience(

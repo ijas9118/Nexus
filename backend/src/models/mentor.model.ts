@@ -1,8 +1,9 @@
 import { MentorStatus } from '@/core/types/entities/mentor';
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import { IUser } from './user.model';
 
 export interface IMentor extends Document {
-  userId: ObjectId;
+  userId: ObjectId | IUser;
   experience: {
     currentRole: string;
     company: string;

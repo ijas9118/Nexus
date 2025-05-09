@@ -5,6 +5,7 @@ export interface IBooking {
   _id: string;
   userId: IUser;
   mentorId: string;
+  mentorUserId: IUser;
   mentorshipType: MentorshipType;
   timeSlot: ITimeSlot; // Populated TimeSlot or ID
   bookingDate: string; // ISO string, e.g., "2025-05-10T00:00:00.000Z"

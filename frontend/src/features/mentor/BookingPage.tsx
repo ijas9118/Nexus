@@ -180,6 +180,11 @@ const BookingPage = () => {
               <p className="text-red-500">
                 Failed to load timeslots. Please refresh the page.
               </p>
+            ) : Object.keys(timeslots).length === 0 ? (
+              <p className="text-muted-foreground">
+                No available dates. Please check back later or contact the
+                mentor.
+              </p>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {Object.keys(timeslots).map((date) => {

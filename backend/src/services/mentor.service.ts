@@ -102,6 +102,19 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
     return await this.findOne({ userId });
   };
 
+  getUserIdByMentorId = async (mentorId: string): Promise<string> => {
+    const mentor = await this.mentorRepository.getMentorDetails(mentorId);
+
+    if (!mentor) {
+      throw new CustomError('Mentor not found.');
+    }
+
+    if (typeof mentor.userId === 'object' && '_id' in mentor.userId) {
+      return mentor.userId._id.toString();
+    }
+    throw new CustomError('Invalid userId format.');
+  };
+
   getMentorshipTypes = async (mentorId: string): Promise<IMentorshipType[]> => {
     const mentor = await this.mentorRepository.getMentorDetails(mentorId);
 

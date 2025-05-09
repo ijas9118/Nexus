@@ -4,11 +4,12 @@ interface IBooking extends Document {
   _id: mongoose.Types.ObjectId | string;
   userId: mongoose.Types.ObjectId | string;
   mentorId: mongoose.Types.ObjectId | string;
+  mentorUserId: mongoose.Types.ObjectId | string;
   mentorshipType: mongoose.Types.ObjectId | string;
   timeSlot: mongoose.Types.ObjectId | string;
   bookingDate: Date;
   reason: string;
-  status: 'pending' | 'confirmed' | 'completed';
+  status: 'unpaid' | 'pending' | 'confirmed' | 'completed';
   meetUrl?: string;
 }
 
@@ -22,6 +23,11 @@ const BookingSchema: Schema = new Schema(
     mentorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Mentor',
+      required: true,
+    },
+    mentorUserId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
     mentorshipType: {
@@ -44,8 +50,8 @@ const BookingSchema: Schema = new Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'confirmed', 'completed'],
-      default: 'pending',
+      enum: ['unpaid', 'pending', 'confirmed', 'completed'],
+      default: 'unpaid',
     },
     meetUrl: {
       type: String,

@@ -108,6 +108,11 @@ export const networkItems = [
     icon: CircleCheckBig,
   },
   {
+    title: "Meetings",
+    url: "/mentorship-meetings",
+    icon: CalendarClock,
+  },
+  {
     title: "Messages",
     url: "/chat",
     icon: Send,

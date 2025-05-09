@@ -5,19 +5,24 @@ import { inject, injectable } from 'inversify';
 import { IBookingPaymentService } from '../core/interfaces/services/IBookingPaymentService';
 import { TYPES } from '../di/types';
 import { IBookingPaymentController } from '@/core/interfaces/controllers/IBookingPaymentController';
+import { IMentorService } from '@/core/interfaces/services/IMentorService';
 
 @injectable()
 export class BookingPaymentController implements IBookingPaymentController {
   constructor(
-    @inject(TYPES.BookingPaymentService) private bookingPaymentService: IBookingPaymentService
+    @inject(TYPES.BookingPaymentService) private bookingPaymentService: IBookingPaymentService,
+    @inject(TYPES.MentorService) private mentorService: IMentorService
   ) {}
 
   checkoutSession = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { mentorId, mentorshipType, date, timeSlot, reason, email } = req.body;
     const customerId = req.user?._id as string;
+    const mentorUserId = await this.mentorService.getUserIdByMentorId(mentorId);
+    console.log(JSON.stringify(mentorUserId), mentorId);
     const sessionUrl = await this.bookingPaymentService.checkoutSession(
       mentorId,
       mentorshipType,
+      mentorUserId,
       date,
       timeSlot,
       reason,

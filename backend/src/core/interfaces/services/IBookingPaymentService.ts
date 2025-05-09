@@ -2,6 +2,7 @@ export interface IBookingPaymentService {
   checkoutSession(
     mentorId: string,
     mentorshipType: string,
+    mentorUserId: string,
     date: string,
     timeSlot: string,
     reason: string,

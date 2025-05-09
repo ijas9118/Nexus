@@ -28,6 +28,10 @@ export class BookingRepository extends BaseRepository<IBooking> implements IBook
         path: 'userId',
         select: 'profilePic name username',
       })
+      .populate({
+        path: 'mentorUserId',
+        select: 'profilePic name username',
+      })
       .exec();
   }
 
@@ -38,6 +42,10 @@ export class BookingRepository extends BaseRepository<IBooking> implements IBook
       .populate('timeSlot')
       .populate({
         path: 'userId',
+        select: 'profilePic name username',
+      })
+      .populate({
+        path: 'mentorId',
         select: 'profilePic name username',
       })
       .exec();

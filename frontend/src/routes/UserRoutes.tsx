@@ -31,6 +31,8 @@ import BookingPage from "@/features/mentor/BookingPage";
 import ForbiddenPage from "@/pages/Unauthorized";
 import BookingStatus from "@/features/booking/BookingStatus";
 import VideoCallPage from "@/features/videoCall/VideoCallPage";
+import BookedMeetList from "@/features/mentorship-meetings/MentorshipMeetingsPage";
+import MentorshipMeetingsPage from "@/features/mentorship-meetings/MentorshipMeetingsPage";
 
 const UserRoutes: React.FC = () => {
   return (
@@ -64,6 +66,10 @@ const UserRoutes: React.FC = () => {
             <Route path="mentors/:mentorId" element={<MentorProfilePage />} />
             <Route path="mentors/:mentorId/book" element={<BookingPage />} />
             <Route path="meeting/:meetId/" element={<VideoCallPage />} />
+            <Route
+              path="mentorship-meetings"
+              element={<MentorshipMeetingsPage />}
+            />
             <Route path="squads" element={<Squads />} />
             <Route path="chat" element={<Chat />} />
             <Route path="connections" element={<Connections />} />

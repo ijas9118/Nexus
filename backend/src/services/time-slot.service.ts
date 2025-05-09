@@ -151,6 +151,7 @@ export class TimeSlotService extends BaseService<ITimeSlot> implements ITimeSlot
 
   async bookTimeSlot(slotId: string, mentorId: string): Promise<ITimeSlot> {
     // Find the time slot by ID and mentorId
+    console.log(slotId, mentorId);
     const timeSlot = await this.timeSlotRepository.findById(slotId);
     if (!timeSlot) {
       throw new CustomError('Time slot not found.', StatusCodes.NOT_FOUND);
@@ -170,8 +171,8 @@ export class TimeSlotService extends BaseService<ITimeSlot> implements ITimeSlot
     }
 
     // Mark the time slot as booked
-    timeSlot.isBooked = true;
     const updatedTimeSlot = await this.timeSlotRepository.update(slotId, { isBooked: true });
+    console.log(updatedTimeSlot);
     if (!updatedTimeSlot) {
       throw new CustomError('Failed to update the time slot.', StatusCodes.NOT_FOUND);
     }

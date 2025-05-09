@@ -28,6 +28,7 @@ export class BookingPaymentService implements IBookingPaymentService {
   async checkoutSession(
     mentorId: string,
     mentorshipType: string,
+    mentorUserId: string,
     date: string,
     timeSlot: string,
     reason: string,
@@ -42,11 +43,11 @@ export class BookingPaymentService implements IBookingPaymentService {
     const booking = await this.bookingRepository.createBooking({
       userId: customerId,
       mentorId,
+      mentorUserId,
       mentorshipType,
       timeSlot,
       bookingDate: new Date(date),
       reason,
-      status: 'pending',
     });
 
     const session = await stripe.checkout.sessions.create({
@@ -71,6 +72,7 @@ export class BookingPaymentService implements IBookingPaymentService {
         mentorshipType,
         mentorshipTypeName: mentorship.name,
         customerId,
+        timeSlot,
         type: 'booking',
       },
     });
@@ -117,6 +119,7 @@ export class BookingPaymentService implements IBookingPaymentService {
       !metadata?.mentorId ||
       !metadata?.mentorshipType ||
       !metadata?.customerId ||
+      !metadata?.timeSlot ||
       !amount_total ||
       !currency ||
       !metadata.mentorshipTypeName ||
@@ -126,6 +129,8 @@ export class BookingPaymentService implements IBookingPaymentService {
     ) {
       throw new Error('Missing required metadata or session details');
     }
+
+    await this.bookingRepository.updateOne({ _id: metadata?.bookingId }, { status: 'pending' });
 
     await this.timeSlotService.bookTimeSlot(metadata.timeSlot, metadata.mentorId);
 

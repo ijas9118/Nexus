@@ -8,8 +8,12 @@ const router = Router();
 
 const bookingController = container.get<IBookingController>(TYPES.BookingController);
 
-router.get('/upcoming', authenticate(['mentor']), bookingController.getUpcomingBookings);
-router.get('/completed', authenticate(['mentor']), bookingController.getCompletedBookings);
+router.get('/upcoming', authenticate(['mentor', 'premium']), bookingController.getUpcomingBookings);
+router.get(
+  '/completed',
+  authenticate(['mentor', 'premium']),
+  bookingController.getCompletedBookings
+);
 router.patch(
   '/:bookingId/reschedule',
   authenticate(['mentor']),

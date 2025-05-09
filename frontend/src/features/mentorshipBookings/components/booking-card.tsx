@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { format, parseISO } from "date-fns";
-import type { IBooking, ITimeSlot } from "@/types/booking";
+import type { IBooking } from "@/types/booking";
 import { Card, CardContent } from "@/components/molecules/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
@@ -13,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
 import { toast } from "sonner";
-import { IUser } from "@/types/user";
 import { RescheduleDialog } from "./reschedule-dialog";
 import BookingService from "@/services/bookingService";
 
