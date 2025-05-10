@@ -16,9 +16,12 @@ export class ChatRepository extends BaseRepository<IChat> implements IChatReposi
   }
 
   async getUserChats(userId: string): Promise<IChat[]> {
-    return this.model.find({ participants: userId }).populate({
-      path: 'participants',
-      select: 'name username profilePic',
-    });
+    return this.model
+      .find({ participants: userId })
+      .populate({
+        path: 'participants',
+        select: 'name username profilePic',
+      })
+      .sort({ updatedAt: -1 });
   }
 }

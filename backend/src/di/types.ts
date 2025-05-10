@@ -136,6 +136,11 @@ export const TYPES = {
   NotificationService: Symbol.for('NotificationService'),
   NotificationController: Symbol.for('NotificationController'),
 
+  // Wallet
+  WalletRepository: Symbol.for('WalletRepository'),
+  WalletService: Symbol.for('WalletService'),
+  WalletController: Symbol.for('WalletController'),
+
   // Miscellaneous / Utilities
   OTPService: Symbol.for('IOTPService'),
   EmailService: Symbol.for('IEmailService'),

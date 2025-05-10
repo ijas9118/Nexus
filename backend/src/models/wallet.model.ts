@@ -1,0 +1,35 @@
+import mongoose, { Schema, Document } from 'mongoose';
+
+export interface IWallet extends Document {
+  _id: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId | string;
+  balance: number;
+  transactions: mongoose.Types.ObjectId[];
+}
+
+const WalletSchema: Schema = new Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      unique: true,
+    },
+    balance: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    transactions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Transaction',
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export const WalletModel = mongoose.model<IWallet>('Wallet', WalletSchema);

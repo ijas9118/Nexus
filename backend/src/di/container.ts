@@ -198,6 +198,13 @@ import { INotificationController } from '@/core/interfaces/controllers/INotifica
 import { NotificationService } from '@/services/notification.service';
 import { NotificationController } from '@/controllers/notification.controller';
 
+import { IWalletRepository } from '@/core/interfaces/repositories/IWalletRepository';
+import { WalletRepository } from '@/repositories/wallet.repository';
+import { IWalletService } from '@/core/interfaces/services/IWalletService';
+import { WalletService } from '@/services/wallet.service';
+import { IWalletController } from '@/core/interfaces/controllers/IWalletController';
+import { WalletController } from '@/controllers/wallet.controller';
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -330,5 +337,9 @@ container
 container.bind<INotificationRepository>(TYPES.NotificationRepository).to(NotificationRepository);
 container.bind<INotificationService>(TYPES.NotificationService).to(NotificationService);
 container.bind<INotificationController>(TYPES.NotificationController).to(NotificationController);
+
+container.bind<IWalletRepository>(TYPES.WalletRepository).to(WalletRepository);
+container.bind<IWalletService>(TYPES.WalletService).to(WalletService);
+container.bind<IWalletController>(TYPES.WalletController).to(WalletController);
 
 export { container };
