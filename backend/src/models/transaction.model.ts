@@ -2,13 +2,14 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface ITransaction extends Document {
   _id: mongoose.Types.ObjectId;
+  transactionId: string;
   type: 'incoming' | 'withdrawal';
   bookingId?: mongoose.Types.ObjectId;
   date: Date;
   amount: number;
-  status: 'pending' | 'completed';
-  userId: mongoose.Types.ObjectId;
-  menteeId?: mongoose.Types.ObjectId;
+  status: 'pending' | 'completed' | 'rejected';
+  userId: mongoose.Types.ObjectId | string;
+  menteeId?: mongoose.Types.ObjectId | string;
   withdrawalNote?: string;
 }
 
@@ -23,6 +24,10 @@ const TransactionSchema: Schema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Booking',
     },
+    transactionId: {
+      type: String,
+      required: true,
+    },
     date: {
       type: Date,
       required: true,
@@ -34,7 +39,7 @@ const TransactionSchema: Schema = new Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'completed'],
+      enum: ['pending', 'completed', 'rejected'],
       default: 'pending',
     },
     userId: {

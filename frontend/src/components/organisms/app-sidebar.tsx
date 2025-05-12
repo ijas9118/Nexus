@@ -1,5 +1,4 @@
 import { ChevronUp, Plus } from "lucide-react";
-
 import {
   Sidebar,
   SidebarContent,

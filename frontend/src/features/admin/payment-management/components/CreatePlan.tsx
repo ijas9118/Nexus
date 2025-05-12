@@ -56,11 +56,11 @@ export function CreatePlan({ open, onOpenChange }: DialogProps) {
   const onSubmit = async (data: FormData) => {
     try {
       await PlanService.createPlan({
-        name: data.name,
+        tier: data.name,
         price: data.price,
         interval: data.interval,
         description: data.description,
-        features: features.filter((feature) => feature.trim() !== ""),
+        highlights: features.filter((feature) => feature.trim() !== ""),
       });
 
       toast("Plan Created", {

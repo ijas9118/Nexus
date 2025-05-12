@@ -1,5 +1,4 @@
 import MentorSettings from "@/features/mentor-settings/MentorSettings";
-import MentorPayments from "@/features/mentorPayment/MentorPayments";
 import ScheduleCallsManagement from "@/features/mentorshipBookings/BookingsPage";
 import Layout from "@/pages/Layout";
 import React from "react";
@@ -19,7 +18,6 @@ const MentorRoutes: React.FC = () => {
             path="/scheduled-calls"
             element={<ScheduleCallsManagement />}
           />
-          <Route path="/payments" element={<MentorPayments />} />
           <Route path="/settings" element={<MentorSettings />} />
           <Route path="/wallet" element={<WalletPage />} />
           <Route path="*" element={<NotFoundPage />} />

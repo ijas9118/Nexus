@@ -8,11 +8,9 @@ import {
   Send,
   Star,
   UsersRoundIcon,
-  LayoutDashboard,
   CalendarClock,
   CreditCard,
   Clock,
-  Inbox,
   Settings,
 } from "lucide-react";
 
@@ -58,8 +56,8 @@ export const mentorItems = [
     icon: CalendarClock,
   },
   {
-    title: "Payments",
-    url: "/mentor/payments",
+    title: "Wallet",
+    url: "/mentor/wallet",
     icon: CreditCard,
   },
   {

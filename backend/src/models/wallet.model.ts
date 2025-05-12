@@ -1,9 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IWallet extends Document {
-  _id: mongoose.Types.ObjectId;
+  _id: mongoose.Types.ObjectId | string;
   userId: mongoose.Types.ObjectId | string;
   balance: number;
+  nexusPoints: number;
   transactions: mongoose.Types.ObjectId[];
 }
 
@@ -16,6 +17,11 @@ const WalletSchema: Schema = new Schema(
       unique: true,
     },
     balance: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    nexusPoints: {
       type: Number,
       required: true,
       default: 0,

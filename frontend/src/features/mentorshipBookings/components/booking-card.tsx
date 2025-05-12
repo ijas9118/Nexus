@@ -148,12 +148,16 @@ export function BookingCard({ booking, onActionComplete }: BookingCardProps) {
                   {booking.status === "pending" && (
                     <>
                       <DropdownMenuItem
+                        disabled={isLoading}
                         onClick={() => setIsRescheduleOpen(true)}
                       >
                         Reschedule
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={handleConfirmBooking}>
-                        Confirm
+                      <DropdownMenuItem
+                        disabled={isLoading}
+                        onClick={handleConfirmBooking}
+                      >
+                        {isLoading ? "Confirming..." : "Confirm"}
                       </DropdownMenuItem>
                     </>
                   )}

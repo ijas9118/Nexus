@@ -10,13 +10,13 @@ import {
 } from "@/components/organisms/table";
 import { Button } from "@/components/atoms/button";
 import { Badge } from "@/components/atoms/badge";
-import type { TargetAudienceData } from "@/services/targetAudienceService";
+import { TargetAudience } from "@/types/mentor";
 
 interface AudienceTableProps {
-  audiences: TargetAudienceData[];
-  onEdit: (audience: TargetAudienceData) => void;
-  onDelete: (audience: TargetAudienceData) => void;
-  onRestore: (audience: TargetAudienceData) => void;
+  audiences: TargetAudience[];
+  onEdit: (audience: TargetAudience) => void;
+  onDelete: (audience: TargetAudience) => void;
+  onRestore: (audience: TargetAudience) => void;
 }
 
 export function AudienceTable({

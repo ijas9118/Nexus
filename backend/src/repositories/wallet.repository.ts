@@ -1,7 +1,7 @@
 import { BaseRepository } from '@/core/abstracts/base.repository';
 import { IWalletRepository } from '@/core/interfaces/repositories/IWalletRepository';
 import { TransactionDetails } from '@/core/types/wallet.types';
-import { ITransaction, TransactionModel } from '@/models/transaction';
+import { ITransaction, TransactionModel } from '@/models/transaction.model';
 import { IWallet, WalletModel } from '@/models/wallet.model';
 import { injectable } from 'inversify';
 import mongoose from 'mongoose';
@@ -47,6 +47,7 @@ export class WalletRepository extends BaseRepository<IWallet> implements IWallet
 
     return transactions.map((t) => ({
       _id: t._id.toString(),
+      transactionId: t.transactionId,
       type: t.type,
       date: t.date,
       amount: t.amount,

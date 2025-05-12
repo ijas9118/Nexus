@@ -24,7 +24,6 @@ export default function VideoCallPage() {
     toggleMute,
     toggleVideo,
     exitCall,
-    setIsCallConnected,
   } = useVideoCall();
 
   const toggleFullScreen = () => {

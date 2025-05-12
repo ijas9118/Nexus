@@ -75,7 +75,7 @@ export const useMentorshipForm = ({ mentorData }: UseMentorshipFormProps) => {
           "Your mentorship preferences have been updated successfully.",
       });
     },
-    onError: (error) => {
+    onError: () => {
       toast.error("Error", {
         description:
           "There was an error updating your mentorship details. Please try again.",

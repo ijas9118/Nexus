@@ -10,39 +10,48 @@ import { Button } from "@/components/atoms/button";
 import { Loader2 } from "lucide-react";
 import { Badge } from "@/components/atoms/badge";
 import { ScrollArea } from "@/components/organisms/scroll-area";
+import { Mentor } from "@/types/mentor";
 
-interface MentorDetails {
-  _id: string;
-  userId: {
-    name: string;
-    email: string;
-    username: string;
-    profilePic?: string;
-    location?: string;
-  };
-  experience: {
-    currentRole: string;
-    company: string;
-    experienceLevel: string;
-    expertiseAreas: string[];
-    technologies: string[];
-    bio: string;
-    resume?: string | null;
-  };
-  mentorshipDetails: {
-    mentorshipTypes: string[];
-    targetAudiences: string[];
-    motivation: string;
-  };
-  status: string;
-  createdAt: string;
-  updatedAt?: string;
-}
+// interface MentorDetails {
+//   _id: string;
+//   userId: {
+//     name: string;
+//     email: string;
+//     username: string;
+//     profilePic?: string;
+//     location?: string;
+//   };
+//   experience: {
+//     currentRole: string;
+//     company: string;
+//     experienceLevel: {
+//       _id: string;
+//       label: string;
+//       name: string;
+//       type: string;
+//       isActive: boolean;
+//       createdAt: string;
+//       updatedAt: string;
+//     };
+//     expertiseAreas: string[];
+//     technologies: string[];
+//     bio: string;
+//     resume?: string | null;
+//   };
+//   mentorshipDetails: {
+//     mentorshipTypes: string[];
+//     targetAudiences: string[];
+//     motivation: string;
+//   };
+//   status: string;
+//   createdAt: string;
+//   updatedAt?: string;
+// }
 
 interface MentorDetailsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  mentorDetails: MentorDetails | undefined;
+  mentorDetails: Mentor | undefined;
   isLoading: boolean;
   isError: boolean;
 }
@@ -132,7 +141,7 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
                       variant={
                         mentorDetails.status === "approved"
                           ? "default"
-                          : mentorDetails.status === "blocked"
+                          : mentorDetails.status === "pending"
                             ? "destructive"
                             : "outline"
                       }
@@ -140,7 +149,7 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
                     >
                       {mentorDetails.status === "approved"
                         ? "Accepted"
-                        : mentorDetails.status === "blocked"
+                        : mentorDetails.status === "pending"
                           ? "Blocked"
                           : "Pending"}
                     </Badge>
@@ -186,7 +195,7 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
                       <strong className="font-medium text-foreground">
                         Experience Level:
                       </strong>{" "}
-                      {mentorDetails.experience.experienceLevel} years
+                      {mentorDetails.experience.experienceLevel.label} years
                     </div>
                     <div>
                       <strong className="font-medium text-foreground">
@@ -195,11 +204,11 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
                       <span className="flex flex-wrap gap-2">
                         {mentorDetails.experience.expertiseAreas.map((area) => (
                           <Badge
-                            key={area}
+                            key={area._id}
                             variant="secondary"
                             className="capitalize hover:bg-muted transition-colors"
                           >
-                            {area}
+                            {area.name}
                           </Badge>
                         ))}
                       </span>
@@ -211,11 +220,11 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
                       <span className="flex flex-wrap gap-2">
                         {mentorDetails.experience.technologies.map((tech) => (
                           <Badge
-                            key={tech}
+                            key={tech._id}
                             variant="outline"
                             className="capitalize hover:bg-muted transition-colors"
                           >
-                            {tech}
+                            {tech.name}
                           </Badge>
                         ))}
                       </span>
@@ -262,11 +271,11 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
                         {mentorDetails.mentorshipDetails.mentorshipTypes.map(
                           (type) => (
                             <Badge
-                              key={type}
+                              key={type._id}
                               variant="secondary"
                               className="capitalize hover:bg-muted transition-colors"
                             >
-                              {type.replace("1-on-1", "One-on-One")}
+                              {type.name}
                             </Badge>
                           ),
                         )}
@@ -280,11 +289,11 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
                         {mentorDetails.mentorshipDetails.targetAudiences.map(
                           (audience) => (
                             <Badge
-                              key={audience}
+                              key={audience._id}
                               variant="outline"
                               className="capitalize hover:bg-muted transition-colors"
                             >
-                              {audience}
+                              {audience.name}
                             </Badge>
                           ),
                         )}

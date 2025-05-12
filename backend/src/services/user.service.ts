@@ -5,7 +5,7 @@ import { IUserService } from '../core/interfaces/services/IUserService';
 import { IUser, UserModel } from '../models/user.model';
 import { BaseService } from '../core/abstracts/base.service';
 import { UsersDTO } from '../dtos/responses/admin/users.dto';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { ISquad } from '../models/squads.model';
 import { Express } from 'express';
 import { deleteFromCloudinary, uploadToCloudinary } from '@/utils/cloudinaryUtils';

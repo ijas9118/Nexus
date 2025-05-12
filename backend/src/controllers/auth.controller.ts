@@ -13,7 +13,7 @@ import { StatusCodes } from 'http-status-codes';
 import { IOTPService } from '../core/interfaces/services/IOTPService';
 import { IEmailService } from '../core/interfaces/services/IEmailService';
 import { ITokenService } from '../core/interfaces/services/ITokenService';
-import { CLIENT_URL } from '@/utils/constants';
+import { CLIENT_URL } from '@/utils/constants/index';
 import { Profile } from 'passport-google-oauth20';
 import { Profile as GitHubProfile } from 'passport-github2';
 import { UserRole } from '@/core/types/global/user-role';

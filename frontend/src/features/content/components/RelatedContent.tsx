@@ -10,53 +10,53 @@ import {
 import { Link } from "react-router-dom";
 
 // Mock function to get related content - replace with your actual API call
-const getRelatedContent = async (
-  authorId: string,
-  currentContentId: string,
-) => {
-  // This would be your actual API call
-  // return await fetchRelatedContent(authorId, currentContentId);
+const getRelatedContent = async () =>
+  // authorId: string,
+  // currentContentId: string,
+  {
+    // This would be your actual API call
+    // return await fetchRelatedContent(authorId, currentContentId);
 
-  // Mock data for demonstration
-  return [
-    {
-      _id: "rel1",
-      title: "Understanding JavaScript Promises",
-      thumbnailUrl:
-        "https://res.cloudinary.com/dhvlhpg55/image/upload/v1742460915/rjdgotx4oyaulwnwm9cm.webp",
-      date: "2025-03-15T08:55:15.646Z",
-      contentType: "Tutorial",
-      isPremium: true,
-      likeCount: 24,
-      commentCount: 8,
-      squad: { name: "JavaScript" },
-    },
-    {
-      _id: "rel2",
-      title: "Building Responsive UIs with React",
-      thumbnailUrl:
-        "https://res.cloudinary.com/dhvlhpg55/image/upload/v1742460915/rjdgotx4oyaulwnwm9cm.webp",
-      date: "2025-03-10T08:55:15.646Z",
-      contentType: "Blog",
-      isPremium: false,
-      likeCount: 42,
-      commentCount: 15,
-      squad: { name: "React" },
-    },
-    {
-      _id: "rel3",
-      title: "CSS Grid Layout Mastery",
-      thumbnailUrl:
-        "https://res.cloudinary.com/dhvlhpg55/image/upload/v1742460915/rjdgotx4oyaulwnwm9cm.webp",
-      date: "2025-03-05T08:55:15.646Z",
-      contentType: "Tutorial",
-      isPremium: false,
-      likeCount: 18,
-      commentCount: 6,
-      squad: { name: "CSS" },
-    },
-  ];
-};
+    // Mock data for demonstration
+    return [
+      {
+        _id: "rel1",
+        title: "Understanding JavaScript Promises",
+        thumbnailUrl:
+          "https://res.cloudinary.com/dhvlhpg55/image/upload/v1742460915/rjdgotx4oyaulwnwm9cm.webp",
+        date: "2025-03-15T08:55:15.646Z",
+        contentType: "Tutorial",
+        isPremium: true,
+        likeCount: 24,
+        commentCount: 8,
+        squad: { name: "JavaScript" },
+      },
+      {
+        _id: "rel2",
+        title: "Building Responsive UIs with React",
+        thumbnailUrl:
+          "https://res.cloudinary.com/dhvlhpg55/image/upload/v1742460915/rjdgotx4oyaulwnwm9cm.webp",
+        date: "2025-03-10T08:55:15.646Z",
+        contentType: "Blog",
+        isPremium: false,
+        likeCount: 42,
+        commentCount: 15,
+        squad: { name: "React" },
+      },
+      {
+        _id: "rel3",
+        title: "CSS Grid Layout Mastery",
+        thumbnailUrl:
+          "https://res.cloudinary.com/dhvlhpg55/image/upload/v1742460915/rjdgotx4oyaulwnwm9cm.webp",
+        date: "2025-03-05T08:55:15.646Z",
+        contentType: "Tutorial",
+        isPremium: false,
+        likeCount: 18,
+        commentCount: 6,
+        squad: { name: "CSS" },
+      },
+    ];
+  };
 
 interface RelatedContentProps {
   authorId?: string;
@@ -73,7 +73,7 @@ export default function RelatedContent({
     error,
   } = useQuery({
     queryKey: ["relatedContent", authorId, currentContentId],
-    queryFn: () => getRelatedContent(authorId || "", currentContentId),
+    queryFn: () => getRelatedContent(),
     enabled: !!authorId,
   });
 

@@ -31,7 +31,6 @@ import BookingPage from "@/features/mentor/BookingPage";
 import ForbiddenPage from "@/pages/Unauthorized";
 import BookingStatus from "@/features/booking/BookingStatus";
 import VideoCallPage from "@/features/videoCall/VideoCallPage";
-import BookedMeetList from "@/features/mentorship-meetings/MentorshipMeetingsPage";
 import MentorshipMeetingsPage from "@/features/mentorship-meetings/MentorshipMeetingsPage";
 
 const UserRoutes: React.FC = () => {

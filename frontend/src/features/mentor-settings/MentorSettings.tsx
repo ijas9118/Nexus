@@ -25,7 +25,7 @@ export default function MentorSettings() {
   const { user } = useSelector((state: RootState) => state.auth);
   const [activeTab, setActiveTab] = useState("experience");
 
-  const { data: mentorData, isLoading } = useQuery({
+  const { data: mentorData } = useQuery({
     queryKey: ["mentorDetails"],
     queryFn: () => MentorService.getMentorDetails(user?.mentorId as string),
     enabled: !!user?.mentorId,

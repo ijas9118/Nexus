@@ -12,7 +12,7 @@ import { Button } from "@/components/atoms/button";
 import { Label } from "@/components/atoms/label";
 import { Input } from "@/components/atoms/input";
 import { Switch } from "@/components/atoms/switch";
-import type { TargetAudienceData } from "@/services/targetAudienceService";
+import { TargetAudience } from "@/types/mentor";
 
 interface AudienceFormData {
   name: string;
@@ -23,7 +23,7 @@ interface AudienceFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: AudienceFormData) => Promise<void>;
-  audience?: TargetAudienceData | null;
+  audience?: TargetAudience | null;
   isSubmitting: boolean;
   mode: "create" | "edit";
 }

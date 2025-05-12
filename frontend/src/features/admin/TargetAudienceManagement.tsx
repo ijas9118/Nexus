@@ -3,9 +3,7 @@ import { Plus, Loader2 } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import { Card, CardContent, CardFooter } from "@/components/molecules/card";
 
-import TargetAudienceService, {
-  type TargetAudienceData,
-} from "@/services/targetAudienceService";
+import TargetAudienceService from "@/services/targetAudienceService";
 import { toast } from "sonner";
 import { PageHeader } from "./target-audience/page-header";
 import { SearchFilterBar } from "./target-audience/search-filter-bar";
@@ -13,14 +11,13 @@ import { EmptyState } from "./target-audience/empty-state";
 import { AudienceTable } from "./target-audience/audience-table";
 import { AudienceFormDialog } from "./target-audience/audience-form-dialog";
 import { ConfirmationDialog } from "./target-audience/confirmation-dialog";
+import { TargetAudience } from "@/types/mentor";
 
 export default function TargetAudiencesPage() {
-  const [targetAudiences, setTargetAudiences] = useState<TargetAudienceData[]>(
+  const [targetAudiences, setTargetAudiences] = useState<TargetAudience[]>([]);
+  const [filteredAudiences, setFilteredAudiences] = useState<TargetAudience[]>(
     [],
   );
-  const [filteredAudiences, setFilteredAudiences] = useState<
-    TargetAudienceData[]
-  >([]);
   const [loading, setLoading] = useState(true);
   const [includeInactive, setIncludeInactive] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,8 +27,9 @@ export default function TargetAudiencesPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = useState(false);
 
-  const [currentAudience, setCurrentAudience] =
-    useState<TargetAudienceData | null>(null);
+  const [currentAudience, setCurrentAudience] = useState<TargetAudience | null>(
+    null,
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch target audiences
@@ -185,19 +183,19 @@ export default function TargetAudiencesPage() {
   };
 
   // Open edit dialog
-  const openEditDialog = (audience: TargetAudienceData) => {
+  const openEditDialog = (audience: TargetAudience) => {
     setCurrentAudience(audience);
     setIsEditDialogOpen(true);
   };
 
   // Open delete dialog
-  const openDeleteDialog = (audience: TargetAudienceData) => {
+  const openDeleteDialog = (audience: TargetAudience) => {
     setCurrentAudience(audience);
     setIsDeleteDialogOpen(true);
   };
 
   // Open restore dialog
-  const openRestoreDialog = (audience: TargetAudienceData) => {
+  const openRestoreDialog = (audience: TargetAudience) => {
     setCurrentAudience(audience);
     setIsRestoreDialogOpen(true);
   };

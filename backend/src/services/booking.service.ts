@@ -94,4 +94,8 @@ export class BookingService implements IBookingService {
 
     return updatedBooking;
   }
+
+  async getBookingById(bookingId: string): Promise<IBooking | null> {
+    return this.bookingRepository.findById(bookingId);
+  }
 }

@@ -205,6 +205,14 @@ import { WalletService } from '@/services/wallet.service';
 import { IWalletController } from '@/core/interfaces/controllers/IWalletController';
 import { WalletController } from '@/controllers/wallet.controller';
 
+import { IWithdrawalRequestRepository } from '@/core/interfaces/repositories/IWithdrawalRequestRepository';
+import { WithdrawalRequestRepository } from '@/repositories/withdrawalRequest.repository';
+import { IWithdrawalRequestService } from '@/core/interfaces/services/IWithdrawalRequestService';
+import { IWithdrawalRequestController } from '@/core/interfaces/controllers/IWithdrawalRequestController';
+import { WithdrawalRequestController } from '@/controllers/withdrawalRequest.controller';
+import { INexusPointRepository } from '@/core/interfaces/repositories/INexusPointRepository';
+import { NexusPointRepository } from '@/repositories/nexusPoint.repository';
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -341,5 +349,14 @@ container.bind<INotificationController>(TYPES.NotificationController).to(Notific
 container.bind<IWalletRepository>(TYPES.WalletRepository).to(WalletRepository);
 container.bind<IWalletService>(TYPES.WalletService).to(WalletService);
 container.bind<IWalletController>(TYPES.WalletController).to(WalletController);
+
+container
+  .bind<IWithdrawalRequestRepository>(TYPES.WithdrawalRequestRepository)
+  .to(WithdrawalRequestRepository);
+container
+  .bind<IWithdrawalRequestController>(TYPES.WithdrawalRequestController)
+  .to(WithdrawalRequestController);
+
+container.bind<INexusPointRepository>(TYPES.NexusPointRepository).to(NexusPointRepository);
 
 export { container };

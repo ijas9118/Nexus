@@ -15,7 +15,6 @@ import { useMentorForm } from "@/context/MentorFormContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import MentorService from "@/services/mentorService";
 import { toast } from "sonner";
-import { RadioGroup, RadioGroupItem } from "@/components/atoms/radio-group";
 import { formatLabel } from "@/utils";
 import { MentorFormData } from "@/types/mentor";
 

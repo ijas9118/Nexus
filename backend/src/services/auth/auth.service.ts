@@ -3,7 +3,7 @@ import { TYPES } from '../../di/types';
 import { IUserRepository } from '../../core/interfaces/repositories/IUserRepository';
 import { LoginDto } from '../../dtos/requests/login.dto';
 import { RegisterDto } from '../../dtos/requests/register.dto';
-import { compare, hash } from 'bcrypt';
+import { compare, hash } from 'bcryptjs';
 import { RegisterResponseDto } from '../../dtos/responses/auth/registerResponse.dto';
 import { LoginResponseDto } from '../../dtos/responses/auth/loginResponse.dto';
 import redisClient from '../../config/redisClient.config';

@@ -3,8 +3,7 @@ import api from "./api";
 import { handleApi } from "@/utils/handleApi";
 
 const PlanService = {
-  createPlan: (planData: IPlan) =>
-    handleApi(() => api.post("/plans", planData)),
+  createPlan: (planData: any) => handleApi(() => api.post("/plans", planData)),
 
   getAllPlans: async () => handleApi(() => api.get<IPlan[]>("/plans")),
 

@@ -3,7 +3,7 @@ import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
 import { validateRefreshToken } from '@/middlewares/auth.middleware';
 import { validateRequest } from '@/middlewares/validate.middleware';
-import { CLIENT_URL } from '@/utils/constants';
+import { CLIENT_URL } from '@/utils/constants/index';
 import {
   forgotPasswordSchema,
   loginSchema,

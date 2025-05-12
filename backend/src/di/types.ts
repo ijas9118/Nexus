@@ -141,6 +141,13 @@ export const TYPES = {
   WalletService: Symbol.for('WalletService'),
   WalletController: Symbol.for('WalletController'),
 
+  // Withdrawel Request
+  WithdrawalRequestRepository: Symbol.for('WithdrawalRequestRepository'),
+  WithdrawalRequestController: Symbol.for('WithdrawalRequestController'),
+
+  // Nexus points
+  NexusPointRepository: Symbol.for('NexusPointRepository'),
+
   // Miscellaneous / Utilities
   OTPService: Symbol.for('IOTPService'),
   EmailService: Symbol.for('IEmailService'),

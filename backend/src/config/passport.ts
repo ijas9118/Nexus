@@ -3,7 +3,7 @@ import {
   GITHUB_CLIENT_SECRET,
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
-} from '@/utils/constants';
+} from '@/utils/constants/index';
 import passport from 'passport';
 import passportGoogle from 'passport-google-oauth20';
 import passportGithub from 'passport-github2';

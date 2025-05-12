@@ -1,4 +1,4 @@
-import { compare } from 'bcrypt';
+import { compare } from 'bcryptjs';
 import { LoginDto } from '../../dtos/requests/login.dto';
 import { LoginResponseDto } from '../../dtos/responses/auth/loginResponse.dto';
 import { inject, injectable } from 'inversify';

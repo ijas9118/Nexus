@@ -55,7 +55,11 @@ export default function MentorshipMeetingsPage() {
         </TabsList>
 
         <TabsContent value="upcoming" className="mt-0">
-          {bookings.length > 0 ? (
+          {isLoading ? (
+            <div className="text-center py-12 text-muted-foreground">
+              Loading upcoming meetings...
+            </div>
+          ) : bookings.length > 0 ? (
             bookings.map((booking) => (
               <MeetingCard key={booking._id} booking={booking} />
             ))

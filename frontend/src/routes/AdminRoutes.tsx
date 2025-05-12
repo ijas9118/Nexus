@@ -20,6 +20,7 @@ import ForbiddenPage from "@/pages/Unauthorized";
 import MentorMetadataPage from "@/features/admin/MentorMetadata";
 import TargetAudiencesPage from "@/features/admin/TargetAudienceManagement";
 import NotificationTypesPage from "@/features/admin/NotificationTypesPage";
+import WithdrawalRequestsPage from "@/features/admin/WithdrawalManagement";
 
 const AdminRoutes: React.FC = () => {
   return (
@@ -41,6 +42,7 @@ const AdminRoutes: React.FC = () => {
           <Route path="mentor-meta-data" element={<MentorMetadataPage />} />
           <Route path="target-audience" element={<TargetAudiencesPage />} />
           <Route path="notification-type" element={<NotificationTypesPage />} />
+          <Route path="withdrawal" element={<WithdrawalRequestsPage />} />
           <Route path="unauthorized" element={<ForbiddenPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>

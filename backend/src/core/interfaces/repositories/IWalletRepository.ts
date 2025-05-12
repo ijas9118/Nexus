@@ -1,5 +1,5 @@
 import { TransactionDetails } from '@/core/types/wallet.types';
-import { ITransaction } from '@/models/transaction';
+import { ITransaction } from '@/models/transaction.model';
 import { IWallet } from '@/models/wallet.model';
 import { IBaseRepository } from './IBaseRepository';
 

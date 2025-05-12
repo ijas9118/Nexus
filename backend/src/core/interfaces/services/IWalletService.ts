@@ -1,6 +1,7 @@
 import { WalletInfo } from '@/core/types/wallet.types';
 import { IBaseService } from './IBaseService';
 import { IWallet } from '@/models/wallet.model';
+import { IWithdrawalRequest } from '@/models/withdrawalRequest.model';
 
 export interface IWalletService extends IBaseService<IWallet> {
   addMoney(
@@ -9,6 +10,14 @@ export interface IWalletService extends IBaseService<IWallet> {
     bookingId?: string,
     menteeId?: string
   ): Promise<WalletInfo>;
-  withdrawMoney(userId: string, amount: number, withdrawalNote: string): Promise<WalletInfo>;
+  requestWithdrawal(
+    userId: string,
+    amount: number,
+    withdrawalNote: string,
+    nexusPoints?: number
+  ): Promise<void>;
+  approveWithdrawal(requestId: string): Promise<WalletInfo>;
+  rejectWithdrawal(requestId: string): Promise<void>;
+  addNexusPoints(userId: string, points: number, description: string): Promise<WalletInfo>;
   getWalletInfo(userId: string, status?: 'pending' | 'completed'): Promise<WalletInfo>;
 }

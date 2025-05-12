@@ -27,20 +27,6 @@
     "paths": {
       "@/*": ["./src/*"]
     }
-    // "paths": {
-    //   "@middleware/*": ["src/middlewares/*"],
-    //   "@validations/*": ["src/validations/*"],
-    //   "@core/*": ["src/core/*"],
-    //   "@di/*": ["src/di/*"],
-    //   "@dtos/*": ["src/dtos/*"],
-    //   "@models/*": ["src/models/*"],
-    //   "@config/*": ["src/config/*"],
-    //   "@controllers/*": ["src/controllers/*"],
-    //   "@repositories/*": ["src/repositories/*"],
-    //   "@routes/*": ["src/routes/*"],
-    //   "@services/*": ["src/services/*"],
-    //   "@utils/*": ["src/utils/*"],
-    // }
   },
   "include": ["src/**/*"],                    // Include all TypeScript files in the src directory
   "exclude": ["node_modules", "dist"]         // Exclude unnecessary folders

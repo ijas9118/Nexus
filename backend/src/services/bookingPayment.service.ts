@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { stripe } from '@/config/stripe.cofig';
-import { CLIENT_URL, STRIPE_WEBHOOK_SECRET } from '@/utils/constants';
+import { CLIENT_URL, STRIPE_WEBHOOK_SECRET } from '@/utils/constants/index';
 import Stripe from 'stripe';
 import { IBookingRepository } from '@/core/interfaces/repositories/IBookingRepository';
 import { IBookingPaymentRepository } from '@/core/interfaces/repositories/IBookingPaymentRepository';

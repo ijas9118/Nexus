@@ -1,7 +1,7 @@
 import { SocketController } from '@/controllers/socket.controller';
 import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
-import { CLIENT_URL } from '@/utils/constants';
+import { CLIENT_URL } from '@/utils/constants/index';
 import { Server } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 
