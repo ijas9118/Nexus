@@ -1,4 +1,4 @@
-export const HOST = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
+export const HOST = import.meta.env.VITE_SERVER_URL;
 
 const AUTH_ROUTE = "/auth";
 const CONTENT_ROUTE = "/content";
