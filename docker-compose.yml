@@ -3,6 +3,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      target: dev
     ports:
       - "3000:3000"
     env_file:
@@ -11,6 +12,21 @@ services:
       - redis
     volumes:
       - ./backend/src:/app/src
+      - /app/node_modules
+    networks:
+      - app-network
+
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - ./frontend/src:/app/src
       - /app/node_modules
     networks:
       - app-network
