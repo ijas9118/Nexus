@@ -1,88 +1,104 @@
-import LoginPage from "@/features/auth/Login";
-import Home from "@/pages/Home";
-import Layout from "@/pages/Layout";
-import MyFeed from "@/features/content/MyFeed";
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
-import GetPremium from "@/features/getPremium/GetPremium";
-import Bookmark from "@/features/content/Bookmark";
-import NotFound from "@/pages/NotFound";
-import ForgotPassword from "@/features/auth/ForgotPassword";
-import ResetPassword from "@/features/auth/ResetPassword";
-import Squads from "@/features/squad/Squads";
-import Connections from "@/features/profile/Connections";
-import History from "@/features/content/History";
-import ContentDetails from "@/features/content/ContentDetails";
-import ProfilePage from "@/features/profile/Profile";
-import Following from "@/features/content/Following";
-import Mentors from "@/features/mentor/MentorsListPage";
-import MentorApply from "@/features/mentor/MentorApply";
-import MentorProfilePage from "@/features/mentor/MentorDetailPage";
 import { MentorFormProvider } from "@/context/MentorFormContext";
-import AddPost from "@/features/addPost/AddPost";
-import Chat from "@/features/chat/Chat";
-import NotificationsPage from "@/features/notification/NotificationsPage";
-import PremiumDashboard from "@/features/premium-dashboard/PremiumDashboard";
-import PaymentPage from "@/features/payment/PaymentPage";
-import EditProfileLayout from "@/features/profile/EditProfileLayout";
-import UpgradePlanPage from "@/features/premium-dashboard/UpgradePlanPage";
-import BookingPage from "@/features/mentor/BookingPage";
-import ForbiddenPage from "@/pages/Unauthorized";
-import BookingStatus from "@/features/booking/BookingStatus";
-import VideoCallPage from "@/features/videoCall/VideoCallPage";
-import MentorshipMeetingsPage from "@/features/mentorship-meetings/MentorshipMeetingsPage";
+import { Skeleton } from "@/components/atoms/skeleton";
+
+const Home = lazy(() => import("@/pages/Home"));
+const LoginPage = lazy(() => import("@/features/auth/Login"));
+const ForgotPassword = lazy(() => import("@/features/auth/ForgotPassword"));
+const ResetPassword = lazy(() => import("@/features/auth/ResetPassword"));
+const Layout = lazy(() => import("@/pages/Layout"));
+const MyFeed = lazy(() => import("@/features/content/MyFeed"));
+const ProfilePage = lazy(() => import("@/features/profile/Profile"));
+const EditProfileLayout = lazy(
+  () => import("@/features/profile/EditProfileLayout"),
+);
+const AddPost = lazy(() => import("@/features/addPost/AddPost"));
+const Bookmark = lazy(() => import("@/features/content/Bookmark"));
+const GetPremium = lazy(() => import("@/features/getPremium/GetPremium"));
+const PremiumDashboard = lazy(
+  () => import("@/features/premium-dashboard/PremiumDashboard"),
+);
+const UpgradePlanPage = lazy(
+  () => import("@/features/premium-dashboard/UpgradePlanPage"),
+);
+const Mentors = lazy(() => import("@/features/mentor/MentorsListPage"));
+const MentorApply = lazy(() => import("@/features/mentor/MentorApply"));
+const MentorProfilePage = lazy(
+  () => import("@/features/mentor/MentorDetailPage"),
+);
+const BookingPage = lazy(() => import("@/features/mentor/BookingPage"));
+const VideoCallPage = lazy(() => import("@/features/videoCall/VideoCallPage"));
+const MentorshipMeetingsPage = lazy(
+  () => import("@/features/mentorship-meetings/MentorshipMeetingsPage"),
+);
+const Squads = lazy(() => import("@/features/squad/Squads"));
+const Chat = lazy(() => import("@/features/chat/Chat"));
+const Connections = lazy(() => import("@/features/profile/Connections"));
+const History = lazy(() => import("@/features/content/History"));
+const ContentDetails = lazy(() => import("@/features/content/ContentDetails"));
+const Following = lazy(() => import("@/features/content/Following"));
+const NotificationsPage = lazy(
+  () => import("@/features/notification/NotificationsPage"),
+);
+const PaymentPage = lazy(() => import("@/features/payment/PaymentPage"));
+const BookingStatus = lazy(() => import("@/features/booking/BookingStatus"));
+const ForbiddenPage = lazy(() => import("@/pages/Unauthorized"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
 const UserRoutes: React.FC = () => {
   return (
     <MentorFormProvider>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/login/forgot-password" element={<ForgotPassword />} />
-        <Route path="/login/reset-password" element={<ResetPassword />} />
+      <Suspense fallback={<Skeleton />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login/forgot-password" element={<ForgotPassword />} />
+          <Route path="/login/reset-password" element={<ResetPassword />} />
 
-        <Route
-          element={
-            <ProtectedRoute requiredRoles={["user", "mentor", "premium"]} />
-          }
-        >
-          <Route path="/" element={<Layout />}>
-            <Route path="myFeed" element={<MyFeed />} />
-            <Route path="profile/:username" element={<ProfilePage />} />
-            <Route path="profile/edit" element={<EditProfileLayout />} />
-            <Route path="addPost" element={<AddPost />} />
-            <Route path="bookmark" element={<Bookmark />} />
-            <Route element={<ProtectedRoute requiredRoles={["user"]} />}>
-              <Route path="getPremium" element={<GetPremium />} />
+          <Route
+            element={
+              <ProtectedRoute requiredRoles={["user", "mentor", "premium"]} />
+            }
+          >
+            <Route path="/" element={<Layout />}>
+              <Route path="myFeed" element={<MyFeed />} />
+              <Route path="profile/:username" element={<ProfilePage />} />
+              <Route path="profile/edit" element={<EditProfileLayout />} />
+              <Route path="addPost" element={<AddPost />} />
+              <Route path="bookmark" element={<Bookmark />} />
+              <Route element={<ProtectedRoute requiredRoles={["user"]} />}>
+                <Route path="getPremium" element={<GetPremium />} />
+              </Route>
+              <Route element={<ProtectedRoute requiredRoles={["premium"]} />}>
+                <Route path="premium" element={<PremiumDashboard />} />
+                <Route path="premium/upgrade" element={<UpgradePlanPage />} />
+              </Route>
+              <Route path="mentors" element={<Mentors />} />
+              <Route path="mentors/apply" element={<MentorApply />} />
+              <Route path="mentors/:mentorId" element={<MentorProfilePage />} />
+              <Route path="mentors/:mentorId/book" element={<BookingPage />} />
+              <Route path="meeting/:meetId/" element={<VideoCallPage />} />
+              <Route
+                path="mentorship-meetings"
+                element={<MentorshipMeetingsPage />}
+              />
+              <Route path="squads" element={<Squads />} />
+              <Route path="chat" element={<Chat />} />
+              <Route path="connections" element={<Connections />} />
+              <Route path="history" element={<History />} />
+              <Route path="content/:id" element={<ContentDetails />} />
+              <Route path="following" element={<Following />} />
+              <Route path="notification" element={<NotificationsPage />} />
+              <Route path="/unauthorized" element={<ForbiddenPage />} />
+              <Route path="*" element={<NotFound />} />
             </Route>
-            <Route element={<ProtectedRoute requiredRoles={["premium"]} />}>
-              <Route path="premium" element={<PremiumDashboard />} />
-              <Route path="premium/upgrade" element={<UpgradePlanPage />} />
-            </Route>
-            <Route path="mentors" element={<Mentors />} />
-            <Route path="mentors/apply" element={<MentorApply />} />
-            <Route path="mentors/:mentorId" element={<MentorProfilePage />} />
-            <Route path="mentors/:mentorId/book" element={<BookingPage />} />
-            <Route path="meeting/:meetId/" element={<VideoCallPage />} />
-            <Route
-              path="mentorship-meetings"
-              element={<MentorshipMeetingsPage />}
-            />
-            <Route path="squads" element={<Squads />} />
-            <Route path="chat" element={<Chat />} />
-            <Route path="connections" element={<Connections />} />
-            <Route path="history" element={<History />} />
-            <Route path="content/:id" element={<ContentDetails />} />
-            <Route path="following" element={<Following />} />
-            <Route path="notification" element={<NotificationsPage />} />
-            <Route path="/unauthorized" element={<ForbiddenPage />} />
-            <Route path="*" element={<NotFound />} />
           </Route>
-        </Route>
-        <Route path="/payment" element={<PaymentPage />} />
-        <Route path="/booking" element={<BookingStatus />} />
-      </Routes>
+          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/booking" element={<BookingStatus />} />
+        </Routes>
+      </Suspense>
     </MentorFormProvider>
   );
 };

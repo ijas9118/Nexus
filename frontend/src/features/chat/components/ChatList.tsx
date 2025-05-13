@@ -29,7 +29,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { formatLastMessageTime } from "../utils/last-message-format";
 
-export const ChatList = () => {
+const ChatList = () => {
   const dispatch = useDispatch();
   const { chats, groups, activeChat } = useSelector(
     (state: RootState) => state.chat,
@@ -400,3 +400,5 @@ export const ChatList = () => {
     </div>
   );
 };
+
+export default ChatList;

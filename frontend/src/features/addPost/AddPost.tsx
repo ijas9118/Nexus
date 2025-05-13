@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
-import { BlogCreationForm } from "./components/BlogCreationForm";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { Skeleton } from "@/components/atoms/skeleton";
+const BlogCreationForm = lazy(() => import("./components/BlogCreationForm"));
 
 const AddPost = () => {
   const dispatch = useDispatch();
@@ -35,7 +36,9 @@ const AddPost = () => {
           Create and publish your content to share with your audience
         </p>
       </div>
-      <BlogCreationForm />
+      <Suspense fallback={<Skeleton />}>
+        <BlogCreationForm />
+      </Suspense>
     </div>
   );
 };

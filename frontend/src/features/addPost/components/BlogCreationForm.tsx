@@ -1,5 +1,5 @@
 import type React from "react";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -10,13 +10,14 @@ import { Card, CardContent } from "@/components/molecules/card";
 import { ContentPreview } from "./ContentPreview";
 import { Progress } from "@/components/molecules/progress";
 import { Form } from "@/components/organisms/form";
-import ContentEditor from "./ContentEditor";
-import ContentSummary from "./ContentSummary";
+const ContentEditor = lazy(() => import("./ContentEditor"));
+const ContentSummary = lazy(() => import("./ContentSummary"));
+const ContentTypeSelector = lazy(() => import("./ContentTypeSelector"));
+const BasicDetailsForm = lazy(() => import("./BasicDetailsForm"));
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import ContentTypeSelector from "./ContentTypeSelector";
-import BasicDetailsForm from "./BasicDetailsForm";
 import { useAddPost } from "../hooks/useAddPost";
+import { Skeleton } from "@/components/atoms/skeleton";
 
 const formSchema = z.object({
   contentType: z.enum(["blog", "video"]),
@@ -44,7 +45,7 @@ const steps = [
   { id: "preview", name: "Preview" },
 ];
 
-export function BlogCreationForm() {
+export default function BlogCreationForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
@@ -156,25 +157,33 @@ export function BlogCreationForm() {
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {currentStep === 0 && <ContentTypeSelector form={form} />}
+                    {currentStep === 0 && (
+                      <Suspense fallback={<Skeleton />}>
+                        <ContentTypeSelector form={form} />
+                      </Suspense>
+                    )}
 
                     {currentStep === 1 && (
-                      <BasicDetailsForm
-                        form={form}
-                        thumbnailPreview={thumbnailPreview}
-                        handleThumbnailChange={handleThumbnailChange}
-                        squads={squads}
-                        setThumbnailPreview={setThumbnailPreview}
-                      />
+                      <Suspense fallback={<Skeleton />}>
+                        <BasicDetailsForm
+                          form={form}
+                          thumbnailPreview={thumbnailPreview}
+                          handleThumbnailChange={handleThumbnailChange}
+                          squads={squads}
+                          setThumbnailPreview={setThumbnailPreview}
+                        />
+                      </Suspense>
                     )}
 
                     {currentStep === 2 && (
-                      <ContentEditor
-                        form={form}
-                        contentType={contentType}
-                        videoPreview={videoPreview}
-                        handleVideoChange={handleVideoChange}
-                      />
+                      <Suspense fallback={<Skeleton />}>
+                        <ContentEditor
+                          form={form}
+                          contentType={contentType}
+                          videoPreview={videoPreview}
+                          handleVideoChange={handleVideoChange}
+                        />
+                      </Suspense>
                     )}
 
                     {currentStep === 3 && (

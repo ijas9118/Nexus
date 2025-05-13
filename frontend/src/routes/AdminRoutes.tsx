@@ -1,53 +1,85 @@
-import AdminLayout from "@/pages/AdminLayout";
-import CategoryManagement from "@/features/admin/CategoryManagement";
-import Dashboard from "@/features/admin/Dashboard";
-import Login from "@/features/admin/Login";
-import MentorManagement from "@/features/admin/MentorManagement";
-import SquadManagement from "@/features/admin/SquadManagement";
-import UserManagement from "@/features/admin/UserManagement";
-
-import NotFound from "@/pages/NotFound";
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
-import CommentManagement from "@/features/admin/CommentManagement";
-import ContentDetail from "@/features/admin/content-management/components/ContentDetail";
-import PaymentManagement from "@/features/admin/PaymentManagement";
-import ContentManagement from "@/features/admin/ContentManagement";
-import SubscriptionPlan from "@/features/admin/SubscriptionPlan";
-import MentorshipTypeSettings from "@/features/admin/MentorshipTypeSettings";
-import ForbiddenPage from "@/pages/Unauthorized";
-import MentorMetadataPage from "@/features/admin/MentorMetadata";
-import TargetAudiencesPage from "@/features/admin/TargetAudienceManagement";
-import NotificationTypesPage from "@/features/admin/NotificationTypesPage";
-import WithdrawalRequestsPage from "@/features/admin/WithdrawalManagement";
+
+const AdminLayout = lazy(() => import("@/pages/AdminLayout"));
+const Login = lazy(() => import("@/features/admin/Login"));
+const Dashboard = lazy(() => import("@/features/admin/Dashboard"));
+const UserManagement = lazy(() => import("@/features/admin/UserManagement"));
+const CategoryManagement = lazy(
+  () => import("@/features/admin/CategoryManagement"),
+);
+const SquadManagement = lazy(() => import("@/features/admin/SquadManagement"));
+const MentorManagement = lazy(
+  () => import("@/features/admin/MentorManagement"),
+);
+const CommentManagement = lazy(
+  () => import("@/features/admin/CommentManagement"),
+);
+const ContentManagement = lazy(
+  () => import("@/features/admin/ContentManagement"),
+);
+const ContentDetail = lazy(
+  () => import("@/features/admin/content-management/components/ContentDetail"),
+);
+const PaymentManagement = lazy(
+  () => import("@/features/admin/PaymentManagement"),
+);
+const SubscriptionPlan = lazy(
+  () => import("@/features/admin/SubscriptionPlan"),
+);
+const MentorshipTypeSettings = lazy(
+  () => import("@/features/admin/MentorshipTypeSettings"),
+);
+const MentorMetadataPage = lazy(
+  () => import("@/features/admin/MentorMetadata"),
+);
+const TargetAudiencesPage = lazy(
+  () => import("@/features/admin/TargetAudienceManagement"),
+);
+const NotificationTypesPage = lazy(
+  () => import("@/features/admin/NotificationTypesPage"),
+);
+const WithdrawalRequestsPage = lazy(
+  () => import("@/features/admin/WithdrawalManagement"),
+);
+const ForbiddenPage = lazy(() => import("@/pages/Unauthorized"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
 const AdminRoutes: React.FC = () => {
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/" element={<AdminLayout />}>
-        <Route element={<ProtectedRoute requiredRoles={["admin"]} />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="users" element={<UserManagement />} />
-          <Route path="category" element={<CategoryManagement />} />
-          <Route path="squads" element={<SquadManagement />} />
-          <Route path="mentors" element={<MentorManagement />} />
-          <Route path="comments" element={<CommentManagement />} />
-          <Route path="contents" element={<ContentManagement />} />
-          <Route path="contents/:contentId" element={<ContentDetail />} />
-          <Route path="payment" element={<PaymentManagement />} />
-          <Route path="plans" element={<SubscriptionPlan />} />
-          <Route path="mentorship-type" element={<MentorshipTypeSettings />} />
-          <Route path="mentor-meta-data" element={<MentorMetadataPage />} />
-          <Route path="target-audience" element={<TargetAudiencesPage />} />
-          <Route path="notification-type" element={<NotificationTypesPage />} />
-          <Route path="withdrawal" element={<WithdrawalRequestsPage />} />
-          <Route path="unauthorized" element={<ForbiddenPage />} />
-          <Route path="*" element={<NotFound />} />
+    <Suspense fallback={<div>Loading...</div>}>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<AdminLayout />}>
+          <Route element={<ProtectedRoute requiredRoles={["admin"]} />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="users" element={<UserManagement />} />
+            <Route path="category" element={<CategoryManagement />} />
+            <Route path="squads" element={<SquadManagement />} />
+            <Route path="mentors" element={<MentorManagement />} />
+            <Route path="comments" element={<CommentManagement />} />
+            <Route path="contents" element={<ContentManagement />} />
+            <Route path="contents/:contentId" element={<ContentDetail />} />
+            <Route path="payment" element={<PaymentManagement />} />
+            <Route path="plans" element={<SubscriptionPlan />} />
+            <Route
+              path="mentorship-type"
+              element={<MentorshipTypeSettings />}
+            />
+            <Route path="mentor-meta-data" element={<MentorMetadataPage />} />
+            <Route path="target-audience" element={<TargetAudiencesPage />} />
+            <Route
+              path="notification-type"
+              element={<NotificationTypesPage />}
+            />
+            <Route path="withdrawal" element={<WithdrawalRequestsPage />} />
+            <Route path="unauthorized" element={<ForbiddenPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
         </Route>
-      </Route>
-    </Routes>
+      </Routes>
+    </Suspense>
   );
 };
 

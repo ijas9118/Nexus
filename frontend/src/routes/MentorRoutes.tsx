@@ -1,29 +1,40 @@
-import MentorSettings from "@/features/mentor-settings/MentorSettings";
-import ScheduleCallsManagement from "@/features/mentorshipBookings/BookingsPage";
-import Layout from "@/pages/Layout";
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import NotFoundPage from "@/pages/NotFound";
 import ProtectedRoute from "./ProtectedRoute";
-import MentorAvailabilityPage from "@/features/mentor-timeslots/ManageTimeslots";
-import WalletPage from "@/features/wallet/WalletPage";
+import { Skeleton } from "@/components/atoms/skeleton";
+
+// Lazy load page components
+const Layout = lazy(() => import("@/pages/Layout"));
+const MentorSettings = lazy(
+  () => import("@/features/mentor-settings/MentorSettings"),
+);
+const ScheduleCallsManagement = lazy(
+  () => import("@/features/mentorshipBookings/BookingsPage"),
+);
+const MentorAvailabilityPage = lazy(
+  () => import("@/features/mentor-timeslots/ManageTimeslots"),
+);
+const WalletPage = lazy(() => import("@/features/wallet/WalletPage"));
+const NotFoundPage = lazy(() => import("@/pages/NotFound"));
 
 const MentorRoutes: React.FC = () => {
   return (
-    <Routes>
-      <Route element={<ProtectedRoute requiredRoles={["mentor"]} />}>
-        <Route element={<Layout />}>
-          <Route path="/time-slots" element={<MentorAvailabilityPage />} />
-          <Route
-            path="/scheduled-calls"
-            element={<ScheduleCallsManagement />}
-          />
-          <Route path="/settings" element={<MentorSettings />} />
-          <Route path="/wallet" element={<WalletPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+    <Suspense fallback={<Skeleton />}>
+      <Routes>
+        <Route element={<ProtectedRoute requiredRoles={["mentor"]} />}>
+          <Route element={<Layout />}>
+            <Route path="/time-slots" element={<MentorAvailabilityPage />} />
+            <Route
+              path="/scheduled-calls"
+              element={<ScheduleCallsManagement />}
+            />
+            <Route path="/settings" element={<MentorSettings />} />
+            <Route path="/wallet" element={<WalletPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
         </Route>
-      </Route>
-    </Routes>
+      </Routes>
+    </Suspense>
   );
 };
 
