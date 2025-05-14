@@ -207,11 +207,17 @@ import { WalletController } from '@/controllers/wallet.controller';
 
 import { IWithdrawalRequestRepository } from '@/core/interfaces/repositories/IWithdrawalRequestRepository';
 import { WithdrawalRequestRepository } from '@/repositories/withdrawalRequest.repository';
-import { IWithdrawalRequestService } from '@/core/interfaces/services/IWithdrawalRequestService';
 import { IWithdrawalRequestController } from '@/core/interfaces/controllers/IWithdrawalRequestController';
 import { WithdrawalRequestController } from '@/controllers/withdrawalRequest.controller';
 import { INexusPointRepository } from '@/core/interfaces/repositories/INexusPointRepository';
 import { NexusPointRepository } from '@/repositories/nexusPoint.repository';
+
+import { IMentorDashboardService } from '@/core/interfaces/services/IMentorDashboardService';
+import { MentorDashboardService } from '@/services/mentor-dashboard.service';
+import { IMentorDashboardRepository } from '@/core/interfaces/repositories/IMentorDashboardRepository';
+import { MentorDashboardRepository } from '@/repositories/mentor-dashboard.repository';
+import { IMentorDashboardController } from '@/core/interfaces/controllers/IMentorDashboardController';
+import { MentorDashboardController } from '@/controllers/mentor-dashboard.controller';
 
 const container = new Container();
 
@@ -358,5 +364,13 @@ container
   .to(WithdrawalRequestController);
 
 container.bind<INexusPointRepository>(TYPES.NexusPointRepository).to(NexusPointRepository);
+
+container.bind<IMentorDashboardService>(TYPES.MentorDashboardService).to(MentorDashboardService);
+container
+  .bind<IMentorDashboardRepository>(TYPES.MentorDashboardRepository)
+  .to(MentorDashboardRepository);
+container
+  .bind<IMentorDashboardController>(TYPES.MentorDashboardController)
+  .to(MentorDashboardController);
 
 export { container };

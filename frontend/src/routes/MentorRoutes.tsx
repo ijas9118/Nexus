@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import { Skeleton } from "@/components/atoms/skeleton";
+import MentorDashboard from "@/features/mentor-dashboard/MentorDashboard";
 
 // Lazy load page components
 const Layout = lazy(() => import("@/pages/Layout"));
@@ -23,6 +24,8 @@ const MentorRoutes: React.FC = () => {
       <Routes>
         <Route element={<ProtectedRoute requiredRoles={["mentor"]} />}>
           <Route element={<Layout />}>
+            <Route path="/dashboard" element={<MentorDashboard />} />
+
             <Route path="/time-slots" element={<MentorAvailabilityPage />} />
             <Route
               path="/scheduled-calls"

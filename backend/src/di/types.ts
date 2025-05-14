@@ -148,6 +148,11 @@ export const TYPES = {
   // Nexus points
   NexusPointRepository: Symbol.for('NexusPointRepository'),
 
+  // Mentor Dashboard
+  MentorDashboardService: Symbol.for('MentorDashboardService'),
+  MentorDashboardRepository: Symbol.for('MentorDashboardRepository'),
+  MentorDashboardController: Symbol.for('MentorDashboardController'),
+
   // Miscellaneous / Utilities
   OTPService: Symbol.for('IOTPService'),
   EmailService: Symbol.for('IEmailService'),

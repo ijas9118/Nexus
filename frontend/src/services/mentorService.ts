@@ -51,6 +51,8 @@ const MentorService = {
     mentorshipTypes: string[];
     targetAudiences: string[];
   }) => handleApi(() => api.put("/mentor/mentorship-details", data)),
+
+  getMentorDashboard: () => handleApi(() => api.get<any>("/mentor/dashboard")),
 };
 
 export default MentorService;

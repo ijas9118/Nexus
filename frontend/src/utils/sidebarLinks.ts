@@ -12,6 +12,7 @@ import {
   CreditCard,
   Clock,
   Settings,
+  LayoutDashboard,
 } from "lucide-react";
 
 // Base sidebar items for all users
@@ -45,6 +46,11 @@ const baseItems = [
 
 // Mentor-specific items
 export const mentorItems = [
+  {
+    title: "Dashboard",
+    url: "/mentor/dashboard",
+    icon: LayoutDashboard,
+  },
   {
     title: "Time Slots",
     url: "/mentor/time-slots",

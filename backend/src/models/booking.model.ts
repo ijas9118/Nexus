@@ -1,7 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-interface IBooking extends Document {
-  _id: mongoose.Types.ObjectId | string;
+interface IBooking extends Document<string> {
   userId: mongoose.Types.ObjectId | string;
   mentorId: mongoose.Types.ObjectId | string;
   mentorUserId: mongoose.Types.ObjectId | string;

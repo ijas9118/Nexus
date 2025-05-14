@@ -1,5 +1,6 @@
 import { BaseRepository } from '@/core/abstracts/base.repository';
 import { IBookingRepository } from '@/core/interfaces/repositories/IBookingRepository';
+import { RecentBooking } from '@/core/types/mentorDashboard';
 import { IBooking, BookingModel } from '@/models/booking.model';
 import dayjs from 'dayjs';
 import { injectable } from 'inversify';
@@ -73,5 +74,18 @@ export class BookingRepository extends BaseRepository<IBooking> implements IBook
         select: 'profilePic name username',
       })
       .exec();
+  }
+
+  async getRecentBookings(userId: string): Promise<RecentBooking[]> {
+    const bookings = await this.model
+      .find({ mentorUserId: userId, status: { $ne: 'unpaid' } })
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .select('bookingDate mentorshipType status timeSlot userId')
+      .populate('userId', 'name profilePic')
+      .populate('timeSlot', 'startTime')
+      .populate('mentorshipType', 'name');
+
+    return bookings as unknown as RecentBooking[];
   }
 }

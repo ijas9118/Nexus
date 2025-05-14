@@ -3,6 +3,7 @@ import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
 import { authenticate } from '@/middlewares/auth.middleware';
 import { Router } from 'express';
+import mentorDashboardRoutes from './mentorDashboard.routes';
 
 const mentorController = container.get<IMentorController>(TYPES.MentorController);
 
@@ -45,5 +46,7 @@ router.put(
   authenticate(['admin', 'mentor']),
   mentorController.updateMentorshipDetails
 );
+
+router.use('/dashboard', authenticate(['mentor']), mentorDashboardRoutes);
 
 export default router;

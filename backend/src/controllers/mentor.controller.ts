@@ -12,10 +12,14 @@ import {
   TargetAudience,
   Technology,
 } from '@/core/types/entities/mentor';
+import { IMentorDashboardService } from '@/core/interfaces/services/IMentorDashboardService';
 
 @injectable()
 export class MentorController implements IMentorController {
-  constructor(@inject(TYPES.MentorService) private mentorService: IMentorService) {}
+  constructor(
+    @inject(TYPES.MentorService) private mentorService: IMentorService,
+    @inject(TYPES.MentorDashboardService) private mentorDashboardService: IMentorDashboardService
+  ) {}
 
   applyAsMentor = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
@@ -109,5 +113,11 @@ export class MentorController implements IMentorController {
       mentorshipDetailsData
     );
     res.status(StatusCodes.OK).json({ success: true, data: updatedMentor });
+  });
+
+  getMentorDashboard = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id;
+    const data = await this.mentorDashboardService.getDashboardData(userId as string);
+    res.status(StatusCodes.OK).json(data);
   });
 }

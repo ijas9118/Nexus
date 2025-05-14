@@ -1,4 +1,5 @@
 import { BaseRepository } from '@/core/abstracts/base.repository';
+import { RecentBooking } from '@/core/types/mentorDashboard';
 import { IBooking } from '@/models/booking.model';
 
 export interface IBookingRepository extends BaseRepository<IBooking> {
@@ -7,4 +8,5 @@ export interface IBookingRepository extends BaseRepository<IBooking> {
   getUpcomingBookings(): Promise<IBooking[]>;
   getCompletedBookings(): Promise<IBooking[]>;
   getFilteredBookings(date?: Date, mentorshipTypeId?: string): Promise<IBooking[]>;
+  getRecentBookings(userId: string): Promise<RecentBooking[]>;
 }
