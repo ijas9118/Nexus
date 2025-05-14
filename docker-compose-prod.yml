@@ -17,9 +17,9 @@ services:
     networks:
       - app-network
 
-  frontend:
-    image: ijas9118/nexus-frontend-image
-    container_name: nexus-frontend
+  nginx:
+    image: ijas9118/nexus-nginx-image
+    container_name: nexus-nginx
     pull_policy: never
     build:
       platforms: 
