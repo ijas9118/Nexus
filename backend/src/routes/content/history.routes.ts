@@ -1,6 +1,4 @@
 import { Router } from 'express';
-import { validateRequest } from '@/middlewares/validate.middleware';
-import { removeFromHistorySchema } from '@/validations/content.schema';
 import { IHistoryController } from '@/core/interfaces/controllers/IHistoryController';
 import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
@@ -15,7 +13,6 @@ router.get('/', authenticate(['user', 'premium', 'mentor']), historyController.g
 router.post(
   '/remove/',
   authenticate(['user', 'premium', 'mentor']),
-  validateRequest(removeFromHistorySchema),
   historyController.removeFromHistory
 );
 

@@ -4,8 +4,6 @@ import { IVoteController } from '@/core/interfaces/controllers/IVoteController';
 import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
 import { authenticate } from '@/middlewares/auth.middleware';
-import { validateRequest } from '@/middlewares/validate.middleware';
-import { toggleSchema, verifyContentSchema } from '@/validations/content.schema';
 import { Router } from 'express';
 
 const router = Router();
@@ -24,7 +22,6 @@ router.post('/', authenticate(['user', 'premium', 'mentor']), contentController.
 // router.post(
 //   '/:id/bookmark',
 //   authenticate(['user', 'premium', 'mentor']),
-//   validateRequest(toggleSchema),
 //   bookmarkController.toggleBookmark
 // );
 
@@ -37,7 +34,6 @@ router.get(
 router.post(
   '/verify/:contentId',
   authenticate(['premium', 'mentor', 'admin']),
-  validateRequest(verifyContentSchema),
   contentController.verifyContent
 );
 

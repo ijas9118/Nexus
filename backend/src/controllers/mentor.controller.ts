@@ -114,10 +114,4 @@ export class MentorController implements IMentorController {
     );
     res.status(StatusCodes.OK).json({ success: true, data: updatedMentor });
   });
-
-  getMentorDashboard = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const userId = req.user?._id;
-    const data = await this.mentorDashboardService.getDashboardData(userId as string);
-    res.status(StatusCodes.OK).json(data);
-  });
 }

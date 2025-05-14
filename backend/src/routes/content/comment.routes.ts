@@ -1,6 +1,4 @@
 import { Router } from 'express';
-import { validateRequest } from '@/middlewares/validate.middleware';
-import { addCommentSchema } from '@/validations/content.schema';
 import { container } from '@/di/container';
 import { ICommentController } from '@/core/interfaces/controllers/ICommentController';
 import { TYPES } from '@/di/types';
@@ -13,7 +11,6 @@ const router = Router();
 router.post(
   '/',
   authenticate(['user', 'mentor', 'premium', 'admin']),
-  validateRequest(addCommentSchema),
   commentController.addComment
 );
 

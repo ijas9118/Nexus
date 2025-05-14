@@ -3,15 +3,6 @@ import { IFollowersController } from '@/core/interfaces/controllers/IFollowersCo
 import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
 import { authenticate } from '@/middlewares/auth.middleware';
-import { validateRequest } from '@/middlewares/validate.middleware';
-import {
-  acceptConnectionSchema,
-  followUserSchema,
-  isConnectedSchema,
-  isFollowingSchema,
-  sendConnectionSchema,
-  withdrawConnectionSchema,
-} from '@/validations/followers.schema';
 import { Router } from 'express';
 
 const followersController = container.get<IFollowersController>(TYPES.FollowersController);
@@ -19,17 +10,11 @@ const connectionsController = container.get<IConnectionsController>(TYPES.Connec
 
 const router = Router();
 
-router.post(
-  '/follow',
-  authenticate(['user', 'premium', 'mentor']),
-  validateRequest(followUserSchema),
-  followersController.followUser
-);
+router.post('/follow', authenticate(['user', 'premium', 'mentor']), followersController.followUser);
 
 router.post(
   '/unfollow',
   authenticate(['user', 'premium', 'mentor']),
-  validateRequest(followUserSchema),
   followersController.unfollowUser
 );
 
@@ -45,19 +30,17 @@ router.get(
   followersController.getFollowing
 );
 
-router.post('/is-following', validateRequest(isFollowingSchema), followersController.isFollowing);
+router.post('/is-following', followersController.isFollowing);
 
 router.post(
   '/connect',
   authenticate(['user', 'premium', 'mentor']),
-  validateRequest(sendConnectionSchema),
   connectionsController.sendConnectionRequest
 );
 
 router.post(
   '/accept',
   authenticate(['user', 'premium', 'mentor']),
-  validateRequest(acceptConnectionSchema),
   connectionsController.acceptConnectionRequest
 );
 
@@ -70,14 +53,12 @@ router.post(
 router.post(
   '/is-connected',
   authenticate(['user', 'premium', 'mentor']),
-  validateRequest(isConnectedSchema),
   connectionsController.isConnected
 );
 
 router.post(
   '/withdraw',
   authenticate(['user', 'premium', 'mentor']),
-  validateRequest(withdrawConnectionSchema),
   connectionsController.withdrawConnectionRequest
 );
 
