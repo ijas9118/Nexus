@@ -1,7 +1,5 @@
-import { ObjectId } from 'mongoose';
-
 export interface RegisterResponseDto {
-  _id: ObjectId;
+  _id: string;
   name: string;
   email: string;
   username: string;

@@ -2,7 +2,6 @@ import { injectable, inject } from 'inversify';
 import { TYPES } from '../../di/types';
 import { IUserRepository } from '../../core/interfaces/repositories/IUserRepository';
 import { LoginDto } from '../../dtos/requests/login.dto';
-import { RegisterDto } from '../../dtos/requests/register.dto';
 import { compare, hash } from 'bcryptjs';
 import { RegisterResponseDto } from '../../dtos/responses/auth/registerResponse.dto';
 import { LoginResponseDto } from '../../dtos/responses/auth/loginResponse.dto';
@@ -13,6 +12,8 @@ import { StatusCodes } from 'http-status-codes';
 import { UsernameGenerator } from '../../utils/usernameGenerator.util';
 import { IUser } from '../../models/user.model';
 import { IMentorService } from '@/core/interfaces/services/IMentorService';
+import { RegisterRequestDTO } from '@/dtos/requests/auth.dto';
+import { RegisterResponseDTO } from '@/dtos/responses/auth.dto';
 
 @injectable()
 export class AuthService implements IAuthService {
@@ -21,10 +22,6 @@ export class AuthService implements IAuthService {
     @inject(TYPES.MentorService) private mentorService: IMentorService
   ) {}
 
-  private generateDummyPassword(): string {
-    return Math.random().toString(36).slice(-8); // Simple random string; enhance as needed
-  }
-
   // Check if a user with the given email exists
   async findUserByEmail(email: string): Promise<boolean> {
     const user = await this.userRepository.findByEmail(email);
@@ -32,7 +29,7 @@ export class AuthService implements IAuthService {
   }
 
   // Register a new user with the given details
-  async register(registerDto: RegisterDto): Promise<RegisterResponseDto> {
+  async register(registerDto: RegisterRequestDTO): Promise<RegisterResponseDTO> {
     const { name, email, password } = registerDto;
     const hashedPassword = await hash(password, 10);
     const username = await UsernameGenerator.generateUsername(
@@ -47,14 +44,11 @@ export class AuthService implements IAuthService {
       username,
     });
 
+    const userData = RegisterResponseDTO.fromEntity(user);
+
     await redisClient.del(`otp:${email}`);
 
-    return {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      username,
-    };
+    return userData;
   }
 
   // Login a user with the given email and password

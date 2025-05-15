@@ -1,8 +1,7 @@
-import { UserRole } from '@/core/types/global/user-role';
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import { UserRole } from '@/core/types/UserTypes';
+import mongoose, { Schema, Document } from 'mongoose';
 
-interface IUser extends Document {
-  _id: ObjectId;
+interface IUser extends Document<string> {
   name: string;
   email: string;
   phone?: string;

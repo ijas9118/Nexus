@@ -21,6 +21,7 @@ export class MentorshipTypeService
   async createMentorshipType(data: {
     name: string;
     description: string;
+    defaultPrice: number;
   }): Promise<IMentorshipType> {
     const existingType = await this.findOne({ name: data.name });
     if (existingType) {
@@ -33,6 +34,7 @@ export class MentorshipTypeService
     return this.create({
       name: data.name,
       description: data.description,
+      defaultPrice: data.defaultPrice,
     });
   }
 

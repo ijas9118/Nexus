@@ -18,3 +18,5 @@ export interface SearchConnections {
   profilePic: string;
   email: string;
 }
+
+export type UserRole = 'user' | 'premium' | 'mentor' | 'admin';

@@ -1,10 +1,9 @@
 import { compare } from 'bcryptjs';
 import { LoginDto } from '../../dtos/requests/login.dto';
-import { LoginResponseDto } from '../../dtos/responses/auth/loginResponse.dto';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../di/types';
 import { IAdminRepository } from '../../core/interfaces/repositories/IAdminRepository';
-import { UserRole } from '@/core/types/global/user-role';
+import { UserRole } from '@/core/types/UserTypes';
 
 @injectable()
 export class AdminAuthService {

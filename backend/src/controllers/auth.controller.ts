@@ -2,7 +2,6 @@ import { injectable, inject } from 'inversify';
 import { Request, Response } from 'express';
 import { TYPES } from '../di/types';
 import { LoginDto } from '../dtos/requests/login.dto';
-import { RegisterDto } from '../dtos/requests/register.dto';
 import { IAuthController } from '../core/interfaces/controllers/IAuthController';
 import { generateAccessToken, verifyRefreshToken } from '../utils/jwt.util';
 import { clearRefreshTokenCookie, setRefreshTokenCookie } from '../utils/cookieUtils';
@@ -16,8 +15,9 @@ import { ITokenService } from '../core/interfaces/services/ITokenService';
 import { CLIENT_URL } from '@/utils/constants/index';
 import { Profile } from 'passport-google-oauth20';
 import { Profile as GitHubProfile } from 'passport-github2';
-import { UserRole } from '@/core/types/global/user-role';
 import { IMentorService } from '@/core/interfaces/services/IMentorService';
+import { RegisterRequestDTO } from '@/dtos/requests/auth.dto';
+import { UserRole } from '@/core/types/UserTypes';
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -31,7 +31,8 @@ export class AuthController implements IAuthController {
 
   // Register a new user and send OTP to email
   register = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const userData: RegisterDto = req.body;
+    const userData = req.body as RegisterRequestDTO;
+    console.log(req.body);
 
     const existingUser = await this.authService.findUserByEmail(userData.email);
     if (existingUser) {
@@ -57,22 +58,11 @@ export class AuthController implements IAuthController {
 
     const result = await this.authService.register(userData);
 
-    setRefreshTokenCookie(res, { _id: result._id.toString(), role: 'user' });
+    setRefreshTokenCookie(res, { _id: result._id, role: 'user' });
 
-    const accessToken = generateAccessToken({
-      _id: result._id.toString(),
-      name: result.name,
-      email: result.email,
-      role: 'user',
-    });
-    const user = {
-      _id: result._id,
-      name: result.name,
-      email: result.email,
-      role: 'user',
-    };
+    const accessToken = generateAccessToken(result);
 
-    res.status(StatusCodes.CREATED).json({ user, accessToken });
+    res.status(StatusCodes.CREATED).json({ result, accessToken });
   });
 
   // Resend OTP to email if OTP is expired or not received

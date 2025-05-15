@@ -1,7 +1,9 @@
 import { IAuthController } from '@/core/interfaces/controllers/IAuthController';
 import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
+import { RegisterRequestDTO } from '@/dtos/requests/auth.dto';
 import { validateRefreshToken } from '@/middlewares/auth.middleware';
+import { validateDto } from '@/middlewares/validate-dto.middleware';
 import { CLIENT_URL } from '@/utils/constants/index';
 import { Router } from 'express';
 import passport from 'passport';
@@ -9,7 +11,7 @@ import passport from 'passport';
 const router = Router();
 const authController = container.get<IAuthController>(TYPES.AuthController);
 
-router.post('/register', authController.register);
+router.post('/register', validateDto(RegisterRequestDTO), authController.register);
 
 router.post('/verify-otp', authController.verifyOTP);
 

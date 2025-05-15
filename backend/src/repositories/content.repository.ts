@@ -8,8 +8,8 @@ import { IFollowersRepository } from '../core/interfaces/repositories/IFollowers
 import UserFollowModel from '../models/followers.model';
 import CustomError from '@/utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
-import { UserRole } from '@/core/types/global/user-role';
 import { IVoteRepository } from '@/core/interfaces/repositories/IVoteRepository';
+import { UserRole } from '@/core/types/UserTypes';
 
 @injectable()
 export class ContentRepository extends BaseRepository<IContent> implements IContentRepository {

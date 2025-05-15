@@ -7,14 +7,14 @@ import { transporter } from '../../utils/nodemailerTransporter';
 import { IEmailService } from '../../core/interfaces/services/IEmailService';
 import { TYPES } from '../../di/types';
 import { ITokenService } from '../../core/interfaces/services/ITokenService';
-import { RegisterDto } from '@/dtos/requests/register.dto';
+import { RegisterRequestDTO } from '@/dtos/requests/auth.dto';
 
 @injectable()
 export class EmailService implements IEmailService {
   constructor(@inject(TYPES.TokenService) private tokenService: ITokenService) {}
 
   // Send OTP to the user's email for verification
-  async sendOtpEmail(userData: RegisterDto, otp: string): Promise<void> {
+  async sendOtpEmail(userData: RegisterRequestDTO, otp: string): Promise<void> {
     const expirationTime = 10 * 60;
     const data = JSON.stringify({ userData, otp });
 

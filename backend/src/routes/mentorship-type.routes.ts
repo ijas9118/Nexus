@@ -1,7 +1,12 @@
 import { IMentorshipTypeController } from '@/core/interfaces/controllers/IMentorshipTypeController';
 import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
+import {
+  CreateMentorshipTypeRequestDto,
+  UpdateMentorshipTypeRequestDto,
+} from '@/dtos/requests/mentorship-type.dto';
 import { authenticate } from '@/middlewares/auth.middleware';
+import { validateDto } from '@/middlewares/validate-dto.middleware';
 import { Router } from 'express';
 
 const mentorshipTypeController = container.get<IMentorshipTypeController>(
@@ -25,10 +30,20 @@ router.get(
 );
 
 // Create a new mentorship type
-router.post('/', authenticate(['admin']), mentorshipTypeController.create);
+router.post(
+  '/',
+  authenticate(['admin']),
+  validateDto(CreateMentorshipTypeRequestDto),
+  mentorshipTypeController.create
+);
 
 // Update a mentorship type by ID
-router.put('/:id', authenticate(['admin']), mentorshipTypeController.update);
+router.put(
+  '/:id',
+  authenticate(['admin']),
+  validateDto(UpdateMentorshipTypeRequestDto),
+  mentorshipTypeController.update
+);
 
 // Delete (soft delete) a mentorship type by ID
 router.delete('/:id', authenticate(['admin']), mentorshipTypeController.delete);

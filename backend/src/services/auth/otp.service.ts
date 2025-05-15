@@ -1,12 +1,12 @@
 import { inject, injectable } from 'inversify';
 import crypto from 'crypto';
-import redisClient from '../../config/redisClient.config';
-import CustomError from '../../utils/CustomError';
+import redisClient from '@/config/redisClient.config';
+import CustomError from '@/utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
-import { RegisterDto } from '../../dtos/requests/register.dto';
-import { IOTPService } from '../../core/interfaces/services/IOTPService';
-import { TYPES } from '../../di/types';
-import { IEmailService } from '../../core/interfaces/services/IEmailService';
+import { IOTPService } from '@/core/interfaces/services/IOTPService';
+import { TYPES } from '@/di/types';
+import { IEmailService } from '@/core/interfaces/services/IEmailService';
+import { RegisterRequestDTO } from '@/dtos/requests/auth.dto';
 
 @injectable()
 export class OTPService implements IOTPService {
@@ -33,7 +33,7 @@ export class OTPService implements IOTPService {
   }
 
   // Verify OTP and retrieve stored user data
-  async verifyAndRetrieveUser(email: string, otp: string): Promise<RegisterDto> {
+  async verifyAndRetrieveUser(email: string, otp: string): Promise<RegisterRequestDTO> {
     const storedData = await redisClient.get(`otp:${email}`);
     console.log(storedData);
 

@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface IMentorshipType extends Document {
+export interface IMentorshipType extends Document<string> {
   name: string;
   description: string;
   isActive: boolean;
