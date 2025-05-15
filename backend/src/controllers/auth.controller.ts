@@ -1,7 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { Request, Response } from 'express';
 import { TYPES } from '../di/types';
-import { LoginDto } from '../dtos/requests/login.dto';
 import { IAuthController } from '../core/interfaces/controllers/IAuthController';
 import { generateAccessToken, verifyRefreshToken } from '../utils/jwt.util';
 import { clearRefreshTokenCookie, setRefreshTokenCookie } from '../utils/cookieUtils';

@@ -1,7 +1,7 @@
 import { IAuthController } from '@/core/interfaces/controllers/IAuthController';
 import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
-import { RegisterRequestDTO } from '@/dtos/requests/auth.dto';
+import { LoginRequestDTO, RegisterRequestDTO } from '@/dtos/requests/auth.dto';
 import { validateRefreshToken } from '@/middlewares/auth.middleware';
 import { validateDto } from '@/middlewares/validate-dto.middleware';
 import { CLIENT_URL } from '@/utils/constants/index';
@@ -21,7 +21,7 @@ router.post('/forgot-password', authController.forgotPassword);
 
 router.post('/reset-password', authController.resetPassword);
 
-router.post('/login', authController.login);
+router.post('/login', validateDto(LoginRequestDTO), authController.login);
 
 router.post('/refresh-token', validateRefreshToken, authController.refreshToken);
 

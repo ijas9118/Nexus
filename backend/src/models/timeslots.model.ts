@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
-export interface ITimeSlot extends Document {
+export interface ITimeSlot extends Document<string> {
   mentorId: ObjectId | string;
   date: Date; // e.g., "2025-04-23T00:00:00.000Z"
   startTime: string; // e.g., "14:00"

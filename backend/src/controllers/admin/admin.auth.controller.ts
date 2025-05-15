@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { IAdminAuthController } from '../../core/interfaces/controllers/admin/IAdminAuthController';
-import { LoginDto } from '../../dtos/requests/login.dto';
 import { AdminAuthService } from '../../services/admin/admin.auth.service';
 import { generateAccessToken, verifyAccessToken } from '../../utils/jwt.util';
 import { inject, injectable } from 'inversify';
@@ -9,13 +8,14 @@ import { clearRefreshTokenCookie, setRefreshTokenCookie } from '../../utils/cook
 import { StatusCodes } from 'http-status-codes';
 import CustomError from '../../utils/CustomError';
 import asyncHandler from 'express-async-handler';
+import { LoginRequestDTO } from '@/dtos/requests/auth.dto';
 
 @injectable()
 export class AdminAuthController implements IAdminAuthController {
   constructor(@inject(TYPES.AdminAuthService) private adminAuthService: AdminAuthService) {}
 
   login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const loginDto: LoginDto = req.body;
+    const loginDto = req.body as LoginRequestDTO;
     const user = await this.adminAuthService.login(loginDto);
 
     if (!user) {

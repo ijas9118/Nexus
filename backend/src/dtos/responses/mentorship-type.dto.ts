@@ -3,7 +3,7 @@ import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class MentorshipTypeResponseDto {
   @IsString()
-  id!: string;
+  _id!: string;
 
   @IsString()
   name!: string;
@@ -19,7 +19,7 @@ export class MentorshipTypeResponseDto {
 
   static fromEntity(entity: IMentorshipType): MentorshipTypeResponseDto {
     const dto = new MentorshipTypeResponseDto();
-    dto.id = entity._id;
+    dto._id = entity._id;
     dto.name = entity.name;
     dto.description = entity.description;
     dto.defaultPrice = entity.defaultPrice;

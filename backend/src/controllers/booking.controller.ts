@@ -7,6 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 import CustomError from '@/utils/CustomError';
 import dayjs from 'dayjs';
 import asyncHandler from 'express-async-handler';
+import { RescheduleBookingRequestDTO } from '@/dtos/requests/booking.dto';
 
 @injectable()
 export class BookingController implements IBookingController {
@@ -14,6 +15,7 @@ export class BookingController implements IBookingController {
 
   getUpcomingBookings = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const bookings = await this.bookingService.getUpcomingBookings();
+    console.log(bookings);
     res.status(StatusCodes.OK).json(bookings);
   });
 
@@ -24,7 +26,7 @@ export class BookingController implements IBookingController {
 
   rescheduleBooking = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { bookingId } = req.params;
-    const { timeSlotId, bookingDate } = req.body;
+    const { timeSlotId, bookingDate } = req.body as RescheduleBookingRequestDTO;
 
     // Validate input
     if (!timeSlotId || !bookingDate) {
