@@ -14,7 +14,7 @@ interface IUser extends Document<string> {
   totalViews: number;
   totalLikes: number;
   bio: string;
-  joinedSquads: mongoose.Types.ObjectId[];
+  joinedSquads: string[];
   skills: string[];
   socials: [{ platform: string; url: string }];
   role: UserRole;

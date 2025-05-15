@@ -1,10 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { TYPES } from '../../di/types';
 import { IUserRepository } from '../../core/interfaces/repositories/IUserRepository';
-import { LoginDto } from '../../dtos/requests/login.dto';
 import { compare, hash } from 'bcryptjs';
-import { RegisterResponseDto } from '../../dtos/responses/auth/registerResponse.dto';
-import { LoginResponseDto } from '../../dtos/responses/auth/loginResponse.dto';
 import redisClient from '../../config/redisClient.config';
 import { IAuthService } from '../../core/interfaces/services/IAuthService';
 import CustomError from '../../utils/CustomError';
@@ -12,8 +9,8 @@ import { StatusCodes } from 'http-status-codes';
 import { UsernameGenerator } from '../../utils/usernameGenerator.util';
 import { IUser } from '../../models/user.model';
 import { IMentorService } from '@/core/interfaces/services/IMentorService';
-import { RegisterRequestDTO } from '@/dtos/requests/auth.dto';
-import { RegisterResponseDTO } from '@/dtos/responses/auth.dto';
+import { LoginRequestDTO, RegisterRequestDTO } from '@/dtos/requests/auth.dto';
+import { LoginResponseDTO, RegisterResponseDTO } from '@/dtos/responses/auth.dto';
 
 @injectable()
 export class AuthService implements IAuthService {
@@ -52,8 +49,8 @@ export class AuthService implements IAuthService {
   }
 
   // Login a user with the given email and password
-  async login(loginDto: LoginDto): Promise<LoginResponseDto> {
-    const { email, password } = loginDto;
+  async login(data: LoginRequestDTO): Promise<LoginResponseDTO> {
+    const { email, password } = data;
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
@@ -65,8 +62,7 @@ export class AuthService implements IAuthService {
       throw new CustomError('Invalid password', StatusCodes.BAD_REQUEST);
     }
 
-    const userObj = user.toObject();
-    delete userObj.password;
+    let userObj = user.toObject();
 
     if (user.role === 'mentor') {
       const mentor = await this.mentorService.getMentorByUserId(user._id.toString());
@@ -76,7 +72,9 @@ export class AuthService implements IAuthService {
       }
     }
 
-    return userObj as LoginResponseDto;
+    userObj = LoginResponseDTO.fromEntity(userObj);
+
+    return userObj;
   }
 
   // Update the password of the user with the given email

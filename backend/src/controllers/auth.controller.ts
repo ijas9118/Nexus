@@ -16,7 +16,7 @@ import { CLIENT_URL } from '@/utils/constants/index';
 import { Profile } from 'passport-google-oauth20';
 import { Profile as GitHubProfile } from 'passport-github2';
 import { IMentorService } from '@/core/interfaces/services/IMentorService';
-import { RegisterRequestDTO } from '@/dtos/requests/auth.dto';
+import { LoginRequestDTO, RegisterRequestDTO } from '@/dtos/requests/auth.dto';
 import { UserRole } from '@/core/types/UserTypes';
 
 @injectable()
@@ -32,7 +32,6 @@ export class AuthController implements IAuthController {
   // Register a new user and send OTP to email
   register = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userData = req.body as RegisterRequestDTO;
-    console.log(req.body);
 
     const existingUser = await this.authService.findUserByEmail(userData.email);
     if (existingUser) {
@@ -54,15 +53,13 @@ export class AuthController implements IAuthController {
 
     const userData = await this.otpService.verifyAndRetrieveUser(email, otp);
 
-    console.log(userData);
+    const user = await this.authService.register(userData);
 
-    const result = await this.authService.register(userData);
+    setRefreshTokenCookie(res, { _id: user._id, role: 'user' });
 
-    setRefreshTokenCookie(res, { _id: result._id, role: 'user' });
+    const accessToken = generateAccessToken({ ...user });
 
-    const accessToken = generateAccessToken(result);
-
-    res.status(StatusCodes.CREATED).json({ result, accessToken });
+    res.status(StatusCodes.CREATED).json({ user, accessToken });
   });
 
   // Resend OTP to email if OTP is expired or not received
@@ -76,8 +73,7 @@ export class AuthController implements IAuthController {
 
   // Login user and set refresh token cookie
   login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const loginDto: LoginDto = req.body;
-    const user = await this.authService.login(loginDto);
+    const user = await this.authService.login(req.body as LoginRequestDTO);
 
     setRefreshTokenCookie(res, { _id: user._id.toString(), role: user.role as UserRole });
 

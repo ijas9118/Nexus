@@ -1,13 +1,11 @@
-import { RegisterRequestDTO } from '@/dtos/requests/auth.dto';
-import { LoginDto } from '../../../dtos/requests/login.dto';
-import { LoginResponseDto } from '../../../dtos/responses/auth/loginResponse.dto';
+import { LoginRequestDTO, RegisterRequestDTO } from '@/dtos/requests/auth.dto';
 import { IUser } from '../../../models/user.model';
-import { RegisterResponseDTO } from '@/dtos/responses/auth.dto';
+import { LoginResponseDTO, RegisterResponseDTO } from '@/dtos/responses/auth.dto';
 
 export interface IAuthService {
   findUserByEmail(email: string): Promise<boolean>;
   register(registerDto: RegisterRequestDTO): Promise<RegisterResponseDTO>;
-  login(loginDto: LoginDto): Promise<LoginResponseDto>;
+  login(loginDto: LoginRequestDTO): Promise<LoginResponseDTO>;
   updatePassword(email: string, newPassword: string): Promise<void>;
   getUserByRoleAndId(role: string, id: string): Promise<IUser | null>;
   handleGoogleUser(googleData: {

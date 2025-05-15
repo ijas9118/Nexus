@@ -104,7 +104,9 @@ export default function LoginPage() {
   const handleComplete = async (value: string) => {
     try {
       const result = await verifyOtp(formData.email, value);
-      if (result) navigate("/myFeed");
+      const { user, accessToken } = result;
+      dispatch(setCredentials({ user, accessToken }));
+      navigate("/myFeed");
     } catch (error: any) {
       console.log("Error occured: ", error.message);
     }

@@ -27,3 +27,25 @@ export class RegisterRequestDTO {
     return dto;
   }
 }
+
+interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export class LoginRequestDTO {
+  @IsEmail()
+  @IsNotEmpty()
+  email!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password!: string;
+
+  static fromPayload(payload: LoginPayload): LoginRequestDTO {
+    const dto = new LoginRequestDTO();
+    dto.email = payload.email;
+    dto.password = payload.password;
+    return dto;
+  }
+}

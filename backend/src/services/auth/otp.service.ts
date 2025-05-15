@@ -43,7 +43,7 @@ export class OTPService implements IOTPService {
 
     const { userData, otp: storedOTP } = JSON.parse(storedData);
 
-    console.log('User', userData);
+    console.log('User', userData, otp);
 
     if (otp !== storedOTP) {
       throw new CustomError('Invalid OTP.', StatusCodes.BAD_REQUEST);
