@@ -1,21 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  checkConnected,
-  checkIsFollowing,
-  followUser,
-  hasSentConnectionRequest,
-  sendConnectionRequest,
-  unfollowUser,
-  withdrawConnectionRequest,
-} from "@/services/user/followService";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { toast } from "sonner";
 import ProfileActivity from "./components/ProfileActivity";
 import ProfileHeader from "./components/ProfileHeader";
 import SquadsList from "./components/SquadsList";
 import ProfileService from "@/services/user/profileService";
+import FollowService from "@/services/followService";
 
 export default function ProfilePage() {
   const { username } = useParams();
@@ -24,6 +16,11 @@ export default function ProfilePage() {
   const [profileUser, setProfileUser] = useState<any>(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [stats, setStats] = useState<{
+    connectionsCount: number;
+    followersCount: number;
+    followingCount: number;
+  }>({ connectionsCount: 0, followersCount: 0, followingCount: 0 });
 
   useEffect(() => {
     if (!username) return;
@@ -33,13 +30,21 @@ export default function ProfilePage() {
         const data = await ProfileService.getUserProfile(username);
         setProfileUser(data);
 
+        const stats = await FollowService.getFollowStats(data._id);
+        setStats(stats);
+
         if (currentUser !== data?._id) {
-          const followingStatus = await checkIsFollowing(currentUser, data._id);
+          const followingStatus = await FollowService.checkIsFollowing(
+            currentUser,
+            data._id,
+          );
           setIsFollowing(followingStatus);
-          const connectionStatus = await hasSentConnectionRequest(data._id);
+          const connectionStatus = await FollowService.hasSentConnectionRequest(
+            data._id,
+          );
           setIsConnected(connectionStatus.result);
 
-          const connected = await checkConnected(data._id);
+          const connected = await FollowService.checkConnected(data._id);
           setIsConnected(connected.result);
         }
       } catch (err: unknown) {
@@ -63,12 +68,20 @@ export default function ProfilePage() {
 
     try {
       if (isFollowing) {
-        await unfollowUser(profileUser._id);
+        await FollowService.unfollowUser(profileUser._id);
+        setStats((prev) => ({
+          ...prev,
+          followersCount: prev.followersCount - 1,
+        }));
         toast.success("Action Successful", {
           description: `You have unfollowed ${profileUser.name}. Hope to see you reconnect soon!`,
         });
       } else {
-        await followUser(profileUser._id);
+        await FollowService.followUser(profileUser._id);
+        setStats((prev) => ({
+          ...prev,
+          followersCount: prev.followersCount + 1,
+        }));
         toast.success("Following!", {
           description: `You're now following ${profileUser.name}. Stay engaged and explore their content!`,
         });
@@ -93,12 +106,12 @@ export default function ProfilePage() {
 
     try {
       if (isConnected) {
-        await withdrawConnectionRequest(profileUser._id);
+        await FollowService.withdrawConnectionRequest(profileUser._id);
         toast.success("Action Successful", {
           description: `You have unfollowed ${profileUser.name}. Hope to see you reconnect soon!`,
         });
       } else {
-        await sendConnectionRequest(profileUser._id);
+        await FollowService.sendConnectionRequest(profileUser._id);
         toast.success("Request Sent!", {
           description: `You're now following ${profileUser.name}. Stay engaged and explore their content!`,
         });
@@ -131,6 +144,7 @@ export default function ProfilePage() {
             isConnected={isConnected}
             onFollowToggle={handleFollowToggle}
             onConnectionToggle={handleConnectionRequest}
+            followStats={stats}
           />
           <SquadsList />
         </div>

@@ -80,4 +80,10 @@ router.get(
   connectionsController.getPendingRequests
 );
 
+router.get(
+  '/stats/:userId',
+  authenticate(['user', 'premium', 'mentor', 'admin']),
+  followersController.getFollowStats
+);
+
 export default router;

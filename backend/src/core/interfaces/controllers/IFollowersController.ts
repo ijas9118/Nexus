@@ -6,4 +6,5 @@ export interface IFollowersController {
   getFollowers: RequestHandler;
   getFollowing: RequestHandler;
   isFollowing: RequestHandler;
+  getFollowStats: RequestHandler;
 }

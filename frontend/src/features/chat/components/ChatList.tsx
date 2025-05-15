@@ -13,10 +13,6 @@ import MultipleSelector, {
 import { useSocket } from "@/hooks/useSocket";
 import { ChatService } from "@/services/user/chatService";
 import {
-  getAllConnections,
-  searchConnectedUsers,
-} from "@/services/user/followService";
-import {
   setActiveChat,
   setChats,
   setGroups,
@@ -28,6 +24,7 @@ import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { formatLastMessageTime } from "../utils/last-message-format";
+import FollowService from "@/services/followService";
 
 const ChatList = () => {
   const dispatch = useDispatch();
@@ -67,7 +64,7 @@ const ChatList = () => {
   useEffect(() => {
     const fetchConnections = async () => {
       try {
-        const options = await getAllConnections();
+        const options = await FollowService.getAllConnections();
         setConnectionOptions(options.data);
       } catch (error) {
         console.error("Failed to load connections:", error);
@@ -81,7 +78,7 @@ const ChatList = () => {
     const search = async () => {
       if (searchTerm.trim()) {
         try {
-          const results = await searchConnectedUsers(searchTerm);
+          const results = await FollowService.searchConnectedUsers(searchTerm);
           setSearchResults(results);
           setShowDropdown(true);
         } catch (error) {

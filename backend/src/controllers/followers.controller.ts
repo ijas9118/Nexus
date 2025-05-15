@@ -55,7 +55,7 @@ export class FollowersController implements IFollowersController {
 
     const followers = await this.followersService.getFollowers(userId);
 
-    res.status(StatusCodes.OK).json({ message: 'Followers fetched successfully', data: followers });
+    res.status(StatusCodes.OK).json(followers);
   });
 
   getFollowing = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -67,9 +67,7 @@ export class FollowersController implements IFollowersController {
 
     const following = await this.followersService.getFollowing(userId);
 
-    res
-      .status(StatusCodes.OK)
-      .json({ message: 'Following list fetched successfully', data: following });
+    res.status(StatusCodes.OK).json(following);
   });
 
   isFollowing = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -85,5 +83,17 @@ export class FollowersController implements IFollowersController {
     );
 
     res.status(StatusCodes.OK).json(result);
+  });
+
+  getFollowStats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { userId } = req.params;
+
+    if (!userId) {
+      throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);
+    }
+
+    const stats = await this.followersService.getFollowStats(userId);
+
+    res.status(StatusCodes.OK).json(stats);
   });
 }

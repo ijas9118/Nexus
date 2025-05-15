@@ -29,4 +29,14 @@ export class FollowersService implements IFollowersService {
   isFollowing = async (followerId: string, followedId: string): Promise<boolean> => {
     return this.followersRepository.isFollowing(followerId, followedId);
   };
+
+  getFollowStats = async (
+    userId: string
+  ): Promise<{
+    followersCount: number;
+    followingCount: number;
+    connectionsCount: number;
+  }> => {
+    return this.followersRepository.getFollowStats(userId);
+  };
 }

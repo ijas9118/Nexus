@@ -28,6 +28,11 @@ interface ProfileHeaderProps {
   isConnected: boolean;
   onFollowToggle: () => void;
   onConnectionToggle: () => void;
+  followStats: {
+    connectionsCount: number;
+    followersCount: number;
+    followingCount: number;
+  };
 }
 
 export default function ProfileHeader({
@@ -36,6 +41,7 @@ export default function ProfileHeader({
   isConnected,
   onFollowToggle,
   onConnectionToggle,
+  followStats,
 }: ProfileHeaderProps) {
   const currentUser = useSelector(
     (state: any) => state.auth.user?.username || "",
@@ -189,15 +195,21 @@ export default function ProfileHeader({
 
         <div className="flex text-center justify-between text-sm text-muted-foreground bg-muted p-3 rounded-md">
           <div className="flex flex-col items-center justify-center">
-            <span className="font-semibold text-foreground text-lg">10</span>
+            <span className="font-semibold text-foreground text-lg">
+              {followStats.followersCount}
+            </span>
             <span>Followers</span>
           </div>
           <div className="flex flex-col items-center justify-center">
-            <span className="font-semibold text-foreground text-lg">0</span>
+            <span className="font-semibold text-foreground text-lg">
+              {followStats.followingCount}
+            </span>
             <span>Following</span>
           </div>
           <div className="flex flex-col items-center justify-center">
-            <span className="font-semibold text-foreground text-lg">12</span>
+            <span className="font-semibold text-foreground text-lg">
+              {followStats.connectionsCount}
+            </span>
             <span>Connections</span>
           </div>
         </div>

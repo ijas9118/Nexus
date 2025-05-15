@@ -60,7 +60,7 @@ export class FollowersRepository
 
   getFollowers = async (userId: string): Promise<IUserWhoFollow[]> => {
     const userFollow = await UserFollowModel.findOne({ userId })
-      .populate<{ followers: IUserWhoFollow[] }>('followers', 'name profilePic')
+      .populate<{ followers: IUserWhoFollow[] }>('followers', 'name profilePic username')
       .lean();
     return userFollow?.followers || [];
   };
@@ -79,5 +79,21 @@ export class FollowersRepository
     });
 
     return !!userFollow;
+  };
+
+  getFollowStats = async (
+    userId: string
+  ): Promise<{
+    followersCount: number;
+    followingCount: number;
+    connectionsCount: number;
+  }> => {
+    const userFollow = await this.findOne({ userId });
+
+    return {
+      followersCount: userFollow?.followers?.length || 0,
+      followingCount: userFollow?.following?.length || 0,
+      connectionsCount: userFollow?.connections?.length || 0,
+    };
   };
 }

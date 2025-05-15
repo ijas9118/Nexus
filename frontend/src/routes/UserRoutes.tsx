@@ -11,6 +11,7 @@ const ResetPassword = lazy(() => import("@/features/auth/ResetPassword"));
 const Layout = lazy(() => import("@/pages/Layout"));
 const MyFeed = lazy(() => import("@/features/content/MyFeed"));
 const ProfilePage = lazy(() => import("@/features/profile/Profile"));
+const Connections = lazy(() => import("@/features/connections/Connections"));
 const EditProfileLayout = lazy(
   () => import("@/features/profile/EditProfileLayout"),
 );
@@ -35,7 +36,6 @@ const MentorshipMeetingsPage = lazy(
 );
 const Squads = lazy(() => import("@/features/squad/Squads"));
 const Chat = lazy(() => import("@/features/chat/Chat"));
-const Connections = lazy(() => import("@/features/profile/Connections"));
 const History = lazy(() => import("@/features/content/History"));
 const ContentDetails = lazy(() => import("@/features/content/ContentDetails"));
 const Following = lazy(() => import("@/features/content/Following"));
