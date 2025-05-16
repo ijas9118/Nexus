@@ -5,8 +5,10 @@ import { Card } from "@/components/molecules/card";
 import getSocialIcon from "@/utils/getSocialIcons";
 import dayjs from "dayjs";
 import { MapPin } from "lucide-react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import StatDialog from "./StatDialog";
 
 interface ProfileHeaderProps {
   profileUser: {
@@ -48,12 +50,24 @@ export default function ProfileHeader({
   );
   const navigate = useNavigate();
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedStat, setSelectedStat] = useState<
+    "followers" | "following" | "connections"
+  >("followers");
+
   if (!profileUser) return <p>Loading profile...</p>;
 
   const isCurrentUser = profileUser.username === currentUser;
 
   const handleEditClick = () => {
     navigate("/profile/edit");
+  };
+
+  const handleStatClick = (
+    statType: "followers" | "following" | "connections",
+  ) => {
+    setSelectedStat(statType);
+    setDialogOpen(true);
   };
 
   return (
@@ -194,19 +208,28 @@ export default function ProfileHeader({
         </div>
 
         <div className="flex text-center justify-between text-sm text-muted-foreground bg-muted p-3 rounded-md">
-          <div className="flex flex-col items-center justify-center">
+          <div
+            className="flex flex-col items-center justify-center cursor-pointer"
+            onClick={() => handleStatClick("followers")}
+          >
             <span className="font-semibold text-foreground text-lg">
               {followStats.followersCount}
             </span>
             <span>Followers</span>
           </div>
-          <div className="flex flex-col items-center justify-center">
+          <div
+            className="flex flex-col items-center justify-center cursor-pointer"
+            onClick={() => handleStatClick("following")}
+          >
             <span className="font-semibold text-foreground text-lg">
               {followStats.followingCount}
             </span>
             <span>Following</span>
           </div>
-          <div className="flex flex-col items-center justify-center">
+          <div
+            className="flex flex-col items-center justify-center cursor-pointer"
+            onClick={() => handleStatClick("connections")}
+          >
             <span className="font-semibold text-foreground text-lg">
               {followStats.connectionsCount}
             </span>
@@ -233,6 +256,13 @@ export default function ProfileHeader({
           </div>
         )}
       </Card>
+
+      <StatDialog
+        isOpen={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        statType={selectedStat}
+        userId={profileUser._id}
+      />
     </div>
   );
 }

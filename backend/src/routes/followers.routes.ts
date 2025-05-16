@@ -30,6 +30,12 @@ router.get(
   followersController.getFollowing
 );
 
+router.get(
+  '/:userId/connections',
+  authenticate(['user', 'premium', 'mentor']),
+  followersController.getConnections
+);
+
 router.post('/is-following', followersController.isFollowing);
 
 router.post(

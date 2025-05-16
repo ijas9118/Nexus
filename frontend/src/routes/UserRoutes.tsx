@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import { MentorFormProvider } from "@/context/MentorFormContext";
 import { Skeleton } from "@/components/atoms/skeleton";
+import ConnectionsPage from "@/features/connections/ConnectionsPage";
 
 const Home = lazy(() => import("@/pages/Home"));
 const LoginPage = lazy(() => import("@/features/auth/Login"));
@@ -11,7 +12,6 @@ const ResetPassword = lazy(() => import("@/features/auth/ResetPassword"));
 const Layout = lazy(() => import("@/pages/Layout"));
 const MyFeed = lazy(() => import("@/features/content/MyFeed"));
 const ProfilePage = lazy(() => import("@/features/profile/Profile"));
-const Connections = lazy(() => import("@/features/connections/Connections"));
 const EditProfileLayout = lazy(
   () => import("@/features/profile/EditProfileLayout"),
 );
@@ -86,7 +86,7 @@ const UserRoutes: React.FC = () => {
               />
               <Route path="squads" element={<Squads />} />
               <Route path="chat" element={<Chat />} />
-              <Route path="connections" element={<Connections />} />
+              <Route path="connections" element={<ConnectionsPage />} />
               <Route path="history" element={<History />} />
               <Route path="content/:id" element={<ContentDetails />} />
               <Route path="following" element={<Following />} />

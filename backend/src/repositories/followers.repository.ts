@@ -58,18 +58,42 @@ export class FollowersRepository
     return true;
   };
 
-  getFollowers = async (userId: string): Promise<IUserWhoFollow[]> => {
+  getFollowers = async (
+    userId: string, // the user whose followers you want
+    currentUserId: string // the currently logged-in user
+  ): Promise<(IUserWhoFollow & { isFollowing: boolean })[]> => {
     const userFollow = await UserFollowModel.findOne({ userId })
       .populate<{ followers: IUserWhoFollow[] }>('followers', 'name profilePic username')
       .lean();
-    return userFollow?.followers || [];
+
+    const followers = userFollow?.followers || [];
+
+    // Get the following list of the current user
+    const currentUserFollow = await UserFollowModel.findOne({ userId: currentUserId }).lean();
+
+    const currentUserFollowingIds = new Set(
+      currentUserFollow?.following.map((id: Types.ObjectId) => id.toString()) || []
+    );
+
+    return followers.map((follower) => ({
+      ...follower,
+      isFollowing: currentUserFollowingIds.has(follower._id.toString()),
+    }));
   };
 
   getFollowing = async (userId: string): Promise<IUserWhoFollow[]> => {
     const userFollow = await UserFollowModel.findOne({ userId })
-      .populate<{ following: IUserWhoFollow[] }>('following', 'name profilePic')
+      .populate<{ following: IUserWhoFollow[] }>('following', 'name profilePic username')
       .lean();
     return userFollow?.following || [];
+  };
+
+  getConnections = async (userId: string): Promise<IUserWhoFollow[]> => {
+    const userFollow = await UserFollowModel.findOne({ userId })
+      .populate<{ connections: IUserWhoFollow[] }>('connections', 'name profilePic username')
+      .lean();
+
+    return userFollow?.connections || [];
   };
 
   isFollowing = async (followerId: string, followedId: string): Promise<boolean> => {

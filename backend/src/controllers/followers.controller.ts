@@ -46,18 +46,21 @@ export class FollowersController implements IFollowersController {
     res.status(StatusCodes.OK).json({ message: 'Unfollowed successfully' });
   });
 
+  // Get All Followers of a User
   getFollowers = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId } = req.params;
+    const currentUserId = req.user?._id as string;
 
     if (!userId) {
       throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const followers = await this.followersService.getFollowers(userId);
+    const followers = await this.followersService.getFollowers(userId, currentUserId);
 
     res.status(StatusCodes.OK).json(followers);
   });
 
+  // Get All Followings of a User
   getFollowing = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId } = req.params;
 
@@ -68,6 +71,18 @@ export class FollowersController implements IFollowersController {
     const following = await this.followersService.getFollowing(userId);
 
     res.status(StatusCodes.OK).json(following);
+  });
+
+  getConnections = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { userId } = req.params;
+
+    if (!userId) {
+      throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);
+    }
+
+    const connections = await this.followersService.getConnections(userId);
+
+    res.status(StatusCodes.OK).json(connections);
   });
 
   isFollowing = asyncHandler(async (req: Request, res: Response): Promise<void> => {

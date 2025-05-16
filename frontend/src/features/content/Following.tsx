@@ -5,12 +5,10 @@ import { getFollowingUsersContents } from "@/services/user/contentService";
 import FilterComponent from "./components/FilterComponent";
 import ContentTypeTab from "./components/ContentTypeTab";
 import ContentCard from "./components/ContentCard";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Following() {
   const dispatch = useDispatch();
-  const [feedContent, setFeedContent] = useState([]);
-  const [filterContent, setFilterContent] = useState([]);
-  const [error, setError] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState<string>("all");
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
@@ -21,40 +19,20 @@ export default function Following() {
         { title: "Following", url: "/following" },
       ]),
     );
-
-    const fetchContent = async () => {
-      try {
-        const data = await getFollowingUsersContents();
-        setFeedContent(data);
-      } catch (err: any) {
-        setError(err.message);
-        console.error("Error fetching content:", err);
-      }
-    };
-
-    fetchContent();
   }, [dispatch]);
 
-  useEffect(() => {
-    let filteredContent = feedContent;
+  const {
+    data = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["followingContent"],
+    queryFn: getFollowingUsersContents,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 2,
+  });
 
-    if (selectedTab !== "all") {
-      filteredContent = filteredContent.filter(
-        (item: any) => item.contentType === selectedTab,
-      );
-    }
-
-    if (selectedTopics.length > 0) {
-      console.log(selectedTopics);
-      filteredContent = filteredContent.filter((item: any) =>
-        selectedTopics.some((topic) =>
-          item.squad.toLowerCase().includes(topic.toLowerCase()),
-        ),
-      );
-    }
-
-    setFilterContent(filteredContent);
-  }, [selectedTab, feedContent, selectedTopics]);
+  console.log(data);
 
   return (
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 py-8">
@@ -67,16 +45,31 @@ export default function Following() {
         setSelectedTab={setSelectedTab}
       />
 
-      {error && <p className="text-red-500">Error: {error}</p>}
+      {isLoading && (
+        <div className="text-center py-4">
+          <p>Loading content...</p>
+        </div>
+      )}
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filterContent.map((item: any, index) => (
+      {error && (
+        <p className="text-red-500 text-center py-4">
+          Error: {(error as Error).message}
+        </p>
+      )}
+
+      {!isLoading && !error && data.length === 0 && (
+        <p className="text-center py-4">No content available</p>
+      )}
+
+      <div className="flex flex-col space-y-8">
+        {data.map((item: any) => (
           <ContentCard
             id={item._id}
-            key={index}
+            key={item._id}
             avatarFallback={"IA"}
             profilePic={item.profilePic}
-            userName={item.userName}
+            userName={item.name}
+            username={item.username}
             contentType={item.contentType}
             heading={item.title}
             date={item.date}
@@ -84,14 +77,13 @@ export default function Following() {
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
             isBookmarked={item.isBookmarked}
-            username={item.username}
-            upvoteCount={0}
-            downvoteCount={0}
-            commentCount={0}
-            content={""}
-            isUpvoted={false}
-            isDownvoted={false}
-            viewCount={0}
+            upvoteCount={item.upvoteCount}
+            downvoteCount={item.downvoteCount}
+            commentCount={item.commentCount}
+            content={item.content}
+            isUpvoted={item.isUpvoted}
+            isDownvoted={item.isDownvoted}
+            viewCount={item.viewCount}
           />
         ))}
       </div>

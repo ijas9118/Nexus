@@ -206,19 +206,159 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
 
   async getFollowingUsersContents(userId: string): Promise<IContent[]> {
     const userObjectId = new mongoose.Types.ObjectId(userId);
+
+    // Find the user's follow document
     const userFollow = await UserFollowModel.findOne({ userId: userObjectId }).exec();
 
     if (!userFollow) {
-      throw new Error('User follow document not found');
+      throw new CustomError('User follow document not found', StatusCodes.NOT_FOUND);
     }
 
     const followingUserIds = userFollow.following.map((id) => new mongoose.Types.ObjectId(id));
 
-    const contents = await ContentModel.find({ author: { $in: followingUserIds } })
-      .sort({ createdAt: -1 }) // Sort by createdAt in descending order
-      .populate('author', 'name profilePic') // Populate author details
-      .populate('squad', 'name') // Populate squad details
-      .exec();
+    const contents = await this.model.aggregate([
+      // Match content from followed users
+      {
+        $match: {
+          author: { $in: followingUserIds },
+        },
+      },
+      // Sort by latest
+      {
+        $sort: { createdAt: -1 },
+      },
+      // Lookup author information
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'authorInfo',
+        },
+      },
+      {
+        $unwind: '$authorInfo',
+      },
+      // Lookup squad information
+      {
+        $lookup: {
+          from: 'squads',
+          localField: 'squad',
+          foreignField: '_id',
+          as: 'squadInfo',
+        },
+      },
+      {
+        $unwind: {
+          path: '$squadInfo',
+          preserveNullAndEmptyArrays: true, // Keep content without squad
+        },
+      },
+      // Lookup user votes
+      {
+        $lookup: {
+          from: 'votes',
+          let: { contentId: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$contentId', '$$contentId'] },
+                    { $eq: ['$userId', userObjectId] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'userVote',
+        },
+      },
+      // Lookup user bookmarks
+      {
+        $lookup: {
+          from: 'bookmarks',
+          let: { contentId: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $in: ['$$contentId', '$contentIds'] },
+                    { $eq: ['$userId', userObjectId] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'userBookmark',
+        },
+      },
+      // Add computed fields
+      {
+        $addFields: {
+          isUpvoted: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: '$userVote',
+                        as: 'vote',
+                        cond: { $eq: ['$$vote.voteType', 'upvote'] },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+          isDownvoted: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: '$userVote',
+                        as: 'vote',
+                        cond: { $eq: ['$$vote.voteType', 'downvote'] },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+          isBookmarked: { $gt: [{ $size: '$userBookmark' }, 0] },
+          name: '$authorInfo.name',
+          username: '$authorInfo.username',
+          profilePic: '$authorInfo.profilePic',
+          userName: '$authorInfo.name',
+          squad: {
+            _id: '$squadInfo._id',
+            name: '$squadInfo.name',
+          },
+        },
+      },
+      // Project final fields
+      {
+        $project: {
+          userVote: 0,
+          userBookmark: 0,
+          authorInfo: 0,
+          squadInfo: 0,
+          __v: 0,
+        },
+      },
+    ]);
 
     return contents;
   }

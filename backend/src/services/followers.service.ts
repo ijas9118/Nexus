@@ -18,12 +18,19 @@ export class FollowersService implements IFollowersService {
     return this.followersRepository.unfollowUser(followerId, followedId);
   };
 
-  getFollowers = async (userId: string): Promise<IUserWhoFollow[]> => {
-    return this.followersRepository.getFollowers(userId);
+  getFollowers = async (
+    userId: string,
+    currentUserId: string
+  ): Promise<(IUserWhoFollow & { isFollowing: boolean })[]> => {
+    return this.followersRepository.getFollowers(userId, currentUserId);
   };
 
   getFollowing = async (userId: string): Promise<IUserWhoFollow[]> => {
     return this.followersRepository.getFollowing(userId);
+  };
+
+  getConnections = async (userId: string): Promise<IUserWhoFollow[]> => {
+    return this.followersRepository.getConnections(userId);
   };
 
   isFollowing = async (followerId: string, followedId: string): Promise<boolean> => {

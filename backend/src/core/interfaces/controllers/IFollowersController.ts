@@ -5,6 +5,7 @@ export interface IFollowersController {
   unfollowUser: RequestHandler;
   getFollowers: RequestHandler;
   getFollowing: RequestHandler;
+  getConnections: RequestHandler;
   isFollowing: RequestHandler;
   getFollowStats: RequestHandler;
 }

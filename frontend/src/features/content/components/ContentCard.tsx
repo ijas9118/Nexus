@@ -165,7 +165,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
               onClick={() => handleCardClick(props.id)}
             >
               <MessageCircle className="h-4 w-4" />
-              10
+              {props.commentCount}
             </div>
 
             <Button

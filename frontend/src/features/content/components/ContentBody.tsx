@@ -20,7 +20,7 @@ export const ContentBody = ({
       </div>
     )}
     <div
-      className="prose prose-lg max-w-none mb-10 text-gray-800 leading-relaxed"
+      className="prose prose-lg max-w-none mb-10 text-primary leading-relaxed"
       dangerouslySetInnerHTML={{ __html: content }}
     />
   </>
