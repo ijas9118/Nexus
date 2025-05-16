@@ -1,3 +1,4 @@
+import { SearchResultItem } from '@/core/types/search';
 import { ISquad } from '../../../models/squads.model';
 import { IUser } from '../../../models/user.model';
 import { BaseRepository } from '../../abstracts/base.repository';
@@ -16,4 +17,5 @@ export interface IUserRepository extends BaseRepository<IUser> {
   getUserByUsername(username: string): Promise<IUser | null>;
   getUserIdByUsername(username: string): Promise<string | null>;
   updatePremiumStatus(userId: string, isPremium: boolean): Promise<IUser | null>;
+  search(criteria: { query: string; limit?: number }): Promise<SearchResultItem[]>;
 }

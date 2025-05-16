@@ -153,6 +153,10 @@ export const TYPES = {
   MentorDashboardRepository: Symbol.for('MentorDashboardRepository'),
   MentorDashboardController: Symbol.for('MentorDashboardController'),
 
+  // Global Search
+  GlobalSearchService: Symbol.for('GlobalSearchService'),
+  GlobalSearchController: Symbol.for('GlobalSearchController'),
+
   // Miscellaneous / Utilities
   OTPService: Symbol.for('IOTPService'),
   EmailService: Symbol.for('IEmailService'),

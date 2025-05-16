@@ -60,5 +60,7 @@ const SquadSchema: Schema = new Schema(
   }
 );
 
+SquadSchema.index({ name: 'text', category: 'text' });
+
 const SquadModel = mongoose.model<ISquad>('Squad', SquadSchema);
 export { ISquad, SquadModel };

@@ -219,6 +219,11 @@ import { MentorDashboardRepository } from '@/repositories/mentor-dashboard.repos
 import { IMentorDashboardController } from '@/core/interfaces/controllers/IMentorDashboardController';
 import { MentorDashboardController } from '@/controllers/mentor-dashboard.controller';
 
+import { IGlobalSearchController } from '@/core/interfaces/controllers/IGlobalSearchController';
+import { GlobalSearchController } from '@/controllers/globalSearch.controller';
+import { IGlobalSearchService } from '@/core/interfaces/services/IGlobalSearchService';
+import { GlobalSearchService } from '@/services/globalSearch.service';
+
 const container = new Container();
 
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
@@ -372,5 +377,8 @@ container
 container
   .bind<IMentorDashboardController>(TYPES.MentorDashboardController)
   .to(MentorDashboardController);
+
+container.bind<IGlobalSearchController>(TYPES.GlobalSearchController).to(GlobalSearchController);
+container.bind<IGlobalSearchService>(TYPES.GlobalSearchService).to(GlobalSearchService);
 
 export { container };

@@ -4,6 +4,7 @@ import { BaseRepository } from '../core/abstracts/base.repository';
 import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
 import { Types } from 'mongoose';
 import { ISquad } from '../models/squads.model';
+import { SearchResultItem } from '@/core/types/search';
 
 @injectable()
 export class UserRepository extends BaseRepository<IUser> implements IUserRepository {
@@ -91,5 +92,21 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
 
   async updatePremiumStatus(userId: string, isPremium: boolean): Promise<IUser | null> {
     return this.findByIdAndUpdate(userId, { isPremium, role: 'premium' });
+  }
+
+  async search(criteria: { query: string; limit?: number }): Promise<SearchResultItem[]> {
+    const users = await this.model
+      .find({ $text: { $search: criteria.query } })
+      .select('name username profilePic')
+      .limit(criteria.limit ?? 20)
+      .lean();
+
+    return users.map((user) => ({
+      id: user._id.toString(),
+      type: 'user',
+      title: user.name || user.username,
+      snippet: user.username,
+      image: user.profilePic,
+    }));
   }
 }

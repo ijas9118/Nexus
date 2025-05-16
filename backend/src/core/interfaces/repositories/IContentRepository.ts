@@ -1,3 +1,4 @@
+import { SearchCriteria, SearchResultItem } from '@/core/types/search';
 import { IContent } from '../../../models/content.model';
 import { BaseRepository } from '../../abstracts/base.repository';
 
@@ -10,4 +11,5 @@ export interface IContentRepository extends BaseRepository<IContent> {
   getContentCount(): Promise<number>;
   getUserContents(userId: string): Promise<IContent[] | null>;
   incrementViewCount(contentId: string): Promise<void>;
+  search(criteria: SearchCriteria): Promise<SearchResultItem[]>;
 }
