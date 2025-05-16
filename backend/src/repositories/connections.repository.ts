@@ -73,7 +73,10 @@ export class ConnectionsRepository
     return pendingRequests.length > 0 ? pendingRequests[0].pendingUsers : [];
   };
 
-  sendConnectionRequest = async (requesterId: string, recipientId: string): Promise<boolean> => {
+  sendConnectionRequest = async (
+    requesterId: string,
+    recipientId: string
+  ): Promise<'ALREADY_SENT' | 'SUCCESS'> => {
     const requesterObjectId = new Types.ObjectId(requesterId);
     const recipientObjectId = new Types.ObjectId(recipientId);
 
@@ -83,7 +86,7 @@ export class ConnectionsRepository
     });
 
     if (existingRequest) {
-      return false;
+      return 'ALREADY_SENT';
     }
 
     await this.findOneAndUpdate(
@@ -91,7 +94,7 @@ export class ConnectionsRepository
       { $addToSet: { pendingConnectionRequests: requesterObjectId } }
     );
 
-    return true;
+    return 'SUCCESS';
   };
 
   acceptConnectionRequest = async (userId: string, requesterId: string): Promise<boolean> => {

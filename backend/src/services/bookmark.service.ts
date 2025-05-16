@@ -8,6 +8,7 @@ import CustomError from '../utils/CustomError';
 import { IBookmark } from '../models/bookmarks.model';
 import { BaseService } from '../core/abstracts/base.service';
 import { StatusCodes } from 'http-status-codes';
+import { IContent } from '@/models/content.model';
 
 @injectable()
 export class BookmarkService extends BaseService<IBookmark> implements IBookmarkService {
@@ -52,7 +53,7 @@ export class BookmarkService extends BaseService<IBookmark> implements IBookmark
   }
 
   // Get all bookmarks of a user
-  async getBookmarks(userId: string): Promise<IBookmark[]> {
+  async getBookmarks(userId: string): Promise<IContent[]> {
     const bookmarks = await this.bookmarkRepository.getBookmarks(userId);
     return bookmarks;
   }

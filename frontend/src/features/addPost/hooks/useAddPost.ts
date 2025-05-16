@@ -1,4 +1,4 @@
-import { addContent, uploadFiles } from "@/services/user/contentService";
+import ContentService, { uploadFiles } from "@/services/user/contentService";
 import { FormValues } from "../components/BlogCreationForm";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -55,7 +55,7 @@ export function useAddPost() {
         videoUrl: uploadedFiles.videoUrl,
       };
 
-      return await addContent(requestData);
+      return await ContentService.addContent(requestData);
     },
     onSuccess: (result) => {
       toast.success("Wohoo!", {

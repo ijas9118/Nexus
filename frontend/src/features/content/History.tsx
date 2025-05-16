@@ -1,5 +1,5 @@
 import { Input } from "@/components/atoms/input";
-import { getHistory } from "@/services/user/contentService";
+import ContentService from "@/services/user/contentService";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { IHistoryItem } from "@/types/content";
 import { Search } from "lucide-react";
@@ -23,7 +23,7 @@ const History = () => {
 
     const fetchHistory = async () => {
       try {
-        const data = await getHistory();
+        const data = await ContentService.getHistory();
         console.log(data);
         setHistory(data);
       } catch (err: unknown) {

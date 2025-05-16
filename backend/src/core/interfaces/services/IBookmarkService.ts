@@ -1,6 +1,6 @@
-import { IBookmark } from '../../../models/bookmarks.model';
+import { IContent } from '@/models/content.model';
 
 export interface IBookmarkService {
   toggleBookmark(contentId: string, userId: string): Promise<{ status: boolean }>;
-  getBookmarks(userId: string): Promise<IBookmark[]>;
+  getBookmarks(userId: string): Promise<IContent[]>;
 }

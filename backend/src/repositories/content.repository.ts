@@ -21,39 +21,203 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
   }
 
   async findContent(id: string, role: UserRole, userId?: string): Promise<any> {
-    const contentIdObj = new Types.ObjectId(id);
+    const contentId = new Types.ObjectId(id);
+    const userObjectId = userId ? new Types.ObjectId(userId) : null;
 
-    const result = (await this.model
-      .findById(contentIdObj)
-      .populate('squad', 'name')
-      .populate('author', 'name profilePic role username')
-      .lean()) as IContent & { isUpvoted?: boolean; isDownvoted?: boolean };
+    const pipeline: any[] = [
+      { $match: { _id: contentId } },
 
-    if (!result) {
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'authorInfo',
+        },
+      },
+      { $unwind: '$authorInfo' },
+
+      {
+        $lookup: {
+          from: 'squads',
+          localField: 'squad',
+          foreignField: '_id',
+          as: 'squadInfo',
+        },
+      },
+      {
+        $unwind: {
+          path: '$squadInfo',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      ...(userId
+        ? [
+            {
+              $lookup: {
+                from: 'votes',
+                let: { contentId: '$_id' },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ['$contentId', '$$contentId'] },
+                          { $eq: ['$userId', userObjectId] },
+                        ],
+                      },
+                    },
+                  },
+                ],
+                as: 'userVote',
+              },
+            },
+            {
+              $lookup: {
+                from: 'bookmarks',
+                let: { contentId: '$_id' },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $in: ['$$contentId', '$contentIds'] },
+                          { $eq: ['$userId', userObjectId] },
+                        ],
+                      },
+                    },
+                  },
+                ],
+                as: 'userBookmark',
+              },
+            },
+            {
+              $lookup: {
+                from: 'userfollows',
+                let: { authorId: '$author' },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ['$userId', userObjectId] },
+                          { $in: ['$$authorId', '$following'] },
+                        ],
+                      },
+                    },
+                  },
+                ],
+                as: 'isFollowingAuthor',
+              },
+            },
+            {
+              $lookup: {
+                from: 'userfollows',
+                let: { authorId: '$author' },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ['$userId', userObjectId] },
+                          { $in: ['$$authorId', '$connections'] },
+                        ],
+                      },
+                    },
+                  },
+                ],
+                as: 'isConnectedToAuthor',
+              },
+            },
+          ]
+        : []),
+
+      {
+        $addFields: {
+          isUpvoted: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: '$userVote',
+                        as: 'vote',
+                        cond: { $eq: ['$$vote.voteType', 'upvote'] },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+          isDownvoted: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: '$userVote',
+                        as: 'vote',
+                        cond: { $eq: ['$$vote.voteType', 'downvote'] },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+          isBookmarked: { $gt: [{ $size: '$userBookmark' }, 0] },
+          isFollowing: { $gt: [{ $size: '$isFollowingAuthor' }, 0] },
+          isConnected: { $gt: [{ $size: '$isConnectedToAuthor' }, 0] },
+          author: {
+            _id: '$authorInfo._id',
+            name: '$authorInfo.name',
+            username: '$authorInfo.username',
+            profilePic: '$authorInfo.profilePic',
+            role: '$authorInfo.role',
+          },
+          squad: {
+            _id: '$squadInfo._id',
+            name: '$squadInfo.name',
+          },
+        },
+      },
+      {
+        $project: {
+          userVote: 0,
+          userBookmark: 0,
+          isFollowingAuthor: 0,
+          isConnectedToAuthor: 0,
+          authorInfo: 0,
+          squadInfo: 0,
+          __v: 0,
+        },
+      },
+    ];
+
+    const [content] = await this.model.aggregate(pipeline);
+
+    if (!content) {
       return null;
     }
 
-    if (result.isPremium && role === 'user') {
+    if (content.isPremium && role === 'user') {
       throw new CustomError(
         'This content is available for premium members only',
         StatusCodes.PAYMENT_REQUIRED
       );
     }
 
-    if (userId) {
-      const vote = await this.voteRepo.findOne({
-        contentId: contentIdObj,
-        userId: new Types.ObjectId(userId),
-      });
-
-      result.isUpvoted = vote?.voteType === 'upvote' || false;
-      result.isDownvoted = vote?.voteType === 'downvote' || false;
-    } else {
-      result.isUpvoted = false;
-      result.isDownvoted = false;
-    }
-
-    return result;
+    return content;
   }
 
   async getContentCount(): Promise<number> {

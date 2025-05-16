@@ -3,7 +3,7 @@ import { Badge } from "@/components/atoms/badge";
 import { Card, CardContent } from "@/components/molecules/card";
 import { TrashIcon } from "lucide-react";
 import { IHistoryItem } from "@/types/content";
-import { removeFromHistory } from "@/services/user/contentService";
+import ContentService from "@/services/user/contentService";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,7 +25,7 @@ interface IHistoryCardProps {
 const HistoryCard: React.FC<IHistoryCardProps> = ({ item, setHistory }) => {
   const handleRemoveHistory = async (contentId: string) => {
     try {
-      await removeFromHistory(contentId);
+      await ContentService.removeFromHistory(contentId);
 
       setHistory((prev) =>
         prev.filter((historyItem) => historyItem.contentId !== contentId),

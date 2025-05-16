@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import api from "../api";
+import { handleApi } from "@/utils/handleApi";
 import { CONTENT_ROUTES } from "@/utils/constants";
 
 export const uploadFiles = async (
@@ -25,7 +26,7 @@ export const uploadFiles = async (
   }
 };
 
-export const addContent = async (requestData: {
+interface AddContentRequest {
   contentType: string;
   squad: string;
   title: string;
@@ -33,96 +34,35 @@ export const addContent = async (requestData: {
   isPremium: boolean;
   thumbnailUrl: string | null | undefined;
   videoUrl: string | null | undefined;
-}): Promise<any> => {
-  try {
-    const response = await api.post(CONTENT_ROUTES.POST, requestData);
-    return response.data;
-  } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      throw error.response?.data || error.message;
-    } else if (error instanceof Error) {
-      throw error.message;
-    } else {
-      throw "An unknown error occurred";
-    }
-  }
+}
+
+const ContentService = {
+  // Add new content
+  addContent: (requestData: AddContentRequest) =>
+    handleApi(() => api.post<any>(CONTENT_ROUTES.POST, requestData)),
+
+  // Get paginated content
+  getAllContent: ({ pageParam = 1 }: { pageParam?: number }) =>
+    handleApi(() =>
+      api.get<any>(`${CONTENT_ROUTES.POST}?page=${pageParam}&limit=4`),
+    ),
+
+  // Get single content by ID
+  getContent: (id: string) =>
+    handleApi(() => api.get<any>(`${CONTENT_ROUTES.POST}/${id}`)),
+
+  // Get contents from followed users
+  getFollowingUsersContents: () =>
+    handleApi(() => api.get<any>(CONTENT_ROUTES.GET_FOLLOWING_POSTS)),
+
+  // Get user's content history
+  getHistory: () => handleApi(() => api.get<any>(CONTENT_ROUTES.GET_HISTORY)),
+
+  // Remove a content from history
+  removeFromHistory: (contentId: string) =>
+    handleApi(() =>
+      api.post<any>(CONTENT_ROUTES.REMOVE_FROM_HISTORY, { contentId }),
+    ),
 };
 
-export const getAllContent = async ({ pageParam = 1 }) => {
-  try {
-    const response = await api.get(
-      `${CONTENT_ROUTES.POST}?page=${pageParam}&limit=4`,
-    );
-    return response.data;
-  } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      throw error.response?.data || error.message;
-    } else if (error instanceof Error) {
-      throw error.message;
-    } else {
-      throw "An unknown error occurred";
-    }
-  }
-};
-
-export const getContent = async (id: string) => {
-  try {
-    const response = await api.get(`${CONTENT_ROUTES.POST}/${id}`);
-    return response.data;
-  } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      throw error.response?.data || error.message;
-    } else if (error instanceof Error) {
-      throw error.message;
-    } else {
-      throw "An unknown error occurred";
-    }
-  }
-};
-
-export const getFollowingUsersContents = async () => {
-  try {
-    const response = await api.get(CONTENT_ROUTES.GET_FOLLOWING_POSTS);
-    return response.data;
-  } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      throw error.response?.data || error.message;
-    } else if (error instanceof Error) {
-      throw error.message;
-    } else {
-      throw "An unknown error occurred";
-    }
-  }
-};
-
-export const getHistory = async () => {
-  try {
-    const response = await api.get(CONTENT_ROUTES.GET_HISTORY);
-    return response.data;
-  } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      throw error.response?.data || error.message;
-    } else if (error instanceof Error) {
-      throw error.message;
-    } else {
-      throw "An unknown error occurred";
-    }
-  }
-};
-
-export const removeFromHistory = async (contentId: string) => {
-  try {
-    const response = await api.post(CONTENT_ROUTES.REMOVE_FROM_HISTORY, {
-      contentId,
-    });
-    return response.data;
-  } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      throw error.response?.data || error.message;
-    } else if (error instanceof Error) {
-      throw error.message;
-    } else {
-      throw "An unknown error occurred";
-    }
-  }
-};
+export default ContentService;

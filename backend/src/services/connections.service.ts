@@ -19,7 +19,10 @@ export class ConnectionService implements IConnectionService {
     return this.connectionsRepository.getPendingRequests(userId);
   };
 
-  sendConnectionRequest = async (requesterId: string, recipientId: string): Promise<boolean> => {
+  sendConnectionRequest = async (
+    requesterId: string,
+    recipientId: string
+  ): Promise<'ALREADY_SENT' | 'SUCCESS'> => {
     return this.connectionsRepository.sendConnectionRequest(requesterId, recipientId);
   };
 

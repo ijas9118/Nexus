@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
-import { getFollowingUsersContents } from "@/services/user/contentService";
+import ContentService from "@/services/user/contentService";
 import FilterComponent from "./components/FilterComponent";
 import ContentTypeTab from "./components/ContentTypeTab";
 import ContentCard from "./components/ContentCard";
@@ -27,7 +27,7 @@ export default function Following() {
     error,
   } = useQuery({
     queryKey: ["followingContent"],
-    queryFn: getFollowingUsersContents,
+    queryFn: ContentService.getFollowingUsersContents,
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
   });

@@ -47,13 +47,22 @@ export class ConnectionsController implements IConnectionsController {
     const requesterId = req.user?._id as string;
     const { recipientId } = req.body;
 
-    const result = await this.connectionsService.sendConnectionRequest(requesterId, recipientId);
-
-    if (!result) {
-      throw new CustomError('Failed to send connection request', StatusCodes.BAD_REQUEST);
+    if (!recipientId) {
+      throw new CustomError('Recipient ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    res.status(StatusCodes.OK).json({ success: true });
+    const result = await this.connectionsService.sendConnectionRequest(requesterId, recipientId);
+
+    if (result === 'ALREADY_SENT') {
+      res
+        .status(StatusCodes.CONFLICT)
+        .json({ success: false, message: 'Connection request already sent' });
+      return;
+    }
+
+    res
+      .status(StatusCodes.OK)
+      .json({ success: true, message: 'Connection request sent successfully' });
   });
 
   acceptConnectionRequest = asyncHandler(async (req: Request, res: Response): Promise<void> => {

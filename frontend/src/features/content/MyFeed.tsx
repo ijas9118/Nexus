@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
-import { getAllContent } from "@/services/user/contentService";
+import ContentService from "@/services/user/contentService";
 import ContentCard from "./components/ContentCard";
 import FilterComponent from "./components/FilterComponent";
 import ContentTypeTab from "./components/ContentTypeTab";
@@ -24,7 +24,7 @@ export default function MyFeed() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfiniteQuery({
       queryKey: ["feedContent"],
-      queryFn: getAllContent,
+      queryFn: ContentService.getAllContent,
       getNextPageParam: (lastPage, allPages) => {
         return lastPage.nextPage ? allPages.length + 1 : undefined;
       },
