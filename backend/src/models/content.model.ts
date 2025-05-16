@@ -100,5 +100,7 @@ const ContentSchema: Schema = new Schema(
   }
 );
 
+ContentSchema.index({ title: 'text', content: 'text' });
+
 const ContentModel = mongoose.model<IContent>('Content', ContentSchema);
 export default ContentModel;

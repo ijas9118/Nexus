@@ -35,6 +35,7 @@ import NotificationService from "@/services/notificationService";
 import { setUnreadCount } from "@/store/slices/notificationSlice";
 import { NotificationsDropdown } from "@/components/organisms/notifications-dropdown";
 import { INotification } from "@/types/notification";
+import { GlobalSearch } from "@/components/organisms/global-search";
 
 export default function Layout() {
   const navigate = useNavigate();
@@ -130,6 +131,7 @@ export default function Layout() {
               </Breadcrumb>
             </div>
             <div className="flex items-center gap-4">
+              <GlobalSearch />
               <ModeToggle />
               {theme === "dark" ? (
                 <NPDark className="h-7 w-8" />

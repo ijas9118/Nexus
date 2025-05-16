@@ -10,6 +10,7 @@ import CustomError from '@/utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
 import { IVoteRepository } from '@/core/interfaces/repositories/IVoteRepository';
 import { UserRole } from '@/core/types/UserTypes';
+import { SearchCriteria, SearchResultItem } from '@/core/types/search';
 
 @injectable()
 export class ContentRepository extends BaseRepository<IContent> implements IContentRepository {
@@ -538,4 +539,28 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
   incrementViewCount = async (contentId: string): Promise<void> => {
     await this.model.findByIdAndUpdate(contentId, { $inc: { viewCount: 1 } });
   };
+
+  async search(criteria: SearchCriteria): Promise<SearchResultItem[]> {
+    const { query, limit = 10 } = criteria;
+
+    if (!query) return [];
+
+    const docs = await ContentModel.find(
+      {
+        contentType: 'blog',
+        $text: { $search: query },
+      },
+      { score: { $meta: 'textScore' } }
+    )
+      .sort({ score: { $meta: 'textScore' }, createdAt: -1 })
+      .limit(limit)
+      .lean();
+
+    return docs.map((doc) => ({
+      id: doc._id.toString(),
+      type: 'blog',
+      title: doc.title,
+      snippet: doc.content.substring(0, 150), // example snippet
+    }));
+  }
 }

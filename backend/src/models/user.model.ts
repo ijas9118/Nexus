@@ -108,5 +108,11 @@ const UserSchema: Schema = new Schema(
   }
 );
 
+UserSchema.index({
+  name: 'text',
+  username: 'text',
+  email: 'text',
+});
+
 const UserModel = mongoose.model<IUser>('User', UserSchema);
 export { UserModel, IUser };

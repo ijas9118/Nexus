@@ -5,6 +5,7 @@ import { ISquad, SquadModel } from '../models/squads.model';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
 import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
+import { SearchCriteria, SearchResultItem } from '@/core/types/search';
 
 @injectable()
 export class SquadRepository extends BaseRepository<ISquad> implements ISquadRepository {
@@ -81,5 +82,25 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
     await this.userRepository.findByIdAndUpdate(userObjectId, {
       $addToSet: { joinedSquads: squadId },
     });
+  };
+
+  search = async (criteria: SearchCriteria): Promise<SearchResultItem[]> => {
+    const { query, limit } = criteria;
+
+    const squads = await this.model
+      .find({
+        name: { $regex: query, $options: 'i' },
+      })
+      .select('name category logo')
+      .limit(limit || 10)
+      .lean();
+
+    return squads.map((squad) => ({
+      type: 'squad',
+      id: squad._id.toString(),
+      title: squad.name,
+      subtitle: squad.category,
+      image: squad.logo,
+    }));
   };
 }

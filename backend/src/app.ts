@@ -31,6 +31,7 @@ import bookingRoutes from './routes/booking.routes';
 import notificationTypeRoutes from './routes/notificationType.routes';
 import notificationRoutes from './routes/notification.routes';
 import walletRoutes from './routes/wallet.routes';
+import globalSearchRoute from './routes/globalSearch.routes';
 
 const app = express();
 setupSwagger(app);
@@ -73,6 +74,7 @@ app.use('/api/booking-payment', bookingPaymentRoutes);
 app.use('/api/notification-types', notificationTypeRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/wallet', walletRoutes);
+app.use('/api/search', globalSearchRoute);
 
 app.get('/api/', (req, res) => {
   res.json({ message: 'this is the backendadsf sadf asdf api' });
