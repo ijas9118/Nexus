@@ -1,29 +1,23 @@
 import FilterComponent from "@/features/content/components/FilterComponent";
 import ContentTypeTab from "@/features/content/components/ContentTypeTab";
-import { useEffect, useState } from "react";
-import { getAllBookmarks } from "@/services/user/bookmarkService";
+import { useState } from "react";
+import BookmarkService from "@/services/user/bookmarkService";
 import ContentCard from "./components/ContentCard";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Bookmark() {
-  const [feedContent, setFeedContent] = useState([]);
-  const [error, setError] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState<string>("all");
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 
-  useEffect(() => {
-    const fetchContent = async () => {
-      try {
-        const data = await getAllBookmarks();
-        console.log(data);
-        setFeedContent(data);
-      } catch (err: any) {
-        setError(err.message);
-        console.error("Error fetching content:", err);
-      }
-    };
-
-    fetchContent();
-  }, []);
+  const {
+    data = [],
+    error,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["bookmarkedContent"],
+    queryFn: BookmarkService.getAllBookmarks,
+  });
 
   return (
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 py-8">
@@ -36,31 +30,44 @@ export default function Bookmark() {
         setSelectedTab={setSelectedTab}
       />
 
-      {error && <p className="text-red-500">Error: {error}</p>}
+      {isLoading && (
+        <p className="text-muted-foreground">Loading bookmarks...</p>
+      )}
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {feedContent.map((item: any, index) => (
+      {isError && (
+        <p className="text-red-500">Error: {(error as Error).message}</p>
+      )}
+
+      {!isLoading && !isError && data.length === 0 && (
+        <div className="text-center text-muted-foreground mt-12">
+          <p className="text-lg font-medium">No bookmarks yet</p>
+          <p className="text-sm">Start bookmarking content to see it here.</p>
+        </div>
+      )}
+
+      <div className="flex flex-col space-y-8">
+        {data.map((item: any) => (
           <ContentCard
             id={item._id}
-            key={index}
+            key={item._id}
             avatarFallback={"IA"}
-            userName={item.userName}
+            profilePic={item.profilePic}
+            userName={item.name}
+            username={item.username}
             contentType={item.contentType}
             heading={item.title}
             date={item.date}
+            squad={item.squad}
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
             isBookmarked={item.isBookmarked}
-            username={item.userName}
-            squad={item.squad}
-            profilePic={item.profilePic}
-            upvoteCount={0}
-            downvoteCount={0}
-            commentCount={0}
-            content={""}
-            isUpvoted={false}
-            isDownvoted={false}
-            viewCount={0}
+            upvoteCount={item.upvoteCount}
+            downvoteCount={item.downvoteCount}
+            commentCount={item.commentCount}
+            content={item.content}
+            isUpvoted={item.isUpvoted}
+            isDownvoted={item.isDownvoted}
+            viewCount={item.viewCount}
           />
         ))}
       </div>

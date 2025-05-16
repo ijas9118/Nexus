@@ -22,6 +22,7 @@ export default function FollowingList() {
   const handleUnfollow = async (userId: string) => {
     // Implement unfollow functionality
     // After successful unfollow, refetch the data
+    console.log(userId);
     refetch();
   };
 

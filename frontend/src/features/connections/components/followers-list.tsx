@@ -22,18 +22,21 @@ export default function FollowersList() {
   const handleFollow = async (userId: string) => {
     // Implement follow functionality
     // After successful follow, refetch the data
+    console.log(userId);
     refetch();
   };
 
   const handleUnfollow = async (userId: string) => {
     // Implement unfollow functionality
     // After successful unfollow, refetch the data
+    console.log(userId);
     refetch();
   };
 
   const handleConnect = async (userId: string) => {
     // Implement connect functionality
     // After successful connect, refetch the data
+    console.log(userId);
     refetch();
   };
 

@@ -1,7 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
-import { bookmarkContent } from "@/services/user/bookmarkService";
 import { Bookmark, EyeIcon, MessageCircle, Share2 } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +24,7 @@ import {
   BiSolidUpvote,
   BiUpvote,
 } from "react-icons/bi";
+import BookmarkService from "@/services/user/bookmarkService";
 
 interface ContentCardProps {
   id: string;
@@ -57,11 +57,18 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
   const navigate = useNavigate();
 
   const handleBookmark = async (id: string) => {
+    const prevIsBookmarked = isBookmarked;
+    const optimisticStatus = !isBookmarked;
+
+    // Optimistically update UI
+    setIsBookmarked(optimisticStatus);
+
     try {
-      const result = await bookmarkContent(id);
-      setIsBookmarked(result.status);
+      await BookmarkService.bookmarkContent(id);
     } catch (error) {
-      console.error("Failed to like content", error);
+      console.error("Failed to bookmark content:", error);
+      // Revert UI if request fails
+      setIsBookmarked(prevIsBookmarked);
     }
   };
 

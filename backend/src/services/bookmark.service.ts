@@ -19,37 +19,37 @@ export class BookmarkService extends BaseService<IBookmark> implements IBookmark
   }
 
   // Toggle bookmark for a content
-  // async toggleBookmark(contentId: string, userId: string): Promise<{ status: boolean }> {
-  //   const content = await this.contentRepository.findContent(contentId);
-  //   if (!content) {
-  //     throw new CustomError('Content not found', StatusCodes.NOT_FOUND);
-  //   }
+  async toggleBookmark(contentId: string, userId: string): Promise<{ status: boolean }> {
+    const content = await this.contentRepository.find({ _id: contentId });
+    if (!content) {
+      throw new CustomError('Content not found', StatusCodes.NOT_FOUND);
+    }
 
-  //   const contentIdObject = new mongoose.Types.ObjectId(contentId);
-  //   const userIdObject = new mongoose.Types.ObjectId(userId);
+    const contentIdObject = new mongoose.Types.ObjectId(contentId);
+    const userIdObject = new mongoose.Types.ObjectId(userId);
 
-  //   let bookmark = await this.bookmarkRepository.findOne({ userId: userIdObject });
+    let bookmark = await this.bookmarkRepository.findOne({ userId: userIdObject });
 
-  //   if (!bookmark) {
-  //     bookmark = await this.bookmarkRepository.create({
-  //       userId: userIdObject,
-  //       contentIds: [contentIdObject],
-  //     });
-  //     return { status: true };
-  //   }
+    if (!bookmark) {
+      bookmark = await this.bookmarkRepository.create({
+        userId: userIdObject,
+        contentIds: [contentIdObject],
+      });
+      return { status: true };
+    }
 
-  //   const isBookmarked = bookmark.contentIds.includes(contentIdObject);
+    const isBookmarked = bookmark.contentIds.includes(contentIdObject);
 
-  //   if (isBookmarked) {
-  //     bookmark.contentIds = bookmark.contentIds.filter((id) => !id.equals(contentIdObject));
-  //     await this.bookmarkRepository.updateBookmark(userIdObject, bookmark.contentIds);
-  //     return { status: false };
-  //   } else {
-  //     bookmark.contentIds.push(contentIdObject);
-  //     await this.bookmarkRepository.updateBookmark(userIdObject, bookmark.contentIds);
-  //     return { status: true };
-  //   }
-  // }
+    if (isBookmarked) {
+      bookmark.contentIds = bookmark.contentIds.filter((id) => !id.equals(contentIdObject));
+      await this.bookmarkRepository.updateBookmark(userIdObject, bookmark.contentIds);
+      return { status: false };
+    } else {
+      bookmark.contentIds.push(contentIdObject);
+      await this.bookmarkRepository.updateBookmark(userIdObject, bookmark.contentIds);
+      return { status: true };
+    }
+  }
 
   // Get all bookmarks of a user
   async getBookmarks(userId: string): Promise<IBookmark[]> {

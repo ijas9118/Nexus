@@ -13,24 +13,20 @@ export class BookmarkController implements IBookmarkController {
   constructor(@inject(TYPES.BookmarkService) private bookmarkService: IBookmarkService) {}
 
   // Toggle a bookmark by content ID
-  // toggleBookmark = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  //   const { id: contentId } = req.params;
-  //   const userId = req.user?._id;
-  //   if (!userId) {
-  //     throw new CustomError('User is not authenticated', StatusCodes.UNAUTHORIZED);
-  //   }
-
-  //   const result = await this.bookmarkService.toggleBookmark(contentId, userId);
-  //   res.status(StatusCodes.OK).json({ ...result });
-  // });
-
-  // Get all bookmarks for a user
-  getAllBookmarks = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    if (!req.user) {
+  toggleBookmark = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { id: contentId } = req.params;
+    const userId = req.user?._id;
+    if (!userId) {
       throw new CustomError('User is not authenticated', StatusCodes.UNAUTHORIZED);
     }
 
-    const bookmarkedContents = await this.bookmarkService.getBookmarks(req.user._id);
+    await this.bookmarkService.toggleBookmark(contentId, userId);
+    res.status(StatusCodes.OK).json({ success: true });
+  });
+
+  // Get all bookmarks for a user
+  getAllBookmarks = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const bookmarkedContents = await this.bookmarkService.getBookmarks(req.user?._id as string);
     res.status(StatusCodes.OK).json(bookmarkedContents);
   });
 }

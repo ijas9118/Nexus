@@ -7,7 +7,6 @@ import {
 } from "@/components/organisms/dialog";
 import { ScrollArea } from "@/components/organisms/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { useNavigate } from "react-router-dom";
 import FollowService from "@/services/followService";
 import { Button } from "@/components/atoms/button";
 
@@ -33,7 +32,6 @@ export default function StatDialog({
 }: StatDialogProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isOpen) return;

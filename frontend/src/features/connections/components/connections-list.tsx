@@ -22,6 +22,8 @@ const mockGetPendingConnections = async (
   direction: "incoming" | "outgoing",
 ) => {
   // Simulate API call
+  console.log(userId);
+
   return [
     {
       _id: `pending-${direction}-1`,
@@ -42,7 +44,6 @@ const mockGetPendingConnections = async (
 
 export default function ConnectionsList() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [connectionsTab, setConnectionsTab] = useState("established");
   const { user } = useSelector((state: RootState) => state.auth);
   const currentUserId = user?._id as string;
 
@@ -57,20 +58,12 @@ export default function ConnectionsList() {
     queryFn: () => FollowService.getConnections(currentUserId),
   });
 
-  const {
-    data: pendingOutgoing,
-    isLoading: isLoadingOutgoing,
-    refetch: refetchOutgoing,
-  } = useQuery({
+  const { data: pendingOutgoing, isLoading: isLoadingOutgoing } = useQuery({
     queryKey: ["pending-outgoing", currentUserId],
     queryFn: () => mockGetPendingConnections(currentUserId, "outgoing"),
   });
 
-  const {
-    data: pendingIncoming,
-    isLoading: isLoadingIncoming,
-    refetch: refetchIncoming,
-  } = useQuery({
+  const { data: pendingIncoming, isLoading: isLoadingIncoming } = useQuery({
     queryKey: ["pending-incoming", currentUserId],
     queryFn: () => mockGetPendingConnections(currentUserId, "incoming"),
   });
@@ -78,14 +71,14 @@ export default function ConnectionsList() {
   const handleAccept = async (userId: string) => {
     // Implement accept connection functionality
     // After successful accept, refetch the data
+    console.log(userId);
     refetchConnections();
-    refetchIncoming();
   };
 
   const handleReject = async (userId: string) => {
     // Implement reject connection functionality
     // After successful reject, refetch the data
-    refetchIncoming();
+    console.log(userId);
   };
 
   const filterUsers = (users: any[] = []) => {
@@ -122,7 +115,7 @@ export default function ConnectionsList() {
         className="max-w-md"
       />
 
-      <Tabs defaultValue="established" onValueChange={setConnectionsTab}>
+      <Tabs defaultValue="established">
         <TabsList className="grid w-full grid-cols-3 mb-6">
           <TabsTrigger value="established">Connected</TabsTrigger>
           <TabsTrigger value="outgoing">Sent Requests</TabsTrigger>

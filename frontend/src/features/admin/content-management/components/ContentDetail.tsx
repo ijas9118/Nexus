@@ -38,8 +38,6 @@ const ContentDetail = () => {
     queryFn: () => ContentService.getContentById(contentId),
   });
 
-  console.log(content);
-
   const { mutate: verifyContent, isPending: isVerifying } = useMutation({
     mutationFn: (contentId: string) => ContentService.verifyContent(contentId),
     onSuccess: () => {

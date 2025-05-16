@@ -3,6 +3,7 @@ import { BaseRepository } from '../core/abstracts/base.repository';
 import { IBookmarkRepository } from '../core/interfaces/repositories/IBookmarnRepository';
 import { IBookmark, BookmarkModel } from '../models/bookmarks.model';
 import mongoose from 'mongoose';
+import { IContent } from '@/models/content.model';
 
 @injectable()
 export class BookmarkRepository extends BaseRepository<IBookmark> implements IBookmarkRepository {
@@ -18,19 +19,13 @@ export class BookmarkRepository extends BaseRepository<IBookmark> implements IBo
     await this.updateOne({ userId }, { contentIds });
   }
 
-  // Get all bookmarked contents for a user by userId
-  async getBookmarks(userId: string): Promise<IBookmark[]> {
-    const userIdObject = new mongoose.Types.ObjectId(userId);
+  async getBookmarks(userId: string): Promise<IContent[]> {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
 
     const bookmarkedContents = await this.model.aggregate([
-      {
-        $match: {
-          userId: userIdObject,
-        },
-      },
-      {
-        $unwind: '$contentIds',
-      },
+      { $match: { userId: userObjectId } },
+      { $unwind: '$contentIds' },
+
       {
         $lookup: {
           from: 'contents',
@@ -39,12 +34,112 @@ export class BookmarkRepository extends BaseRepository<IBookmark> implements IBo
           as: 'content',
         },
       },
+      { $unwind: '$content' },
+
+      // Replace root with the actual content document
       {
-        $unwind: '$content',
+        $replaceRoot: { newRoot: '$content' },
+      },
+
+      // Join author info
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'authorInfo',
+        },
+      },
+      { $unwind: '$authorInfo' },
+
+      // Join vote info for current user
+      {
+        $lookup: {
+          from: 'votes',
+          let: { contentId: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$contentId', '$$contentId'] },
+                    { $eq: ['$userId', userObjectId] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'userVote',
+        },
+      },
+
+      // Join squad info (if any)
+      {
+        $lookup: {
+          from: 'squads',
+          localField: 'squad',
+          foreignField: '_id',
+          as: 'squadInfo',
+        },
+      },
+      {
+        $unwind: {
+          path: '$squadInfo',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      // Add computed fields
+      {
+        $addFields: {
+          isUpvoted: {
+            $gt: [
+              {
+                $size: {
+                  $filter: {
+                    input: '$userVote',
+                    as: 'vote',
+                    cond: { $eq: ['$$vote.voteType', 'upvote'] },
+                  },
+                },
+              },
+              0,
+            ],
+          },
+          isDownvoted: {
+            $gt: [
+              {
+                $size: {
+                  $filter: {
+                    input: '$userVote',
+                    as: 'vote',
+                    cond: { $eq: ['$$vote.voteType', 'downvote'] },
+                  },
+                },
+              },
+              0,
+            ],
+          },
+          isBookmarked: true, // Always true in this context
+          username: '$authorInfo.username',
+          profilePic: '$authorInfo.profilePic',
+          squad: {
+            _id: '$squadInfo._id',
+            name: '$squadInfo.name',
+          },
+        },
+      },
+
+      // Exclude unwanted fields
+      {
+        $project: {
+          userVote: 0,
+          authorInfo: 0,
+          squadInfo: 0,
+          __v: 0,
+        },
       },
     ]);
-
-    console.log(bookmarkedContents);
 
     return bookmarkedContents;
   }

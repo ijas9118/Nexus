@@ -19,11 +19,11 @@ router.get(
 
 router.post('/', authenticate(['user', 'premium', 'mentor']), contentController.createContent);
 
-// router.post(
-//   '/:id/bookmark',
-//   authenticate(['user', 'premium', 'mentor']),
-//   bookmarkController.toggleBookmark
-// );
+router.post(
+  '/:id/bookmark',
+  authenticate(['user', 'premium', 'mentor']),
+  bookmarkController.toggleBookmark
+);
 
 router.get(
   '/bookmarks',
