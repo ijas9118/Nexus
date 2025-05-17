@@ -3,6 +3,7 @@ import { IPendingRequestUser, SearchConnections } from '../../types/UserTypes';
 export interface IConnectionService {
   searchConnections(userId: string, search?: string): Promise<SearchConnections[]>;
   getPendingRequest(userId: string): Promise<IPendingRequestUser[]>;
+  getSentConnectionRequests(userId: string): Promise<IPendingRequestUser[]>; // New method
   sendConnectionRequest(
     requesterId: string,
     recipientId: string

@@ -5,6 +5,8 @@ export interface IUserFollow extends Document {
   followers: Types.ObjectId[];
   following: Types.ObjectId[];
   connections: Types.ObjectId[];
+  pendingConnectionRequests: Types.ObjectId[];
+  sentConnectionRequests: Types.ObjectId[];
 }
 
 const UserFollowSchema: Schema = new Schema(
@@ -34,6 +36,12 @@ const UserFollowSchema: Schema = new Schema(
       },
     ],
     pendingConnectionRequests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    sentConnectionRequests: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

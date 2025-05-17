@@ -15,33 +15,6 @@ import { EmptyState } from "./empty-state";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
-// This is a mock function since the actual API for pending connections wasn't provided
-// In a real app, you would replace this with actual API calls
-const mockGetPendingConnections = async (
-  userId: string,
-  direction: "incoming" | "outgoing",
-) => {
-  // Simulate API call
-  console.log(userId);
-
-  return [
-    {
-      _id: `pending-${direction}-1`,
-      name: `${direction === "incoming" ? "Incoming" : "Outgoing"} Request 1`,
-      profilePic:
-        "https://res.cloudinary.com/dhvlhpg55/image/upload/v1745093138/nexus/images/profile-pic/nexus/images/profile-pic/830.jpg",
-      username: `user-${direction}-1`,
-    },
-    {
-      _id: `pending-${direction}-2`,
-      name: `${direction === "incoming" ? "Incoming" : "Outgoing"} Request 2`,
-      profilePic:
-        "https://res.cloudinary.com/dhvlhpg55/image/upload/v1745093138/nexus/images/profile-pic/nexus/images/profile-pic/830.jpg",
-      username: `user-${direction}-2`,
-    },
-  ];
-};
-
 export default function ConnectionsList() {
   const [searchTerm, setSearchTerm] = useState("");
   const { user } = useSelector((state: RootState) => state.auth);
@@ -60,25 +33,30 @@ export default function ConnectionsList() {
 
   const { data: pendingOutgoing, isLoading: isLoadingOutgoing } = useQuery({
     queryKey: ["pending-outgoing", currentUserId],
-    queryFn: () => mockGetPendingConnections(currentUserId, "outgoing"),
+    queryFn: () => FollowService.getSentConnectionRequests(),
   });
 
   const { data: pendingIncoming, isLoading: isLoadingIncoming } = useQuery({
     queryKey: ["pending-incoming", currentUserId],
-    queryFn: () => mockGetPendingConnections(currentUserId, "incoming"),
+    queryFn: () => FollowService.getPendingRequests(),
   });
 
   const handleAccept = async (userId: string) => {
-    // Implement accept connection functionality
-    // After successful accept, refetch the data
-    console.log(userId);
-    refetchConnections();
+    try {
+      await FollowService.acceptConnectionRequest(userId);
+      refetchConnections();
+    } catch (error) {
+      console.error("Failed to accept connection:", error);
+    }
   };
 
   const handleReject = async (userId: string) => {
-    // Implement reject connection functionality
-    // After successful reject, refetch the data
-    console.log(userId);
+    try {
+      await FollowService.withdrawConnectionRequest(userId);
+      refetchConnections();
+    } catch (error) {
+      console.error("Failed to reject connection:", error);
+    }
   };
 
   const filterUsers = (users: any[] = []) => {

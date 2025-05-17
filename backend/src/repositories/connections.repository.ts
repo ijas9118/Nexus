@@ -80,6 +80,7 @@ export class ConnectionsRepository
     const requesterObjectId = new Types.ObjectId(requesterId);
     const recipientObjectId = new Types.ObjectId(recipientId);
 
+    // Check if request already exists
     const existingRequest = await this.findOne({
       userId: recipientObjectId,
       pendingConnectionRequests: { $in: [requesterObjectId] },
@@ -89,9 +90,16 @@ export class ConnectionsRepository
       return 'ALREADY_SENT';
     }
 
+    // Add to recipient's pendingConnectionRequests
     await this.findOneAndUpdate(
       { userId: recipientObjectId },
       { $addToSet: { pendingConnectionRequests: requesterObjectId } }
+    );
+
+    // Add to requester's sentConnectionRequests
+    await this.findOneAndUpdate(
+      { userId: requesterObjectId },
+      { $addToSet: { sentConnectionRequests: recipientObjectId } }
     );
 
     return 'SUCCESS';
@@ -101,8 +109,7 @@ export class ConnectionsRepository
     const userObjectId = new Types.ObjectId(userId);
     const requesterObjectId = new Types.ObjectId(requesterId);
 
-    console.log(userObjectId, requesterObjectId);
-
+    // Remove from recipient's pendingConnectionRequests and add to connections
     await this.findOneAndUpdate(
       { userId: userObjectId },
       {
@@ -111,14 +118,13 @@ export class ConnectionsRepository
       }
     );
 
-    // await this.findOneAndUpdate(
-    //   { userId: recipientObjectId },
-    //   { $addToSet: { connections: requesterObjectId } }
-    // );
-
+    // Remove from requester's sentConnectionRequests and add to connections
     await this.findOneAndUpdate(
       { userId: requesterObjectId },
-      { $addToSet: { connections: userId } }
+      {
+        $pull: { sentConnectionRequests: userObjectId },
+        $addToSet: { connections: userObjectId },
+      }
     );
 
     return true;
@@ -128,12 +134,12 @@ export class ConnectionsRepository
     const requesterObjectId = new Types.ObjectId(requesterId);
     const recipientObjectId = new Types.ObjectId(recipientId);
 
-    const recipientUser = await this.findOne({
-      userId: recipientObjectId,
-      pendingConnectionRequests: { $in: [requesterObjectId] },
+    const requesterUser = await this.findOne({
+      userId: requesterObjectId,
+      sentConnectionRequests: { $in: [recipientObjectId] },
     });
 
-    return !!recipientUser;
+    return !!requesterUser;
   };
 
   withdrawConnectionRequest = async (
@@ -143,12 +149,48 @@ export class ConnectionsRepository
     const requesterObjectId = new Types.ObjectId(requesterId);
     const recipientObjectId = new Types.ObjectId(recipientId);
 
+    // Remove from recipient's pendingConnectionRequests
     await this.findOneAndUpdate(
       { userId: recipientObjectId },
       { $pull: { pendingConnectionRequests: requesterObjectId } }
     );
 
+    // Remove from requester's sentConnectionRequests
+    await this.findOneAndUpdate(
+      { userId: requesterObjectId },
+      { $pull: { sentConnectionRequests: recipientObjectId } }
+    );
+
     return true;
+  };
+
+  getSentConnectionRequests = async (userId: string): Promise<IPendingRequestUser[]> => {
+    const userObjId = new Types.ObjectId(userId);
+
+    const sentRequests = await UserFollowModel.aggregate([
+      { $match: { userId: userObjId } },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'sentConnectionRequests',
+          foreignField: '_id',
+          as: 'sentUsers',
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          sentUsers: {
+            _id: 1,
+            name: 1,
+            username: 1,
+            profilePic: 1,
+          },
+        },
+      },
+    ]);
+
+    return sentRequests.length > 0 ? sentRequests[0].sentUsers : [];
   };
 
   isConnected = async (userId1: string, userId2: string): Promise<boolean> => {

@@ -1,3 +1,4 @@
+// connection.service.ts
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
 import { IConnectionService } from '../core/interfaces/services/IConnectionService';
@@ -17,6 +18,10 @@ export class ConnectionService implements IConnectionService {
 
   getPendingRequest = async (userId: string): Promise<IPendingRequestUser[]> => {
     return this.connectionsRepository.getPendingRequests(userId);
+  };
+
+  getSentConnectionRequests = async (userId: string): Promise<IPendingRequestUser[]> => {
+    return this.connectionsRepository.getSentConnectionRequests(userId);
   };
 
   sendConnectionRequest = async (

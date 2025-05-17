@@ -55,9 +55,9 @@ const ChatHeader = ({ userDetails, chatType }: ChatHeaderProps) => {
       <div className="flex gap-2 sm:gap-5 items-center flex-shrink-0">
         {chatType === "Chat" && (
           <>
-            <Button onClick={() => setShowVideoCall(true)} variant="ghost">
+            {/* <Button onClick={() => setShowVideoCall(true)} variant="ghost">
               <Video />
-            </Button>
+            </Button> */}
             {showVideoCall && (
               <VideoCall
                 userId={user?._id as string}

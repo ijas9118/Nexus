@@ -51,6 +51,9 @@ const FollowService = {
 
   getConnections: (userId: string) =>
     handleApi(() => api.get<any>(`/followers/${userId}/connections`)),
+
+  getSentConnectionRequests: () =>
+    handleApi(() => api.get<any>("/followers/sent-requests")),
 };
 
 export default FollowService;

@@ -92,4 +92,10 @@ router.get(
   followersController.getFollowStats
 );
 
+router.get(
+  '/sent-requests',
+  authenticate(['user', 'premium', 'mentor']),
+  connectionsController.getSentConnectionRequests
+);
+
 export default router;

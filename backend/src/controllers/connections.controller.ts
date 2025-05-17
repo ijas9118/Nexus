@@ -35,14 +35,6 @@ export class ConnectionsController implements IConnectionsController {
     res.status(StatusCodes.OK).json(result);
   });
 
-  getPendingRequests = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const userId = req.user?._id as string;
-
-    const result = await this.connectionsService.getPendingRequest(userId);
-
-    res.status(StatusCodes.OK).json(result);
-  });
-
   sendConnectionRequest = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const requesterId = req.user?._id as string;
     const { recipientId } = req.body;
@@ -134,5 +126,21 @@ export class ConnectionsController implements IConnectionsController {
     const data = await this.connectionsService.getAllConnections(userId);
 
     res.status(StatusCodes.OK).json({ data });
+  });
+
+  getPendingRequests = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
+
+    const result = await this.connectionsService.getPendingRequest(userId);
+
+    res.status(StatusCodes.OK).json(result);
+  });
+
+  getSentConnectionRequests = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
+
+    const result = await this.connectionsService.getSentConnectionRequests(userId);
+
+    res.status(StatusCodes.OK).json(result);
   });
 }
