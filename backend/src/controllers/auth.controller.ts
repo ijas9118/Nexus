@@ -17,6 +17,7 @@ import { Profile as GitHubProfile } from 'passport-github2';
 import { IMentorService } from '@/core/interfaces/services/IMentorService';
 import { LoginRequestDTO, RegisterRequestDTO } from '@/dtos/requests/auth.dto';
 import { UserRole } from '@/core/types/UserTypes';
+import logger from '@/config/logger';
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -73,6 +74,8 @@ export class AuthController implements IAuthController {
   // Login user and set refresh token cookie
   login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const user = await this.authService.login(req.body as LoginRequestDTO);
+
+    logger.error('Errorr loggin in');
 
     setRefreshTokenCookie(res, { _id: user._id.toString(), role: user.role as UserRole });
 
@@ -204,8 +207,6 @@ export class AuthController implements IAuthController {
     if (!githubProfile.emails || githubProfile.emails.length === 0) {
       throw new CustomError('No email provided by GitHub', StatusCodes.BAD_REQUEST);
     }
-
-    console.log(githubProfile);
 
     const user = await this.authService.handleGithubUser({
       githubId: githubProfile.id,

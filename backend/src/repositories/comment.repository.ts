@@ -15,7 +15,6 @@ export class CommentRepository extends BaseRepository<IComment> implements IComm
   }
 
   createComment = async (commentData: AddCommentParams): Promise<IComment | null> => {
-    console.log(commentData);
     const userId = new mongoose.Types.ObjectId(commentData.userId);
     const contentId = new mongoose.Types.ObjectId(commentData.contentId);
 

@@ -15,8 +15,6 @@ export class VoteController implements IVoteController {
     const { contentId, voteType } = req.body;
     const userId = req.user?._id as string;
 
-    console.log(contentId, voteType, userId);
-
     // Process the vote
     await this.voteService.vote(contentId, userId, voteType);
 

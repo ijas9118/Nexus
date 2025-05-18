@@ -97,7 +97,6 @@ export class MentorController implements IMentorController {
     };
 
     const updatedMentor = await this.mentorService.updateMentorExperience(userId, experienceData);
-    console.log(experienceData, updatedMentor);
     res.status(StatusCodes.OK).json({ success: true, data: updatedMentor });
   });
 

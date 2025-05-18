@@ -16,8 +16,6 @@ export const uploadToCloudinary = async (
 
   const filename = path.basename(file.originalname, path.extname(file.originalname));
 
-  console.log(filename);
-
   const publicId = `${folder}/${filename}`;
 
   try {
