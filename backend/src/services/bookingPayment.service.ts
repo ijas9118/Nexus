@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { INotificationService } from '@/core/interfaces/services/INotificationService';
 import { IMentorRepository } from '@/core/interfaces/repositories/IMentorRepository';
 import { ITimeSlotService } from '@/core/interfaces/services/ITimeSlotService';
+import { IWalletService } from '@/core/interfaces/services/IWalletService';
 
 @injectable()
 export class BookingPaymentService implements IBookingPaymentService {
@@ -22,7 +23,8 @@ export class BookingPaymentService implements IBookingPaymentService {
     private mentorshipTypeRepository: MentorshipTypeRepository,
     @inject(TYPES.NotificationService) private notificationService: INotificationService,
     @inject(TYPES.MentorRepository) private mentorRepository: IMentorRepository,
-    @inject(TYPES.TimeSlotService) private timeSlotService: ITimeSlotService
+    @inject(TYPES.TimeSlotService) private timeSlotService: ITimeSlotService,
+    @inject(TYPES.WalletService) private walletService: IWalletService
   ) {}
 
   async checkoutSession(
@@ -148,15 +150,22 @@ export class BookingPaymentService implements IBookingPaymentService {
       customerName: customer_details.name,
     });
 
-    const meetToken = uuidv4();
-    const meetUrl = `${CLIENT_URL}/meeting/${meetToken}`;
-
-    await this.bookingRepository.update(metadata.bookingId, { meetUrl });
-
     const mentor = await this.mentorRepository.findById(metadata.mentorId);
     if (!mentor) {
       throw new Error('Mentor not found');
     }
+
+    await this.walletService.addMoney(
+      mentor.userId.toString(), // Mentor's user ID
+      amount_total / 100 - 20,
+      metadata.bookingId,
+      metadata.customerId // Mentee ID
+    );
+
+    const meetToken = uuidv4();
+    const meetUrl = `${CLIENT_URL}/meeting/${meetToken}`;
+
+    await this.bookingRepository.update(metadata.bookingId, { meetUrl });
 
     const notificationTypeId =
       await this.notificationService.getNotificationTypeIdByName('New Booking Request');
