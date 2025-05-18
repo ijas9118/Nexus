@@ -18,7 +18,6 @@ export class BookingPaymentController implements IBookingPaymentController {
     const { mentorId, mentorshipType, date, timeSlot, reason, email } = req.body;
     const customerId = req.user?._id as string;
     const mentorUserId = await this.mentorService.getUserIdByMentorId(mentorId);
-    console.log(JSON.stringify(mentorUserId), mentorId);
     const sessionUrl = await this.bookingPaymentService.checkoutSession(
       mentorId,
       mentorshipType,

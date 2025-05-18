@@ -150,14 +150,11 @@ export class TimeSlotService extends BaseService<ITimeSlot> implements ITimeSlot
   }
 
   async bookTimeSlot(slotId: string, mentorId: string): Promise<ITimeSlot> {
-    // Find the time slot by ID and mentorId
-    console.log(slotId, mentorId);
     const timeSlot = await this.timeSlotRepository.findById(slotId);
     if (!timeSlot) {
       throw new CustomError('Time slot not found.', StatusCodes.NOT_FOUND);
     }
 
-    // Verify the time slot belongs to the mentor
     if (timeSlot.mentorId.toString() !== mentorId) {
       throw new CustomError(
         'Time slot does not belong to the specified mentor.',
@@ -165,14 +162,11 @@ export class TimeSlotService extends BaseService<ITimeSlot> implements ITimeSlot
       );
     }
 
-    // Check if the time slot is already booked
     if (timeSlot.isBooked) {
       throw new CustomError('Time slot is already booked.', StatusCodes.CONFLICT);
     }
 
-    // Mark the time slot as booked
     const updatedTimeSlot = await this.timeSlotRepository.update(slotId, { isBooked: true });
-    console.log(updatedTimeSlot);
     if (!updatedTimeSlot) {
       throw new CustomError('Failed to update the time slot.', StatusCodes.NOT_FOUND);
     }

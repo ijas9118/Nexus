@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { verifyAccessToken, verifyRefreshToken } from '../utils/jwt.util';
 import { StatusCodes } from 'http-status-codes';
 import { UserRole } from '@/core/types/UserTypes';
+import logger from '@/config/logger';
 
 interface IUser {
   _id: string;
@@ -31,7 +32,7 @@ export const authenticate = (roles: Array<UserRole>) => {
       req.user = decoded;
 
       if (roles.length && (!req.user || !roles.includes(req.user.role))) {
-        console.log(req.user.role, roles);
+        logger.debug(req.user.role, roles);
         res.status(StatusCodes.FORBIDDEN).json({ message: 'Permission denied' });
         return;
       }

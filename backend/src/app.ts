@@ -3,7 +3,6 @@ import express from 'express';
 import cors from 'cors';
 import { CLIENT_URL } from './utils/constants';
 import cookieParser from 'cookie-parser';
-import morgan from 'morgan';
 
 import errorMiddleware from './middlewares/errorMiddleware';
 import { setupSwagger } from './utils/swaggerConfig';
@@ -32,6 +31,7 @@ import notificationTypeRoutes from './routes/notificationType.routes';
 import notificationRoutes from './routes/notification.routes';
 import walletRoutes from './routes/wallet.routes';
 import globalSearchRoute from './routes/globalSearch.routes';
+import { httpLogger } from './middlewares/httpLogger';
 
 const app = express();
 setupSwagger(app);
@@ -49,7 +49,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(morgan('dev'));
+app.use(httpLogger);
 
 app.use(passport.initialize());
 
@@ -77,7 +77,7 @@ app.use('/api/wallet', walletRoutes);
 app.use('/api/search', globalSearchRoute);
 
 app.get('/api/', (req, res) => {
-  res.json({ message: 'this is the backendadsf sadf asdf api' });
+  res.json({ message: 'this is the backend' });
 });
 
 app.use(errorMiddleware);

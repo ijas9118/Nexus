@@ -15,7 +15,6 @@ export class BookingController implements IBookingController {
 
   getUpcomingBookings = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const bookings = await this.bookingService.getUpcomingBookings();
-    console.log(bookings);
     res.status(StatusCodes.OK).json(bookings);
   });
 

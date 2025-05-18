@@ -12,6 +12,7 @@ import { INotificationService } from '@/core/interfaces/services/INotificationSe
 import { IMentorRepository } from '@/core/interfaces/repositories/IMentorRepository';
 import { ITimeSlotService } from '@/core/interfaces/services/ITimeSlotService';
 import { IWalletService } from '@/core/interfaces/services/IWalletService';
+import logger from '@/config/logger';
 
 @injectable()
 export class BookingPaymentService implements IBookingPaymentService {
@@ -96,7 +97,7 @@ export class BookingPaymentService implements IBookingPaymentService {
         break;
       }
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        logger.info(`Unhandled event type: ${event.type}`);
     }
   }
 
