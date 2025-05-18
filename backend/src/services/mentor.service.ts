@@ -39,7 +39,6 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
       profilePic: personalInfo.profilePic as string,
     });
 
-
     if (!updatedUser) {
       throw new CustomError('User not found.');
     } else {
