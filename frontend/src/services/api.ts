@@ -1,10 +1,9 @@
 import { refreshAccessToken } from "@/store/slices/authSlice";
 import store from "@/store/store";
-import { HOST } from "@/utils/constants";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: HOST + "/api",
+  baseURL: "/api",
   withCredentials: true,
 });
 
