@@ -1,5 +1,3 @@
-import { ObjectId, Types } from 'mongoose';
-
 export interface MentorDashboardData {
   totalEarnings: number;
   pendingWithdrawal: number;

@@ -1,7 +1,6 @@
 import { WalletInfo } from '@/core/types/wallet.types';
 import { IBaseService } from './IBaseService';
 import { IWallet } from '@/models/wallet.model';
-import { IWithdrawalRequest } from '@/models/withdrawalRequest.model';
 
 export interface IWalletService extends IBaseService<IWallet> {
   addMoney(

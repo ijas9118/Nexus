@@ -38,7 +38,7 @@ export class SocketController {
 
       // Video call events
       socket.on('join-video-room', ({ roomId, peerId }) => {
-        this.handleJoinVideoRoom(userId, roomId, peerId, socket, io);
+        this.handleJoinVideoRoom(userId, roomId, peerId, socket);
       });
 
       socket.on('leave-video-room', ({ roomId }) => {
@@ -90,8 +90,7 @@ export class SocketController {
     userId: string,
     roomId: string,
     peerId: string,
-    socket: Socket,
-    io: SocketIOServer
+    socket: Socket
   ): Promise<void> {
     try {
       // Join the socket room
