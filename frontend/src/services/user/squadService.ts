@@ -2,19 +2,17 @@ import { AxiosError } from "axios";
 import api from "../api";
 
 const SquadService = {
-  createSquad: async (data: {
-    name: string;
-    description: string;
-    handle: string;
-    category: string;
-    logoUrl?: string;
-  }) => {
+  createSquad: async (formData: FormData) => {
     try {
-      const response = await api.post("/squad", data);
+      const response = await api.post("/squad", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        console.log(error);
+        console.error("Error creating squad:", error);
         throw error.response?.data || error.message;
       } else if (error instanceof Error) {
         throw error.message;

@@ -2,11 +2,11 @@ import { Request, Response } from 'express';
 import { ISquadController } from '../core/interfaces/controllers/ISquadController';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
-
 import { ISquadService } from '../core/interfaces/services/ISquadService';
 import asyncHandler from 'express-async-handler';
 import CustomError from '../utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
+import { Express } from 'express';
 
 @injectable()
 export class SquadController implements ISquadController {
@@ -18,7 +18,13 @@ export class SquadController implements ISquadController {
       throw new CustomError('Squad with this name already exists', StatusCodes.BAD_REQUEST);
     }
 
-    const squad = await this.squadService.createSquad(req.body);
+    const logoFile = req.file as Express.Multer.File | undefined;
+    const squadData = {
+      ...req.body,
+      logo: undefined,
+    };
+
+    const squad = await this.squadService.createSquad(squadData, logoFile);
     res.status(StatusCodes.CREATED).json(squad);
   });
 

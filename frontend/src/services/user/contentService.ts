@@ -1,45 +1,21 @@
-import axios, { AxiosError } from "axios";
 import api from "../api";
 import { handleApi } from "@/utils/handleApi";
 import { CONTENT_ROUTES } from "@/utils/constants";
 
-export const uploadFiles = async (
-  uploadUrl: string,
-  formData: FormData,
-): Promise<string | undefined> => {
-  try {
-    const response = await axios.post(uploadUrl, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    return response.data.secure_url;
-  } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      throw error.response?.data || error.message;
-    } else if (error instanceof Error) {
-      throw error.message;
-    } else {
-      throw "An unknown error occurred";
-    }
-  }
-};
-
-interface AddContentRequest {
-  contentType: string;
-  squad: string;
-  title: string;
-  content: string;
-  isPremium: boolean;
-  thumbnailUrl: string | null | undefined;
-  videoUrl: string | null | undefined;
-}
-
 const ContentService = {
   // Add new content
-  addContent: (requestData: AddContentRequest) =>
-    handleApi(() => api.post<any>(CONTENT_ROUTES.POST, requestData)),
+  addContent: async (formData: FormData) => {
+    try {
+      const response = await api.post("/content/posts", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error("Failed to create content");
+    }
+  },
 
   // Get paginated content
   getAllContent: ({ pageParam = 1 }: { pageParam?: number }) =>

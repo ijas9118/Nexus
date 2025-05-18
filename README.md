@@ -128,7 +128,6 @@ The project is divided into two main folders:
      ```
    - Use the `.env.example` file to create your `.env` file:
      ```env
-     VITE_CLOUD_NAME=your_cloudinary_name
      VITE_API_BASE_URL=http://localhost:3000/api
      ```
    - Run the frontend application:

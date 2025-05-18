@@ -5,6 +5,8 @@ import { ISquad } from '../models/squads.model';
 import { TYPES } from '../di/types';
 import { ISquadRepository } from '../core/interfaces/repositories/ISquadRepository';
 import { ICategoryRepository } from '../core/interfaces/repositories/ICategoryRepository';
+import { uploadToCloudinary } from '@/utils/cloudinaryUtils';
+import { Express } from 'express';
 
 @injectable()
 export class SquadService extends BaseService<ISquad> implements ISquadService {
@@ -15,7 +17,10 @@ export class SquadService extends BaseService<ISquad> implements ISquadService {
     super(squadRepository);
   }
 
-  createSquad = async (squadData: Partial<ISquad>): Promise<ISquad> => {
+  createSquad = async (
+    squadData: Partial<ISquad>,
+    logoFile?: Express.Multer.File
+  ): Promise<ISquad> => {
     const { category } = squadData;
     if (!category || typeof category !== 'string') {
       throw new Error('Invalid category provided');
@@ -26,12 +31,31 @@ export class SquadService extends BaseService<ISquad> implements ISquadService {
       throw new Error('Category not found');
     }
 
-    const squad = await this.create(squadData);
+    // Upload logo to Cloudinary if provided
+    let logoUrl: string | undefined;
+    if (logoFile) {
+      const result = await uploadToCloudinary(logoFile, {
+        baseFolder: 'images',
+        subFolder: 'squad-logos',
+        resourceType: 'image',
+      });
+      logoUrl = result.url;
+    }
 
+    // Update squadData with the logo URL
+    const updatedSquadData = {
+      ...squadData,
+      logo: logoUrl,
+    };
+
+    // Create the squad
+    const squad = await this.create(updatedSquadData);
+
+    // Update category
     categoryObj.squads.push(squad._id);
     categoryObj.squadCount += 1;
-
     await categoryObj.save();
+
     return squad;
   };
 

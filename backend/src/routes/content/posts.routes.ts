@@ -4,6 +4,7 @@ import { IVoteController } from '@/core/interfaces/controllers/IVoteController';
 import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
 import { authenticate } from '@/middlewares/auth.middleware';
+import upload from '@/middlewares/multer';
 import { Router } from 'express';
 
 const router = Router();
@@ -17,7 +18,15 @@ router.get(
   contentController.getAllContent
 );
 
-router.post('/', authenticate(['user', 'premium', 'mentor']), contentController.createContent);
+router.post(
+  '/',
+  authenticate(['user', 'premium', 'mentor']),
+  upload.fields([
+    { name: 'thumbnail', maxCount: 1 },
+    { name: 'videoFile', maxCount: 1 },
+  ]),
+  contentController.createContent
+);
 
 router.post(
   '/:id/bookmark',

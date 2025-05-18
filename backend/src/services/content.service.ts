@@ -6,6 +6,8 @@ import { BaseService } from '../core/abstracts/base.service';
 import { IContentRepository } from '../core/interfaces/repositories/IContentRepository';
 import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
 import { IContentViewService } from '@/core/interfaces/services/IContentViewService';
+import { Express } from 'express';
+import { uploadToCloudinary } from '@/utils/cloudinaryUtils';
 
 @injectable()
 export class ContentService extends BaseService<IContent> implements IContentService {
@@ -17,9 +19,45 @@ export class ContentService extends BaseService<IContent> implements IContentSer
     super(contentRepository);
   }
 
-  async createContent(contentData: Partial<IContent>): Promise<IContent> {
-    const createdContent = await this.create(contentData);
+  async createContent(
+    contentData: Partial<IContent>,
+    thumbnailFile?: Express.Multer.File,
+    videoFile?: Express.Multer.File
+  ): Promise<IContent> {
+    let thumbnailUrl: string | undefined;
+    let videoUrl: string | undefined;
 
+    // Upload thumbnail to Cloudinary if provided
+    if (thumbnailFile) {
+      const result = await uploadToCloudinary(thumbnailFile, {
+        baseFolder: 'images',
+        subFolder: 'blog-thumbnails',
+        resourceType: 'image',
+      });
+      thumbnailUrl = result.url;
+    }
+
+    // Upload video to Cloudinary if provided
+    if (videoFile) {
+      const result = await uploadToCloudinary(videoFile, {
+        baseFolder: 'videos',
+        subFolder: 'content-videos',
+        resourceType: 'video',
+      });
+      videoUrl = result.url;
+    }
+
+    // Update contentData with Cloudinary URLs
+    const updatedContentData = {
+      ...contentData,
+      thumbnailUrl,
+      videoUrl,
+    };
+
+    // Save content to the database
+    const createdContent = await this.create(updatedContentData);
+
+    // Increment author's post count
     if (createdContent.author) {
       await this.userRepository.addPostCount(createdContent.author.toString());
     }

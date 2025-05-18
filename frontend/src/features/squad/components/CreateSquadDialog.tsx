@@ -22,7 +22,6 @@ import {
 } from "@/components/atoms/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import SquadService from "@/services/user/squadService";
-import { uploadFiles } from "@/services/user/contentService";
 import CategoryService from "@/services/admin/categoryService";
 import { Category } from "@/types/category";
 import { Squad } from "@/types/squad";
@@ -46,12 +45,10 @@ const formSchema = z.object({
   logo: z
     .instanceof(File)
     .optional()
-    .refine((file) => {
-      if (file) {
-        return file.size <= 5000000;
-      }
-      return true;
-    }, "Max file size is 5MB."),
+    .refine(
+      (file) => !file || file.size <= 5 * 1024 * 1024,
+      "Max file size is 5MB.",
+    ),
   isPremium: z.boolean().default(false),
 });
 
@@ -75,6 +72,7 @@ export function CreateSquadDialog({
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -103,32 +101,21 @@ export function CreateSquadDialog({
   const onSubmit = async (data: FormData) => {
     try {
       setLoading(true);
-      let logo: string | undefined = undefined;
-
-      if (data.logo instanceof File) {
-        const uploadUrl = `https://api.cloudinary.com/v1_1/${
-          import.meta.env.VITE_CLOUD_NAME
-        }/upload`;
-        const formData = new FormData();
-        formData.append("file", data.logo);
-        formData.append("upload_preset", "nexus_images");
-
-        logo = await uploadFiles(uploadUrl, formData);
-        console.log("LOGO:", logo, typeof logo);
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("description", data.description);
+      formData.append("handle", data.handle);
+      formData.append("category", data.category);
+      formData.append("isPremium", String(data.isPremium));
+      if (data.logo) {
+        formData.append("logo", data.logo);
       }
 
-      const squadData = {
-        name: data.name,
-        description: data.description,
-        handle: data.handle,
-        category: data.category,
-        logo,
-        isPremium: data.isPremium,
-      };
-
-      const result = await SquadService.createSquad(squadData);
+      const result = await SquadService.createSquad(formData);
       onSquadCreated(result);
       setLoading(false);
+      setLogoPreview(null);
+      reset();
 
       toast.success("Success", {
         description: result.message || "Squad created successfully!",

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
 import { IContentController } from '../core/interfaces/controllers/IContentController';
-import { Request, Response } from 'express';
+import { Request, Response, Express } from 'express';
 
 import { IContentService } from '../core/interfaces/services/IContentService';
 import { IHistoryService } from '../core/interfaces/services/IHistoryService';
@@ -17,6 +17,10 @@ export class ContentController implements IContentController {
   ) {}
 
   createContent = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+    const thumbnailFile = files?.['thumbnail']?.[0];
+    const videoFile = files?.['videoFile']?.[0];
+
     const contentData = {
       ...req.body,
       author: req.user?._id,
@@ -28,7 +32,8 @@ export class ContentController implements IContentController {
       }),
     };
 
-    const content = await this.contentService.createContent(contentData);
+    const content = await this.contentService.createContent(contentData, thumbnailFile, videoFile);
+
     res.status(StatusCodes.CREATED).json({
       success: true,
       message: 'Content created successfully',

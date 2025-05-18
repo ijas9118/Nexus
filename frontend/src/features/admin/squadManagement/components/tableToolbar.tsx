@@ -6,11 +6,9 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import { ChevronDown, Plus } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import { FacetedFilter } from "./faceted-filter";
-import { useState } from "react";
-import { CreateSquadDialog } from "./CreateSquadDialog";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -19,8 +17,6 @@ interface DataTableToolbarProps<TData> {
 export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
   return (
     <div className="flex items-center justify-between py-4">
       <div className="flex flex-1 items-center space-x-2">
@@ -54,11 +50,6 @@ export function DataTableToolbar<TData>({
         )}
       </div>
       <div className="flex items-center space-x-2">
-        <Button variant="secondary" onClick={() => setIsDialogOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Create Squad
-        </Button>
-        <CreateSquadDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
