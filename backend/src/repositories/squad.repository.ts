@@ -6,6 +6,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
 import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
 import { SearchCriteria, SearchResultItem } from '@/core/types/search';
+import { SquadWithIsJoined } from '@/core/types/squad';
 
 @injectable()
 export class SquadRepository extends BaseRepository<ISquad> implements ISquadRepository {
@@ -22,11 +23,74 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
     return await this.find({});
   };
 
-  getSquadsByCategory = async (category: string, userId: string): Promise<ISquad[]> => {
-    const userObjectId = new mongoose.Types.ObjectId(userId);
+  getSquadDetailsByHandle = async (handle: string): Promise<ISquad> => {
+    const squadDetails = await SquadModel.aggregate([
+      {
+        $match: { handle: handle.toLowerCase() },
+      },
+      {
+        $lookup: {
+          from: 'categories', // Category collection
+          localField: 'category',
+          foreignField: '_id',
+          as: 'categoryData',
+        },
+      },
+      {
+        $unwind: {
+          path: '$categoryData',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'users', // Admin user
+          localField: 'admin',
+          foreignField: '_id',
+          as: 'adminData',
+        },
+      },
+      {
+        $unwind: {
+          path: '$adminData',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          description: 1,
+          handle: 1,
+          logo: 1,
+          postCount: 1,
+          viewCount: 1,
+          upvoteCount: 1,
+          membersCount: 1,
+          isActive: 1,
+          isPremium: 1,
+          createdAt: 1,
+          category: '$categoryData.name',
+          adminName: '$adminData.name',
+          adminUsername: '$adminData.username',
+          adminProfilePic: '$adminData.profilePic',
+        },
+      },
+    ]);
 
+    return squadDetails[0] || null;
+  };
+
+  getSquadsByCategory = async (
+    categoryId: string,
+    userId: string
+  ): Promise<SquadWithIsJoined[]> => {
     return await this.model.aggregate([
-      { $match: { category } },
+      {
+        $match: {
+          category: new mongoose.Types.ObjectId(categoryId),
+        },
+      },
       {
         $lookup: {
           from: 'users',
@@ -46,7 +110,9 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
                       $filter: {
                         input: '$joinedUsers',
                         as: 'user',
-                        cond: { $eq: ['$$user._id', userObjectId] },
+                        cond: {
+                          $eq: ['$$user._id', new mongoose.Types.ObjectId(userId)], // Cast userId to ObjectId
+                        },
                       },
                     },
                   },
@@ -59,7 +125,11 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
           },
         },
       },
-      { $project: { joinedUsers: 0 } },
+      {
+        $project: {
+          joinedUsers: 0,
+        },
+      },
     ]);
   };
 

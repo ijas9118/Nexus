@@ -7,6 +7,7 @@ import asyncHandler from 'express-async-handler';
 import CustomError from '../utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
 import { Express } from 'express';
+import logger from '@/config/logger';
 
 @injectable()
 export class SquadController implements ISquadController {
@@ -46,6 +47,7 @@ export class SquadController implements ISquadController {
   getSquadsByCategory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
     const category = req.query.category as string;
+    console.log(category);
     if (!category) {
       throw new CustomError('Category is required', StatusCodes.BAD_REQUEST);
     }
@@ -64,5 +66,22 @@ export class SquadController implements ISquadController {
 
     await this.squadService.joinSquad(userId, squadId);
     res.status(StatusCodes.OK).json({ message: 'Successfully joined squad' });
+  });
+
+  getSquadDetailsByHandle = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { handle } = req.params;
+
+    logger.debug(handle);
+    if (!handle) {
+      throw new CustomError('Squad handle is required', StatusCodes.BAD_REQUEST);
+    }
+
+    const squad = await this.squadService.getSquadDetailsByHandle(handle);
+
+    if (!squad) {
+      throw new CustomError('Squad not found', StatusCodes.NOT_FOUND);
+    }
+
+    res.status(StatusCodes.OK).json(squad);
   });
 }

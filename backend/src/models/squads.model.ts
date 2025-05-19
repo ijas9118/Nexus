@@ -1,12 +1,16 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-interface ISquad extends Document {
-  _id: mongoose.Types.ObjectId;
+interface ISquad extends Document<string> {
   name: string;
+  admin: string;
   description: string;
   handle: string;
   members: mongoose.Types.ObjectId[];
   logo: string;
+  postCount: number;
+  viewCount: number;
+  upvoteCount: number;
+  membersCount: number;
   category: string;
   isActive: boolean;
   isPremium: boolean;
@@ -19,6 +23,10 @@ const SquadSchema: Schema = new Schema(
       required: true,
       trim: true,
       unique: true,
+    },
+    admin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
     },
     description: {
       type: String,
@@ -43,8 +51,25 @@ const SquadSchema: Schema = new Schema(
       required: true,
     },
     category: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: 'Category',
+    },
+    postCount: {
+      type: Number,
+      default: 0,
+    },
+    viewCount: {
+      type: Number,
+      default: 0,
+    },
+    upvoteCount: {
+      type: Number,
+      default: 0,
+    },
+    membersCount: {
+      type: Number,
+      default: 0,
     },
     isActive: {
       type: Boolean,

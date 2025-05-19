@@ -1,9 +1,9 @@
-import { Schema, model, Document, Types } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 
 interface ICategory extends Document {
   name: string;
   squadCount: number;
-  squads: Types.ObjectId[];
+  squads: string[];
   isActive: boolean;
 }
 
@@ -17,10 +17,12 @@ const CategorySchema = new Schema<ICategory>(
       type: Number,
       default: 0,
     },
-    squads: {
-      type: [Schema.Types.ObjectId],
-      ref: 'Squads',
-    },
+    squads: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Squads',
+      },
+    ],
     isActive: {
       type: Boolean,
       default: true,
