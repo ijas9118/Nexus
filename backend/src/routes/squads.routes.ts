@@ -30,4 +30,10 @@ router.post(
   squadController.joinSquad
 );
 
+router.get(
+  '/:squadId/contents',
+  authenticate(['user', 'premium', 'mentor', 'admin']),
+  squadController.getSquadContents
+);
+
 export default router;

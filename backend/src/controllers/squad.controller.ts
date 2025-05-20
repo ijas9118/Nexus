@@ -84,4 +84,17 @@ export class SquadController implements ISquadController {
 
     res.status(StatusCodes.OK).json(squad);
   });
+
+  getSquadContents = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { squadId } = req.params;
+    const userId = req.user?._id as string;
+    const role = req.user?.role as string;
+
+    if (!squadId) {
+      throw new CustomError('Squad ID is required', StatusCodes.BAD_REQUEST);
+    }
+
+    const contents = await this.squadService.getSquadContents(squadId, role, userId);
+    res.status(StatusCodes.OK).json(contents);
+  });
 }

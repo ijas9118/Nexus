@@ -1,4 +1,5 @@
 import { SquadByCategoryResponseDto } from '@/dtos/responses/sqauds.dto';
+import { SquadContentResponseDto } from '@/dtos/responses/squad-contents.dto';
 import { ISquad } from '@/models/squads.model';
 import { Express } from 'express';
 
@@ -11,4 +12,9 @@ export interface ISquadService {
   getSquadDetailsByHandle(handle: string): Promise<ISquad | null>;
   getAllSquads(): Promise<ISquad[]>;
   getSquadById(id: string): Promise<ISquad | null>;
+  getSquadContents(
+    squadId: string,
+    role: string,
+    userId: string
+  ): Promise<SquadContentResponseDto[]>;
 }

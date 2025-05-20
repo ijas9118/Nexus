@@ -22,7 +22,7 @@ import { Squad } from "@/types/squad";
 import { Plus } from "lucide-react";
 import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import CategoryScroll from "./components/CategoryScroll";
 import { CreateSquadDialog } from "./components/CreateSquadDialog";
@@ -40,6 +40,15 @@ const Squads: FC = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.openCreateSquadDialog && user?.isPremium) {
+      setIsDialogOpen(true);
+    } else if (location.state?.openCreateSquadDialog && !user?.isPremium) {
+      setShowAlert(true);
+    }
+  }, [location.state, user]);
 
   useEffect(() => {
     const fetchCategory = async () => {

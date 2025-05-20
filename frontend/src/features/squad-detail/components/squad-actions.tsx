@@ -1,26 +1,23 @@
 import { useState } from "react";
 import { PlusCircle, UserPlus, LogOut } from "lucide-react";
 import { Button } from "@/components/atoms/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/molecules/alert-dialog";
 import { Separator } from "@/components/atoms/separator";
 import { toast } from "sonner";
+import { useConfirmDialog } from "@/context/ConfirmDialogContext";
 
 interface SquadActionsProps {
+  squadName: string;
   membersCount: number;
+  isAdmin: boolean;
 }
 
-export function SquadActions({ membersCount }: SquadActionsProps) {
+export function SquadActions({
+  membersCount,
+  squadName,
+  isAdmin,
+}: SquadActionsProps) {
   const [inviteLink] = useState("https://squad.io/invite/nodejs-dev");
+  const { showConfirm } = useConfirmDialog();
 
   const copyInviteLink = () => {
     navigator.clipboard.writeText(inviteLink);
@@ -51,28 +48,25 @@ export function SquadActions({ membersCount }: SquadActionsProps) {
           <PlusCircle className="mr-2 h-4 w-4" />
           Add Post
         </Button>
-
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="outline" className="w-full" size="sm">
-              <LogOut className="mr-2 h-4 w-4" />
-              Leave Squad
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                You are about to leave the Node.js Developers squad. You will no
-                longer have access to exclusive content.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction>Leave Squad</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        {!isAdmin && (
+          <Button
+            variant="outline"
+            className="w-full"
+            size="sm"
+            onClick={() =>
+              showConfirm({
+                title: "Are you sure?",
+                description: `You are about to leave the ${squadName} squad. You will no
+            longer have access to exclusive content.`,
+                confirmLabel: "Leave Squad",
+                cancelLabel: "Cancel",
+              })
+            }
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Leave Squad
+          </Button>
+        )}
       </div>
     </div>
   );

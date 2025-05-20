@@ -1,15 +1,15 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface IContent extends Document {
+export interface IContent extends Document<string> {
   avatarFallback: string;
-  author: mongoose.Types.ObjectId;
+  author: string;
   userName: string;
   contentType: string;
   title: string;
   date: string;
   upvoteCount: number;
   downvoteCount: number;
-  squad: mongoose.Types.ObjectId;
+  squad: string;
   isPremium: boolean;
   thumbnailUrl: string;
   videoUrl: string;
@@ -18,6 +18,7 @@ export interface IContent extends Document {
   bookmarkCount: number;
   viewCount: number;
   isVerified: boolean;
+  createdAt: string;
 }
 
 const ContentSchema: Schema = new Schema(

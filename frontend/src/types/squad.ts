@@ -26,7 +26,36 @@ export interface SquadDetail {
   isPremium: boolean;
   createdAt: string;
   category: string;
+  admin: string;
   adminName: string;
   adminUsername: string;
   adminProfilePic: string;
+}
+
+export interface SquadContent {
+  _id: string;
+  author: string;
+  contentType: string;
+  title: string;
+  upvoteCount: number;
+  downvoteCount: number;
+  squad: string;
+  isPremium: boolean;
+  thumbnailUrl?: string;
+  videoUrl?: string | null;
+  content: string;
+  commentCount: number;
+  bookmarkCount: number;
+  viewCount: number;
+  isVerified: boolean;
+  createdAt: string;
+  isUpvoted: boolean;
+  isDownvoted: boolean;
+  isBookmarked: boolean;
+  isFollowing: boolean;
+  isConnected: boolean;
+  authorName: string;
+  authorUsername: string;
+  authorProfilePic: string;
+  authorRole: string;
 }

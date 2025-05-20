@@ -1,6 +1,5 @@
 import { ArrowBigUp, CalendarDays, Eye, MessagesSquare } from "lucide-react";
 import { Badge } from "@/components/atoms/badge";
-import { Separator } from "@/components/atoms/separator";
 import { Card, CardContent } from "@/components/molecules/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 
@@ -98,8 +97,6 @@ export function SquadHeader({
               </div>
             </div>
           </div>
-
-          <Separator className="my-2" />
         </div>
       </CardContent>
     </Card>

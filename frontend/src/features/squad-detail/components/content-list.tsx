@@ -1,147 +1,126 @@
-import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
-import {
-  ThumbsUp,
-  ThumbsDown,
-  MessageSquare,
-  Eye,
-  Bookmark,
-  Link2,
-  Share2,
-} from "lucide-react";
+import { MessageSquare, Eye, Bookmark, Link2, Play } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import { Separator } from "@/components/atoms/separator";
 import { toast } from "sonner";
+import type { SquadContent } from "@/types/squad";
+import SquadService from "@/services/user/squadService";
+import { extractTextFromHtml } from "@/utils/htmlToText";
+import Premium from "@/components/icons/Premium";
+import { Badge } from "@/components/atoms/badge";
+import {
+  BiDownvote,
+  BiSolidDownvote,
+  BiSolidUpvote,
+  BiUpvote,
+} from "react-icons/bi";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store/store";
+import PremiumAccessAlert from "@/components/organisms/PremiumAccessAlert";
+import { useState } from "react";
+import BookmarkService from "@/services/user/bookmarkService";
+import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { ShareMenu } from "@/components/organisms/share-menu";
 
-interface ContentItem {
-  id: string;
-  title: string;
-  excerpt: string;
-  author: {
-    name: string;
-    avatar: string;
-  };
-  publishedAt: Date;
-  readTime: string;
-  type: "blog" | "video";
-  thumbnail?: string;
-  upvotes: number;
-  downvotes: number;
-  comments: number;
-  views: number;
-  isBookmarked: boolean;
-  tags: string[];
-}
+export function ContentList({ squadId }: { squadId: string }) {
+  const isPremium = useSelector(
+    (state: RootState) => state.auth.user?.isPremium,
+  );
+  const [showAlert, setShowAlert] = useState(false);
+  const navigate = useNavigate();
 
-export function ContentList() {
-  const [contents, setContents] = useState<ContentItem[]>([
-    {
-      id: "1",
-      title: "Building Scalable APIs with Node.js and Express",
-      excerpt:
-        "Learn how to build robust and scalable RESTful APIs using Node.js and Express framework with best practices for error handling, authentication, and more.",
-      author: {
-        name: "Alex Chen",
-        avatar: "/placeholder.svg?height=40&width=40",
-      },
-      publishedAt: new Date("2023-04-15"),
-      readTime: "8 min read",
-      type: "blog",
-      thumbnail: "/placeholder.svg?height=150&width=280",
-      upvotes: 342,
-      downvotes: 12,
-      comments: 56,
-      views: 4521,
-      isBookmarked: false,
-      tags: ["Node.js", "Express", "API"],
+  const {
+    data: contents,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<SquadContent[], Error>({
+    queryKey: ["squadContents", squadId],
+    queryFn: () => SquadService.getSquadContents(squadId),
+  });
+
+  const queryClient = useQueryClient();
+
+  const bookmarkMutation = useMutation({
+    mutationFn: (contentId: string) =>
+      BookmarkService.bookmarkContent(contentId),
+    onMutate: async (contentId: string) => {
+      await queryClient.cancelQueries({ queryKey: ["squadContents", squadId] });
+
+      const previousContents = queryClient.getQueryData<SquadContent[]>([
+        "squadContents",
+        squadId,
+      ]);
+
+      queryClient.setQueryData<SquadContent[]>(
+        ["squadContents", squadId],
+        (old) =>
+          old?.map((content) =>
+            content._id === contentId
+              ? { ...content, isBookmarked: !content.isBookmarked }
+              : content,
+          ) || [],
+      );
+
+      return { previousContents };
     },
-    {
-      id: "2",
-      title: "Mastering Async/Await in Node.js",
-      excerpt:
-        "Deep dive into asynchronous programming in Node.js using async/await patterns to write cleaner, more maintainable code.",
-      author: {
-        name: "Maria Rodriguez",
-        avatar: "/placeholder.svg?height=40&width=40",
-      },
-      publishedAt: new Date("2023-05-22"),
-      readTime: "6 min read",
-      type: "blog",
-      upvotes: 287,
-      downvotes: 5,
-      comments: 42,
-      views: 3876,
-      isBookmarked: true,
-      tags: ["Node.js", "JavaScript", "Async"],
+    onError: (_err, _contentId, context) => {
+      if (context?.previousContents) {
+        queryClient.setQueryData(
+          ["squadContents", squadId],
+          context.previousContents,
+        );
+      }
+      toast.error("Failed to bookmark. Please try again.");
     },
-    {
-      id: "3",
-      title: "Node.js Performance Optimization Techniques",
-      excerpt:
-        "Watch this comprehensive video tutorial on optimizing your Node.js applications for maximum performance and scalability.",
-      author: {
-        name: "David Kim",
-        avatar: "/placeholder.svg?height=40&width=40",
-      },
-      publishedAt: new Date("2023-06-10"),
-      readTime: "15 min video",
-      type: "video",
-      thumbnail: "/placeholder.svg?height=150&width=280",
-      upvotes: 512,
-      downvotes: 8,
-      comments: 78,
-      views: 8932,
-      isBookmarked: false,
-      tags: ["Node.js", "Performance", "Optimization"],
+    onSuccess: () => {
+      toast.info("Bookmark updated.");
     },
-  ]);
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["squadContents", squadId] });
+    },
+  });
 
-  const toggleBookmark = (id: string) => {
-    setContents(
-      contents.map((content) =>
-        content.id === id
-          ? { ...content, isBookmarked: !content.isBookmarked }
-          : content,
-      ),
-    );
-
-    const content = contents.find((c) => c.id === id);
-    toast(
-      content?.isBookmarked ? "Removed from bookmarks" : "Added to bookmarks",
-      {
-        description: content?.isBookmarked
-          ? "The content has been removed from your bookmarks."
-          : "The content has been added to your bookmarks.",
-      },
-    );
+  const handleBookmark = async (id: string) => {
+    bookmarkMutation.mutate(id);
   };
 
-  const toggleUpvote = (id: string) => {
-    setContents(
-      contents.map((content) =>
-        content.id === id
-          ? { ...content, upvotes: content.upvotes + 1 }
-          : content,
-      ),
-    );
+  const handleCardClick = (id: string, premium: boolean) => {
+    if (premium && !isPremium) {
+      setShowAlert(true);
+    } else {
+      navigate(`/content/${id}`);
+    }
   };
 
-  const toggleDownvote = (id: string) => {
-    setContents(
-      contents.map((content) =>
-        content.id === id
-          ? { ...content, downvotes: content.downvotes + 1 }
-          : content,
-      ),
-    );
+  const handleUserClick = (username: string) => {
+    navigate(`/profile/${username}`);
   };
 
   const copyLink = (id: string) => {
-    navigator.clipboard.writeText(`https://squad.io/content/${id}`);
-    toast("Link copied", {
+    navigator.clipboard.writeText(`${window.location.origin}/content/${id}`);
+    toast.info("Link copied", {
       description: "The content link has been copied to your clipboard.",
     });
   };
+
+  if (isLoading) {
+    return <div className="text-center">Loading content...</div>;
+  }
+
+  if (isError) {
+    return (
+      <div className="text-center text-red-500">
+        Error loading content: {error?.message || "Something went wrong"}
+      </div>
+    );
+  }
+
+  if (!contents || contents.length === 0) {
+    return <div className="text-center">No content available</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -149,19 +128,25 @@ export function ContentList() {
 
       <div className="space-y-6">
         {contents.map((content) => (
-          <div key={content.id} className="space-y-4">
+          <div
+            key={content._id}
+            className="space-y-4 cursor-pointer"
+            onClick={() => handleCardClick(content._id, content.isPremium)}
+          >
             <div className="flex gap-4">
-              {content.thumbnail && (
+              {content.thumbnailUrl && (
                 <div className="relative hidden h-[100px] w-[180px] overflow-hidden rounded-lg sm:block">
                   <img
-                    src={content.thumbnail || "/placeholder.svg"}
+                    src={content.thumbnailUrl || "/placeholder.svg"}
                     alt={content.title}
                     className="object-cover"
                   />
-                  {content.type === "video" && (
+                  {content.contentType === "video" && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                      <div className="h-12 w-12 rounded-full bg-white/20 p-3">
-                        <div className="h-full w-full rounded-full bg-white"></div>
+                      <div className="h-12 w-12 rounded-full bg-muted/50 p-3">
+                        <div className="h-full w-full rounded-full">
+                          <Play className="fill-primary stroke-none" />
+                        </div>
                       </div>
                     </div>
                   )}
@@ -170,78 +155,82 @@ export function ContentList() {
 
               <div className="flex-1 space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="relative h-6 w-6 overflow-hidden rounded-full">
-                    <img
-                      src={content.author.avatar || "/placeholder.svg"}
-                      alt={content.author.name}
-                      className="object-cover"
-                    />
+                  <div
+                    className="flex items-center gap-3 w-fit p-2 rounded-lg hover:bg-muted duration-300 transition-all"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleUserClick(content.authorUsername);
+                    }}
+                  >
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage
+                        src={content.authorProfilePic || "/placeholder.svg"}
+                      />
+                      <AvatarFallback>
+                        {content.authorName.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium ">
+                        {content.authorName}
+                      </span>
+                      <span className="text-xs font-serif text-muted-foreground">
+                        @{content.authorUsername}
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-sm text-muted-foreground">
-                    {content.author.name}
-                  </span>
                   <span className="text-xs text-muted-foreground">•</span>
+                  <Badge
+                    variant="secondary"
+                    className="text-muted-foreground capitalize"
+                  >
+                    {content.contentType}
+                  </Badge>
                   <span className="text-sm text-muted-foreground">
-                    {formatDistanceToNow(content.publishedAt, {
+                    {formatDistanceToNow(new Date(content.createdAt), {
                       addSuffix: true,
                     })}
                   </span>
-                  <span className="text-xs text-muted-foreground">•</span>
-                  <span className="text-sm text-muted-foreground">
-                    {content.readTime}
-                  </span>
+                  {content.isPremium && <Premium />}
                 </div>
 
                 <h3 className="font-semibold leading-tight">{content.title}</h3>
                 <p className="text-sm text-muted-foreground line-clamp-2">
-                  {content.excerpt}
+                  {extractTextFromHtml(content.content)}
                 </p>
-
-                <div className="flex flex-wrap gap-2">
-                  {content.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={() => toggleUpvote(content.id)}
-                >
-                  <ThumbsUp className="h-4 w-4" />
-                  <span className="sr-only">Upvote</span>
-                </Button>
-                <span className="text-sm">{content.upvotes}</span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={() => toggleDownvote(content.id)}
-                >
-                  <ThumbsDown className="h-4 w-4" />
-                  <span className="sr-only">Downvote</span>
-                </Button>
+            <div className="flex flex-wrap items-center gap-6">
+              <div className="border border-muted flex items-center rounded-lg overflow-hidden gap-2">
+                <button className="py-2 px-3">
+                  {content.isUpvoted ? (
+                    <BiSolidUpvote className="text-emerald-400 dark:text-emerald-500" />
+                  ) : (
+                    <BiUpvote className="text-muted-foreground" />
+                  )}
+                </button>
+                <div className="text-sm text-muted-foreground">
+                  {content.upvoteCount - content.downvoteCount}
+                </div>
+                <button className="py-2 px-3">
+                  {content.isDownvoted ? (
+                    <BiSolidDownvote className="text-pink-400 dark:text-pink-500" />
+                  ) : (
+                    <BiDownvote className="text-muted-foreground" />
+                  )}
+                </button>
               </div>
 
               <div className="flex items-center gap-1">
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">{content.comments}</span>
+                <span className="text-sm">{content.commentCount}</span>
               </div>
 
               <div className="flex items-center gap-1">
                 <Eye className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm">
-                  {content.views.toLocaleString()}
+                  {content.viewCount.toLocaleString()}
                 </span>
               </div>
 
@@ -250,7 +239,10 @@ export function ContentList() {
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8"
-                  onClick={() => toggleBookmark(content.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleBookmark(content._id);
+                  }}
                 >
                   <Bookmark
                     className={`h-4 w-4 ${content.isBookmarked ? "fill-current" : ""}`}
@@ -264,16 +256,18 @@ export function ContentList() {
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8"
-                  onClick={() => copyLink(content.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    copyLink(content._id);
+                  }}
                 >
                   <Link2 className="h-4 w-4" />
                   <span className="sr-only">Copy link</span>
                 </Button>
 
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Share2 className="h-4 w-4" />
-                  <span className="sr-only">Share</span>
-                </Button>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <ShareMenu contentId={content._id} title={content.title} />
+                </div>
               </div>
             </div>
 
@@ -281,6 +275,8 @@ export function ContentList() {
           </div>
         ))}
       </div>
+
+      <PremiumAccessAlert open={showAlert} onOpenChange={setShowAlert} />
     </div>
   );
 }

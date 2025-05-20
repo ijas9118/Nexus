@@ -7,9 +7,12 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import SquadService from "@/services/user/squadService";
 import dayjs from "dayjs";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 export default function SquadDetailPage() {
   const { handle } = useParams<{ handle: string }>();
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const {
     data: squad,
@@ -21,7 +24,9 @@ export default function SquadDetailPage() {
     enabled: !!handle,
   });
 
-  console.log(squad);
+  const isAdmin = user?._id === squad?.admin;
+
+  console.log(squad?.admin);
   if (isLoading) return <div>Loading squad details...</div>;
   if (isError || !squad) return <div>Error loading squad details</div>;
 
@@ -43,16 +48,21 @@ export default function SquadDetailPage() {
           <div className="md:col-span-2 space-y-8">
             <SquadDescription description={squad.description} />
 
-            <ContentList />
+            <ContentList squadId={squad._id} />
           </div>
 
           <div className="space-y-6">
             <SquadAdmin
               name={squad.adminName}
+              username={squad.adminUsername}
               profilePic={squad.adminProfilePic}
             />
 
-            <SquadActions membersCount={squad.membersCount} />
+            <SquadActions
+              membersCount={squad.membersCount}
+              squadName={squad.name}
+              isAdmin={isAdmin}
+            />
           </div>
         </div>
       </div>

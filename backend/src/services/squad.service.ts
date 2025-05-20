@@ -10,12 +10,16 @@ import { Express } from 'express';
 import CustomError from '@/utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
 import { SquadByCategoryResponseDto } from '@/dtos/responses/sqauds.dto';
+import { IContentRepository } from '@/core/interfaces/repositories/IContentRepository';
+import { UserRole } from '@/core/types/UserTypes';
+import { SquadContentResponseDto } from '@/dtos/responses/squad-contents.dto';
 
 @injectable()
 export class SquadService extends BaseService<ISquad> implements ISquadService {
   constructor(
     @inject(TYPES.SquadRepository) private squadRepository: ISquadRepository,
-    @inject(TYPES.CategoryRepository) private categoryRepository: ICategoryRepository
+    @inject(TYPES.CategoryRepository) private categoryRepository: ICategoryRepository,
+    @inject(TYPES.ContentRepository) private contentRepository: IContentRepository
   ) {
     super(squadRepository);
   }
@@ -99,4 +103,18 @@ export class SquadService extends BaseService<ISquad> implements ISquadService {
   joinSquad = async (userId: string, squadId: string) => {
     await this.squadRepository.addMemberToSquad(userId, squadId);
   };
+
+  async getSquadContents(
+    squadId: string,
+    role: string,
+    userId: string
+  ): Promise<SquadContentResponseDto[]> {
+    const contents = await this.contentRepository.getSquadContents(
+      squadId,
+      role as UserRole,
+      userId
+    );
+
+    return SquadContentResponseDto.fromEntities(contents);
+  }
 }
