@@ -41,7 +41,7 @@ export default function VerifyContentPage() {
   // Fetch pending content
   const { data: pendingContent, isLoading } = useQuery({
     queryKey: ["pendingContent", squadId],
-    queryFn: () => fetchPendingContent(squadId),
+    queryFn: () => fetchPendingContent(),
   });
 
   const openRejectDialog = () => {
@@ -56,11 +56,10 @@ export default function VerifyContentPage() {
   });
 
   return (
-    <div className="container mx-auto py-6 max-w-7xl">
+    <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 py-8 space-y-8">
       <div className="flex items-center mb-6">
         <Button variant="ghost" className="mr-4">
           <ChevronLeft className="mr-2 h-4 w-4" />
-          Back to Squad
         </Button>
         <h1 className="text-2xl font-bold">Content Verification</h1>
       </div>

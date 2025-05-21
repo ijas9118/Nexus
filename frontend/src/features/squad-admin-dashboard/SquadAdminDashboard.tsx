@@ -108,10 +108,7 @@ export const searchUsers = async (query: string): Promise<User[]> => {
   );
 };
 
-export const inviteUserAsModerator = async (
-  userId: string,
-  squadId: string,
-): Promise<void> => {
+export const inviteUserAsModerator = async (): Promise<void> => {
   // Simulate API call
   await new Promise((resolve) => setTimeout(resolve, 1000));
   return;
@@ -166,7 +163,7 @@ export default function SquadAdminDashboard() {
   };
 
   return (
-    <div className="container mx-auto py-6 max-w-7xl">
+    <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 py-8 space-y-8">
       <DashboardHeader />
 
       {isLoading ? (

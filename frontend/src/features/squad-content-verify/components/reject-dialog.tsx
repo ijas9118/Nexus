@@ -35,13 +35,7 @@ export default function RejectDialog({
 }: RejectDialogProps) {
   // Reject content mutation
   const rejectMutation = useMutation({
-    mutationFn: ({
-      contentId,
-      reason,
-    }: {
-      contentId: string;
-      reason: string;
-    }) => rejectContent(contentId, reason),
+    mutationFn: () => rejectContent(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pendingContent", squadId] });
       toast.success("Content rejected");
@@ -55,10 +49,7 @@ export default function RejectDialog({
 
   const handleReject = () => {
     if (selectedContent && rejectionReason.trim()) {
-      rejectMutation.mutate({
-        contentId: selectedContent.id,
-        reason: rejectionReason,
-      });
+      rejectMutation.mutate();
     }
   };
 

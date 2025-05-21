@@ -1,9 +1,7 @@
 import { ContentItem } from "../VerifyContentPage";
 
 // Mock service functions - replace with actual API calls
-export const fetchPendingContent = async (
-  squadId: string,
-): Promise<ContentItem[]> => {
+export const fetchPendingContent = async (): Promise<ContentItem[]> => {
   // Simulate API call
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -59,16 +57,13 @@ export const fetchPendingContent = async (
   ];
 };
 
-export const approveContent = async (contentId: string): Promise<void> => {
+export const approveContent = async (): Promise<void> => {
   // Simulate API call
   await new Promise((resolve) => setTimeout(resolve, 1000));
   return;
 };
 
-export const rejectContent = async (
-  contentId: string,
-  reason: string,
-): Promise<void> => {
+export const rejectContent = async (): Promise<void> => {
   // Simulate API call
   await new Promise((resolve) => setTimeout(resolve, 1000));
   return;

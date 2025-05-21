@@ -49,7 +49,7 @@ export default function InviteModeratorDialog({
   const handleInviteUser = async () => {
     if (selectedUser && selectedSquad) {
       try {
-        await inviteUserAsModerator(selectedUser.id, selectedSquad.id);
+        await inviteUserAsModerator();
         toast.success(`Invitation sent to ${selectedUser.name}`, {
           description: `${selectedUser.name} has been invited as a moderator for ${selectedSquad.name}`,
         });

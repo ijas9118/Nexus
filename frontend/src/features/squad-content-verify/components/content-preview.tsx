@@ -40,7 +40,7 @@ export default function ContentPreview({
 }: ContentPreviewProps) {
   // Approve content mutation
   const approveMutation = useMutation({
-    mutationFn: (contentId: string) => approveContent(contentId),
+    mutationFn: () => approveContent(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pendingContent", squadId] });
       toast.success("Content approved successfully");
@@ -53,7 +53,7 @@ export default function ContentPreview({
 
   const handleApprove = () => {
     if (selectedContent) {
-      approveMutation.mutate(selectedContent.id);
+      approveMutation.mutate();
     }
   };
 
