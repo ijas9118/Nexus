@@ -4,10 +4,38 @@ import { Badge } from "@/components/atoms/badge";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/atoms/button";
 import { Atom } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import SquadService from "@/services/user/squadService";
 
-export default function SquadsList() {
-  const squads = useSelector((state: any) => state.userSquads.squads);
+export default function SquadsList({
+  profileUserId,
+}: {
+  profileUserId: string;
+}) {
+  const {
+    data: squads = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["userSquads", profileUserId],
+    queryFn: () => SquadService.getJoinedSquads(profileUserId),
+    enabled: !!profileUserId,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="text-sm text-muted-foreground">Loading squads...</div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="text-sm text-destructive">
+        Failed to load squads. {(error as Error).message}
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -30,7 +58,7 @@ export default function SquadsList() {
           className={`w-full ${squads.length > 3 ? "h-[350px]" : "min-h-[100px]"}`}
         >
           <div className="space-y-4">
-            {squads.map((squad: any) => (
+            {squads.map((squad) => (
               <Card key={squad.handle} className="px-3 py-2">
                 <div className="flex items-center gap-4">
                   <img
@@ -40,17 +68,20 @@ export default function SquadsList() {
                     width="60"
                   />
                   <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <Link className="font-semibold hover:underline" to="#">
+                    <div className="flex items-center justify-between">
+                      <Link
+                        className="font-semibold hover:underline"
+                        to={`/squads/${squad.handle}`}
+                      >
                         {squad.name}
                       </Link>
-                      {squad.isAdmin && <Badge>Admin</Badge>}
+                      {squad.isAdmin && <Badge variant={"squad"}>Admin</Badge>}
                     </div>
                     <div className="text-sm text-muted-foreground">
                       @{squad.handle}
                     </div>
                     <div className="mt-1 text-sm text-muted-foreground">
-                      {squad.members.length} members
+                      {squad.membersCount} members
                     </div>
                   </div>
                 </div>

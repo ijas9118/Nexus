@@ -146,7 +146,7 @@ export default function ProfilePage() {
             onConnectionToggle={handleConnectionRequest}
             followStats={stats}
           />
-          <SquadsList />
+          <SquadsList profileUserId={profileUser?._id} />
         </div>
       </div>
     </div>

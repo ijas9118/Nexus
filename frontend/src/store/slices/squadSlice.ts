@@ -1,8 +1,8 @@
+import { SquadDetail } from "@/types/squad";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Squad } from "@/types/squad";
 
 interface SquadState {
-  squadsByCategory: { [key: string]: Squad[] };
+  squadsByCategory: { [key: string]: SquadDetail[] };
 }
 
 const initialState: SquadState = {
@@ -15,7 +15,7 @@ const squadSlice = createSlice({
   reducers: {
     setSquadsByCategory: (
       state,
-      action: PayloadAction<{ category: string; squads: Squad[] }>,
+      action: PayloadAction<{ category: string; squads: SquadDetail[] }>,
     ) => {
       const { category, squads } = action.payload;
       state.squadsByCategory[category] = squads;

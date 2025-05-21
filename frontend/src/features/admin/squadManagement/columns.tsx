@@ -9,13 +9,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import { Squad } from "@/types/squad";
+import { SquadDetail } from "@/types/squad";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 export const columns = (
   toggleSquadStatus: (id: string) => void,
-): ColumnDef<Squad>[] => [
+): ColumnDef<SquadDetail>[] => [
   {
     id: "select",
     header: ({ table }) => (

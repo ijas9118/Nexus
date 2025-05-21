@@ -32,6 +32,10 @@ const SquadSubmenu: React.FC = () => {
     fetchUserSquads();
   }, [dispatch]);
 
+  const handleClick = () => {
+    navigate("/squads", { state: { openCreateSquadDialog: true } });
+  };
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Squads</SidebarGroupLabel>
@@ -48,7 +52,7 @@ const SquadSubmenu: React.FC = () => {
           {squads.map((squad: any) => (
             <SidebarMenuSubItem key={squad._id}>
               <SidebarMenuSubButton
-                onClick={() => navigate(`/squads/${squad.id}`)}
+                onClick={() => navigate(`/squads/${squad.handle}`)}
               >
                 <img src={squad.logo} alt="" className="w-6 rounded-full" />
                 <span>{squad.name}</span>
@@ -56,7 +60,7 @@ const SquadSubmenu: React.FC = () => {
             </SidebarMenuSubItem>
           ))}
         </SidebarMenuSub>
-        <SidebarMenuButton>
+        <SidebarMenuButton onClick={handleClick}>
           <DiamondPlus />
           <span>Create Squad</span>
         </SidebarMenuButton>
