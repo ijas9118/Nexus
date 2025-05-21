@@ -68,15 +68,38 @@ export class SquadController implements ISquadController {
     res.status(StatusCodes.OK).json({ message: 'Successfully joined squad' });
   });
 
+  leaveSquad = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
+    const { squadId } = req.params;
+
+    if (!userId) {
+      throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);
+    }
+
+    await this.squadService.leaveSquad(userId, squadId);
+    res.status(StatusCodes.OK).json({ message: 'Successfully left squad' });
+  });
+
+  getJoinedSquads = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { userId } = req.body;
+
+    if (!userId) {
+      throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);
+    }
+
+    const squads = await this.squadService.getJoinedSquads(userId);
+    res.status(StatusCodes.OK).json(squads);
+  });
+
   getSquadDetailsByHandle = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { handle } = req.params;
+    const userId = req.user?._id as string;
 
-    logger.debug(handle);
     if (!handle) {
       throw new CustomError('Squad handle is required', StatusCodes.BAD_REQUEST);
     }
 
-    const squad = await this.squadService.getSquadDetailsByHandle(handle);
+    const squad = await this.squadService.getSquadDetailsByHandle(handle, userId);
 
     if (!squad) {
       throw new CustomError('Squad not found', StatusCodes.NOT_FOUND);

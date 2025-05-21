@@ -26,7 +26,7 @@ export default function SquadDetailPage() {
 
   const isAdmin = user?._id === squad?.admin;
 
-  console.log(squad?.admin);
+  console.log(squad);
   if (isLoading) return <div>Loading squad details...</div>;
   if (isError || !squad) return <div>Error loading squad details</div>;
 
@@ -59,9 +59,9 @@ export default function SquadDetailPage() {
             />
 
             <SquadActions
-              membersCount={squad.membersCount}
-              squadName={squad.name}
+              squad={squad}
               isAdmin={isAdmin}
+              isJoined={squad.isJoined}
             />
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { handleApi } from "@/utils/handleApi";
 import api from "../api";
-import { Squad, SquadContent, SquadDetail } from "@/types/squad";
+import { SquadContent, SquadDetail } from "@/types/squad";
 
 const SquadService = {
   createSquad: async (formData: FormData) =>
@@ -11,10 +11,13 @@ const SquadService = {
     ),
 
   getSquadsByCategory: async (category: string) =>
-    handleApi(() => api.get<Squad[]>(`/squad?category=${category}`)),
+    handleApi(() => api.get<SquadDetail[]>(`/squad?category=${category}`)),
 
   joinSquad: async (squadId: string) =>
-    handleApi(() => api.post(`/squad/${squadId}/join`)),
+    handleApi(() => api.post<void>(`/squad/${squadId}/join`)),
+
+  leaveSquad: async (squadId: string) =>
+    handleApi(() => api.post(`/squad/${squadId}/leave`)),
 
   getUserJoinedSquads: async () =>
     handleApi(() => api.get<any>("/user/squads")),
@@ -24,6 +27,9 @@ const SquadService = {
 
   getSquadContents: async (squadId: string) =>
     handleApi(() => api.get<SquadContent[]>(`/squad/${squadId}/contents`)),
+
+  getJoinedSquads: async (userId: string) =>
+    handleApi(() => api.post<any[]>("/squad/joined", { userId })),
 };
 
 export default SquadService;

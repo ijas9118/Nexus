@@ -24,10 +24,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import SquadService from "@/services/user/squadService";
 import CategoryService from "@/services/admin/categoryService";
 import { Category } from "@/types/category";
-import { Squad } from "@/types/squad";
 import { toast } from "sonner";
 import { Switch } from "@/components/atoms/switch";
 import { Loader2 } from "lucide-react";
+import { SquadDetail } from "@/types/squad";
 
 const formSchema = z.object({
   name: z
@@ -57,7 +57,7 @@ type FormData = z.infer<typeof formSchema>;
 interface CreateSquadDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSquadCreated: (newSquad: Squad) => void;
+  onSquadCreated: (newSquad: SquadDetail) => void;
 }
 
 export function CreateSquadDialog({

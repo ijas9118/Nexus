@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
-import { Bookmark, EyeIcon, MessageCircle, Share2 } from "lucide-react";
+import { Bookmark, EyeIcon, MessageCircle } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Premium from "@/components/icons/Premium";

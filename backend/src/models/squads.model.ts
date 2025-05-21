@@ -5,7 +5,7 @@ interface ISquad extends Document<string> {
   admin: string;
   description: string;
   handle: string;
-  members: mongoose.Types.ObjectId[];
+  members: string[];
   logo: string;
   postCount: number;
   viewCount: number;

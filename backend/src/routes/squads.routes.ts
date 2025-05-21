@@ -30,10 +30,22 @@ router.post(
   squadController.joinSquad
 );
 
+router.post(
+  '/:squadId/leave',
+  authenticate(['user', 'premium', 'mentor']),
+  squadController.leaveSquad
+);
+
 router.get(
   '/:squadId/contents',
   authenticate(['user', 'premium', 'mentor', 'admin']),
   squadController.getSquadContents
+);
+
+router.post(
+  '/joined',
+  authenticate(['user', 'admin', 'mentor', 'premium']),
+  squadController.getJoinedSquads
 );
 
 export default router;

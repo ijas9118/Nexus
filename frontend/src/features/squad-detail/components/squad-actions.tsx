@@ -1,28 +1,58 @@
 import { useState } from "react";
-import { PlusCircle, UserPlus, LogOut } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { PlusCircle, LogOut, UserPlus } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import { Separator } from "@/components/atoms/separator";
-import { toast } from "sonner";
 import { useConfirmDialog } from "@/context/ConfirmDialogContext";
+import { InvitationShareMenu } from "./invitation-share-menu";
+import { Link } from "react-router-dom";
+import SquadService from "@/services/user/squadService";
+import { SquadDetail } from "@/types/squad";
+import { addUserSquad, removeUserSquad } from "@/store/slices/userSquadsSlice";
 
 interface SquadActionsProps {
-  squadName: string;
-  membersCount: number;
+  squad: SquadDetail;
   isAdmin: boolean;
+  isJoined: boolean;
 }
 
 export function SquadActions({
-  membersCount,
-  squadName,
+  squad,
   isAdmin,
+  isJoined: initialJoined,
 }: SquadActionsProps) {
-  const [inviteLink] = useState("https://squad.io/invite/nodejs-dev");
+  const [inviteLink] = useState(
+    `https://nexus-connect.ddns.net/squads/${squad.handle}`,
+  );
+  const [isJoined, setIsJoined] = useState(initialJoined);
   const { showConfirm } = useConfirmDialog();
+  const dispatch = useDispatch();
 
-  const copyInviteLink = () => {
-    navigator.clipboard.writeText(inviteLink);
-    toast("Invite link copied", {
-      description: "The invite link has been copied to your clipboard.",
+  const handleJoin = async () => {
+    try {
+      await SquadService.joinSquad(squad._id);
+      dispatch(addUserSquad(squad));
+      setIsJoined(true);
+    } catch (err) {
+      console.error("Failed to join squad:", err);
+    }
+  };
+
+  const handleLeave = () => {
+    showConfirm({
+      title: "Are you sure?",
+      description: `You are about to leave the ${squad.name} squad. You will no longer have access to exclusive content.`,
+      confirmLabel: "Leave Squad",
+      cancelLabel: "Cancel",
+      onConfirm: async () => {
+        try {
+          await SquadService.leaveSquad(squad._id);
+          dispatch(removeUserSquad(squad._id));
+          setIsJoined(false);
+        } catch (err) {
+          console.error("Failed to leave squad:", err);
+        }
+      },
     });
   };
 
@@ -32,41 +62,39 @@ export function SquadActions({
         <div>
           <h3 className="font-medium">Members</h3>
           <p className="text-sm text-muted-foreground">
-            {membersCount.toLocaleString()} members
+            {squad.membersCount} members
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={copyInviteLink}>
-          <UserPlus className="mr-2 h-4 w-4" />
-          Invite
-        </Button>
+        <InvitationShareMenu inviteLink={inviteLink} squadName={squad.name} />
       </div>
 
       <Separator />
 
       <div className="space-y-3">
-        <Button className="w-full" size="sm">
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add Post
-        </Button>
-        {!isAdmin && (
-          <Button
-            variant="outline"
-            className="w-full"
-            size="sm"
-            onClick={() =>
-              showConfirm({
-                title: "Are you sure?",
-                description: `You are about to leave the ${squadName} squad. You will no
-            longer have access to exclusive content.`,
-                confirmLabel: "Leave Squad",
-                cancelLabel: "Cancel",
-              })
-            }
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            Leave Squad
+        <Link to="/addPost">
+          <Button className="w-full" size="sm">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Post
           </Button>
-        )}
+        </Link>
+
+        {!isAdmin &&
+          (isJoined ? (
+            <Button
+              variant="outline"
+              className="w-full"
+              size="sm"
+              onClick={handleLeave}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Leave Squad
+            </Button>
+          ) : (
+            <Button className="w-full" size="sm" onClick={handleJoin}>
+              <UserPlus className="mr-2 h-4 w-4" />
+              Join Squad
+            </Button>
+          ))}
       </div>
     </div>
   );

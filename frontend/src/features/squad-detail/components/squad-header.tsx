@@ -58,7 +58,9 @@ export function SquadHeader({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">{tag}</span>
+                  <span className="font-medium text-muted-foreground font-serif">
+                    {tag}
+                  </span>
                   <div className="flex items-center gap-1">
                     <CalendarDays className="h-3.5 w-3.5" />
                     <span>Created {createdDate}</span>
