@@ -4,7 +4,7 @@ import { IUserRepository } from '../core/interfaces/repositories/IUserRepository
 import { IUserService } from '../core/interfaces/services/IUserService';
 import { IUser, UserModel } from '../models/user.model';
 import { BaseService } from '../core/abstracts/base.service';
-import { UsersDTO } from '../dtos/responses/admin/users.dto';
+import { UsersResponseDTO } from '../dtos/responses/admin/users.dto';
 import bcrypt from 'bcryptjs';
 import { ISquad } from '../models/squads.model';
 import { Express } from 'express';
@@ -33,23 +33,16 @@ export class UserService extends BaseService<IUser> implements IUserService {
   async getUsers(
     page: number = 1,
     limit: number = 10
-  ): Promise<{ users: UsersDTO[]; total: number }> {
+  ): Promise<{ users: UsersResponseDTO[]; total: number }> {
     const skip = (page - 1) * limit;
-    const [users, total] = await Promise.all([
+    const [usersRaw, total] = await Promise.all([
       this.userRepository.getAllUsers(skip, limit),
       UserModel.countDocuments({}),
     ]);
 
-    const userDTOs = users.map((user) => ({
-      id: user._id.toString(),
-      name: user.name,
-      email: user.email,
-      profilePic: user.profilePic,
-      postsCount: user.postsCount,
-      joinedSquadsCount: user.joinedSquads.length,
-    }));
+    const users = UsersResponseDTO.fromEntities(usersRaw);
 
-    return { users: userDTOs, total };
+    return { users, total };
   }
 
   async getUserById(userId: string): Promise<IUser | null> {

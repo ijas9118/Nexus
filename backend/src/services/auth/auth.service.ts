@@ -97,6 +97,14 @@ export class AuthService implements IAuthService {
     return this.userRepository.getUserByRoleAndId(role, id);
   }
 
+  async isUserBlocked(userId: string): Promise<boolean> {
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new CustomError('User not found', StatusCodes.NOT_FOUND);
+    }
+    return user.isBlocked || false;
+  }
+
   async handleGoogleUser(googleData: {
     googleId: string;
     email: string;

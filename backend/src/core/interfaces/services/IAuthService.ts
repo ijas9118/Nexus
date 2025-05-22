@@ -7,6 +7,7 @@ export interface IAuthService {
   register(registerDto: RegisterRequestDTO): Promise<RegisterResponseDTO>;
   login(loginDto: LoginRequestDTO): Promise<LoginResponseDTO>;
   updatePassword(email: string, newPassword: string): Promise<void>;
+  isUserBlocked(userId: string): Promise<boolean>;
   getUserByRoleAndId(role: string, id: string): Promise<IUser | null>;
   handleGoogleUser(googleData: {
     googleId: string;

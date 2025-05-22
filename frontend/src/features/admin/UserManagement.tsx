@@ -1,27 +1,33 @@
-import { useEffect, useState } from "react";
-import { AdminUser, columns } from "./userManagement/columns";
+import { useState } from "react";
+import { getUserTableColumns } from "./userManagement/columns";
 import AdminUserService from "@/services/admin/userManagement";
 import { DataTable } from "./userManagement/components/data-table";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const UserManagement = () => {
-  const [data, setData] = useState<AdminUser[]>([]);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(3);
-  const [total, setTotal] = useState(0);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await AdminUserService.getUsers(page, limit);
-        setData(response.data);
-        setTotal(response.total);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
+  const queryClient = useQueryClient();
 
-    fetchUsers();
-  }, [limit, page]);
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["admin-users", page, limit],
+    queryFn: () => AdminUserService.getUsers(page, limit),
+  });
+
+  const blockMutation = useMutation({
+    mutationFn: (userId: string) => AdminUserService.blockUser(userId),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] }),
+  });
+
+  const unblockMutation = useMutation({
+    mutationFn: (userId: string) => AdminUserService.unblockUser(userId),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] }),
+  });
+
+  const columns = getUserTableColumns(blockMutation, unblockMutation);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -36,17 +42,23 @@ const UserManagement = () => {
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-18 py-8">
       <h1 className="text-3xl font-semibold mb-6">User Management</h1>
 
-      <DataTable
-        columns={columns}
-        data={data}
-        pagination={{
-          pageIndex: page - 1,
-          pageSize: limit,
-          pageCount: Math.ceil(total / limit),
-          onPageChange: (newPageIndex) => handlePageChange(newPageIndex + 1),
-          onPageSizeChange: handleLimitChange,
-        }}
-      />
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : isError ? (
+        <p className="text-red-500">Error: {(error as Error).message}</p>
+      ) : (
+        <DataTable
+          columns={columns}
+          data={data?.data ?? []}
+          pagination={{
+            pageIndex: page - 1,
+            pageSize: limit,
+            pageCount: data ? data.totalPages : 0,
+            onPageChange: (newPageIndex) => handlePageChange(newPageIndex + 1),
+            onPageSizeChange: handleLimitChange,
+          }}
+        />
+      )}
     </div>
   );
 };

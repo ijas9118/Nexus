@@ -10,7 +10,7 @@ import { authenticate } from '@/middlewares/auth.middleware';
 const router = Router();
 
 router.use('/', adminAuthRoutes);
-router.use('/user', adminUserRoutes);
+router.use('/user', authenticate(['admin']), adminUserRoutes);
 router.use('/category', authenticate(['admin', 'user', 'premium', 'mentor']), adminCategoryRoutes);
 router.use('/squad', authenticate(['admin']), adminSquadRoutes);
 router.use('/comment', authenticate(['admin']), adminCommentRoutes);
