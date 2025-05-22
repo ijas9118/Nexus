@@ -3,6 +3,7 @@ import { verifyAccessToken, verifyRefreshToken } from '../utils/jwt.util';
 import { StatusCodes } from 'http-status-codes';
 import { UserRole } from '@/core/types/UserTypes';
 import logger from '@/config/logger';
+import redisClient from '@/config/redisClient.config';
 
 interface IUser {
   _id: string;
@@ -19,7 +20,7 @@ declare module 'express-serve-static-core' {
 }
 
 export const authenticate = (roles: Array<UserRole>) => {
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const token = req.headers.authorization?.split(' ')[1];
 

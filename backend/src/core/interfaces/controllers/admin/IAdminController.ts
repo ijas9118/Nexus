@@ -1,7 +1,9 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 
 export interface IAdminController {
-  getUsers(req: Request, res: Response): Promise<void>;
-  getUserById(req: Request, res: Response): Promise<void>;
-  updateUser(req: Request, res: Response): Promise<void>;
+  getUsers: RequestHandler;
+  getUserById: RequestHandler;
+  updateUser: RequestHandler;
+  blockUser: RequestHandler;
+  unblockUser: RequestHandler;
 }

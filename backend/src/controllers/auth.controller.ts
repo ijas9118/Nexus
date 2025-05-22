@@ -18,6 +18,7 @@ import { IMentorService } from '@/core/interfaces/services/IMentorService';
 import { LoginRequestDTO, RegisterRequestDTO } from '@/dtos/requests/auth.dto';
 import { UserRole } from '@/core/types/UserTypes';
 import logger from '@/config/logger';
+import redisClient from '@/config/redisClient.config';
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -77,6 +78,13 @@ export class AuthController implements IAuthController {
 
     logger.error('Errorr loggin in');
 
+    const isBlocked = await this.authService.isUserBlocked(user._id);
+
+    if (isBlocked) {
+      res.status(StatusCodes.FORBIDDEN).json({ message: 'User is blocked' });
+      return;
+    }
+
     setRefreshTokenCookie(res, { _id: user._id.toString(), role: user.role as UserRole });
 
     const accessToken = generateAccessToken({
@@ -129,7 +137,13 @@ export class AuthController implements IAuthController {
 
     const decodedToken = verifyRefreshToken(refreshToken);
     if (!decodedToken) {
+      clearRefreshTokenCookie(res);
       throw new CustomError('Invalid token', StatusCodes.FORBIDDEN);
+    }
+    const isBlocked = await redisClient.get(`blocked_user:${decodedToken.user._id}`);
+    if (isBlocked) {
+      res.status(StatusCodes.FORBIDDEN).json({ message: 'User is blocked' });
+      return;
     }
 
     const { _id, name, email, role } = decodedToken.user;

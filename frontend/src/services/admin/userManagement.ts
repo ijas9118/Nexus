@@ -1,68 +1,21 @@
-import { AxiosError } from "axios";
+import { handleApi } from "@/utils/handleApi";
 import api from "../api";
+import { IGetUsersResponse } from "@/types/admin/user";
 
 const AdminUserService = {
-  getUsers: async (page: number = 1, limit: number = 10) => {
-    try {
-      const response = await api.get("admin/user", { params: { page, limit } });
-      console.log(response);
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        throw error.response?.data || error.message;
-      } else if (error instanceof Error) {
-        throw error.message;
-      } else {
-        throw "An unknown error occurred";
-      }
-    }
-  },
+  getUsers: (page: number = 1, limit: number = 10) =>
+    handleApi(() =>
+      api.get<IGetUsersResponse>("admin/user", { params: { page, limit } }),
+    ),
 
-  getUserById: async (userId: string) => {
-    try {
-      const response = await api.get(`admin/user/${userId}`);
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        throw error.response?.data || error.message;
-      } else if (error instanceof Error) {
-        throw error.message;
-      } else {
-        throw "An unknown error occurred";
-      }
-    }
-  },
+  getUserById: (userId: string) =>
+    handleApi(() => api.get(`admin/user/${userId}`)),
 
-  updateUser: async (userId: string, userData: any) => {
-    try {
-      const response = await api.put(`admin/user/${userId}`, userData);
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        throw error.response?.data || error.message;
-      } else if (error instanceof Error) {
-        throw error.message;
-      } else {
-        throw "An unknown error occurred";
-      }
-    }
-  },
+  blockUser: (userId: string) =>
+    handleApi(() => api.patch(`admin/user/block/${userId}`)),
 
-  // Delete a user
-  deleteUser: async (userId: string) => {
-    try {
-      const response = await api.delete(`admin/user/${userId}`);
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        throw error.response?.data || error.message;
-      } else if (error instanceof Error) {
-        throw error.message;
-      } else {
-        throw "An unknown error occurred";
-      }
-    }
-  },
+  unblockUser: (userId: string) =>
+    handleApi(() => api.patch(`admin/user/unblock/${userId}`)),
 };
 
 export default AdminUserService;

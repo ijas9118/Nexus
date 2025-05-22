@@ -6,7 +6,7 @@ const ACCESS_TOKEN_SECRET = ACCESS_TOKEN || 'access_secret';
 const REFRESH_TOKEN_SECRET = REFRESH_TOKEN || 'refresh_secret';
 
 export const generateAccessToken = (payload: JwtPayloadWithUser): string => {
-  return jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+  return jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '5min' });
 };
 
 export const generateRefreshToken = (user: object): string => {
