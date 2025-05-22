@@ -5,7 +5,7 @@ import { IUserRepository } from '@/core/interfaces/repositories/IUserRepository'
 import { IContentRepository } from '@/core/interfaces/repositories/IContentRepository';
 import { ISquadRepository } from '@/core/interfaces/repositories/ISquadRepository';
 import { ISubscriptionRepository } from '@/core/interfaces/repositories/ISubscriptionRepository';
-import { AdminDashboardStatsDTO } from '@/dtos/responses/auth.dto';
+import { AdminDashboardStatsDTO } from '@/dtos/responses/admin/AdminDashboardStats.dto';
 
 @injectable()
 export class AdminDashboardService implements IAdminDashboardService {

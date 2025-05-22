@@ -1,17 +1,15 @@
-import { AxiosError } from "axios";
+import { DashboardStatsResponse } from "@/types/admin/dashboard";
 import api from "../api";
+import { LoginResponse } from "@/types/admin/auth";
 
-export const loginAdmin = async (email: string, password: string) => {
-  try {
-    const response = await api.post("/admin/login", { email, password });
-    return response.data;
-  } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      throw error.response?.data || error.message;
-    } else if (error instanceof Error) {
-      throw error.message;
-    } else {
-      throw "An unknown error occurred";
-    }
-  }
+export const AdminService = {
+  loginAdmin: (email: string, password: string): Promise<LoginResponse> =>
+    api
+      .post<LoginResponse>("/admin/login", { email, password })
+      .then((res) => res.data),
+
+  getDashboardStats: (): Promise<DashboardStatsResponse> =>
+    api
+      .get<DashboardStatsResponse>("/admin/dashboard/stats")
+      .then((res) => res.data),
 };

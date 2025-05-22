@@ -1,135 +1,99 @@
+import { type FC, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Atom,
+  Compass,
+  CreditCard,
+  GraduationCap,
+  Loader,
+  User,
+  ArrowUpRight,
+  Calendar,
+  DollarSign,
+  Filter,
+  ChevronDown,
+} from "lucide-react";
+
 import {
   Card,
   CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
+import { Button } from "@/components/atoms/button";
 import {
-  Atom,
-  Bell,
-  Compass,
-  CreditCard,
-  FileCheck,
-  FileX,
-  GraduationCap,
-  User,
-  Zap,
-} from "lucide-react";
-import { FC } from "react";
-import UserGrowthGraph from "./components/UserGrowthGraph";
-
-interface Activity {
-  id: number;
-  type: "mentor" | "content-approved" | "notification" | "content-rejected";
-  title: string;
-  description: string;
-  time: string;
-}
-
-const activities: Activity[] = [
-  {
-    id: 1,
-    type: "mentor",
-    title: "New Mentor Application",
-    description: "Sarah Johnson applied to become a mentor",
-    time: "2m ago",
-  },
-  {
-    id: 2,
-    type: "content-approved",
-    title: "Content Approved",
-    description: "Tech blog post approved and published",
-    time: "15m ago",
-  },
-  {
-    id: 3,
-    type: "notification",
-    title: "Notification Sent",
-    description: "System update notification sent to all users",
-    time: "1hr ago",
-  },
-  {
-    id: 4,
-    type: "mentor",
-    title: "New Mentor Application",
-    description: "Afsal M applied to become a mentor",
-    time: "2h ago",
-  },
-  {
-    id: 5,
-    type: "content-rejected",
-    title: "Content Rejected",
-    description: "Tech video post rejected",
-    time: "2hr 15m ago",
-  },
-  {
-    id: 6,
-    type: "notification",
-    title: "Notification Sent",
-    description: "System update notification sent to all users",
-    time: "3hr ago",
-  },
-];
-
-const getActivityIcon = (type: Activity["type"]) => {
-  switch (type) {
-    case "mentor":
-      return (
-        <div className="p-2 rounded-lg border-[0.5px]">
-          <Zap />
-        </div>
-      );
-    case "content-approved":
-      return (
-        <div className="p-2 rounded-lg border-[0.5px]">
-          <FileCheck />
-        </div>
-      );
-    case "notification":
-      return (
-        <div className="p-2 rounded-lg border-[0.5px]">
-          <Bell />
-        </div>
-      );
-    case "content-rejected":
-      return (
-        <div className="p-2 rounded-lg border-[0.5px]">
-          <FileX />
-        </div>
-      );
-  }
-};
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/atoms/select";
+import { AdminService } from "@/services/admin/adminService";
+import { RevenueChart } from "./admin-dashboard/revenue-chart";
+import { MentorApplicationsChart } from "./admin-dashboard/mentor-applications-chart";
+import { ContentAnalyticsChart } from "./admin-dashboard/content-analytics-chart";
+import { SubscriptionDistributionChart } from "./admin-dashboard/subscription-distribution-chart";
+import { RecentTransactions } from "./admin-dashboard/recent-transactions";
+import { BookingStatusChart } from "./admin-dashboard/booking-status-chart";
 
 const Dashboard: FC = () => {
+  const [timeRange, setTimeRange] = useState<
+    "7days" | "30days" | "90days" | "year"
+  >("30days");
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["adminDashboardStats"],
+    queryFn: AdminService.getDashboardStats,
+  });
+
+  // const { data: revenueData } = useQuery({
+  //   queryKey: ["adminRevenueStats", timeRange],
+  //   queryFn: () => AdminService.getRevenueStats(timeRange),
+  // });
+
   const stats = [
     {
       title: "Total Users",
-      value: "10,230",
+      value: data?.totalUsers ?? "-",
       icon: <User />,
+      change: "+12%",
+      trend: "up",
     },
     {
       title: "Total Mentors",
-      value: "120",
+      value: data?.totalMentors ?? "-",
       icon: <GraduationCap />,
+      change: "+8%",
+      trend: "up",
     },
     {
       title: "Active Squads",
-      value: "54",
+      value: data?.totalSquads ?? "-",
       icon: <Compass />,
+      change: "+5%",
+      trend: "up",
     },
     {
       title: "Contents",
-      value: "2,450",
+      value: data?.totalContents ?? "-",
       icon: <Atom />,
+      change: "+15%",
+      trend: "up",
     },
     {
       title: "Active Subscription",
-      value: "460",
+      value: data?.totalSubscription ?? "-",
       icon: <CreditCard />,
+      change: "+10%",
+      trend: "up",
     },
   ];
+
   return (
-    <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-18 py-8">
+    <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-18 py-8 space-y-8">
+      {/* Stats Cards */}
       <div className="flex flex-wrap gap-3 md:grid md:grid-cols-2 lg:flex">
         {stats.map((stat, index) => (
           <Card
@@ -146,38 +110,253 @@ const Dashboard: FC = () => {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-semibold text-slate-800 dark:text-slate-100">
-                {stat.value}
+                {isLoading ? (
+                  <Loader className="animate-spin text-blue-500 w-6 h-6" />
+                ) : isError ? (
+                  "-"
+                ) : (
+                  stat.value
+                )}
               </div>
+              {!isLoading && !isError && (
+                <p
+                  className={`text-xs mt-1 flex items-center ${stat.trend === "up" ? "text-green-500" : "text-red-500"}`}
+                >
+                  {stat.trend === "up" ? (
+                    <ArrowUpRight className="w-3 h-3 mr-1" />
+                  ) : (
+                    <ArrowUpRight className="w-3 h-3 mr-1 rotate-180" />
+                  )}
+                  {stat.change} from last month
+                </p>
+              )}
             </CardContent>
           </Card>
         ))}
       </div>
-      <div className="my-6 flex gap-4 ">
-        <UserGrowthGraph />
-        <div>
-          <Card className="w-full">
-            <CardHeader>
-              <CardTitle className="text-2xl font-normal">
-                Recent Activity
+
+      {/* Revenue Overview */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-2 rounded-2xl bg-gradient-to-br from-white to-slate-100 dark:from-[#1f2937] dark:to-[#111827] shadow-md">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+                Revenue Overview
               </CardTitle>
-            </CardHeader>
-            <CardContent className="divide-y">
-              {activities.map((activity) => (
-                <div
-                  key={activity.id}
-                  className="flex items-start gap-4 py-4 first:pt-0 last:pb-0"
-                >
-                  {getActivityIcon(activity.type)}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium">{activity.title}</p>
-                    <p className="text-sm">{activity.description}</p>
-                  </div>
-                  <p className="text-sm">{activity.time}</p>
+              <CardDescription className="text-slate-500 dark:text-slate-400">
+                Platform fees and subscription revenue
+              </CardDescription>
+            </div>
+            <Select
+              value={timeRange}
+              onValueChange={(value) => setTimeRange(value as any)}
+            >
+              <SelectTrigger className="w-[140px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+                <SelectValue placeholder="Select period" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="7days">Last 7 days</SelectItem>
+                <SelectItem value="30days">Last 30 days</SelectItem>
+                <SelectItem value="90days">Last 90 days</SelectItem>
+                <SelectItem value="year">Last year</SelectItem>
+              </SelectContent>
+            </Select>
+          </CardHeader>
+          <CardContent className="pl-2">
+            <RevenueChart />
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl bg-gradient-to-br from-white to-slate-100 dark:from-[#1f2937] dark:to-[#111827] shadow-md">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+              Subscription Plans
+            </CardTitle>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
+              Distribution by plan type
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <SubscriptionDistributionChart />
+          </CardContent>
+          <CardFooter className="flex justify-between border-t border-slate-200 dark:border-slate-700 pt-4">
+            <div>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                Total Revenue
+              </p>
+              <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+                $12,845
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              className="border-blue-500 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950"
+            >
+              View Details
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+
+      {/* Mentor Applications and Content Analytics */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="rounded-2xl bg-gradient-to-br from-white to-slate-100 dark:from-[#1f2937] dark:to-[#111827] shadow-md">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+              Mentor Applications
+            </CardTitle>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
+              Status overview
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <MentorApplicationsChart />
+          </CardContent>
+          <CardFooter className="border-t border-slate-200 dark:border-slate-700 pt-4">
+            <div className="w-full flex justify-between">
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
+                <span className="text-sm text-slate-600 dark:text-slate-300">
+                  Pending: 12
+                </span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                <span className="text-sm text-slate-600 dark:text-slate-300">
+                  Approved: 45
+                </span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                <span className="text-sm text-slate-600 dark:text-slate-300">
+                  Rejected: 8
+                </span>
+              </div>
+            </div>
+          </CardFooter>
+        </Card>
+
+        <Card className="rounded-2xl bg-gradient-to-br from-white to-slate-100 dark:from-[#1f2937] dark:to-[#111827] shadow-md">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+              Content Analytics
+            </CardTitle>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
+              Views, likes and engagement
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ContentAnalyticsChart />
+          </CardContent>
+          <CardFooter className="border-t border-slate-200 dark:border-slate-700 pt-4">
+            <div className="grid grid-cols-3 w-full gap-2">
+              <div className="text-center">
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                  Total Views
+                </p>
+                <p className="text-xl font-bold text-slate-800 dark:text-slate-100">
+                  24.5K
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                  Avg. Likes
+                </p>
+                <p className="text-xl font-bold text-slate-800 dark:text-slate-100">
+                  78
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                  Premium %
+                </p>
+                <p className="text-xl font-bold text-slate-800 dark:text-slate-100">
+                  35%
+                </p>
+              </div>
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
+
+      {/* Bookings and Transactions */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="rounded-2xl bg-gradient-to-br from-white to-slate-100 dark:from-[#1f2937] dark:to-[#111827] shadow-md">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+              Booking Status
+            </CardTitle>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
+              Mentorship session status
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <BookingStatusChart />
+          </CardContent>
+          <CardFooter className="border-t border-slate-200 dark:border-slate-700 pt-4">
+            <div className="w-full grid grid-cols-2 gap-4">
+              <div className="flex items-center">
+                <div className="p-2 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-sm mr-3">
+                  <Calendar className="w-4 h-4" />
                 </div>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
+                <div>
+                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                    This Week
+                  </p>
+                  <p className="text-lg font-bold text-slate-800 dark:text-slate-100">
+                    32 Sessions
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center">
+                <div className="p-2 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 text-white shadow-sm mr-3">
+                  <DollarSign className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                    Revenue
+                  </p>
+                  <p className="text-lg font-bold text-slate-800 dark:text-slate-100">
+                    $1,280
+                  </p>
+                </div>
+              </div>
+            </div>
+          </CardFooter>
+        </Card>
+
+        <Card className="lg:col-span-2 rounded-2xl bg-gradient-to-br from-white to-slate-100 dark:from-[#1f2937] dark:to-[#111827] shadow-md">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+                Recent Transactions
+              </CardTitle>
+              <CardDescription className="text-slate-500 dark:text-slate-400">
+                Platform fees and withdrawals
+              </CardDescription>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-slate-200 dark:border-slate-700"
+            >
+              <Filter className="w-4 h-4 mr-2" />
+              Filter
+              <ChevronDown className="w-4 h-4 ml-2" />
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <RecentTransactions />
+          </CardContent>
+          <CardFooter className="border-t border-slate-200 dark:border-slate-700 pt-4">
+            <Button
+              variant="outline"
+              className="w-full border-blue-500 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950"
+            >
+              View All Transactions
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );
