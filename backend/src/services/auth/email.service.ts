@@ -8,7 +8,6 @@ import { IEmailService } from '../../core/interfaces/services/IEmailService';
 import { TYPES } from '../../di/types';
 import { ITokenService } from '../../core/interfaces/services/ITokenService';
 import { RegisterRequestDTO } from '@/dtos/requests/auth.dto';
-import logger from '@/config/logger';
 
 @injectable()
 export class EmailService implements IEmailService {
@@ -59,8 +58,6 @@ export class EmailService implements IEmailService {
       console.error('Error sending OTP email:', error);
       throw new CustomError('Failed to send OTP. Please try again later.', StatusCodes.BAD_REQUEST);
     }
-
-    logger.debug(userData.email, otp);
   }
 
   // Create a reset password link with token
