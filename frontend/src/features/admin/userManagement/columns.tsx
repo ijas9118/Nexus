@@ -9,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import AdminUserService from "@/services/admin/userManagement";
 import { UserManagementData } from "@/types/admin/user";
 import { UseMutationResult } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
