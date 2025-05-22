@@ -21,6 +21,14 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     return this.findOne({ email });
   }
 
+  async countUsers(): Promise<number> {
+    return this.model.countDocuments({});
+  }
+
+  async countMentors(): Promise<number> {
+    return this.model.countDocuments({ role: 'mentor' });
+  }
+
   async findByGoogleId(googleId: string): Promise<IUser | null> {
     return await UserModel.findOne({ googleId });
   }

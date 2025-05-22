@@ -23,4 +23,8 @@ export class SubscriptionRepository
       .sort({ createdAt: -1 })
       .exec();
   }
+
+  async countSubscription(): Promise<number> {
+    return this.model.countDocuments({});
+  }
 }

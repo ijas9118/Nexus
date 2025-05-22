@@ -219,4 +219,8 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
       $pull: { joinedSquads: squadObjId },
     });
   };
+
+  async countSquads(): Promise<number> {
+    return this.model.countDocuments({});
+  }
 }

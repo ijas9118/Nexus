@@ -13,4 +13,5 @@ export interface ISquadRepository extends BaseRepository<ISquad> {
   getSquadDetailsByHandle(handle: string, userId: string): Promise<ISquad>;
   removeMemberFromSquad(userId: string, squadId: string): Promise<void>;
   getJoinedSquads(userId: string): Promise<(ISquad & { isAdmin: boolean })[]>;
+  countSquads(): Promise<number>;
 }

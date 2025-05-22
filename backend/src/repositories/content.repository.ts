@@ -759,4 +759,8 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       snippet: doc.content.substring(0, 150), // example snippet
     }));
   }
+
+  async countContents(): Promise<number> {
+    return this.model.countDocuments({});
+  }
 }

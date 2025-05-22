@@ -18,4 +18,6 @@ export interface IUserRepository extends BaseRepository<IUser> {
   getUserIdByUsername(username: string): Promise<string | null>;
   updatePremiumStatus(userId: string, isPremium: boolean): Promise<IUser | null>;
   search(criteria: { query: string; limit?: number }): Promise<SearchResultItem[]>;
+  countUsers(): Promise<number>;
+  countMentors(): Promise<number>;
 }

@@ -105,31 +105,26 @@ const Dashboard: FC = () => {
     {
       title: "Total Users",
       value: "10,230",
-      subtext: "320 new this month",
       icon: <User />,
     },
     {
       title: "Total Mentors",
       value: "120",
-      subtext: "5 pending application",
       icon: <GraduationCap />,
     },
     {
       title: "Active Squads",
       value: "54",
-      subtext: "8 new this week",
       icon: <Compass />,
     },
     {
       title: "Contents",
       value: "2,450",
-      subtext: "12 pending review",
       icon: <Atom />,
     },
     {
       title: "Active Subscription",
       value: "460",
-      subtext: "2 new this week",
       icon: <CreditCard />,
     },
   ];
@@ -137,16 +132,22 @@ const Dashboard: FC = () => {
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-18 py-8">
       <div className="flex flex-wrap gap-3 md:grid md:grid-cols-2 lg:flex">
         {stats.map((stat, index) => (
-          <Card key={index} className="flex-1 min-w-[150px] md:min-w-[200px]">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-normal">
+          <Card
+            key={index}
+            className="flex-1 min-w-[150px] md:min-w-[200px] rounded-2xl bg-gradient-to-br from-white to-slate-100 dark:from-[#1f2937] dark:to-[#111827] shadow-md hover:shadow-lg transition-shadow"
+          >
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 {stat.title}
               </CardTitle>
-              {stat.icon}
+              <div className="p-2 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-sm">
+                {stat.icon}
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-gray-500">{stat.subtext}</p>
+              <div className="text-3xl font-semibold text-slate-800 dark:text-slate-100">
+                {stat.value}
+              </div>
             </CardContent>
           </Card>
         ))}
