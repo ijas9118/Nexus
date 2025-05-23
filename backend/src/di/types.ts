@@ -165,4 +165,5 @@ export const TYPES = {
   OTPService: Symbol.for('IOTPService'),
   EmailService: Symbol.for('IEmailService'),
   TokenService: Symbol.for('ITokenService'),
+  TransactionRepository: Symbol.for('TransactionRepository'),
 };

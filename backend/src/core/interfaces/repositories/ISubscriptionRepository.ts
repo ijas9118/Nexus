@@ -15,4 +15,9 @@ export interface ISubscriptionRepository extends IBaseRepository<ISubscription> 
       revenue: number;
     }>;
   }>;
+  getSubscriptionRevenueByDateGroups(
+    startDate: Date,
+    endDate: Date,
+    groupByFormat: string
+  ): Promise<Array<{ date: string; revenue: number }>>;
 }

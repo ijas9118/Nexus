@@ -31,3 +31,13 @@ export interface SubscriptionStatsResponse {
   totalSubscriptions: number;
   plans: SubscriptionPlanStats[];
 }
+export interface RevenueDataPoint {
+  date: string;
+  platformFees: number;
+  subscriptions: number;
+  total: number;
+}
+
+export interface RevenueStatsResponse {
+  data: RevenueDataPoint[];
+}

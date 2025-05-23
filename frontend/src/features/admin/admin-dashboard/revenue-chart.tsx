@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Bar,
   BarChart,
@@ -18,36 +20,63 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/organisms/chart";
+import { Loader } from "lucide-react";
+import { RevenueStatsResponse } from "@/types/admin/dashboard";
 
-const mockRevenueData = [
-  { date: "Jan", platformFees: 2400, subscriptions: 1800, total: 4200 },
-  { date: "Feb", platformFees: 1800, subscriptions: 2000, total: 3800 },
-  { date: "Mar", platformFees: 2800, subscriptions: 2200, total: 5000 },
-  { date: "Apr", platformFees: 3200, subscriptions: 2400, total: 5600 },
-  { date: "May", platformFees: 2900, subscriptions: 2600, total: 5500 },
-  { date: "Jun", platformFees: 3500, subscriptions: 2800, total: 6300 },
-  { date: "Jul", platformFees: 3800, subscriptions: 3000, total: 6800 },
-];
+interface RevenueChartProps {
+  data?: RevenueStatsResponse;
+  isLoading?: boolean;
+  isError?: boolean;
+}
 
-export function RevenueChart({ data = mockRevenueData }) {
+export function RevenueChart({
+  data,
+  isLoading = false,
+  isError = false,
+}: RevenueChartProps) {
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[300px]">
+        <Loader className="animate-spin text-blue-500 w-6 h-6" />
+      </div>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="flex items-center justify-center h-[300px] text-sm text-slate-500 dark:text-slate-400">
+        Failed to load revenue data
+      </div>
+    );
+  }
+
+  // If no data exists, show empty state
+  if (data.data.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-[300px] text-sm text-slate-500 dark:text-slate-400">
+        No revenue data available
+      </div>
+    );
+  }
+
   return (
     <Tabs defaultValue="line">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
-            <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
+            <div className="w-3 h-3 rounded-full bg-[hsl(var(--chart-1))] mr-2"></div>
             <span className="text-sm text-slate-600 dark:text-slate-300">
               Platform Fees
             </span>
           </div>
           <div className="flex items-center">
-            <div className="w-3 h-3 rounded-full bg-indigo-500 mr-2"></div>
+            <div className="w-3 h-3 rounded-full bg-[hsl(var(--chart-2))] mr-2"></div>
             <span className="text-sm text-slate-600 dark:text-slate-300">
               Subscriptions
             </span>
           </div>
           <div className="flex items-center">
-            <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+            <div className="w-3 h-3 rounded-full bg-[hsl(var(--chart-3))] mr-2"></div>
             <span className="text-sm text-slate-600 dark:text-slate-300">
               Total
             </span>
@@ -78,7 +107,7 @@ export function RevenueChart({ data = mockRevenueData }) {
           className="h-[300px]"
         >
           <LineChart
-            data={data}
+            data={data.data}
             margin={{ top: 5, right: 10, left: 10, bottom: 0 }}
           >
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -138,7 +167,7 @@ export function RevenueChart({ data = mockRevenueData }) {
           className="h-[300px]"
         >
           <BarChart
-            data={data}
+            data={data.data}
             margin={{ top: 5, right: 10, left: 10, bottom: 0 }}
           >
             <CartesianGrid strokeDasharray="3 3" vertical={false} />

@@ -108,4 +108,66 @@ export class SubscriptionRepository
 
     return result;
   }
+
+  async getSubscriptionRevenueByDateGroups(
+    startDate: Date,
+    endDate: Date,
+    groupByFormat: string
+  ): Promise<Array<{ date: string; revenue: number }>> {
+    // Determine the date format for grouping based on the time range
+    let dateFormat;
+    switch (groupByFormat) {
+      case 'day':
+        dateFormat = '%Y-%m-%d'; // Group by day
+        break;
+      case 'week':
+        dateFormat = '%Y-%U'; // Group by week
+        break;
+      case 'month':
+        dateFormat = '%Y-%m'; // Group by month
+        break;
+      default:
+        dateFormat = '%Y-%m-%d'; // Default to day
+    }
+
+    const result = await this.model.aggregate([
+      {
+        $match: {
+          startDate: { $gte: startDate, $lte: endDate },
+          status: 'active',
+        },
+      },
+      {
+        $lookup: {
+          from: 'plans',
+          localField: 'planId',
+          foreignField: '_id',
+          as: 'plan',
+        },
+      },
+      {
+        $unwind: '$plan',
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: dateFormat, date: '$startDate' } },
+          revenue: { $sum: '$plan.price' },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          date: '$_id',
+          revenue: 1,
+          count: 1,
+        },
+      },
+      {
+        $sort: { date: 1 },
+      },
+    ]);
+
+    return result;
+  }
 }

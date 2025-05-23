@@ -10,6 +10,8 @@ import {
   SubscriptionPlanStatsDTO,
   SubscriptionStatsDTO,
 } from '@/dtos/responses/admin/SubscriptionStatsDTO';
+import { RevenueDataPointDTO, RevenueStatsDTO } from '@/dtos/responses/admin/RevenueStatsDTO';
+import { ITransactionRepository } from '@/core/interfaces/repositories/ITransactionRepository';
 
 @injectable()
 export class AdminDashboardService implements IAdminDashboardService {
@@ -17,7 +19,8 @@ export class AdminDashboardService implements IAdminDashboardService {
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
     @inject(TYPES.ContentRepository) private contentRepo: IContentRepository,
     @inject(TYPES.SquadRepository) private squadRepo: ISquadRepository,
-    @inject(TYPES.SubscriptionRepository) private subscriptionRepo: ISubscriptionRepository
+    @inject(TYPES.SubscriptionRepository) private subscriptionRepo: ISubscriptionRepository,
+    @inject(TYPES.TransactionRepository) private transactionRepo: ITransactionRepository
   ) {}
 
   getStats = async (): Promise<AdminDashboardStatsDTO> => {
@@ -90,4 +93,159 @@ export class AdminDashboardService implements IAdminDashboardService {
 
     return SubscriptionStatsDTO.create(stats.totalRevenue, stats.totalSubscriptions, planDTOs);
   };
+
+  getRevenueStats = async (timeRange: string): Promise<RevenueStatsDTO> => {
+    // Calculate date range based on timeRange
+    const endDate = new Date();
+    const startDate = new Date();
+    let groupByFormat: string;
+
+    switch (timeRange) {
+      case '7days':
+        startDate.setDate(endDate.getDate() - 7);
+        groupByFormat = 'day';
+        break;
+      case '30days':
+        startDate.setDate(endDate.getDate() - 30);
+        groupByFormat = 'day';
+        break;
+      case '90days':
+        startDate.setDate(endDate.getDate() - 90);
+        groupByFormat = 'week';
+        break;
+      case 'year':
+        startDate.setFullYear(endDate.getFullYear() - 1);
+        groupByFormat = 'month';
+        break;
+      default:
+        startDate.setDate(endDate.getDate() - 30); // Default to 30 days
+        groupByFormat = 'day';
+    }
+
+    // Get platform fees from transactions (20% of transaction amount)
+    const platformFees = await this.transactionRepo.getTransactionRevenueByDateGroups(
+      startDate,
+      endDate,
+      groupByFormat
+    );
+
+    // Get subscription revenue
+    const subscriptionRevenue = await this.subscriptionRepo.getSubscriptionRevenueByDateGroups(
+      startDate,
+      endDate,
+      groupByFormat
+    );
+
+    // Combine the data and calculate totals
+    const dateMap = new Map<string, RevenueDataPointDTO>();
+
+    // Initialize with all dates in the range
+    const allDates = this.generateDateRange(startDate, endDate, groupByFormat);
+    allDates.forEach((date) => {
+      dateMap.set(date, {
+        date,
+        platformFees: 0,
+        subscriptions: 0,
+        total: 0,
+      });
+    });
+
+    // Add platform fees data
+    platformFees.forEach((item) => {
+      const dataPoint = dateMap.get(item.date) || {
+        date: item.date,
+        platformFees: 0,
+        subscriptions: 0,
+        total: 0,
+      };
+      dataPoint.platformFees = Math.round(item.revenue);
+      dataPoint.total = dataPoint.platformFees + dataPoint.subscriptions;
+      dateMap.set(item.date, dataPoint);
+    });
+
+    // Add subscription revenue data
+    subscriptionRevenue.forEach((item) => {
+      const dataPoint = dateMap.get(item.date) || {
+        date: item.date,
+        platformFees: 0,
+        subscriptions: 0,
+        total: 0,
+      };
+      dataPoint.subscriptions = Math.round(item.revenue);
+      dataPoint.total = dataPoint.platformFees + dataPoint.subscriptions;
+      dateMap.set(item.date, dataPoint);
+    });
+
+    // Convert map to sorted array
+    const revenueData = Array.from(dateMap.values()).sort((a, b) => a.date.localeCompare(b.date));
+
+    return RevenueStatsDTO.create(revenueData);
+  };
+
+  private generateDateRange(startDate: Date, endDate: Date, groupByFormat: string): string[] {
+    const dates: string[] = [];
+    const currentDate = new Date(startDate);
+    const formatOptions: Intl.DateTimeFormatOptions = {};
+
+    switch (groupByFormat) {
+      case 'day':
+        formatOptions.year = 'numeric';
+        formatOptions.month = '2-digit';
+        formatOptions.day = '2-digit';
+        break;
+      case 'week':
+        formatOptions.year = 'numeric';
+        // formatOptions.week = '2-digit';
+        break;
+      case 'month':
+        formatOptions.year = 'numeric';
+        formatOptions.month = '2-digit';
+        break;
+      default:
+        formatOptions.year = 'numeric';
+        formatOptions.month = '2-digit';
+        formatOptions.day = '2-digit';
+    }
+
+    while (currentDate <= endDate) {
+      let dateStr: string;
+
+      if (groupByFormat === 'day') {
+        dateStr = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD
+      } else if (groupByFormat === 'week') {
+        const year = currentDate.getFullYear();
+        const weekNum = this.getWeekNumber(currentDate);
+        dateStr = `${year}-${weekNum.toString().padStart(2, '0')}`;
+      } else if (groupByFormat === 'month') {
+        const year = currentDate.getFullYear();
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+        dateStr = `${year}-${month}`;
+      } else {
+        dateStr = currentDate.toISOString().split('T')[0];
+      }
+
+      dates.push(dateStr);
+
+      // Increment date based on grouping
+      if (groupByFormat === 'day') {
+        currentDate.setDate(currentDate.getDate() + 1);
+      } else if (groupByFormat === 'week') {
+        currentDate.setDate(currentDate.getDate() + 7);
+      } else if (groupByFormat === 'month') {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+      } else {
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+    }
+
+    return dates;
+  }
+
+  private getWeekNumber(date: Date): number {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+  }
 }

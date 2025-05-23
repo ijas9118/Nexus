@@ -3,12 +3,16 @@ import { container } from '@/di/container';
 import { TYPES } from '@/di/types';
 import { Router } from 'express';
 
-const adminController = container.get<IAdminDashboardController>(TYPES.AdminDashboardController);
+const adminDashboardController = container.get<IAdminDashboardController>(
+  TYPES.AdminDashboardController
+);
 
 const router = Router();
 
-router.get('/stats', adminController.getDashboardStats);
+router.get('/stats', adminDashboardController.getDashboardStats);
 
-router.get('/subscription-stats', adminController.getSubscriptionStats);
+router.get('/subscription-stats', adminDashboardController.getSubscriptionStats);
+
+router.get('/revenue-stats', adminDashboardController.getRevenueStats);
 
 export default router;

@@ -61,15 +61,12 @@ export function SubscriptionDistributionChart({
         config={{
           spark: {
             label: "Spark (1 month)",
-            color: "hsl(216, 92%, 58%)",
           },
           flame: {
             label: "Flame (6 months)",
-            color: "hsl(258, 90%, 66%)",
           },
           fire: {
             label: "Fire (12 months)",
-            color: "hsl(330, 81%, 60%)",
           },
         }}
         className="w-full h-full" // Takes available space

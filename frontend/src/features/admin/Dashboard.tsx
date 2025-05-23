@@ -58,12 +58,14 @@ const Dashboard: FC = () => {
     queryFn: AdminService.getSubscriptionStats,
   });
 
-  console.log(subscriptionData);
-
-  // const { data: revenueData } = useQuery({
-  //   queryKey: ["adminRevenueStats", timeRange],
-  //   queryFn: () => AdminService.getRevenueStats(timeRange),
-  // });
+  const {
+    data: revenueData,
+    isLoading: revenueLoading,
+    isError: revenueError,
+  } = useQuery({
+    queryKey: ["adminRevenueStats", timeRange],
+    queryFn: () => AdminService.getRevenueStats(timeRange),
+  });
 
   const stats = [
     {
@@ -183,7 +185,11 @@ const Dashboard: FC = () => {
             </Select>
           </CardHeader>
           <CardContent className="pl-2">
-            <RevenueChart />
+            <RevenueChart
+              data={revenueData}
+              isLoading={revenueLoading}
+              isError={revenueError}
+            />
           </CardContent>
         </Card>
 

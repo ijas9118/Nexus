@@ -21,4 +21,10 @@ export class AdminDashboardController implements IAdminDashboardController {
     const stats = await this.adminDashboardService.getSubscriptionStats();
     res.status(StatusCodes.OK).json(stats);
   });
+
+  getRevenueStats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const timeRange = (req.query.timeRange as string) || '30days';
+    const stats = await this.adminDashboardService.getRevenueStats(timeRange);
+    res.status(StatusCodes.OK).json(stats);
+  });
 }

@@ -227,6 +227,8 @@ import { IAdminDashboardController } from '@/core/interfaces/controllers/IAdminD
 import { AdminDashboardController } from '@/controllers/admin/admin.dashboard.controller';
 import { IAdminDashboardService } from '@/core/interfaces/services/IAdminDashboardService';
 import { AdminDashboardService } from '@/services/admin/admin.dashboard.service';
+import { TransactionRepository } from '@/repositories/transactions.repository';
+import { ITransactionRepository } from '@/core/interfaces/repositories/ITransactionRepository';
 
 const container = new Container();
 
@@ -389,5 +391,7 @@ container
   .bind<IAdminDashboardController>(TYPES.AdminDashboardController)
   .to(AdminDashboardController);
 container.bind<IAdminDashboardService>(TYPES.AdminDashboardService).to(AdminDashboardService);
+
+container.bind<ITransactionRepository>(TYPES.TransactionRepository).to(TransactionRepository);
 
 export { container };

@@ -1,5 +1,6 @@
 import {
   DashboardStatsResponse,
+  RevenueStatsResponse,
   SubscriptionStatsResponse,
 } from "@/types/admin/dashboard";
 import api from "../api";
@@ -18,4 +19,9 @@ export const AdminService = {
 
   getSubscriptionStats: (): Promise<SubscriptionStatsResponse> =>
     api.get("/admin/dashboard/subscription-stats").then((res) => res.data),
+
+  getRevenueStats: (timeRange: string): Promise<RevenueStatsResponse> =>
+    api
+      .get(`/admin/dashboard/revenue-stats?timeRange=${timeRange}`)
+      .then((res) => res.data),
 };
