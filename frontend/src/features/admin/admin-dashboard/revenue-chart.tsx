@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Bar,
   BarChart,
@@ -60,7 +58,7 @@ export function RevenueChart({
   }
 
   return (
-    <Tabs defaultValue="line">
+    <Tabs defaultValue="line" className="">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
@@ -88,7 +86,7 @@ export function RevenueChart({
         </TabsList>
       </div>
 
-      <TabsContent value="line" className="mt-0">
+      <TabsContent value="line" className="mt-2 mx-2">
         <ChartContainer
           config={{
             platformFees: {
@@ -104,7 +102,7 @@ export function RevenueChart({
               color: "hsl(var(--chart-3))",
             },
           }}
-          className="h-[300px]"
+          className="w-full"
         >
           <LineChart
             data={data.data}
@@ -121,7 +119,7 @@ export function RevenueChart({
               axisLine={false}
               tickLine={false}
               tickMargin={10}
-              tickFormatter={(value) => `$${value}`}
+              tickFormatter={(value) => `₹${value}`}
             />
             <ChartTooltip content={<ChartTooltipContent />} />
             <Line
@@ -164,7 +162,7 @@ export function RevenueChart({
               color: "hsl(var(--chart-2))",
             },
           }}
-          className="h-[300px]"
+          className="w-full"
         >
           <BarChart
             data={data.data}

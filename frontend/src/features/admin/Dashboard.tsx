@@ -8,10 +8,6 @@ import {
   Loader,
   User,
   ArrowUpRight,
-  Calendar,
-  DollarSign,
-  Filter,
-  ChevronDown,
   Minus,
 } from "lucide-react";
 
@@ -34,15 +30,12 @@ import {
 import { AdminService } from "@/services/admin/adminService";
 import { RevenueChart } from "./admin-dashboard/revenue-chart";
 import { MentorApplicationsChart } from "./admin-dashboard/mentor-applications-chart";
-import { ContentAnalyticsChart } from "./admin-dashboard/content-analytics-chart";
 import { SubscriptionDistributionChart } from "./admin-dashboard/subscription-distribution-chart";
-import { RecentTransactions } from "./admin-dashboard/recent-transactions";
-import { BookingStatusChart } from "./admin-dashboard/booking-status-chart";
 
 const Dashboard: FC = () => {
   const [timeRange, setTimeRange] = useState<
     "7days" | "30days" | "90days" | "year"
-  >("30days");
+  >("7days");
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["adminDashboardStats"],
@@ -65,6 +58,15 @@ const Dashboard: FC = () => {
   } = useQuery({
     queryKey: ["adminRevenueStats", timeRange],
     queryFn: () => AdminService.getRevenueStats(timeRange),
+  });
+
+  const {
+    data: mentorApplicationData,
+    isLoading: mentorApplicationLoading,
+    isError: mentorApplicationError,
+  } = useQuery({
+    queryKey: ["mentorApplicationStats"],
+    queryFn: AdminService.getMentorApplicationStats,
   });
 
   const stats = [
@@ -203,7 +205,7 @@ const Dashboard: FC = () => {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="flex-1">
+          <CardContent className="flex-1 flex items-center justify-center">
             <SubscriptionDistributionChart
               data={subscriptionData}
               isLoading={subscriptionLoading}
@@ -248,151 +250,42 @@ const Dashboard: FC = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <MentorApplicationsChart />
+            <MentorApplicationsChart
+              data={mentorApplicationData}
+              isLoading={mentorApplicationLoading}
+              isError={mentorApplicationError}
+            />
           </CardContent>
           <CardFooter className="border-t border-slate-200 dark:border-slate-700 pt-4">
             <div className="w-full flex justify-between">
               <div className="flex items-center">
                 <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
                 <span className="text-sm text-slate-600 dark:text-slate-300">
-                  Pending: 12
+                  Pending:{" "}
+                  {mentorApplicationData?.statusBreakdown.find(
+                    (s) => s.status === "pending",
+                  )?.count || 0}
                 </span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
                 <span className="text-sm text-slate-600 dark:text-slate-300">
-                  Approved: 45
+                  Approved:{" "}
+                  {mentorApplicationData?.statusBreakdown.find(
+                    (s) => s.status === "approved",
+                  )?.count || 0}
                 </span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
                 <span className="text-sm text-slate-600 dark:text-slate-300">
-                  Rejected: 8
+                  Rejected:{" "}
+                  {mentorApplicationData?.statusBreakdown.find(
+                    (s) => s.status === "rejected",
+                  )?.count || 0}
                 </span>
               </div>
             </div>
-          </CardFooter>
-        </Card>
-
-        <Card className="rounded-2xl bg-gradient-to-br from-white to-slate-100 dark:from-[#1f2937] dark:to-[#111827] shadow-md">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold text-slate-800 dark:text-slate-100">
-              Content Analytics
-            </CardTitle>
-            <CardDescription className="text-slate-500 dark:text-slate-400">
-              Views, likes and engagement
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ContentAnalyticsChart />
-          </CardContent>
-          <CardFooter className="border-t border-slate-200 dark:border-slate-700 pt-4">
-            <div className="grid grid-cols-3 w-full gap-2">
-              <div className="text-center">
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                  Total Views
-                </p>
-                <p className="text-xl font-bold text-slate-800 dark:text-slate-100">
-                  24.5K
-                </p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                  Avg. Likes
-                </p>
-                <p className="text-xl font-bold text-slate-800 dark:text-slate-100">
-                  78
-                </p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                  Premium %
-                </p>
-                <p className="text-xl font-bold text-slate-800 dark:text-slate-100">
-                  35%
-                </p>
-              </div>
-            </div>
-          </CardFooter>
-        </Card>
-      </div>
-
-      {/* Bookings and Transactions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="rounded-2xl bg-gradient-to-br from-white to-slate-100 dark:from-[#1f2937] dark:to-[#111827] shadow-md">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold text-slate-800 dark:text-slate-100">
-              Booking Status
-            </CardTitle>
-            <CardDescription className="text-slate-500 dark:text-slate-400">
-              Mentorship session status
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <BookingStatusChart />
-          </CardContent>
-          <CardFooter className="border-t border-slate-200 dark:border-slate-700 pt-4">
-            <div className="w-full grid grid-cols-2 gap-4">
-              <div className="flex items-center">
-                <div className="p-2 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-sm mr-3">
-                  <Calendar className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                    This Week
-                  </p>
-                  <p className="text-lg font-bold text-slate-800 dark:text-slate-100">
-                    32 Sessions
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <div className="p-2 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 text-white shadow-sm mr-3">
-                  <DollarSign className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                    Revenue
-                  </p>
-                  <p className="text-lg font-bold text-slate-800 dark:text-slate-100">
-                    $1,280
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardFooter>
-        </Card>
-
-        <Card className="lg:col-span-2 rounded-2xl bg-gradient-to-br from-white to-slate-100 dark:from-[#1f2937] dark:to-[#111827] shadow-md">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-xl font-semibold text-slate-800 dark:text-slate-100">
-                Recent Transactions
-              </CardTitle>
-              <CardDescription className="text-slate-500 dark:text-slate-400">
-                Platform fees and withdrawals
-              </CardDescription>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-slate-200 dark:border-slate-700"
-            >
-              <Filter className="w-4 h-4 mr-2" />
-              Filter
-              <ChevronDown className="w-4 h-4 ml-2" />
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <RecentTransactions />
-          </CardContent>
-          <CardFooter className="border-t border-slate-200 dark:border-slate-700 pt-4">
-            <Button
-              variant="outline"
-              className="w-full border-blue-500 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950"
-            >
-              View All Transactions
-            </Button>
           </CardFooter>
         </Card>
       </div>

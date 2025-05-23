@@ -27,4 +27,9 @@ export class AdminDashboardController implements IAdminDashboardController {
     const stats = await this.adminDashboardService.getRevenueStats(timeRange);
     res.status(StatusCodes.OK).json(stats);
   });
+
+  getMentorApplicationStats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const stats = await this.adminDashboardService.getMentorApplicationStats();
+    res.status(StatusCodes.OK).json(stats);
+  });
 }

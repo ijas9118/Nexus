@@ -15,4 +15,6 @@ router.get('/subscription-stats', adminDashboardController.getSubscriptionStats)
 
 router.get('/revenue-stats', adminDashboardController.getRevenueStats);
 
+router.get('/mentor-application-stats', adminDashboardController.getMentorApplicationStats);
+
 export default router;

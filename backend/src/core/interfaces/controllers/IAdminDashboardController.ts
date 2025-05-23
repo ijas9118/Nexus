@@ -4,4 +4,5 @@ export interface IAdminDashboardController {
   getDashboardStats: RequestHandler;
   getSubscriptionStats: RequestHandler;
   getRevenueStats: RequestHandler;
+  getMentorApplicationStats: RequestHandler;
 }

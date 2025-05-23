@@ -12,6 +12,11 @@ import {
 } from '@/dtos/responses/admin/SubscriptionStatsDTO';
 import { RevenueDataPointDTO, RevenueStatsDTO } from '@/dtos/responses/admin/RevenueStatsDTO';
 import { ITransactionRepository } from '@/core/interfaces/repositories/ITransactionRepository';
+import {
+  MentorApplicationStatsDTO,
+  MentorApplicationStatusDTO,
+} from '@/dtos/responses/admin/MentorApplicationStatsDTO';
+import { IMentorRepository } from '@/core/interfaces/repositories/IMentorRepository';
 
 @injectable()
 export class AdminDashboardService implements IAdminDashboardService {
@@ -20,7 +25,8 @@ export class AdminDashboardService implements IAdminDashboardService {
     @inject(TYPES.ContentRepository) private contentRepo: IContentRepository,
     @inject(TYPES.SquadRepository) private squadRepo: ISquadRepository,
     @inject(TYPES.SubscriptionRepository) private subscriptionRepo: ISubscriptionRepository,
-    @inject(TYPES.TransactionRepository) private transactionRepo: ITransactionRepository
+    @inject(TYPES.TransactionRepository) private transactionRepo: ITransactionRepository,
+    @inject(TYPES.MentorRepository) private mentorRepo: IMentorRepository
   ) {}
 
   getStats = async (): Promise<AdminDashboardStatsDTO> => {
@@ -180,6 +186,41 @@ export class AdminDashboardService implements IAdminDashboardService {
     const revenueData = Array.from(dateMap.values()).sort((a, b) => a.date.localeCompare(b.date));
 
     return RevenueStatsDTO.create(revenueData);
+  };
+
+  getMentorApplicationStats = async (): Promise<MentorApplicationStatsDTO> => {
+    const stats = await this.mentorRepo.countMentorsByStatus();
+
+    // Define colors for each status
+    const statusColors = {
+      pending: '#3b82f6', // Blue
+      approved: '#22c55e', // Green
+      rejected: '#ef4444', // Red
+    };
+
+    // Calculate percentages and create DTOs
+    const statusDTOs: MentorApplicationStatusDTO[] = stats.statusCounts.map((statusCount) => {
+      const percentage =
+        stats.totalApplications > 0 ? (statusCount.count / stats.totalApplications) * 100 : 0;
+
+      const dto = new MentorApplicationStatusDTO();
+      dto.status = statusCount.status;
+      dto.count = statusCount.count;
+      dto.percentage = Number.parseFloat(percentage.toFixed(1));
+      dto.color = statusColors[statusCount.status as keyof typeof statusColors] || '#94a3b8';
+
+      return dto;
+    });
+
+    // Sort by status in a specific order: pending, approved, rejected
+    const statusOrder = ['pending', 'approved', 'rejected'];
+    statusDTOs.sort((a, b) => {
+      const indexA = statusOrder.indexOf(a.status);
+      const indexB = statusOrder.indexOf(b.status);
+      return indexA - indexB;
+    });
+
+    return MentorApplicationStatsDTO.create(stats.totalApplications, statusDTOs);
   };
 
   private generateDateRange(startDate: Date, endDate: Date, groupByFormat: string): string[] {

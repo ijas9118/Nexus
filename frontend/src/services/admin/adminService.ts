@@ -1,5 +1,6 @@
 import {
   DashboardStatsResponse,
+  MentorApplicationStatsResponse,
   RevenueStatsResponse,
   SubscriptionStatsResponse,
 } from "@/types/admin/dashboard";
@@ -24,4 +25,7 @@ export const AdminService = {
     api
       .get(`/admin/dashboard/revenue-stats?timeRange=${timeRange}`)
       .then((res) => res.data),
+
+  getMentorApplicationStats: (): Promise<MentorApplicationStatsResponse> =>
+    api.get("admin/dashboard/mentor-application-stats").then((res) => res.data),
 };

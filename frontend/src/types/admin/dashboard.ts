@@ -41,3 +41,15 @@ export interface RevenueDataPoint {
 export interface RevenueStatsResponse {
   data: RevenueDataPoint[];
 }
+
+export interface MentorApplicationStatus {
+  status: string;
+  count: number;
+  percentage: number;
+  color: string;
+}
+
+export interface MentorApplicationStatsResponse {
+  totalApplications: number;
+  statusBreakdown: MentorApplicationStatus[];
+}
