@@ -1,4 +1,3 @@
-import { BaseService } from '@/core/abstracts/base.service';
 import { IGroupRepository } from '@/core/interfaces/repositories/IGroupRepository';
 import { IConnectionService } from '@/core/interfaces/services/IConnectionService';
 import { IGroupService } from '@/core/interfaces/services/IGroupService';
@@ -7,13 +6,11 @@ import { IGroup } from '@/models/group.model';
 import { inject, injectable } from 'inversify';
 
 @injectable()
-export class GroupService extends BaseService<IGroup> implements IGroupService {
+export class GroupService implements IGroupService {
   constructor(
     @inject(TYPES.GroupRepository) protected repository: IGroupRepository,
     @inject(TYPES.ConnectionService) private connectionService: IConnectionService
-  ) {
-    super(repository);
-  }
+  ) {}
 
   async createGroup(userId: string, name: string, memberIds: string[]): Promise<IGroup> {
     const allMembers = [...new Set([userId, ...memberIds])];

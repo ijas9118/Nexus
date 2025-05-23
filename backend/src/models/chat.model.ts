@@ -1,7 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export interface IChat extends Document {
-  _id: string;
+export interface IChat extends Document<string> {
   participants: string[]; // Array of User IDs (exactly 2 for one-on-one)
   unreadCounts: { userId: string; count: number }[];
   lastMessage?: {

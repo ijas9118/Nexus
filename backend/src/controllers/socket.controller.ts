@@ -217,9 +217,7 @@ export class SocketController {
     try {
       let actualChatId = data.chatId;
       if (data.chatType === 'Chat') {
-        const existingChat = await this.chatService
-          .findById(new mongoose.Types.ObjectId(data.chatId))
-          .catch(() => null);
+        const existingChat = await this.chatService.findById(data.chatId).catch(() => null);
         if (!existingChat) {
           const chat = await this.chatService.createChat(userId, data.chatId);
           actualChatId = chat._id.toString();

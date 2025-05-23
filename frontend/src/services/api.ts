@@ -4,7 +4,6 @@ import { HOST } from "@/utils/constants";
 import axios from "axios";
 
 const baseURL = import.meta.env.MODE === "development" ? `${HOST}/api` : "/api";
-console.log(baseURL);
 
 const api = axios.create({
   baseURL,

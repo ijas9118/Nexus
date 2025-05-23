@@ -1,4 +1,3 @@
-import { BaseService } from '@/core/abstracts/base.service';
 import { IWalletRepository } from '@/core/interfaces/repositories/IWalletRepository';
 import { IWithdrawalRequestRepository } from '@/core/interfaces/repositories/IWithdrawalRequestRepository';
 import { INexusPointRepository } from '@/core/interfaces/repositories/INexusPointRepository';
@@ -6,7 +5,6 @@ import { IBookingService } from '@/core/interfaces/services/IBookingService';
 import { IWalletService } from '@/core/interfaces/services/IWalletService';
 import { WalletInfo } from '@/core/types/wallet.types';
 import { TYPES } from '@/di/types';
-import { IWallet } from '@/models/wallet.model';
 import CustomError from '@/utils/CustomError';
 import { generateTransactionId } from '@/utils/transactionUtils';
 import { StatusCodes } from 'http-status-codes';
@@ -14,7 +12,7 @@ import { injectable, inject } from 'inversify';
 import mongoose from 'mongoose';
 
 @injectable()
-export class WalletService extends BaseService<IWallet> implements IWalletService {
+export class WalletService implements IWalletService {
   private NEXUS_COIN_VALUE = 10; // 1 nexus coin = 10 rupees
 
   constructor(
@@ -23,9 +21,7 @@ export class WalletService extends BaseService<IWallet> implements IWalletServic
     @inject(TYPES.WithdrawalRequestRepository)
     private withdrawalRequestRepository: IWithdrawalRequestRepository,
     @inject(TYPES.NexusPointRepository) private nexusPointRepository: INexusPointRepository
-  ) {
-    super(repository);
-  }
+  ) {}
 
   async addMoney(
     userId: string,
@@ -42,7 +38,12 @@ export class WalletService extends BaseService<IWallet> implements IWalletServic
 
     let wallet = await this.repository.getWalletByUserId(userId);
     if (!wallet) {
-      wallet = await this.create({ userId, balance: 0, nexusPoints: 0, transactions: [] });
+      wallet = await this.repository.create({
+        userId,
+        balance: 0,
+        nexusPoints: 0,
+        transactions: [],
+      });
     }
 
     const transactionId = generateTransactionId();
@@ -168,7 +169,12 @@ export class WalletService extends BaseService<IWallet> implements IWalletServic
   async addNexusPoints(userId: string, points: number, description: string): Promise<WalletInfo> {
     let wallet = await this.repository.getWalletByUserId(userId);
     if (!wallet) {
-      wallet = await this.create({ userId, balance: 0, nexusPoints: 0, transactions: [] });
+      wallet = await this.repository.create({
+        userId,
+        balance: 0,
+        nexusPoints: 0,
+        transactions: [],
+      });
     }
 
     await this.nexusPointRepository.addPointsTransaction({

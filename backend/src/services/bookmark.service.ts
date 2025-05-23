@@ -5,19 +5,15 @@ import mongoose from 'mongoose';
 import { IBookmarkRepository } from '../core/interfaces/repositories/IBookmarnRepository';
 import { IContentRepository } from '../core/interfaces/repositories/IContentRepository';
 import CustomError from '../utils/CustomError';
-import { IBookmark } from '../models/bookmarks.model';
-import { BaseService } from '../core/abstracts/base.service';
 import { StatusCodes } from 'http-status-codes';
 import { IContent } from '@/models/content.model';
 
 @injectable()
-export class BookmarkService extends BaseService<IBookmark> implements IBookmarkService {
+export class BookmarkService implements IBookmarkService {
   constructor(
     @inject(TYPES.BookmarkRepository) private bookmarkRepository: IBookmarkRepository,
     @inject(TYPES.ContentRepository) private contentRepository: IContentRepository
-  ) {
-    super(bookmarkRepository);
-  }
+  ) {}
 
   // Toggle bookmark for a content
   async toggleBookmark(contentId: string, userId: string): Promise<{ status: boolean }> {

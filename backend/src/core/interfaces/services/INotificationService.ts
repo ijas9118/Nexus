@@ -1,7 +1,6 @@
 import { INotification } from '@/models/notification.model';
-import { IBaseService } from './IBaseService';
 
-export interface INotificationService extends IBaseService<INotification> {
+export interface INotificationService {
   getNotificationTypeIdByName(name: string): Promise<string>;
   createForUser(
     notificationTypeId: string,
@@ -13,4 +12,5 @@ export interface INotificationService extends IBaseService<INotification> {
   markAsRead(id: string): Promise<INotification | null>;
   markAllAsRead(userId: string): Promise<number>;
   deleteManyByIds(ids: string[]): Promise<number>;
+  delete(id: string): Promise<INotification | null>;
 }

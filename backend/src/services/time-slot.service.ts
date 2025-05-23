@@ -8,17 +8,14 @@ import dayjs from 'dayjs';
 import { inject, injectable } from 'inversify';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { StatusCodes } from 'http-status-codes';
-import { BaseService } from '@/core/abstracts/base.service';
 dayjs.extend(customParseFormat);
 
 @injectable()
-export class TimeSlotService extends BaseService<ITimeSlot> implements ITimeSlotService {
+export class TimeSlotService implements ITimeSlotService {
   constructor(
     @inject(TYPES.TimeSlotRepository) private timeSlotRepository: TimeSlotRepository,
     @inject(TYPES.MentorService) private mentorService: IMentorService
-  ) {
-    super(timeSlotRepository);
-  }
+  ) {}
 
   async addTimeSlot(mentorId: string, date: Date, startTime12Hr: string): Promise<ITimeSlot> {
     const mentor = await this.mentorService.getMentorDetails(mentorId);
@@ -171,5 +168,13 @@ export class TimeSlotService extends BaseService<ITimeSlot> implements ITimeSlot
       throw new CustomError('Failed to update the time slot.', StatusCodes.NOT_FOUND);
     }
     return updatedTimeSlot;
+  }
+
+  async update(timeslot: string, data: Partial<ITimeSlot>): Promise<ITimeSlot | null> {
+    return await this.timeSlotRepository.update(timeslot, data);
+  }
+
+  async findById(timeslot: string): Promise<ITimeSlot | null> {
+    return await this.timeSlotRepository.findById(timeslot);
   }
 }

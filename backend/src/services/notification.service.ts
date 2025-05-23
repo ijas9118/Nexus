@@ -1,4 +1,3 @@
-import { BaseService } from '@/core/abstracts/base.service';
 import { INotificationRepository } from '@/core/interfaces/repositories/INotificationRepository';
 import { INotificationTypeRepository } from '@/core/interfaces/repositories/INotificationTypeRepository';
 import { INotificationService } from '@/core/interfaces/services/INotificationService';
@@ -8,18 +7,13 @@ import CustomError from '@/utils/CustomError';
 import { injectable, inject } from 'inversify';
 
 @injectable()
-export class NotificationService
-  extends BaseService<INotification>
-  implements INotificationService
-{
+export class NotificationService implements INotificationService {
   constructor(
     @inject(TYPES.NotificationRepository)
     protected repository: INotificationRepository,
     @inject(TYPES.NotificationTypeRepository)
     protected notificationTypeRepo: INotificationTypeRepository
-  ) {
-    super(repository);
-  }
+  ) {}
 
   async getNotificationTypeIdByName(name: string): Promise<string> {
     const notificationType = await this.notificationTypeRepo.findByName(name);
@@ -71,5 +65,9 @@ export class NotificationService
 
   async deleteManyByIds(ids: string[]): Promise<number> {
     return this.repository.deleteManyByIds(ids);
+  }
+
+  async delete(id: string): Promise<INotification | null> {
+    return this.repository.delete(id);
   }
 }

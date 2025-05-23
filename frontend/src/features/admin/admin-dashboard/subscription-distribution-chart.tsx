@@ -69,7 +69,7 @@ export function SubscriptionDistributionChart({
             label: "Fire (12 months)",
           },
         }}
-        className="w-full h-full" // Takes available space
+        className="w-full my-6" // Takes available space
       >
         <PieChart>
           <Pie

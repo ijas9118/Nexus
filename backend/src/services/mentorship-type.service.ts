@@ -1,4 +1,3 @@
-import { BaseService } from '@/core/abstracts/base.service';
 import { IMentorshipTypeService } from '@/core/interfaces/services/IMentorshipTypeService';
 import { TYPES } from '@/di/types';
 import { IMentorshipType } from '@/models/mentorship-type.model';
@@ -8,22 +7,17 @@ import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 
 @injectable()
-export class MentorshipTypeService
-  extends BaseService<IMentorshipType>
-  implements IMentorshipTypeService
-{
+export class MentorshipTypeService implements IMentorshipTypeService {
   constructor(
     @inject(TYPES.MentorshipTypeRepository) protected repository: MentorshipTypeRepository
-  ) {
-    super(repository);
-  }
+  ) {}
 
   async createMentorshipType(data: {
     name: string;
     description: string;
     defaultPrice: number;
   }): Promise<IMentorshipType> {
-    const existingType = await this.findOne({ name: data.name });
+    const existingType = await this.repository.findOne({ name: data.name });
     if (existingType) {
       throw new CustomError(
         'Mentorship type with this name already exists',
@@ -31,7 +25,7 @@ export class MentorshipTypeService
       );
     }
 
-    return this.create({
+    return this.repository.create({
       name: data.name,
       description: data.description,
       defaultPrice: data.defaultPrice,
@@ -39,7 +33,7 @@ export class MentorshipTypeService
   }
 
   async getMentorshipType(id: string): Promise<IMentorshipType> {
-    const type = await this.findById(id);
+    const type = await this.repository.findById(id);
     if (!type || !type.isActive) {
       throw new CustomError('Mentorship type not found', StatusCodes.NOT_FOUND);
     }
@@ -48,20 +42,20 @@ export class MentorshipTypeService
 
   async getAllMentorshipTypes(options?: { includeInactive?: boolean }): Promise<IMentorshipType[]> {
     if (options?.includeInactive) {
-      return this.find({});
+      return this.repository.find({});
     }
-    return this.find({ isActive: true });
+    return this.repository.find({ isActive: true });
   }
 
   async deleteMentorshipType(id: string): Promise<void> {
-    const type = await this.softDelete(id);
+    const type = await this.repository.softDelete(id);
     if (!type) {
       throw new CustomError('Mentorship type not found', StatusCodes.NOT_FOUND);
     }
   }
 
   async restoreMentorshipType(id: string): Promise<void> {
-    const type = await this.restore(id);
+    const type = await this.repository.restore(id);
     if (!type) {
       throw new CustomError('Mentorship type not found', StatusCodes.NOT_FOUND);
     }
@@ -75,7 +69,7 @@ export class MentorshipTypeService
       defaultPrice: number;
     }>
   ): Promise<IMentorshipType> {
-    const typeToUpdate = await this.findById(id);
+    const typeToUpdate = await this.repository.findById(id);
 
     if (!typeToUpdate || !typeToUpdate.isActive) {
       throw new CustomError(
@@ -101,7 +95,7 @@ export class MentorshipTypeService
       throw new CustomError('Price cannot be negative', StatusCodes.BAD_REQUEST);
     }
 
-    const updatedType = await this.update(id, data);
+    const updatedType = await this.repository.update(id, data);
     if (!updatedType) {
       throw new CustomError('Mentorship type not found', StatusCodes.NOT_FOUND);
     }

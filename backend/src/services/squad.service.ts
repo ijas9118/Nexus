@@ -1,5 +1,4 @@
 import { inject, injectable } from 'inversify';
-import { BaseService } from '../core/abstracts/base.service';
 import { ISquadService } from '../core/interfaces/services/ISquadService';
 import { ISquad } from '../models/squads.model';
 import { TYPES } from '../di/types';
@@ -15,15 +14,13 @@ import { UserRole } from '@/core/types/UserTypes';
 import { SquadContentResponseDto } from '@/dtos/responses/squad-contents.dto';
 
 @injectable()
-export class SquadService extends BaseService<ISquad> implements ISquadService {
+export class SquadService implements ISquadService {
   constructor(
     @inject(TYPES.SquadRepository) private squadRepository: ISquadRepository,
     @inject(TYPES.CategoryRepository) private categoryRepository: ICategoryRepository,
     @inject(TYPES.ContentRepository) private contentRepository: IContentRepository,
     @inject(TYPES.UserRepository) private userRepository: IContentRepository
-  ) {
-    super(squadRepository);
-  }
+  ) {}
 
   createSquad = async (
     squadData: Partial<ISquad>,
@@ -57,7 +54,7 @@ export class SquadService extends BaseService<ISquad> implements ISquadService {
     };
 
     // Create the squad
-    const squad = await this.create(updatedSquadData);
+    const squad = await this.squadRepository.create(updatedSquadData);
 
     // Update category
     categoryObj.squads.push(squad._id);
@@ -68,7 +65,7 @@ export class SquadService extends BaseService<ISquad> implements ISquadService {
   };
 
   getSquadByName = async (name: string): Promise<ISquad | null> => {
-    return await this.findOne({ name });
+    return await this.squadRepository.findOne({ name });
   };
 
   getSquadDetailsByHandle = async (handle: string, userId: string): Promise<ISquad | null> => {

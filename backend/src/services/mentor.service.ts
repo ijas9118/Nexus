@@ -1,4 +1,3 @@
-import { BaseService } from '@/core/abstracts/base.service';
 import { IMentorRepository } from '@/core/interfaces/repositories/IMentorRepository';
 import { IUserRepository } from '@/core/interfaces/repositories/IUserRepository';
 import { IMentorService } from '@/core/interfaces/services/IMentorService';
@@ -11,13 +10,11 @@ import CustomError from '@/utils/CustomError';
 import { inject, injectable } from 'inversify';
 
 @injectable()
-export class MentorService extends BaseService<IMentor> implements IMentorService {
+export class MentorService implements IMentorService {
   constructor(
     @inject(TYPES.MentorRepository) private mentorRepository: IMentorRepository,
     @inject(TYPES.UserRepository) private userRepository: IUserRepository
-  ) {
-    super(mentorRepository);
-  }
+  ) {}
 
   applyAsMentor = async (
     userId: string,
@@ -75,7 +72,7 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
   };
 
   getStatus = async (userId: string): Promise<MentorStatus | null> => {
-    const mentor = await this.findOne({ userId });
+    const mentor = await this.mentorRepository.findOne({ userId });
 
     if (!mentor) {
       return null; // User hasn't applied yet
@@ -97,7 +94,7 @@ export class MentorService extends BaseService<IMentor> implements IMentorServic
   };
 
   getMentorByUserId = async (userId: string): Promise<IMentor | null> => {
-    return await this.findOne({ userId });
+    return await this.mentorRepository.findOne({ userId });
   };
 
   getUserIdByMentorId = async (mentorId: string): Promise<string> => {
