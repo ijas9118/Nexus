@@ -223,6 +223,12 @@ import { IGlobalSearchController } from '@/core/interfaces/controllers/IGlobalSe
 import { GlobalSearchController } from '@/controllers/globalSearch.controller';
 import { IGlobalSearchService } from '@/core/interfaces/services/IGlobalSearchService';
 import { GlobalSearchService } from '@/services/globalSearch.service';
+import { IAdminDashboardController } from '@/core/interfaces/controllers/IAdminDashboardController';
+import { AdminDashboardController } from '@/controllers/admin/admin.dashboard.controller';
+import { IAdminDashboardService } from '@/core/interfaces/services/IAdminDashboardService';
+import { AdminDashboardService } from '@/services/admin/admin.dashboard.service';
+import { TransactionRepository } from '@/repositories/transactions.repository';
+import { ITransactionRepository } from '@/core/interfaces/repositories/ITransactionRepository';
 
 const container = new Container();
 
@@ -380,5 +386,12 @@ container
 
 container.bind<IGlobalSearchController>(TYPES.GlobalSearchController).to(GlobalSearchController);
 container.bind<IGlobalSearchService>(TYPES.GlobalSearchService).to(GlobalSearchService);
+
+container
+  .bind<IAdminDashboardController>(TYPES.AdminDashboardController)
+  .to(AdminDashboardController);
+container.bind<IAdminDashboardService>(TYPES.AdminDashboardService).to(AdminDashboardService);
+
+container.bind<ITransactionRepository>(TYPES.TransactionRepository).to(TransactionRepository);
 
 export { container };

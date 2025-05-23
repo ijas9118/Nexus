@@ -4,7 +4,7 @@ import { Button } from "@/components/atoms/button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { loginAdmin } from "@/services/admin/adminService";
+import { AdminService } from "@/services/admin/adminService";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "@/store/slices/authSlice";
@@ -36,7 +36,8 @@ export default function AdminLogin() {
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
       setErrorMessage(null);
-      const result = await loginAdmin(data.email, data.password);
+      const result = await AdminService.loginAdmin(data.email, data.password);
+      console.log(result);
       if (result.user) {
         const { user, accessToken } = result;
         dispatch(setCredentials({ user, accessToken }));

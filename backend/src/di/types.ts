@@ -157,8 +157,13 @@ export const TYPES = {
   GlobalSearchService: Symbol.for('GlobalSearchService'),
   GlobalSearchController: Symbol.for('GlobalSearchController'),
 
+  // Admin Dashboard
+  AdminDashboardController: Symbol.for('AdminDashboardController'),
+  AdminDashboardService: Symbol.for('AdminDashboardService'),
+
   // Miscellaneous / Utilities
   OTPService: Symbol.for('IOTPService'),
   EmailService: Symbol.for('IEmailService'),
   TokenService: Symbol.for('ITokenService'),
+  TransactionRepository: Symbol.for('TransactionRepository'),
 };
