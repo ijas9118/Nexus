@@ -3,7 +3,6 @@ import { TYPES } from '../di/types';
 import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
 import { IUserService } from '../core/interfaces/services/IUserService';
 import { IUser, UserModel } from '../models/user.model';
-import { BaseService } from '../core/abstracts/base.service';
 import { UsersResponseDTO } from '../dtos/responses/admin/users.dto';
 import bcrypt from 'bcryptjs';
 import { ISquad } from '../models/squads.model';
@@ -18,13 +17,11 @@ interface UserUpdateData {
 }
 
 @injectable()
-export class UserService extends BaseService<IUser> implements IUserService {
+export class UserService implements IUserService {
   constructor(
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
     @inject(TYPES.ContentRepository) private contentRepo: IContentRepository
-  ) {
-    super(userRepository);
-  }
+  ) {}
 
   async findByEmail(email: string): Promise<IUser | null> {
     return this.userRepository.findByEmail(email);

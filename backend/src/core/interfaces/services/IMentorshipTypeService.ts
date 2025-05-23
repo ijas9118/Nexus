@@ -1,7 +1,6 @@
 import { IMentorshipType } from '@/models/mentorship-type.model';
-import { IBaseService } from './IBaseService';
 
-export interface IMentorshipTypeService extends IBaseService<IMentorshipType> {
+export interface IMentorshipTypeService {
   createMentorshipType(data: { name: string; description: string }): Promise<IMentorshipType>;
   getMentorshipType(id: string): Promise<IMentorshipType>;
   getAllMentorshipTypes(options?: { includeInactive?: boolean }): Promise<IMentorshipType[]>;

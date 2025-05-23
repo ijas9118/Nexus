@@ -2,7 +2,6 @@ import { inject, injectable } from 'inversify';
 import { IContentService } from '../core/interfaces/services/IContentService';
 import { TYPES } from '../di/types';
 import { IContent } from '../models/content.model';
-import { BaseService } from '../core/abstracts/base.service';
 import { IContentRepository } from '../core/interfaces/repositories/IContentRepository';
 import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
 import { IContentViewService } from '@/core/interfaces/services/IContentViewService';
@@ -10,14 +9,12 @@ import { Express } from 'express';
 import { uploadToCloudinary } from '@/utils/cloudinaryUtils';
 
 @injectable()
-export class ContentService extends BaseService<IContent> implements IContentService {
+export class ContentService implements IContentService {
   constructor(
     @inject(TYPES.ContentRepository) private contentRepository: IContentRepository,
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
     @inject(TYPES.ContentViewService) private viewService: IContentViewService
-  ) {
-    super(contentRepository);
-  }
+  ) {}
 
   async createContent(
     contentData: Partial<IContent>,
@@ -55,7 +52,7 @@ export class ContentService extends BaseService<IContent> implements IContentSer
     };
 
     // Save content to the database
-    const createdContent = await this.create(updatedContentData);
+    const createdContent = await this.contentRepository.create(updatedContentData);
 
     // Increment author's post count
     if (createdContent.author) {

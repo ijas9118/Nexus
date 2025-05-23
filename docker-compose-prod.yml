@@ -1,13 +1,7 @@
 services:
   backend:
     image: ijas9118/nexus-backend-image
-    # container_name: nexus-backend
     pull_policy: always
-    build:
-      platforms: 
-        - linux/amd64
-      context: ./backend
-      dockerfile: Dockerfile.prod
     ports:
       - "3000:3000"
     env_file:
@@ -19,15 +13,12 @@ services:
 
   nginx:
     image: ijas9118/nexus-nginx-image
+    pull_policy: always
     container_name: nexus-nginx
-    pull_policy: never
-    build:
-      platforms: 
-        - linux/amd64
-      context: ./frontend
-      dockerfile: Dockerfile.prod
-      target: prod
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     ports:
+      - "443:443"
       - "80:80"
     env_file:
       - ./frontend/.env

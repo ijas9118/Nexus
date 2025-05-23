@@ -1,4 +1,3 @@
-import { BaseService } from '@/core/abstracts/base.service';
 import { IChatRepository } from '@/core/interfaces/repositories/IChatRepository';
 import { IGroupRepository } from '@/core/interfaces/repositories/IGroupRepository';
 import { IMessageRepository } from '@/core/interfaces/repositories/IMessageRepository';
@@ -10,14 +9,12 @@ import mongoose, { Types } from 'mongoose';
 import { Server as SocketIOServer } from 'socket.io';
 
 @injectable()
-export class MessageService extends BaseService<IMessage> implements IMessageService {
+export class MessageService implements IMessageService {
   constructor(
     @inject(TYPES.MessageRepository) protected repository: IMessageRepository,
     @inject(TYPES.ChatRepository) private chatRepository: IChatRepository,
     @inject(TYPES.GroupRepository) private groupRepository: IGroupRepository
-  ) {
-    super(repository);
-  }
+  ) {}
 
   async sendMessage(
     userId: string,

@@ -1,4 +1,3 @@
-import { BaseService } from '@/core/abstracts/base.service';
 import { IChatRepository } from '@/core/interfaces/repositories/IChatRepository';
 import { IChatService } from '@/core/interfaces/services/IChatService';
 import { IConnectionService } from '@/core/interfaces/services/IConnectionService';
@@ -7,13 +6,11 @@ import { ChatModel, IChat } from '@/models/chat.model';
 import { inject, injectable } from 'inversify';
 
 @injectable()
-export class ChatService extends BaseService<IChat> implements IChatService {
+export class ChatService implements IChatService {
   constructor(
     @inject(TYPES.ChatRepository) protected repository: IChatRepository,
     @inject(TYPES.ConnectionService) private connectionService: IConnectionService
-  ) {
-    super(repository);
-  }
+  ) {}
 
   async createChat(userId: string, otherUserId: string): Promise<IChat> {
     const isConnected = await this.connectionService.isConnected(userId, otherUserId);
@@ -38,5 +35,9 @@ export class ChatService extends BaseService<IChat> implements IChatService {
 
   async getUserChats(userId: string): Promise<IChat[]> {
     return this.repository.getUserChats(userId);
+  }
+
+  async findById(chatId: string): Promise<IChat | null> {
+    return this.repository.findById(chatId);
   }
 }

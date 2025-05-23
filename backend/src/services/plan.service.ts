@@ -1,4 +1,3 @@
-import { BaseService } from '@/core/abstracts/base.service';
 import { IPlanRepository } from '@/core/interfaces/repositories/IPlanRepository';
 import { IPlanService } from '@/core/interfaces/services/IPlanService';
 import { TYPES } from '@/di/types';
@@ -6,10 +5,8 @@ import { IPlan } from '@/models/plan.model';
 import { inject, injectable } from 'inversify';
 
 @injectable()
-export class PlanService extends BaseService<IPlan> implements IPlanService {
-  constructor(@inject(TYPES.PlanRepository) private planRepository: IPlanRepository) {
-    super(planRepository);
-  }
+export class PlanService implements IPlanService {
+  constructor(@inject(TYPES.PlanRepository) private planRepository: IPlanRepository) {}
 
   createPlan = async (data: Partial<IPlan>): Promise<IPlan> => {
     const existingPlan = await this.planRepository.findOne({ tier: data.tier });
