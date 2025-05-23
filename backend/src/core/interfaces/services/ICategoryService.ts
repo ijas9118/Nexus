@@ -5,4 +5,9 @@ export interface ICategoryService {
   updateCategory(id: string, newName: string): Promise<ICategory | null>;
   toggleCategory(id: string): Promise<ICategory | null>;
   getAllCategories(): Promise<ICategory[]>;
+  getAllCategoriesWithPagination(
+    page: number,
+    limit: number,
+    search: string
+  ): Promise<{ categories: ICategory[]; total: number }>;
 }
