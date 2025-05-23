@@ -9,12 +9,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import CategoryService from "@/services/admin/categoryService";
-import { Category } from "@/types/category";
-import { ColumnDef } from "@tanstack/react-table";
+import type { Category } from "@/types/category";
+import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-export const columns: ColumnDef<Category>[] = [
+interface CategoryColumnProps {
+  onEdit: (category: Category) => void;
+  onToggleStatus: (id: string) => void;
+}
+
+export const getColumns = ({
+  onEdit,
+  onToggleStatus,
+}: CategoryColumnProps): ColumnDef<Category>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -61,7 +68,11 @@ export const columns: ColumnDef<Category>[] = [
     header: () => <div className="text-center w-full">Status</div>,
     cell: ({ row }) => (
       <div className="text-center">
-        <Badge onClick={() => CategoryService.toggleStatus(row.original._id)}>
+        <Badge
+          variant={row.getValue("isActive") ? "default" : "secondary"}
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => onToggleStatus(row.original._id)}
+        >
           {row.getValue("isActive") ? "Active" : "Inactive"}
         </Badge>
       </div>
@@ -83,11 +94,13 @@ export const columns: ColumnDef<Category>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => console.log(category._id)}>
+            <DropdownMenuItem onClick={() => onEdit(category)}>
               Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Toggle Status</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onToggleStatus(category._id)}>
+              Toggle Status
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

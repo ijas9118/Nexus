@@ -69,7 +69,7 @@ export function SubscriptionDistributionChart({
             label: "Fire (12 months)",
           },
         }}
-        className="w-full my-6" // Takes available space
+        className="w-full h-[200px]" // Takes available space
       >
         <PieChart>
           <Pie
@@ -107,7 +107,7 @@ export function SubscriptionDistributionChart({
               {plan.value} users
             </span>
             <span className="text-xs text-slate-500 dark:text-slate-400">
-              ${plan.revenue.toLocaleString()}
+              ₹{plan.revenue.toLocaleString()}
             </span>
           </div>
         ))}

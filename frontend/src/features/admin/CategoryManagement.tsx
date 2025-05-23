@@ -1,30 +1,60 @@
-import CategoryService from "@/services/admin/categoryService";
-import { FC, useEffect, useState } from "react";
-import { columns } from "./category-management/columns";
+import { type FC, useState } from "react";
+import { getColumns } from "./category-management/columns";
 import { DataTable } from "./category-management/components/data-table";
-import { Category } from "@/types/category";
+import type { Category } from "@/types/category";
+import {
+  useCategories,
+  useToggleCategoryStatus,
+} from "./category-management/hooks/use-categories";
+import EditCategoryModal from "./category-management/components/edit-category-modal";
 
 const CategoryManagement: FC = () => {
-  const [data, setData] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null,
+  );
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const categories = await CategoryService.getAllCategory();
-        setData(categories);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
+  // Use React Query hooks
+  const { data: categories = [], isLoading } = useCategories();
+  const toggleStatusMutation = useToggleCategoryStatus();
 
-    fetchCategory();
-  }, []);
+  const handleEditCategory = (category: Category) => {
+    setSelectedCategory(category);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedCategory(null);
+  };
+
+  const handleToggleStatus = (id: string) => {
+    toggleStatusMutation.mutate(id);
+  };
+
+  const columns = getColumns({
+    onEdit: handleEditCategory,
+    onToggleStatus: handleToggleStatus,
+  });
 
   return (
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-18 py-8">
       <h1 className="text-3xl font-semibold mb-6">Category Management</h1>
 
-      <DataTable columns={columns} data={data} />
+      {isLoading ? (
+        <div className="flex justify-center items-center h-64">
+          <p>Loading categories...</p>
+        </div>
+      ) : (
+        <DataTable columns={columns} data={categories} />
+      )}
+
+      <EditCategoryModal
+        category={selectedCategory}
+        isOpen={isEditModalOpen}
+        onClose={handleCloseModal}
+        onToggleStatus={handleToggleStatus}
+      />
     </div>
   );
 };
