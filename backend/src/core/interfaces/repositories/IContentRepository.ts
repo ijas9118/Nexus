@@ -15,4 +15,5 @@ export interface IContentRepository extends BaseRepository<IContent> {
   search(criteria: SearchCriteria): Promise<SearchResultItem[]>;
   getSquadContents(squadId: string, role: UserRole, userId: string): Promise<any[]>;
   countContents(): Promise<number>;
+  countContentsBefore(date: Date): Promise<number>;
 }

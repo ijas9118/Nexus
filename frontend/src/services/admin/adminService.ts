@@ -1,4 +1,7 @@
-import { DashboardStatsResponse } from "@/types/admin/dashboard";
+import {
+  DashboardStatsResponse,
+  SubscriptionStatsResponse,
+} from "@/types/admin/dashboard";
 import api from "../api";
 import { LoginResponse } from "@/types/admin/auth";
 
@@ -12,4 +15,7 @@ export const AdminService = {
     api
       .get<DashboardStatsResponse>("/admin/dashboard/stats")
       .then((res) => res.data),
+
+  getSubscriptionStats: (): Promise<SubscriptionStatsResponse> =>
+    api.get("/admin/dashboard/subscription-stats").then((res) => res.data),
 };

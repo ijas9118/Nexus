@@ -12,6 +12,7 @@ import {
   DollarSign,
   Filter,
   ChevronDown,
+  Minus,
 } from "lucide-react";
 
 import {
@@ -48,6 +49,17 @@ const Dashboard: FC = () => {
     queryFn: AdminService.getDashboardStats,
   });
 
+  const {
+    data: subscriptionData,
+    isLoading: subscriptionLoading,
+    isError: subscriptionError,
+  } = useQuery({
+    queryKey: ["subscriptionStats"],
+    queryFn: AdminService.getSubscriptionStats,
+  });
+
+  console.log(subscriptionData);
+
   // const { data: revenueData } = useQuery({
   //   queryKey: ["adminRevenueStats", timeRange],
   //   queryFn: () => AdminService.getRevenueStats(timeRange),
@@ -58,36 +70,36 @@ const Dashboard: FC = () => {
       title: "Total Users",
       value: data?.totalUsers ?? "-",
       icon: <User />,
-      change: "+12%",
-      trend: "up",
+      change: data?.userChange ?? "+12%",
+      trend: data?.userTrend ?? "up",
     },
     {
       title: "Total Mentors",
       value: data?.totalMentors ?? "-",
       icon: <GraduationCap />,
-      change: "+8%",
-      trend: "up",
+      change: data?.mentorChange ?? "+8%",
+      trend: data?.mentorTrend ?? "up",
     },
     {
       title: "Active Squads",
       value: data?.totalSquads ?? "-",
       icon: <Compass />,
-      change: "+5%",
-      trend: "up",
+      change: data?.squadChange ?? "+5%",
+      trend: data?.squadTrend ?? "up",
     },
     {
       title: "Contents",
       value: data?.totalContents ?? "-",
       icon: <Atom />,
-      change: "+15%",
-      trend: "up",
+      change: data?.contentChange ?? "+15%",
+      trend: data?.contentTrend ?? "up",
     },
     {
       title: "Active Subscription",
       value: data?.totalSubscription ?? "-",
       icon: <CreditCard />,
-      change: "+10%",
-      trend: "up",
+      change: data?.subscriptionChange ?? "+10%",
+      trend: data?.subscriptionTrend ?? "up",
     },
   ];
 
@@ -120,12 +132,20 @@ const Dashboard: FC = () => {
               </div>
               {!isLoading && !isError && (
                 <p
-                  className={`text-xs mt-1 flex items-center ${stat.trend === "up" ? "text-green-500" : "text-red-500"}`}
+                  className={`text-xs mt-1 flex items-center ${
+                    stat.trend === "up"
+                      ? "text-green-500"
+                      : stat.trend === "down"
+                        ? "text-red-500"
+                        : "text-gray-500"
+                  }`}
                 >
                   {stat.trend === "up" ? (
                     <ArrowUpRight className="w-3 h-3 mr-1" />
-                  ) : (
+                  ) : stat.trend === "down" ? (
                     <ArrowUpRight className="w-3 h-3 mr-1 rotate-180" />
+                  ) : (
+                    <Minus className="w-3 h-3 mr-1" />
                   )}
                   {stat.change} from last month
                 </p>
@@ -167,7 +187,7 @@ const Dashboard: FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl bg-gradient-to-br from-white to-slate-100 dark:from-[#1f2937] dark:to-[#111827] shadow-md">
+        <Card className="flex flex-col h-full rounded-2xl bg-gradient-to-br from-white to-slate-100 dark:from-[#1f2937] dark:to-[#111827] shadow-md">
           <CardHeader>
             <CardTitle className="text-xl font-semibold text-slate-800 dark:text-slate-100">
               Subscription Plans
@@ -176,16 +196,28 @@ const Dashboard: FC = () => {
               Distribution by plan type
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <SubscriptionDistributionChart />
+
+          <CardContent className="flex-1">
+            <SubscriptionDistributionChart
+              data={subscriptionData}
+              isLoading={subscriptionLoading}
+              isError={subscriptionError}
+            />
           </CardContent>
+
           <CardFooter className="flex justify-between border-t border-slate-200 dark:border-slate-700 pt-4">
             <div>
               <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
                 Total Revenue
               </p>
               <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-                $12,845
+                {subscriptionLoading ? (
+                  <Loader className="animate-spin text-blue-500 w-5 h-5" />
+                ) : subscriptionError ? (
+                  "-"
+                ) : (
+                  `₹${subscriptionData?.totalRevenue.toLocaleString() || "0"}`
+                )}
               </p>
             </div>
             <Button

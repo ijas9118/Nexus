@@ -223,4 +223,10 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
   async countSquads(): Promise<number> {
     return this.model.countDocuments({});
   }
+
+  async countSquadsBefore(date: Date): Promise<number> {
+    return this.model.countDocuments({
+      createdAt: { $lt: date },
+    });
+  }
 }

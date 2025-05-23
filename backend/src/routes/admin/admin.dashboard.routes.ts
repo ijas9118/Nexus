@@ -9,4 +9,6 @@ const router = Router();
 
 router.get('/stats', adminController.getDashboardStats);
 
+router.get('/subscription-stats', adminController.getSubscriptionStats);
+
 export default router;

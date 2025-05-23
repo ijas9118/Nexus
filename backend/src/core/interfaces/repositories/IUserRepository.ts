@@ -20,4 +20,6 @@ export interface IUserRepository extends BaseRepository<IUser> {
   search(criteria: { query: string; limit?: number }): Promise<SearchResultItem[]>;
   countUsers(): Promise<number>;
   countMentors(): Promise<number>;
+  countUsersBefore(date: Date): Promise<number>;
+  countMentorsBefore(date: Date): Promise<number>;
 }

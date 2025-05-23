@@ -21,6 +21,16 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
     super(ContentModel);
   }
 
+  async countContents(): Promise<number> {
+    return this.model.countDocuments({});
+  }
+
+  async countContentsBefore(date: Date): Promise<number> {
+    return this.model.countDocuments({
+      createdAt: { $lt: date },
+    });
+  }
+
   async findContent(id: string, role: UserRole, userId?: string): Promise<any> {
     const contentId = new Types.ObjectId(id);
     const userObjectId = userId ? new Types.ObjectId(userId) : null;
@@ -758,9 +768,5 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       title: doc.title,
       snippet: doc.content.substring(0, 150), // example snippet
     }));
-  }
-
-  async countContents(): Promise<number> {
-    return this.model.countDocuments({});
   }
 }
