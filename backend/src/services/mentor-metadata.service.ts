@@ -4,6 +4,7 @@ import { TYPES } from '@/di/types';
 import { IMentorMetadata } from '@/models/mentor-metadata.model';
 import { MentorMetadataRepository } from '@/repositories/mentor-metadata.repository';
 import { injectable, inject } from 'inversify';
+import { FilterQuery } from 'mongoose';
 
 @injectable()
 export class MentorMetadataService implements IMentorMetadataService {
@@ -33,8 +34,10 @@ export class MentorMetadataService implements IMentorMetadataService {
     return this.repository.findById(id);
   }
 
-  async find(query: Partial<IMentorMetadata> = {}): Promise<IMentorMetadata[]> {
-    return this.repository.find({ query });
+  async find(query: FilterQuery<IMentorMetadata> = {}): Promise<IMentorMetadata[]> {
+    console.log(query);
+
+    return this.repository.find(query);
   }
 
   async softDelete(id: string): Promise<IMentorMetadata | null> {

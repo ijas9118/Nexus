@@ -22,9 +22,6 @@ const ContentManagement = lazy(
 const ContentDetail = lazy(
   () => import("@/features/admin/content-management/components/ContentDetail"),
 );
-const PaymentManagement = lazy(
-  () => import("@/features/admin/PaymentManagement"),
-);
 const SubscriptionPlan = lazy(
   () => import("@/features/admin/SubscriptionPlan"),
 );
@@ -61,7 +58,6 @@ const AdminRoutes: React.FC = () => {
             <Route path="comments" element={<CommentManagement />} />
             <Route path="contents" element={<ContentManagement />} />
             <Route path="contents/:contentId" element={<ContentDetail />} />
-            <Route path="payment" element={<PaymentManagement />} />
             <Route path="plans" element={<SubscriptionPlan />} />
             <Route
               path="mentorship-type"
