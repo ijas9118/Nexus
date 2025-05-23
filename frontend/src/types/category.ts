@@ -4,3 +4,11 @@ export interface Category {
   squadCount: number;
   isActive: boolean;
 }
+
+export interface PaginatedCategoryResponse {
+  categories: Category[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}

@@ -205,7 +205,7 @@ const Dashboard: FC = () => {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="flex-1 flex items-center justify-center">
+          <CardContent className="flex-1 flex items-center justify-center ">
             <SubscriptionDistributionChart
               data={subscriptionData}
               isLoading={subscriptionLoading}

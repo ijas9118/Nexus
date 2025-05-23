@@ -59,12 +59,38 @@ export class CategoryController implements ICategoryController {
 
   // Get all categories
   getAllCategories = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const categories = await this.categoryService.getAllCategories();
+    const userRole = req.user?.role || 'user';
 
-    if (!categories || categories.length === 0) {
-      throw new CustomError('No categories found', StatusCodes.NOT_FOUND);
+    if (userRole === 'admin') {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const search = (req.query.search as string) || '';
+
+      const { categories, total } = await this.categoryService.getAllCategoriesWithPagination(
+        page,
+        limit,
+        search
+      );
+
+      if (!categories || categories.length === 0) {
+        throw new CustomError('No categories found', StatusCodes.NOT_FOUND);
+      }
+
+      res.status(StatusCodes.OK).json({
+        categories,
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      });
+    } else {
+      const categories = await this.categoryService.getAllCategories();
+
+      if (!categories || categories.length === 0) {
+        throw new CustomError('No categories found', StatusCodes.NOT_FOUND);
+      }
+
+      res.status(StatusCodes.OK).json(categories);
     }
-
-    res.status(StatusCodes.OK).json(categories);
   });
 }
