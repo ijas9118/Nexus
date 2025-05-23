@@ -138,4 +138,55 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
       .populate('mentorshipDetails.mentorshipTypes')
       .populate('mentorshipDetails.targetAudiences');
   };
+
+  async countMentorsByStatus(): Promise<{
+    totalApplications: number;
+    statusCounts: Array<{
+      status: string;
+      count: number;
+    }>;
+  }> {
+    // Get total count of all mentor applications
+    const totalApplications = await this.model.countDocuments({});
+
+    // Aggregate mentor applications by status
+    const statusCounts = await this.model.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          status: '$_id',
+          count: 1,
+        },
+      },
+      {
+        $sort: { status: 1 },
+      },
+    ]);
+
+    // Ensure all statuses are represented (even if count is 0)
+    const allStatuses = ['pending', 'approved', 'rejected'];
+    const statusMap = new Map(statusCounts.map((item) => [item.status, item.count]));
+
+    const completeStatusCounts = allStatuses.map((status) => ({
+      status,
+      count: statusMap.get(status) || 0,
+    }));
+
+    return {
+      totalApplications,
+      statusCounts: completeStatusCounts,
+    };
+  }
+
+  async countMentorApplicationsBefore(date: Date): Promise<number> {
+    return this.model.countDocuments({
+      createdAt: { $lt: date },
+    });
+  }
 }

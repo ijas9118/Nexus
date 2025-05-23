@@ -2,10 +2,10 @@ import { FC, useEffect, useState } from "react";
 import { columns } from "./squadManagement/columns";
 import { DataTable } from "./squadManagement/components/data-table";
 import AdminSquadService from "@/services/admin/squadService";
-import { Squad } from "@/types/squad";
+import { SquadDetail } from "@/types/squad";
 
 const SquadManagement: FC = () => {
-  const [data, setData] = useState<Squad[]>([]);
+  const [data, setData] = useState<SquadDetail[]>([]);
 
   useEffect(() => {
     const fetchSquads = async () => {

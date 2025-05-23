@@ -1,10 +1,5 @@
 import { IMentorDashboardRepository } from '@/core/interfaces/repositories/IMentorDashboardRepository';
-import {
-  EarningsResponse,
-  PendingWithdrawalsResponse,
-  RecentBooking,
-  SessionStatsResponse,
-} from '@/core/types/mentorDashboard';
+import { PendingWithdrawalsResponse, SessionStatsResponse } from '@/core/types/mentorDashboard';
 import { BookingModel } from '@/models/booking.model';
 import { TransactionModel } from '@/models/transaction.model';
 import { WalletModel } from '@/models/wallet.model';

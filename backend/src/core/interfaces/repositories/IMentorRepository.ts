@@ -37,4 +37,14 @@ export interface IMentorRepository extends BaseRepository<IMentor> {
       targetAudiences: string[];
     }
   ): Promise<IMentor | null>;
+
+  countMentorsByStatus(): Promise<{
+    totalApplications: number;
+    statusCounts: Array<{
+      status: string;
+      count: number;
+    }>;
+  }>;
+
+  countMentorApplicationsBefore(date: Date): Promise<number>;
 }

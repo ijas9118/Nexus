@@ -1,5 +1,3 @@
-import { IPlan } from '../../../models/plan.model';
-
 export interface IPaymentService {
   checkoutSession(
     planId: string,

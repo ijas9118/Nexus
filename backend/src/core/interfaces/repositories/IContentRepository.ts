@@ -1,6 +1,7 @@
 import { SearchCriteria, SearchResultItem } from '@/core/types/search';
 import { IContent } from '../../../models/content.model';
 import { BaseRepository } from '../../abstracts/base.repository';
+import { UserRole } from '@/core/types/UserTypes';
 
 export interface IContentRepository extends BaseRepository<IContent> {
   findContent(contentId: string, role: string, userId: string): Promise<IContent | null>;
@@ -12,4 +13,7 @@ export interface IContentRepository extends BaseRepository<IContent> {
   getUserContents(userId: string): Promise<IContent[] | null>;
   incrementViewCount(contentId: string): Promise<void>;
   search(criteria: SearchCriteria): Promise<SearchResultItem[]>;
+  getSquadContents(squadId: string, role: UserRole, userId: string): Promise<any[]>;
+  countContents(): Promise<number>;
+  countContentsBefore(date: Date): Promise<number>;
 }

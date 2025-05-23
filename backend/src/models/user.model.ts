@@ -22,6 +22,7 @@ interface IUser extends Document<string> {
   isPremium: boolean;
   googleId?: string;
   githubId?: string;
+  isBlocked: boolean;
 }
 
 const UserSchema: Schema = new Schema(
@@ -101,6 +102,10 @@ const UserSchema: Schema = new Schema(
       type: String,
       unique: true,
       sparse: true,
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
     },
   },
   {

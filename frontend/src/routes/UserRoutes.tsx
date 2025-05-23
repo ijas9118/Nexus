@@ -4,6 +4,9 @@ import ProtectedRoute from "./ProtectedRoute";
 import { MentorFormProvider } from "@/context/MentorFormContext";
 import { Skeleton } from "@/components/atoms/skeleton";
 import ConnectionsPage from "@/features/connections/ConnectionsPage";
+import SquadDetailPage from "@/features/squad-detail/SquadDetailPage";
+import VerifyContentPage from "@/features/squad-content-verify/VerifyContentPage";
+import SquadAdminDashboard from "@/features/squad-admin-dashboard/SquadAdminDashboard";
 
 const Home = lazy(() => import("@/pages/Home"));
 const LoginPage = lazy(() => import("@/features/auth/Login"));
@@ -34,7 +37,7 @@ const VideoCallPage = lazy(() => import("@/features/videoCall/VideoCallPage"));
 const MentorshipMeetingsPage = lazy(
   () => import("@/features/mentorship-meetings/MentorshipMeetingsPage"),
 );
-const Squads = lazy(() => import("@/features/squad/Squads"));
+const Squads = lazy(() => import("@/features/squad-list/Squads"));
 const Chat = lazy(() => import("@/features/chat/Chat"));
 const History = lazy(() => import("@/features/content/History"));
 const ContentDetails = lazy(() => import("@/features/content/ContentDetails"));
@@ -85,6 +88,15 @@ const UserRoutes: React.FC = () => {
                 element={<MentorshipMeetingsPage />}
               />
               <Route path="squads" element={<Squads />} />
+              <Route path="squads/:handle" element={<SquadDetailPage />} />
+              <Route
+                path="squads/:squadId/verify"
+                element={<VerifyContentPage />}
+              />
+              <Route
+                path="squads/dashboard"
+                element={<SquadAdminDashboard />}
+              />
               <Route path="chat" element={<Chat />} />
               <Route path="connections" element={<ConnectionsPage />} />
               <Route path="history" element={<History />} />

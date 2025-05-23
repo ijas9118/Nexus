@@ -5,6 +5,7 @@ import { TYPES } from '@/di/types';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { inject, injectable } from 'inversify';
 import mongoose from 'mongoose';
+import logger from '@/config/logger';
 
 @injectable()
 export class SocketController {
@@ -27,7 +28,7 @@ export class SocketController {
 
       // Store user socket mapping
       this.userSocketMap.set(userId, socket.id);
-      console.log(`User connected: ${userId} with socket ID: ${socket.id}`);
+      logger.info(`User connected: ${userId} with socket ID: ${socket.id}`);
 
       // Join user to their chats and groups
       this.joinUserRooms(userId, socket);
@@ -37,7 +38,7 @@ export class SocketController {
 
       // Video call events
       socket.on('join-video-room', ({ roomId, peerId }) => {
-        this.handleJoinVideoRoom(userId, roomId, peerId, socket, io);
+        this.handleJoinVideoRoom(userId, roomId, peerId, socket);
       });
 
       socket.on('leave-video-room', ({ roomId }) => {
@@ -89,8 +90,7 @@ export class SocketController {
     userId: string,
     roomId: string,
     peerId: string,
-    socket: Socket,
-    io: SocketIOServer
+    socket: Socket
   ): Promise<void> {
     try {
       // Join the socket room
@@ -314,6 +314,6 @@ export class SocketController {
         socket.to(roomId).emit('user-disconnected', { userId });
       }
     });
-    console.log(`User disconnected: ${userId}`);
+    logger.info(`User disconnected: ${userId}`);
   }
 }

@@ -53,13 +53,11 @@ export class EmailService implements IEmailService {
     };
 
     try {
-      // await transporter.sendMail(mailOptions);
+      await transporter.sendMail(mailOptions);
     } catch (error) {
       console.error('Error sending OTP email:', error);
       throw new CustomError('Failed to send OTP. Please try again later.', StatusCodes.BAD_REQUEST);
     }
-
-    console.log(userData.email, otp);
   }
 
   // Create a reset password link with token

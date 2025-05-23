@@ -1,9 +1,13 @@
 import { refreshAccessToken } from "@/store/slices/authSlice";
 import store from "@/store/store";
+import { HOST } from "@/utils/constants";
 import axios from "axios";
 
+const baseURL = import.meta.env.MODE === "development" ? `${HOST}/api` : "/api";
+console.log(baseURL);
+
 const api = axios.create({
-  baseURL: "/api",
+  baseURL,
   withCredentials: true,
 });
 

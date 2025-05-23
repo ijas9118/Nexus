@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import CustomError from '../utils/CustomError';
+import logger from '@/config/logger';
 
 const errorMiddleware = (
   err: CustomError | Error,
@@ -7,12 +8,12 @@ const errorMiddleware = (
   res: Response,
   _next: NextFunction
 ) => {
-  console.error('Error:', err);
+  logger.error('Error:', err);
 
   const statusCode = err instanceof CustomError ? err.statusCode : 500;
   const message = err.message || 'Internal Server Error';
 
-  console.log(statusCode, message);
+  logger.error(statusCode.toString(), message);
 
   res.status(statusCode).json({ message });
 };

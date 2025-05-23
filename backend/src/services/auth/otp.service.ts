@@ -7,6 +7,7 @@ import { IOTPService } from '@/core/interfaces/services/IOTPService';
 import { TYPES } from '@/di/types';
 import { IEmailService } from '@/core/interfaces/services/IEmailService';
 import { RegisterRequestDTO } from '@/dtos/requests/auth.dto';
+import logger from '@/config/logger';
 
 @injectable()
 export class OTPService implements IOTPService {
@@ -35,7 +36,6 @@ export class OTPService implements IOTPService {
   // Verify OTP and retrieve stored user data
   async verifyAndRetrieveUser(email: string, otp: string): Promise<RegisterRequestDTO> {
     const storedData = await redisClient.get(`otp:${email}`);
-    console.log(storedData);
 
     if (!storedData) {
       throw new CustomError('OTP expired or invalid.', StatusCodes.BAD_REQUEST);
@@ -43,7 +43,7 @@ export class OTPService implements IOTPService {
 
     const { userData, otp: storedOTP } = JSON.parse(storedData);
 
-    console.log('User', userData, otp);
+    logger.debug('User', userData, otp);
 
     if (otp !== storedOTP) {
       throw new CustomError('Invalid OTP.', StatusCodes.BAD_REQUEST);

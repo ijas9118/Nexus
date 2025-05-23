@@ -38,7 +38,7 @@
 
 /**
  * @swagger
- * /content/posts/bookmark:
+ * /content/posts/bookmarks:
  *   get:
  *     summary: Get all bookmarks for the authenticated user
  *     description: Retrieves a list of all bookmarked content items for the authenticated user.

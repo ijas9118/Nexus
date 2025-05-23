@@ -1,10 +1,11 @@
 import { ScrollArea, ScrollBar } from "@/components/organisms/scroll-area";
+import { Category } from "@/types/category";
 import { FC } from "react";
 
 interface CategoryScrollProps {
-  categories: string[];
-  selectedCategory: string;
-  onCategorySelect: (category: string) => void;
+  categories: Category[];
+  selectedCategory: Category | null;
+  onCategorySelect: (category: Category) => void;
 }
 
 const CategoryScroll: FC<CategoryScrollProps> = ({
@@ -17,15 +18,15 @@ const CategoryScroll: FC<CategoryScrollProps> = ({
       <div className="flex h-14 items-center">
         {categories.map((category) => (
           <button
-            key={category}
+            key={category._id}
             onClick={() => onCategorySelect(category)}
             className={`flex h-14 items-center border-b-2  ${
-              category === selectedCategory
+              selectedCategory?._id === category._id
                 ? "border-primary text-foreground"
                 : "border-transparent text-muted-foreground"
             } px-2 text-sm font-medium transition-colors hover:text-foreground`}
           >
-            {category}
+            {category.name}
           </button>
         ))}
       </div>

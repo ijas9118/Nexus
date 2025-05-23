@@ -14,7 +14,6 @@ export class GlobalSearchService implements IGlobalSearchService {
   ) {}
 
   async search(criteria: SearchCriteria): Promise<SearchResultItem[]> {
-    console.log(criteria);
     const [blogs, squads, users] = await Promise.all([
       this.contentRepo.search({ ...criteria, filters: { contentType: 'blog' } }),
       this.squadRepo.search(criteria),

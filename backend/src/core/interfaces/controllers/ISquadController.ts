@@ -6,4 +6,8 @@ export interface ISquadController {
   toggleSquad: RequestHandler;
   getSquadsByCategory: RequestHandler;
   joinSquad: RequestHandler;
+  getSquadDetailsByHandle: RequestHandler;
+  getSquadContents: RequestHandler;
+  leaveSquad: RequestHandler;
+  getJoinedSquads: RequestHandler;
 }

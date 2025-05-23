@@ -38,7 +38,6 @@ export class MentorshipTypeController implements IMentorshipTypeController {
   });
 
   update = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    console.log(req.body);
     const mentorshipType = await this.service.updateMentorshipType(req.params.id, req.body);
     res.status(StatusCodes.OK).json(MentorshipTypeResponseDto.fromEntity(mentorshipType));
   });

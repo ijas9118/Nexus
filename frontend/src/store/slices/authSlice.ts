@@ -22,7 +22,7 @@ const initialState: AuthState = {
 // Thunk to refresh access token
 export const refreshAccessToken = createAsyncThunk(
   "auth/refreshToken",
-  async (_, { rejectWithValue, dispatch }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await api.post(
         "/auth/refresh-token",
@@ -31,7 +31,6 @@ export const refreshAccessToken = createAsyncThunk(
       );
       return response.data;
     } catch {
-      dispatch(clearUser()); // Logout user if refresh fails
       return rejectWithValue("Session expired, please log in again.");
     }
   },
@@ -55,6 +54,7 @@ const authSlice = createSlice({
       localStorage.setItem("accessToken", action.payload);
     },
     clearUser: (state) => {
+      console.log(state);
       state.isAuthenticated = false;
       state.user = null;
       state.accessToken = null;

@@ -8,6 +8,7 @@ import { IPaymentRepository } from '@/core/interfaces/repositories/IPaymentRepos
 import { ISubscriptionRepository } from '@/core/interfaces/repositories/ISubscriptionRepository';
 import { TYPES } from '@/di/types';
 import { IBookingPaymentService } from '@/core/interfaces/services/IBookingPaymentService';
+import logger from '@/config/logger';
 
 @injectable()
 export class PaymentServce implements IPaymentService {
@@ -79,12 +80,12 @@ export class PaymentServce implements IPaymentService {
         } else if (metadata?.type === 'subscription') {
           await this.handleCheckoutSessionCompleted(session);
         } else {
-          console.log('Unknown checkout session type');
+          logger.error('Unknown checkout session type');
         }
         break;
       }
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        logger.info(`Unhandled event type: ${event.type}`);
     }
   };
 

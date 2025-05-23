@@ -1,73 +1,35 @@
-import { AxiosError } from "axios";
+import { handleApi } from "@/utils/handleApi";
 import api from "../api";
+import { SquadContent, SquadDetail } from "@/types/squad";
 
 const SquadService = {
-  createSquad: async (formData: FormData) => {
-    try {
-      const response = await api.post("/squad", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        console.error("Error creating squad:", error);
-        throw error.response?.data || error.message;
-      } else if (error instanceof Error) {
-        throw error.message;
-      } else {
-        throw "An unknown error occurred";
-      }
-    }
-  },
+  createSquad: async (formData: FormData) =>
+    handleApi(() =>
+      api.post<any>("/squad", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      }),
+    ),
 
-  getSquadsByCategory: async (category: string) => {
-    try {
-      const response = await api.get(`/squad?category=${category}`);
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        throw error.response?.data || error.message;
-      } else if (error instanceof Error) {
-        throw error.message;
-      } else {
-        throw "An unknown error occurred";
-      }
-    }
-  },
+  getSquadsByCategory: async (category: string) =>
+    handleApi(() => api.get<SquadDetail[]>(`/squad?category=${category}`)),
 
-  joinSquad: async (squadId: string) => {
-    try {
-      const response = await api.post(`/squad/${squadId}/join`);
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        console.log(error);
-        throw error.response?.data || error.message;
-      } else if (error instanceof Error) {
-        throw error.message;
-      } else {
-        throw "An unknown error occurred";
-      }
-    }
-  },
+  joinSquad: async (squadId: string) =>
+    handleApi(() => api.post<void>(`/squad/${squadId}/join`)),
 
-  getUserJoinedSquads: async () => {
-    try {
-      const response = await api.get("/user/squads");
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        console.log(error);
-        throw error.response?.data || error.message;
-      } else if (error instanceof Error) {
-        throw error.message;
-      } else {
-        throw "An unknown error occurred";
-      }
-    }
-  },
+  leaveSquad: async (squadId: string) =>
+    handleApi(() => api.post(`/squad/${squadId}/leave`)),
+
+  getUserJoinedSquads: async () =>
+    handleApi(() => api.get<any>("/user/squads")),
+
+  getSquadDetailsByHandle: async (handle: string) =>
+    handleApi(() => api.get<SquadDetail>(`/squad/detail/${handle}`)),
+
+  getSquadContents: async (squadId: string) =>
+    handleApi(() => api.get<SquadContent[]>(`/squad/${squadId}/contents`)),
+
+  getJoinedSquads: async (userId: string) =>
+    handleApi(() => api.post<any[]>("/squad/joined", { userId })),
 };
 
 export default SquadService;

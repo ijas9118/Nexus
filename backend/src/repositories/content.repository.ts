@@ -21,6 +21,16 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
     super(ContentModel);
   }
 
+  async countContents(): Promise<number> {
+    return this.model.countDocuments({});
+  }
+
+  async countContentsBefore(date: Date): Promise<number> {
+    return this.model.countDocuments({
+      createdAt: { $lt: date },
+    });
+  }
+
   async findContent(id: string, role: UserRole, userId?: string): Promise<any> {
     const contentId = new Types.ObjectId(id);
     const userObjectId = userId ? new Types.ObjectId(userId) : null;
@@ -356,6 +366,202 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
         },
       },
     ]);
+
+    return contents;
+  }
+
+  async getSquadContents(squadId: string, role: UserRole, userId: string): Promise<any[]> {
+    const squadObjectId = new Types.ObjectId(squadId);
+    const userObjectId = new Types.ObjectId(userId);
+
+    const pipeline: any[] = [
+      // Match contents for the given squad
+      { $match: { squad: squadObjectId } },
+
+      // Filter out premium content for non-premium users
+      {
+        $match: {
+          $or: [
+            { isPremium: false },
+            { isPremium: true, $expr: { $in: [role, ['premium', 'mentor', 'admin']] } },
+          ],
+        },
+      },
+
+      // Lookup author information
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'authorInfo',
+        },
+      },
+      { $unwind: '$authorInfo' },
+
+      // Lookup squad information
+      {
+        $lookup: {
+          from: 'squads',
+          localField: 'squad',
+          foreignField: '_id',
+          as: 'squadInfo',
+        },
+      },
+      {
+        $unwind: {
+          path: '$squadInfo',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      // Lookup user-specific data (votes, bookmarks, following, connections)
+      {
+        $lookup: {
+          from: 'votes',
+          let: { contentId: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$contentId', '$$contentId'] },
+                    { $eq: ['$userId', userObjectId] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'userVote',
+        },
+      },
+      {
+        $lookup: {
+          from: 'bookmarks',
+          let: { contentId: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $in: ['$$contentId', '$contentIds'] },
+                    { $eq: ['$userId', userObjectId] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'userBookmark',
+        },
+      },
+      {
+        $lookup: {
+          from: 'userfollows',
+          let: { authorId: '$author' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [{ $eq: ['$userId', userObjectId] }, { $in: ['$$authorId', '$following'] }],
+                },
+              },
+            },
+          ],
+          as: 'isFollowingAuthor',
+        },
+      },
+      {
+        $lookup: {
+          from: 'userfollows',
+          let: { authorId: '$author' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$userId', userObjectId] },
+                    { $in: ['$$authorId', '$connections'] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'isConnectedToAuthor',
+        },
+      },
+
+      // Add fields for user-specific flags and formatted author/squad data
+      {
+        $addFields: {
+          isUpvoted: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: '$userVote',
+                        as: 'vote',
+                        cond: { $eq: ['$$vote.voteType', 'upvote'] },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+          isDownvoted: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: '$userVote',
+                        as: 'vote',
+                        cond: { $eq: ['$$vote.voteType', 'downvote'] },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+          isBookmarked: { $gt: [{ $size: '$userBookmark' }, 0] },
+          isFollowing: { $gt: [{ $size: '$isFollowingAuthor' }, 0] },
+          isConnected: { $gt: [{ $size: '$isConnectedToAuthor' }, 0] },
+          authorName: '$authorInfo.name',
+          authorUsername: '$authorInfo.username',
+          authorProfilePic: '$authorInfo.profilePic',
+          authorRole: '$authorInfo.role',
+          squad: '$squadInfo.name',
+        },
+      },
+
+      // Project only the necessary fields
+      {
+        $project: {
+          userVote: 0,
+          userBookmark: 0,
+          isFollowingAuthor: 0,
+          isConnectedToAuthor: 0,
+          authorInfo: 0,
+          squadInfo: 0,
+          __v: 0,
+        },
+      },
+
+      // Sort by date (newest first)
+      { $sort: { createdAt: -1 } },
+    ];
+
+    const contents = await this.model.aggregate(pipeline);
 
     return contents;
   }

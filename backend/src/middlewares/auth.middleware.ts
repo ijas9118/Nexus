@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { verifyAccessToken, verifyRefreshToken } from '../utils/jwt.util';
 import { StatusCodes } from 'http-status-codes';
 import { UserRole } from '@/core/types/UserTypes';
+import logger from '@/config/logger';
+import redisClient from '@/config/redisClient.config';
 
 interface IUser {
   _id: string;
@@ -18,7 +20,7 @@ declare module 'express-serve-static-core' {
 }
 
 export const authenticate = (roles: Array<UserRole>) => {
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const token = req.headers.authorization?.split(' ')[1];
 
@@ -31,7 +33,7 @@ export const authenticate = (roles: Array<UserRole>) => {
       req.user = decoded;
 
       if (roles.length && (!req.user || !roles.includes(req.user.role))) {
-        console.log(req.user.role, roles);
+        logger.debug(req.user.role, roles);
         res.status(StatusCodes.FORBIDDEN).json({ message: 'Permission denied' });
         return;
       }

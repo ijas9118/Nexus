@@ -1,22 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
-import { Bookmark, EyeIcon, MessageCircle, Share2 } from "lucide-react";
+import { Bookmark, EyeIcon, MessageCircle } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Premium from "@/components/icons/Premium";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/molecules/alert-dialog";
 import { extractTextFromHtml } from "@/utils/htmlToText";
 import {
   BiDownvote,
@@ -25,6 +15,8 @@ import {
   BiUpvote,
 } from "react-icons/bi";
 import BookmarkService from "@/services/user/bookmarkService";
+import PremiumAccessAlert from "@/components/organisms/PremiumAccessAlert";
+import { ShareMenu } from "@/components/organisms/share-menu";
 
 interface ContentCardProps {
   id: string;
@@ -187,13 +179,9 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
               )}
             </Button>
 
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-neutral-600 hover:text-blue-600 dark:text-neutral-400 hover:dark:text-blue-400"
-            >
-              <Share2 className="h-5 w-5" />
-            </Button>
+            <div onClick={(e) => e.stopPropagation()}>
+              <ShareMenu contentId={props.id} title={props.heading} />
+            </div>
             <div className="flex gap-2 items-center px-2 text-muted-foreground text-sm">
               <EyeIcon className="h-4 w-4" />
               <span>
@@ -206,25 +194,7 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
         </div>
       </div>
 
-      <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>🔒 Premium Content</AlertDialogTitle>
-            <AlertDialogDescription>
-              This content is exclusive to premium members. Upgrade now to get
-              full access!
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setShowAlert(false)}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={() => navigate("/pricing")}>
-              Upgrade Now
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <PremiumAccessAlert open={showAlert} onOpenChange={setShowAlert} />
     </div>
   );
 };

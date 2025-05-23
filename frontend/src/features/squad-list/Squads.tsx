@@ -18,38 +18,49 @@ import { setSquadsByCategory } from "@/store/slices/squadSlice";
 import { addUserSquad } from "@/store/slices/userSquadsSlice";
 import { RootState } from "@/store/store";
 import { Category } from "@/types/category";
-import { Squad } from "@/types/squad";
 import { Plus } from "lucide-react";
 import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import CategoryScroll from "./components/CategoryScroll";
 import { CreateSquadDialog } from "./components/CreateSquadDialog";
+import { SquadDetail } from "@/types/squad";
 
 const Squads: FC = () => {
   const dispatch = useDispatch();
   const { squadsByCategory } = useSelector((state: RootState) => state.squads);
   const { user } = useSelector((state: RootState) => state.auth);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-  const [squads, setSquads] = useState<Squad[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null,
+  );
+  const [squads, setSquads] = useState<SquadDetail[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.openCreateSquadDialog && user?.isPremium) {
+      setIsDialogOpen(true);
+    } else if (location.state?.openCreateSquadDialog && !user?.isPremium) {
+      setShowAlert(true);
+    }
+  }, [location.state, user]);
 
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const data = await CategoryService.getAllCategory();
-        const categoryList = data.map((category: Category) => category.name);
-        if (categoryList.length > 0) {
-          setSelectedCategory(categoryList[0]);
+        const data: Category[] = await CategoryService.getAllCategory();
+        setCategories(data);
+
+        if (data.length > 0) {
+          setSelectedCategory(data[0]); // Select the first category object
         } else {
           setLoading(false);
         }
-        setCategories(categoryList);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -64,22 +75,26 @@ const Squads: FC = () => {
     const fetchSquads = async () => {
       setLoading(true);
 
-      const cachedSquads = squadsByCategory[selectedCategory];
+      const cachedSquads = selectedCategory
+        ? squadsByCategory[selectedCategory._id]
+        : null;
+
       if (cachedSquads) {
         setSquads(cachedSquads); // Use cached squads from Redux
         setLoading(false);
         return;
       }
       try {
-        const squadsData =
-          await SquadService.getSquadsByCategory(selectedCategory);
+        const squadsData = await SquadService.getSquadsByCategory(
+          selectedCategory._id,
+        );
         console.log(squadsData);
         dispatch(
           setSquadsByCategory({
-            category: selectedCategory,
+            category: selectedCategory._id,
             squads: squadsData,
           }),
-        ); // Store squads in Redux
+        );
         setSquads(squadsData);
       } catch (error) {
         console.error("Error fetching squads:", error);
@@ -90,7 +105,7 @@ const Squads: FC = () => {
     fetchSquads();
   }, [dispatch, selectedCategory, squadsByCategory, squads]);
 
-  const handleJoinSquad = async (squad: Squad) => {
+  const handleJoinSquad = async (squad: SquadDetail) => {
     if (squad.isPremium && !user?.isPremium) {
       toast.error("This squad is for premium members only. Upgrade to join!");
       return;
@@ -113,8 +128,8 @@ const Squads: FC = () => {
     }
   };
 
-  const handleViewSquad = async (squadId: string) => {
-    console.log(squadId);
+  const handleViewSquad = async (squadHanlde: string) => {
+    navigate(`/squads/${squadHanlde}`);
   };
 
   return (
@@ -126,6 +141,7 @@ const Squads: FC = () => {
             selectedCategory={selectedCategory}
             onCategorySelect={setSelectedCategory}
           />
+
           <div className="ml-auto flex items-center">
             <Button
               onClick={() => {
@@ -180,7 +196,11 @@ const Squads: FC = () => {
           </>
         ) : squads.length > 0 ? (
           squads.map((squad) => (
-            <Card key={squad._id} className="p-5">
+            <Card
+              key={squad._id}
+              className="p-5 cursor-pointer"
+              onClick={() => handleViewSquad(squad.handle)}
+            >
               <div className="flex justify-between items-center pb-2">
                 <img
                   src={squad.logo || "/placeholder.svg"}
@@ -190,7 +210,7 @@ const Squads: FC = () => {
                 {squad.isJoined ? (
                   <Button
                     variant="outline"
-                    onClick={() => handleViewSquad(squad._id)}
+                    onClick={() => handleViewSquad(squad.handle)}
                   >
                     View Squad
                   </Button>
@@ -209,7 +229,7 @@ const Squads: FC = () => {
               </p>
               <div className="pt-2 text-xs flex justify-between items-center">
                 <p>
-                  {squad.handle} • {squad.members.length} members
+                  {squad.handle} • {squad.membersCount} members
                 </p>
                 {squad.isPremium && <Premium />}
               </div>
@@ -230,7 +250,7 @@ const Squads: FC = () => {
       <CreateSquadDialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
-        onSquadCreated={(newSquad: Squad) =>
+        onSquadCreated={(newSquad: SquadDetail) =>
           setSquads((prev) => [newSquad, ...prev])
         }
       />

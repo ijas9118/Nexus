@@ -1,3 +1,4 @@
+import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
 import { Checkbox } from "@/components/atoms/checkbox";
 import {
@@ -8,20 +9,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-
+import { UserManagementData } from "@/types/admin/user";
+import { UseMutationResult } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-export type AdminUser = {
-  id: string;
-  name: string;
-  email: string;
-  profilePic: string;
-  postsCount: number;
-  joinedSquadsCount: number;
-};
-
-export const columns: ColumnDef<AdminUser>[] = [
+export const getUserTableColumns = (
+  blockMutation: UseMutationResult<any, unknown, string>,
+  unblockMutation: UseMutationResult<any, unknown, string>,
+): ColumnDef<UserManagementData>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -100,29 +96,52 @@ export const columns: ColumnDef<AdminUser>[] = [
     ),
   },
   {
+    accessorKey: "isBlocked",
+    header: "Status",
+    cell: ({ row }) => {
+      const isBlocked = row.getValue("isBlocked") as boolean;
+      return (
+        <Badge
+          variant={isBlocked ? "destructive" : "secondary"}
+          className="text-xs"
+        >
+          {isBlocked ? "Blocked" : "Active"}
+        </Badge>
+      );
+    },
+  },
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
+      const userId = row.original.id;
+      const isBlocked = row.original.isBlocked;
+
+      const handleBlockUnblock = () => {
+        if (isBlocked) {
+          unblockMutation.mutate(userId);
+        } else {
+          blockMutation.mutate(userId);
+        }
+      };
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0 ">
+            <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
+            <DropdownMenuItem onClick={() => console.log("View", userId)}>
+              View user
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleBlockUnblock}>
+              {isBlocked ? "Unblock" : "Block"}
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
