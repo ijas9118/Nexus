@@ -76,6 +76,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
           adminProfilePic: '$adminData.profilePic',
           adminName: '$adminData.name',
           name: 1,
+          handle: 1,
           category: '$categoryData.name',
           membersCount: 1,
           isPremium: 1,

@@ -22,6 +22,9 @@ export class SquadListDto {
   name!: string;
 
   @IsString()
+  handle!: string;
+
+  @IsString()
   category!: string;
 
   @IsNumber()
@@ -41,6 +44,7 @@ export class SquadListDto {
     dto.adminProfilePic = entity.adminProfilePic;
     dto.adminName = entity.adminName;
     dto.name = entity.name;
+    dto.handle = entity.handle;
     dto.category = entity.category;
     dto.membersCount = entity.membersCount;
     dto.isPremium = entity.isPremium;
