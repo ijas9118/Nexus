@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Button } from "@/components/atoms/button";
 import { Card, CardContent } from "@/components/molecules/card";
@@ -8,9 +9,33 @@ import { IBooking } from "@/types/booking";
 import { isMeetingTimeReached } from "@/utils/meetingUtils";
 
 export const MeetingCard = ({ booking }: { booking: IBooking }) => {
+  const [isJoinable, setIsJoinable] = useState(
+    booking.status !== "completed" && isMeetingTimeReached(booking),
+  );
+
+  useEffect(() => {
+    // If the meeting is already completed, no need to check
+    if (booking.status === "completed") {
+      setIsJoinable(false);
+      return;
+    }
+
+    // Check if the meeting time is reached every 30 seconds
+    const interval = setInterval(() => {
+      const joinable = isMeetingTimeReached(booking);
+      setIsJoinable(joinable);
+
+      // Stop the interval if the meeting is joinable (no need to keep checking)
+      if (joinable) {
+        clearInterval(interval);
+      }
+    }, 30 * 1000); // Check every 30 seconds
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
+  }, [booking]);
+
   const meetingTime = `${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}`;
-  const isJoinable =
-    booking.status !== "completed" && isMeetingTimeReached(booking);
 
   return (
     <Card className="mb-4">

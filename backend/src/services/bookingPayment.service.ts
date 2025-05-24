@@ -38,6 +38,16 @@ export class BookingPaymentService implements IBookingPaymentService {
     customerId: string,
     email: string
   ): Promise<string> {
+    const isAvailable = await this.timeSlotService.isTimeSlotAvailable(timeSlot, mentorId);
+    if (!isAvailable) {
+      throw new Error('Selected time slot is not available');
+    }
+
+    const reserved = await this.timeSlotService.reserveTimeSlot(timeSlot, mentorId, 10);
+    if (!reserved) {
+      throw new Error('Failed to reserve time slot');
+    }
+
     const mentorship = await this.mentorshipTypeRepository.findById(mentorshipType);
     if (!mentorship) {
       throw new Error('Mentorship type not found');
@@ -96,6 +106,24 @@ export class BookingPaymentService implements IBookingPaymentService {
         await this.handleCheckoutSessionCompleted(session);
         break;
       }
+      case 'checkout.session.expired': {
+        const session = event.data.object;
+        if (
+          session.metadata?.bookingId &&
+          session.metadata?.timeSlot &&
+          session.metadata?.mentorId
+        ) {
+          await this.bookingRepository.updateOne(
+            { _id: session.metadata.bookingId },
+            { status: 'cancelled' }
+          );
+          await this.timeSlotService.update(session.metadata.timeSlot, {
+            status: 'available',
+            reservedUntil: undefined,
+          });
+        }
+        break;
+      }
       default:
         logger.info(`Unhandled event type: ${event.type}`);
     }
@@ -131,6 +159,19 @@ export class BookingPaymentService implements IBookingPaymentService {
       !customer_details?.name
     ) {
       throw new Error('Missing required metadata or session details');
+    }
+
+    const timeSlot = await this.timeSlotService.findById(metadata.timeSlot);
+    if (
+      !timeSlot ||
+      timeSlot.mentorId.toString() !== metadata.mentorId ||
+      timeSlot.status !== 'reserved'
+    ) {
+      logger.error(
+        `Time slot ${metadata.timeSlot} is not reserved for booking ${metadata.bookingId}`
+      );
+      await this.bookingRepository.updateOne({ _id: metadata.bookingId }, { status: 'cancelled' });
+      throw new Error('Time slot is no longer available');
     }
 
     await this.bookingRepository.updateOne({ _id: metadata?.bookingId }, { status: 'pending' });

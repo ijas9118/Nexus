@@ -184,6 +184,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
       {
         $match: {
           category: new mongoose.Types.ObjectId(categoryId),
+          isActive: true,
         },
       },
       {
