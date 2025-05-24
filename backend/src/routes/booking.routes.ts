@@ -23,4 +23,10 @@ router.get('/filter', authenticate(['mentor']), bookingController.getFilteredBoo
 
 router.patch('/:bookingId/confirm', authenticate(['mentor']), bookingController.confirmBooking);
 
+router.post(
+  '/meet',
+  authenticate(['user', 'premium', 'mentor']),
+  bookingController.getBookingByMeetUrl
+);
+
 export default router;

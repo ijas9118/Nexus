@@ -6,4 +6,5 @@ export interface IBookingController {
   rescheduleBooking: RequestHandler;
   getFilteredBookings: RequestHandler;
   confirmBooking: RequestHandler;
+  getBookingByMeetUrl: RequestHandler;
 }

@@ -3,7 +3,7 @@ import { IBookingService } from '@/core/interfaces/services/IBookingService';
 import { IBookingRepository } from '@/core/interfaces/repositories/IBookingRepository';
 import { ITimeSlotService } from '@/core/interfaces/services/ITimeSlotService';
 import { TYPES } from '@/di/types';
-import { IBooking } from '@/models/booking.model';
+import { BookingModel, IBooking } from '@/models/booking.model';
 import CustomError from '@/utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
 import dayjs from 'dayjs';
@@ -17,6 +17,23 @@ export class BookingService implements IBookingService {
 
   async getUpcomingBookings(): Promise<IBooking[]> {
     return this.bookingRepository.getUpcomingBookings();
+  }
+
+  async getBookingByMeetUrl(meetUrl: string, userId: string): Promise<IBooking | null> {
+    const booking = await BookingModel.findOne({ meetUrl })
+      .populate('mentorId userId mentorUserId mentorshipType timeSlot')
+      .exec();
+
+    if (!booking) {
+      return null;
+    }
+
+    // Restrict access to the booking's user or mentor
+    if (booking.userId.toString() !== userId && booking.mentorUserId.toString() !== userId) {
+      return null;
+    }
+
+    return booking;
   }
 
   async getCompletedBookings(): Promise<IBooking[]> {
