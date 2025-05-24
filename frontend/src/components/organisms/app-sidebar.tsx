@@ -20,7 +20,7 @@ import { Collapsible } from "../molecules/collapsible";
 import {
   getSidebarItems,
   mentorItems,
-  networkItems,
+  getNetworkItems,
 } from "@/utils/sidebarLinks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { useNavigate } from "react-router-dom";
@@ -37,6 +37,7 @@ export function AppSidebar() {
   const logoutUser = useLogout();
   const user = useSelector((state: RootState) => state.auth.user);
   const items = getSidebarItems(user?.role as string);
+  const networkItems = getNetworkItems(user?.role as string);
   const dispatch = useDispatch();
   const { state } = useSidebar();
 

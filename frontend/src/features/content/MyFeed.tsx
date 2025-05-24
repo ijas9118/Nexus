@@ -31,8 +31,6 @@ export default function MyFeed() {
       initialPageParam: 1,
     });
 
-  console.log(data);
-
   const feedContent = data?.pages.flatMap((page) => page.contents) || [];
 
   const filteredContent = feedContent

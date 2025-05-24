@@ -223,12 +223,21 @@ import { IGlobalSearchController } from '@/core/interfaces/controllers/IGlobalSe
 import { GlobalSearchController } from '@/controllers/globalSearch.controller';
 import { IGlobalSearchService } from '@/core/interfaces/services/IGlobalSearchService';
 import { GlobalSearchService } from '@/services/globalSearch.service';
+
 import { IAdminDashboardController } from '@/core/interfaces/controllers/IAdminDashboardController';
 import { AdminDashboardController } from '@/controllers/admin/admin.dashboard.controller';
 import { IAdminDashboardService } from '@/core/interfaces/services/IAdminDashboardService';
 import { AdminDashboardService } from '@/services/admin/admin.dashboard.service';
+
 import { TransactionRepository } from '@/repositories/transactions.repository';
 import { ITransactionRepository } from '@/core/interfaces/repositories/ITransactionRepository';
+
+import { IReviewRepository } from '@/core/interfaces/repositories/IReviewRepository';
+import { ReviewRepository } from '@/repositories/review.repository';
+import { IReviewService } from '@/core/interfaces/services/IReviewService';
+import { ReviewService } from '@/services/review.service';
+import { ReviewController } from '@/controllers/review.controller';
+import { IReviewController } from '@/core/interfaces/controllers/IReviewController';
 
 const container = new Container();
 
@@ -393,5 +402,9 @@ container
 container.bind<IAdminDashboardService>(TYPES.AdminDashboardService).to(AdminDashboardService);
 
 container.bind<ITransactionRepository>(TYPES.TransactionRepository).to(TransactionRepository);
+
+container.bind<IReviewRepository>(TYPES.ReviewRepository).to(ReviewRepository);
+container.bind<IReviewService>(TYPES.ReviewService).to(ReviewService);
+container.bind<IReviewController>(TYPES.ReviewController).to(ReviewController);
 
 export { container };

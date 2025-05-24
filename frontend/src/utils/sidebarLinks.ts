@@ -100,7 +100,8 @@ export const getSidebarItems = (role: string) => {
   return baseItems;
 };
 
-export const networkItems = [
+// Base network items for all roles
+const baseNetworkItems = [
   {
     title: "Connections",
     url: "/connections",
@@ -112,13 +113,24 @@ export const networkItems = [
     icon: CircleCheckBig,
   },
   {
-    title: "Meetings",
-    url: "/mentorship-meetings",
-    icon: CalendarClock,
-  },
-  {
     title: "Messages",
     url: "/chat",
     icon: Send,
   },
 ];
+
+// Network items with conditional "Meetings" for user and premium roles
+export const getNetworkItems = (role: string) => {
+  if (role === "user" || role === "premium") {
+    return [
+      ...baseNetworkItems,
+      {
+        title: "Meetings",
+        url: "/mentorship-meetings",
+        icon: CalendarClock,
+      },
+    ];
+  }
+
+  return baseNetworkItems;
+};

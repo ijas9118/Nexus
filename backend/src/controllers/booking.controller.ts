@@ -13,6 +13,39 @@ import { RescheduleBookingRequestDTO } from '@/dtos/requests/booking.dto';
 export class BookingController implements IBookingController {
   constructor(@inject(TYPES.BookingService) private bookingService: IBookingService) {}
 
+  getBookingByMeetUrl = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const { meetUrl } = req.body;
+    const userId = req.user?._id as string;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Authentication required' });
+      return;
+    }
+
+    const booking = await this.bookingService.getBookingByMeetUrl(meetUrl, userId);
+
+    if (!booking) {
+      res.status(404).json({ error: 'Booking not found or access denied' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      data: {
+        _id: booking._id,
+        mentorId: booking.mentorId,
+        userId: booking.userId,
+        mentorUserId: booking.mentorUserId,
+        mentorshipType: booking.mentorshipType,
+        timeSlot: booking.timeSlot,
+        bookingDate: booking.bookingDate,
+        reason: booking.reason,
+        status: booking.status,
+        meetUrl: booking.meetUrl,
+      },
+    });
+  });
+
   getUpcomingBookings = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const bookings = await this.bookingService.getUpcomingBookings();
     res.status(StatusCodes.OK).json(bookings);

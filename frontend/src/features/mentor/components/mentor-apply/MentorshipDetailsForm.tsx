@@ -15,8 +15,9 @@ import { useMentorForm } from "@/context/MentorFormContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import MentorService from "@/services/mentorService";
 import { toast } from "sonner";
-import { formatLabel } from "@/utils";
 import { MentorFormData } from "@/types/mentor";
+import MentorshipTypeService from "@/services/mentorshipTypeService";
+import TargetAudienceService from "@/services/targetAudienceService";
 
 const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
   const navigator = useNavigate();
@@ -30,9 +31,22 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
     handleSubmit,
   } = form;
 
-  const { data: enums, isLoading } = useQuery({
-    queryKey: ["mentorEnums"],
-    queryFn: MentorService.getMentorEnums,
+  const {
+    data: mentorshipTypesOptions,
+    isLoading: isMentorshipTypesLoading,
+    isError: isMentorshipTypesError,
+  } = useQuery({
+    queryKey: ["mentorshipTypes"],
+    queryFn: () => MentorshipTypeService.getAllTypes(),
+  });
+
+  const {
+    data: targetAudienceOptions,
+    isLoading: isTargetAudiencesLoading,
+    isError: isTargetAudiencesError,
+  } = useQuery({
+    queryKey: ["targetAudiences"],
+    queryFn: () => TargetAudienceService.getAll(),
   });
 
   const mentorshipTypes = watch("mentorshipDetails.mentorshipTypes", []);
@@ -74,6 +88,7 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
   });
 
   const onSubmit = (data: MentorFormData) => {
+    console.log(data);
     mutation.mutate(data);
   };
 
@@ -88,30 +103,38 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
           <Label>
             What type of mentorship are you interested in providing?
           </Label>
-          {isLoading ? (
-            <div>Loading...</div>
+          {isMentorshipTypesLoading ? (
+            <div>Loading mentorship types...</div>
+          ) : isMentorshipTypesError ? (
+            <div className="text-sm text-red-500">
+              Failed to load mentorship types.
+            </div>
           ) : (
             <div className="grid gap-2">
-              {enums?.mentorshipTypes.map((type: any, index: number) => (
-                <div key={index} className="flex items-center space-x-2">
+              {(mentorshipTypesOptions ?? []).map((type: any) => (
+                <div key={type._id} className="flex items-start space-x-2">
                   <Checkbox
-                    id={`mentorshipType-${type}`}
-                    checked={mentorshipTypes.includes(type)}
+                    id={`mentorshipType-${type._id}`}
+                    checked={mentorshipTypes.includes(type._id)}
                     onCheckedChange={(checked) =>
                       handleCheckboxChange(
                         "mentorshipTypes",
-                        type,
+                        type._id,
                         checked === true,
                       )
                     }
                   />
-
-                  <Label
-                    htmlFor={`mentorshipType-${type}`}
-                    className="text-sm font-normal"
-                  >
-                    {formatLabel(type)}
-                  </Label>
+                  <div>
+                    <Label
+                      htmlFor={`mentorshipType-${type._id}`}
+                      className="text-sm font-medium"
+                    >
+                      {type.name}
+                    </Label>
+                    <p className="text-xs text-muted-foreground">
+                      {type.description}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -125,29 +148,32 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
 
         <div className="grid gap-2">
           <Label>What is your target audience?</Label>
-          {isLoading ? (
-            <div>Loading...</div>
+          {isTargetAudiencesLoading ? (
+            <div>Loading target audiences...</div>
+          ) : isTargetAudiencesError ? (
+            <div className="text-sm text-red-500">
+              Failed to load target audiences.
+            </div>
           ) : (
             <div className="grid grid-cols-2 gap-2">
-              {enums?.targetAudiences?.map((audience: any, index: number) => (
-                <div key={index} className="flex items-center space-x-2">
+              {targetAudienceOptions?.map((audience: any) => (
+                <div key={audience._id} className="flex items-center space-x-2">
                   <Checkbox
-                    id={`audience-${audience}`}
-                    checked={targetAudiences.includes(audience)}
+                    id={`audience-${audience._id}`}
+                    checked={targetAudiences.includes(audience._id)}
                     onCheckedChange={(checked) =>
                       handleCheckboxChange(
                         "targetAudiences",
-                        audience,
+                        audience._id,
                         checked === true,
                       )
                     }
                   />
-
                   <Label
-                    htmlFor={`audience-${audience}`}
+                    htmlFor={`audience-${audience._id}`}
                     className="text-sm font-normal"
                   >
-                    {formatLabel(audience)}
+                    {audience.name}
                   </Label>
                 </div>
               ))}

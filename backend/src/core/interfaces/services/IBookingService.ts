@@ -11,4 +11,5 @@ export interface IBookingService {
   getFilteredBookings(date?: Date, mentorshipTypeId?: string): Promise<IBooking[]>;
   confirmBooking(bookingId: string): Promise<IBooking>;
   getBookingById(bookingId: string): Promise<IBooking | null>;
+  getBookingByMeetUrl(meetUrl: string, userId: string): Promise<IBooking | null>;
 }

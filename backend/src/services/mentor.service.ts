@@ -6,7 +6,9 @@ import { MentorStatus } from '@/core/types/entities/mentor';
 import { TYPES } from '@/di/types';
 import { IMentor } from '@/models/mentor.model';
 import { IMentorshipType } from '@/models/mentorship-type.model';
+import { IUser } from '@/models/user.model';
 import CustomError from '@/utils/CustomError';
+import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 
 @injectable()
@@ -26,26 +28,43 @@ export class MentorService implements IMentorService {
   ): Promise<IMentor> => {
     const existingMentor = await this.mentorRepository.findMentorByUserId(userId);
     if (existingMentor) {
-      throw new CustomError('You have already applied to be a mentor.');
+      throw new CustomError('You have already applied to be a mentor.', StatusCodes.CONFLICT);
     }
 
     const { personalInfo, experience, mentorshipDetails } = data;
 
-    const updatedUser = await this.userRepository.updateUser(userId, {
-      ...personalInfo,
-      profilePic: personalInfo.profilePic as string,
+    // Map personalInfo to IUser fields
+    const userUpdate: Partial<IUser> = {
+      name: `${personalInfo.firstName} ${personalInfo.lastName}`,
+      email: personalInfo.email,
+      phone: personalInfo.phone || undefined,
+      location: personalInfo.location || undefined,
+      profilePic: personalInfo.profilePhoto || undefined,
+      socials: [],
+    };
+
+    // Map linkedin and github to socials array
+    if (personalInfo.linkedin) {
+      userUpdate.socials!.push({ platform: 'linkedin', url: personalInfo.linkedin });
+    }
+    if (personalInfo.github) {
+      userUpdate.socials!.push({ platform: 'github', url: personalInfo.github });
+    }
+
+    // Update user with personalInfo
+    const updatedUser = await this.userRepository.updateUser(userId, userUpdate);
+    if (!updatedUser) {
+      throw new CustomError('User not found.', StatusCodes.NOT_FOUND);
+    }
+
+    // Create mentor application
+    const mentor = await this.mentorRepository.createMentorApplication(userId, {
+      experience,
+      mentorshipDetails,
+      status: 'pending',
     });
 
-    if (!updatedUser) {
-      throw new CustomError('User not found.');
-    } else {
-      const mentor = await this.mentorRepository.createMentorApplication(userId, {
-        experience,
-        mentorshipDetails,
-      });
-
-      return mentor;
-    }
+    return mentor;
   };
 
   approveMentor = async (mentorId: string, userId: string): Promise<IMentor> => {

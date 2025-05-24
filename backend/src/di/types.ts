@@ -161,6 +161,11 @@ export const TYPES = {
   AdminDashboardController: Symbol.for('AdminDashboardController'),
   AdminDashboardService: Symbol.for('AdminDashboardService'),
 
+  // Mentor Reviews
+  ReviewRepository: Symbol.for('ReviewRepository'),
+  ReviewService: Symbol.for('ReviewService'),
+  ReviewController: Symbol.for('ReviewController'),
+
   // Miscellaneous / Utilities
   OTPService: Symbol.for('IOTPService'),
   EmailService: Symbol.for('IEmailService'),

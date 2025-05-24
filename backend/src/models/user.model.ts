@@ -16,7 +16,7 @@ interface IUser extends Document<string> {
   bio: string;
   joinedSquads: string[];
   skills: string[];
-  socials: [{ platform: string; url: string }];
+  socials?: Array<{ platform: string; url: string }>;
   role: UserRole;
   username: string;
   isPremium: boolean;

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +11,8 @@ import { Loader2 } from "lucide-react";
 import { Badge } from "@/components/atoms/badge";
 import { ScrollArea } from "@/components/organisms/scroll-area";
 import { Mentor } from "@/types/mentor";
+import { toast } from "sonner";
+import MentorService from "@/services/mentorService";
 
 interface MentorDetailsDialogProps {
   open: boolean;
@@ -18,6 +20,7 @@ interface MentorDetailsDialogProps {
   mentorDetails: Mentor | undefined;
   isLoading: boolean;
   isError: boolean;
+  refetchMentorDetails: () => void;
 }
 
 export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
@@ -26,7 +29,38 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
   mentorDetails,
   isLoading,
   isError,
+  refetchMentorDetails,
 }) => {
+  const [isApproving, setIsApproving] = useState(false); // State for approval loading
+  const [approveError, setApproveError] = useState<string | null>(null); // State for approval error
+
+  const handleApproveMentor = async () => {
+    if (!mentorDetails?._id || !mentorDetails?.userId._id) {
+      toast.error("Missing mentor or user ID.");
+      return;
+    }
+
+    setIsApproving(true);
+    setApproveError(null);
+
+    try {
+      await MentorService.approveMentor(
+        mentorDetails._id,
+        mentorDetails.userId._id,
+      );
+      toast.success("Mentor approved successfully!");
+      refetchMentorDetails(); // Refresh mentor details to show updated status
+      onOpenChange(false); // Optionally close the dialog
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to approve mentor.";
+      setApproveError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsApproving(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -105,16 +139,16 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
                         mentorDetails.status === "approved"
                           ? "default"
                           : mentorDetails.status === "pending"
-                            ? "destructive"
-                            : "outline"
+                            ? "outline"
+                            : "destructive"
                       }
                       className="mt-1"
                     >
                       {mentorDetails.status === "approved"
                         ? "Accepted"
                         : mentorDetails.status === "pending"
-                          ? "Blocked"
-                          : "Pending"}
+                          ? "Pending"
+                          : "Rejected"}
                     </Badge>
                   </div>
                   <div>
@@ -198,7 +232,7 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
                       </strong>{" "}
                       {mentorDetails.experience.bio}
                     </div>
-                    <div>
+                    {/* <div>
                       <strong className="font-medium text-foreground">
                         Resume:
                       </strong>{" "}
@@ -216,7 +250,7 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
                           Not provided
                         </span>
                       )}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 
@@ -278,15 +312,36 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
             No mentor details available.
           </p>
         )}
+        {approveError && (
+          <p className="text-red-500 text-center py-2 text-sm">
+            {approveError}
+          </p>
+        )}
         <div className="flex justify-end gap-2 mt-6">
           {mentorDetails?.status === "pending" && (
-            <Button variant="outline">Approve</Button>
+            <Button
+              variant="default"
+              onClick={handleApproveMentor}
+              disabled={isApproving}
+              aria-label="Approve mentor application"
+              className="flex items-center gap-2"
+            >
+              {isApproving ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Approving...
+                </>
+              ) : (
+                "Approve"
+              )}
+            </Button>
           )}
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
             aria-label="Close mentor details dialog"
             className="hover:bg-muted transition-colors"
+            disabled={isApproving}
           >
             Close
           </Button>
