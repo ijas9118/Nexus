@@ -1,57 +1,33 @@
-import { AxiosError } from "axios";
 import api from "../api";
 
 const AdminSquadService = {
-  getAllSquads: async () => {
-    try {
-      const response = await api.get("admin/squad");
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        throw error.response?.data || error.message;
-      } else if (error instanceof Error) {
-        throw error.message;
-      } else {
-        throw "An unknown error occurred";
-      }
-    }
-  },
+  getAllSquads: (
+    params: {
+      limit?: number;
+      page?: number;
+      search?: string;
+    } = {},
+  ) =>
+    api
+      .get("admin/squad", {
+        params: {
+          limit: params.limit || 10,
+          page: params.page || 1,
+          search: params.search || "",
+        },
+      })
+      .then((res) => res.data),
 
-  toggleStatus: async (id: string) => {
-    try {
-      const response = await api.post(`admin/squad/${id}/toggle`);
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        throw error.response?.data || error.message;
-      } else if (error instanceof Error) {
-        throw error.message;
-      } else {
-        throw "An unknown error occurred";
-      }
-    }
-  },
+  toggleStatus: (id: string) =>
+    api.post(`admin/squad/${id}/toggle`).then((res) => res.data),
 
-  createSquad: async (data: {
+  createSquad: (data: {
     name: string;
     description: string;
     handle: string;
     category: string;
     logoUrl?: string;
-  }) => {
-    try {
-      const response = await api.post("admin/squad", data);
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        throw error.response?.data || error.message;
-      } else if (error instanceof Error) {
-        throw error.message;
-      } else {
-        throw "An unknown error occurred";
-      }
-    }
-  },
+  }) => api.post("admin/squad", data).then((res) => res.data),
 };
 
 export default AdminSquadService;

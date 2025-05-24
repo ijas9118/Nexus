@@ -30,8 +30,6 @@ export default function CategoryManagement() {
     handleToggleStatus,
   } = useCategoryManagement();
 
-  console.log(categories);
-
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleSearch(searchQuery);

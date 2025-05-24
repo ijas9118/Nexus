@@ -21,6 +21,8 @@ const SquadManagement: FC = () => {
     fetchSquads();
   }, []);
 
+  console.log(data);
+
   const toggleSquadStatus = async (id: string) => {
     setData((prevData) =>
       prevData.map((squad) =>

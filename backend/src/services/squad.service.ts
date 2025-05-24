@@ -12,6 +12,7 @@ import { SquadByCategoryResponseDto } from '@/dtos/responses/sqauds.dto';
 import { IContentRepository } from '@/core/interfaces/repositories/IContentRepository';
 import { UserRole } from '@/core/types/UserTypes';
 import { SquadContentResponseDto } from '@/dtos/responses/squad-contents.dto';
+import { SquadListDto } from '@/dtos/responses/admin/SquadListDTO';
 
 @injectable()
 export class SquadService implements ISquadService {
@@ -72,8 +73,17 @@ export class SquadService implements ISquadService {
     return await this.squadRepository.getSquadDetailsByHandle(handle, userId);
   };
 
-  getAllSquads = async (): Promise<ISquad[]> => {
-    return await this.squadRepository.getAllSquads();
+  getAllSquads = async ({
+    limit,
+    page,
+    search,
+  }: {
+    limit: number;
+    page: number;
+    search: string;
+  }): Promise<SquadListDto[]> => {
+    const squads = await this.squadRepository.getAllSquads({ limit, page, search });
+    return SquadListDto.fromEntities(squads);
   };
 
   getSquadById = async (id: string): Promise<ISquad | null> => {

@@ -7,7 +7,6 @@ import asyncHandler from 'express-async-handler';
 import CustomError from '../utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
 import { Express } from 'express';
-import logger from '@/config/logger';
 
 @injectable()
 export class SquadController implements ISquadController {
@@ -30,8 +29,31 @@ export class SquadController implements ISquadController {
   });
 
   getAllSquads = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const squads = await this.squadService.getAllSquads();
-    res.status(StatusCodes.OK).json(squads);
+    const { limit = '10', page = '1', search = '' } = req.query; // Default values
+    const limitNum = parseInt(limit as string, 10);
+    const pageNum = parseInt(page as string, 10);
+
+    if (isNaN(limitNum) || limitNum < 1) {
+      throw new CustomError('Invalid limit value', StatusCodes.BAD_REQUEST);
+    }
+    if (isNaN(pageNum) || pageNum < 1) {
+      throw new CustomError('Invalid page value', StatusCodes.BAD_REQUEST);
+    }
+
+    const squads = await this.squadService.getAllSquads({
+      limit: limitNum,
+      page: pageNum,
+      search: search as string,
+    });
+
+    res.status(StatusCodes.OK).json({
+      data: squads,
+      meta: {
+        limit: limitNum,
+        page: pageNum,
+        total: squads.length,
+      },
+    });
   });
 
   toggleSquad = asyncHandler(async (req: Request, res: Response): Promise<void> => {

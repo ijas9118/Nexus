@@ -1,3 +1,4 @@
+import { SquadListDto } from '@/dtos/responses/admin/SquadListDTO';
 import { SquadByCategoryResponseDto } from '@/dtos/responses/sqauds.dto';
 import { SquadContentResponseDto } from '@/dtos/responses/squad-contents.dto';
 import { ISquad } from '@/models/squads.model';
@@ -10,7 +11,7 @@ export interface ISquadService {
   createSquad(squadData: Partial<ISquad>, logoFile?: Express.Multer.File): Promise<ISquad>;
   getSquadByName(name: string): Promise<ISquad | null>;
   getSquadDetailsByHandle(handle: string, userId: string): Promise<ISquad | null>;
-  getAllSquads(): Promise<ISquad[]>;
+  getAllSquads(params: { limit: number; page: number; search: string }): Promise<SquadListDto[]>;
   getSquadById(id: string): Promise<ISquad | null>;
   getSquadContents(
     squadId: string,
