@@ -33,6 +33,7 @@ const MentorManagement: FC = () => {
     data: mentorDetails,
     isLoading: isDetailsLoading,
     isError: isDetailsError,
+    refetch,
   } = useQuery({
     queryKey: ["mentor", selectedMentorId],
     queryFn: () => MentorService.getMentorDetails(selectedMentorId!),
@@ -75,6 +76,7 @@ const MentorManagement: FC = () => {
         mentorDetails={mentorDetails}
         isLoading={isDetailsLoading}
         isError={isDetailsError}
+        refetchMentorDetails={refetch}
       />
     </div>
   );
