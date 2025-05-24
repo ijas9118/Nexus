@@ -24,8 +24,7 @@ import FileUpload from "./FileUpload";
 import React from "react";
 import { useMentorForm } from "@/context/MentorFormContext";
 import { useQuery } from "@tanstack/react-query";
-import { formatLabel } from "@/utils";
-import MentorService from "@/services/mentorService";
+import MentorMetadataService from "@/services/mentorMetadataService";
 
 interface ExperienceFormProps {
   onBack: () => void;
@@ -44,9 +43,19 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
     watch,
   } = form;
 
-  const { data: enums, isLoading } = useQuery({
-    queryKey: ["mentorEnums"],
-    queryFn: MentorService.getMentorEnums,
+  const { data: experienceLevels } = useQuery({
+    queryKey: ["experienceLevels"],
+    queryFn: () => MentorMetadataService.getByType("experienceLevel"),
+  });
+
+  const { data: expertiseAreaOptions } = useQuery({
+    queryKey: ["expertiseAreas"],
+    queryFn: () => MentorMetadataService.getByType("expertiseArea"),
+  });
+
+  const { data: technologyOptions } = useQuery({
+    queryKey: ["technologies"],
+    queryFn: () => MentorMetadataService.getByType("technology"),
   });
 
   const expertiseAreas = watch("experience.expertiseAreas", []);
@@ -113,7 +122,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
 
         <div className="grid gap-2">
           <Label htmlFor="experience">Years of Professional Experience</Label>
-          {isLoading ? (
+          {!experienceLevels ? (
             <div>Loading...</div>
           ) : (
             <Select
@@ -128,9 +137,9 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
                 <SelectValue placeholder="Select experience level" />
               </SelectTrigger>
               <SelectContent>
-                {enums?.experienceLevels.map((level: any, index: number) => (
-                  <SelectItem key={index} value={level}>
-                    {formatLabel(level)}
+                {experienceLevels.map((level: any) => (
+                  <SelectItem key={level._id} value={level._id}>
+                    {level.name} ({level.label})
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -145,28 +154,28 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
 
         <div className="grid gap-2">
           <Label>Areas of Expertise</Label>
-          {isLoading ? (
+          {!expertiseAreaOptions ? (
             <div>Loading...</div>
           ) : (
             <div className="grid grid-cols-2 gap-2">
-              {enums?.expertiseAreas?.map((area: any, index: number) => (
-                <div key={index} className="flex items-center space-x-2">
+              {expertiseAreaOptions.map((area: any) => (
+                <div key={area._id} className="flex items-center space-x-2">
                   <Checkbox
-                    id={`expertise-${area}`}
-                    checked={expertiseAreas.includes(area)}
+                    id={`expertise-${area._id}`}
+                    checked={expertiseAreas.includes(area._id)}
                     onCheckedChange={(checked) =>
                       handleCheckboxChange(
                         "expertiseAreas",
-                        area,
+                        area._id,
                         checked === true,
                       )
                     }
                   />
                   <Label
-                    htmlFor={`expertise-${area}`}
+                    htmlFor={`expertise-${area._id}`}
                     className="text-sm font-normal"
                   >
-                    {formatLabel(area)}
+                    {area.name}
                   </Label>
                 </div>
               ))}
@@ -181,28 +190,28 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
 
         <div className="grid gap-2">
           <Label>Technologies & Languages</Label>
-          {isLoading ? (
+          {!technologyOptions ? (
             <div>Loading...</div>
           ) : (
             <div className="grid grid-cols-3 gap-2">
-              {enums?.technologies?.map((tech: any, index: number) => (
-                <div key={index} className="flex items-center space-x-2">
+              {technologyOptions.map((tech: any) => (
+                <div key={tech._id} className="flex items-center space-x-2">
                   <Checkbox
-                    id={`tech-${tech}`}
-                    checked={technologies.includes(tech)}
+                    id={`tech-${tech._id}`}
+                    checked={technologies.includes(tech._id)}
                     onCheckedChange={(checked) =>
                       handleCheckboxChange(
                         "technologies",
-                        tech,
+                        tech._id,
                         checked === true,
                       )
                     }
                   />
                   <Label
-                    htmlFor={`tech-${tech}`}
+                    htmlFor={`tech-${tech._id}`}
                     className="text-sm font-normal"
                   >
-                    {formatLabel(tech)}
+                    {tech.name}
                   </Label>
                 </div>
               ))}
@@ -235,10 +244,10 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
           )}
         </div>
 
-        <div className="grid gap-2">
+        {/* <div className="grid gap-2">
           <Label htmlFor="resume">Resume/CV (optional)</Label>
           <FileUpload acceptedFileTypes="PDF or DOCX, max 5MB" />
-        </div>
+        </div> */}
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline" onClick={onBack}>

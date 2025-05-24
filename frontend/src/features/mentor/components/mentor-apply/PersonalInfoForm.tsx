@@ -10,7 +10,6 @@ import {
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
 import { ArrowRight, Github, Linkedin } from "lucide-react";
-import FileUpload from "./FileUpload";
 import React, { useEffect } from "react";
 import { useMentorForm } from "@/context/MentorFormContext";
 import { RootState } from "@/store/store";
@@ -155,11 +154,6 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ onContinue }) => {
               {...register("personalInfo.github")}
             />
           </div>
-        </div>
-
-        <div className="grid gap-2">
-          <Label htmlFor="profilePhoto">Profile Photo</Label>
-          <FileUpload acceptedFileTypes="JPG or PNG, max 2MB" />
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
