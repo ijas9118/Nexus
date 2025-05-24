@@ -20,7 +20,6 @@ import {
 import { Textarea } from "@/components/atoms/textarea";
 import { ArrowRight } from "lucide-react";
 
-import FileUpload from "./FileUpload";
 import React from "react";
 import { useMentorForm } from "@/context/MentorFormContext";
 import { useQuery } from "@tanstack/react-query";

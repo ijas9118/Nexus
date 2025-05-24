@@ -2,6 +2,8 @@ import { BaseRepository } from '@/core/abstracts/base.repository';
 import { IMentor, MentorModel } from '../models/mentor.model';
 import { IMentorRepository } from '@/core/interfaces/repositories/IMentorRepository';
 import { injectable } from 'inversify';
+import CustomError from '@/utils/CustomError';
+import { StatusCodes } from 'http-status-codes';
 
 @injectable()
 export class MentorRepository extends BaseRepository<IMentor> implements IMentorRepository {
@@ -13,7 +15,19 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
     userId: string,
     mentorData: Partial<IMentor>
   ): Promise<IMentor> => {
-    return this.create({ userId, ...mentorData, status: 'pending' } as Partial<IMentor>);
+    if (!mentorData.experience || !mentorData.mentorshipDetails) {
+      throw new CustomError(
+        'Missing required fields: experience or mentorshipDetails.',
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    return this.create({
+      userId,
+      experience: mentorData.experience,
+      mentorshipDetails: mentorData.mentorshipDetails,
+      status: 'pending',
+    } as unknown as Partial<IMentor>);
   };
 
   findMentorByUserId = async (userId: string): Promise<IMentor | null> => {

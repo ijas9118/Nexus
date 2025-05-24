@@ -49,8 +49,6 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
     queryFn: () => TargetAudienceService.getAll(),
   });
 
-  console.log(targetAudienceOptions);
-
   const mentorshipTypes = watch("mentorshipDetails.mentorshipTypes", []);
   const targetAudiences = watch("mentorshipDetails.targetAudiences", []);
 
@@ -91,7 +89,7 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
 
   const onSubmit = (data: MentorFormData) => {
     console.log(data);
-    // mutation.mutate(data);
+    mutation.mutate(data);
   };
 
   return (

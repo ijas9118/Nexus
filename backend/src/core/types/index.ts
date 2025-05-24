@@ -1,10 +1,10 @@
-export type PersonalInfo = {
+export interface PersonalInfo {
   firstName: string;
   lastName: string;
   email: string;
-  phone: string;
-  location: string;
+  phone?: string;
+  location?: string;
   linkedin?: string;
   github?: string;
-  profilePic?: string | null;
-};
+  profilePhoto?: string | null;
+}

@@ -13,6 +13,9 @@ import {
   Technology,
 } from '@/core/types/entities/mentor';
 import { IMentorDashboardService } from '@/core/interfaces/services/IMentorDashboardService';
+import { PersonalInfo } from '@/core/types';
+import { IMentor } from '@/models/mentor.model';
+import CustomError from '@/utils/CustomError';
 
 @injectable()
 export class MentorController implements IMentorController {
@@ -24,10 +27,31 @@ export class MentorController implements IMentorController {
   applyAsMentor = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
     const mentorData = {
-      personalInfo: req.body.personalInfo,
-      experience: req.body.experience,
-      mentorshipDetails: req.body.mentorshipDetails,
+      personalInfo: req.body.personalInfo as PersonalInfo,
+      experience: req.body.experience as IMentor['experience'],
+      mentorshipDetails: req.body.mentorshipDetails as IMentor['mentorshipDetails'],
     };
+
+    // Basic validation
+    if (!mentorData.personalInfo || !mentorData.experience || !mentorData.mentorshipDetails) {
+      throw new CustomError(
+        'Missing required fields: personalInfo, experience, or mentorshipDetails.',
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    if (
+      !mentorData.personalInfo.firstName ||
+      !mentorData.personalInfo.lastName ||
+      !mentorData.personalInfo.email
+    ) {
+      throw new CustomError(
+        'Missing required personalInfo fields: firstName, lastName, or email.',
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    console.log('Received mentor application data:', mentorData);
 
     const mentor = await this.mentorService.applyAsMentor(userId, mentorData);
     res.status(StatusCodes.CREATED).json({ success: true, data: mentor });
