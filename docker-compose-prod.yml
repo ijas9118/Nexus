@@ -8,6 +8,7 @@ services:
       - ./backend/.env
     depends_on:
       - redis
+      - loki
     networks:
       - app-network
 
@@ -36,8 +37,34 @@ services:
     networks:
       - app-network
 
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - loki
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    networks:
+      - app-network
+
 volumes:
   redis-data:
+  loki-data:
+  grafana-data:
 
 networks:
   app-network:

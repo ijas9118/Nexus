@@ -19,14 +19,14 @@ const transports: winston.transport[] = [
     level: 'debug',
     format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
   }),
-  // new LokiTransport({
-  //   host: 'http://loki:3100', // Loki service in Docker Compose
-  //   labels: { app: 'backend', env }, // Labels for filtering in Grafana
-  //   json: true,
-  //   format: winston.format.json(),
-  //   replaceTimestamp: true,
-  //   onConnectionError: (err) => console.error('Loki connection error:', err),
-  // }),
+  new LokiTransport({
+    host: 'http://loki:3100', // Loki service in Docker Compose
+    labels: { app: 'backend', env }, // Labels for filtering in Grafana
+    json: true,
+    format: winston.format.json(),
+    replaceTimestamp: true,
+    onConnectionError: (err) => console.error('Loki connection error:', err),
+  }),
 ];
 
 if (env !== 'development') {
