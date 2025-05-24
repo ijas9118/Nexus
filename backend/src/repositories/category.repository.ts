@@ -30,6 +30,10 @@ export class CategoryRepository extends BaseRepository<ICategory> implements ICa
     return await this.update(objId, { isActive: !category.isActive });
   }
 
+  async getAllCategories(): Promise<ICategory[]> {
+    return await this.find({ isActive: true });
+  }
+
   async findAllWithPagination(
     page: number,
     limit: number,

@@ -32,6 +32,7 @@ import notificationRoutes from './routes/notification.routes';
 import walletRoutes from './routes/wallet.routes';
 import globalSearchRoute from './routes/globalSearch.routes';
 import { httpLogger } from './middlewares/httpLogger';
+import { startCleanupJob } from './jobs/cleanup-expired-reservations';
 
 const app = express();
 setupSwagger(app);
@@ -42,6 +43,8 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
+
+startCleanupJob();
 
 app.use('/api/webhook', express.raw({ type: 'application/json' }), webhookRouter);
 

@@ -34,7 +34,6 @@ import {
   Leaf,
   Database,
   Target,
-  Banknote,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import CollapsibleComponent from "@/components/organisms/CollapsibleComponent";
@@ -55,8 +54,7 @@ const interactionItems = [
 
 const revenueItems = [
   { title: "Pricing Plans", url: "plans", icon: CreditCard },
-  { title: "Payment", url: "payment", icon: IndianRupee },
-  { title: "Payout Requests", url: "withdrawal", icon: Banknote },
+  { title: "Payout Requests", url: "withdrawal", icon: IndianRupee },
 ];
 
 const mentorSettings = [

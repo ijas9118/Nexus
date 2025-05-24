@@ -170,6 +170,59 @@ export class TimeSlotService implements ITimeSlotService {
     return updatedTimeSlot;
   }
 
+  async reserveTimeSlot(
+    slotId: string,
+    mentorId: string,
+    expiresInMinutes: number
+  ): Promise<boolean> {
+    const timeSlot = await this.timeSlotRepository.findById(slotId);
+    if (!timeSlot || timeSlot.mentorId.toString() !== mentorId) {
+      return false;
+    }
+
+    if (timeSlot.status !== 'available') {
+      return false;
+    }
+
+    const reservedUntil = new Date(Date.now() + expiresInMinutes * 60 * 1000);
+    const updated = await this.timeSlotRepository.update(slotId, {
+      status: 'reserved',
+      reservedUntil,
+    });
+
+    return !!updated;
+  }
+
+  async isTimeSlotAvailable(slotId: string, mentorId: string): Promise<boolean> {
+    const timeSlot = await this.timeSlotRepository.findById(slotId);
+    if (!timeSlot || timeSlot.mentorId.toString() !== mentorId) {
+      return false;
+    }
+
+    if (timeSlot.status === 'available') {
+      return true;
+    }
+
+    if (
+      timeSlot.status === 'reserved' &&
+      timeSlot.reservedUntil &&
+      new Date() > timeSlot.reservedUntil
+    ) {
+      // Release expired reservation
+      await this.timeSlotRepository.update(slotId, {
+        status: 'available',
+        reservedUntil: undefined,
+      });
+      return true;
+    }
+
+    return false;
+  }
+
+  async releaseExpiredReservations(): Promise<void> {
+    await this.timeSlotRepository.releaseExpiredReservations();
+  }
+
   async update(timeslot: string, data: Partial<ITimeSlot>): Promise<ITimeSlot | null> {
     return await this.timeSlotRepository.update(timeslot, data);
   }

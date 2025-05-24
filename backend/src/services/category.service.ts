@@ -28,7 +28,7 @@ export class CategoryService implements ICategoryService {
   }
 
   async getAllCategories(): Promise<ICategory[]> {
-    return await this.categoryRepository.findAll();
+    return await this.categoryRepository.getAllCategories();
   }
 
   async getAllCategoriesWithPagination(

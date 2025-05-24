@@ -6,6 +6,8 @@ export interface ITimeSlot extends Document<string> {
   startTime: string; // e.g., "14:00"
   endTime: string; // e.g., "15:00"
   isBooked: boolean;
+  status: 'available' | 'reserved' | 'booked';
+  reservedUntil?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -33,21 +35,27 @@ const TimeSlotSchema: Schema = new Schema(
       type: Boolean,
       default: false,
     },
+    status: {
+      type: String,
+      enum: ['available', 'reserved', 'booked'],
+      default: 'available',
+    },
+    reservedUntil: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// Index for efficient querying by mentor and date
-TimeSlotSchema.index({ mentorId: 1, date: 1, isBooked: 1 });
+TimeSlotSchema.index({ mentorId: 1, date: 1, status: 1 });
 
-// Ensure no overlapping slots for the same mentor
 TimeSlotSchema.index(
   { mentorId: 1, date: 1, startTime: 1 },
   {
     unique: true,
-    partialFilterExpression: { isBooked: false },
   }
 );
 

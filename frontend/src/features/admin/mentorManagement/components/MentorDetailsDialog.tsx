@@ -12,42 +12,6 @@ import { Badge } from "@/components/atoms/badge";
 import { ScrollArea } from "@/components/organisms/scroll-area";
 import { Mentor } from "@/types/mentor";
 
-// interface MentorDetails {
-//   _id: string;
-//   userId: {
-//     name: string;
-//     email: string;
-//     username: string;
-//     profilePic?: string;
-//     location?: string;
-//   };
-//   experience: {
-//     currentRole: string;
-//     company: string;
-//     experienceLevel: {
-//       _id: string;
-//       label: string;
-//       name: string;
-//       type: string;
-//       isActive: boolean;
-//       createdAt: string;
-//       updatedAt: string;
-//     };
-//     expertiseAreas: string[];
-//     technologies: string[];
-//     bio: string;
-//     resume?: string | null;
-//   };
-//   mentorshipDetails: {
-//     mentorshipTypes: string[];
-//     targetAudiences: string[];
-//     motivation: string;
-//   };
-//   status: string;
-//   createdAt: string;
-//   updatedAt?: string;
-// }
-
 interface MentorDetailsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -63,7 +27,6 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
   isLoading,
   isError,
 }) => {
-  console.log(mentorDetails);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent

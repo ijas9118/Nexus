@@ -4,6 +4,7 @@ import { TYPES } from '@/di/types';
 import { ITargetAudience } from '@/models/target-audience.model';
 import CustomError from '@/utils/CustomError';
 import { injectable, inject } from 'inversify';
+import { FilterQuery } from 'mongoose';
 
 @injectable()
 export class TargetAudienceService implements ITargetAudienceService {
@@ -32,8 +33,8 @@ export class TargetAudienceService implements ITargetAudienceService {
     return this.repository.update(id, data);
   }
 
-  async find(query: Partial<ITargetAudience> = {}): Promise<ITargetAudience[]> {
-    return this.repository.find({ query });
+  async find(query: FilterQuery<ITargetAudience> = {}): Promise<ITargetAudience[]> {
+    return this.repository.find(query);
   }
 
   async findById(id: string): Promise<ITargetAudience | null> {

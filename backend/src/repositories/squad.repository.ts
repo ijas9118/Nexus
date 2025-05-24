@@ -6,7 +6,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../di/types';
 import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
 import { SearchCriteria, SearchResultItem } from '@/core/types/search';
-import { SquadWithIsJoined } from '@/core/types/squad';
+import { ISquadAggregated, SquadWithIsJoined } from '@/core/types/squad';
 
 @injectable()
 export class SquadRepository extends BaseRepository<ISquad> implements ISquadRepository {
@@ -19,8 +19,73 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
     return await this.findById(idObj);
   };
 
-  getAllSquads = async (): Promise<ISquad[]> => {
-    return await this.find({});
+  getAllSquads = async ({
+    limit,
+    page,
+    search,
+  }: {
+    limit: number;
+    page: number;
+    search: string;
+  }): Promise<ISquadAggregated[]> => {
+    const skip = (page - 1) * limit;
+
+    // Build the search filter for the aggregation pipeline
+    const searchFilter = search
+      ? {
+          $match: {
+            name: { $regex: search, $options: 'i' }, // Case-insensitive search on squad name
+          },
+        }
+      : { $match: {} }; // No search filter if search is empty
+
+    return await this.model.aggregate([
+      searchFilter, // Apply search filter first
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'admin',
+          foreignField: '_id',
+          as: 'adminData',
+        },
+      },
+      {
+        $unwind: {
+          path: '$adminData',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'category',
+          foreignField: '_id',
+          as: 'categoryData',
+        },
+      },
+      {
+        $unwind: {
+          path: '$categoryData',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          logo: 1,
+          adminId: '$adminData._id',
+          adminProfilePic: '$adminData.profilePic',
+          adminName: '$adminData.name',
+          name: 1,
+          handle: 1,
+          category: '$categoryData.name',
+          membersCount: 1,
+          isPremium: 1,
+          isActive: 1,
+        },
+      },
+      { $skip: skip }, // Pagination: skip records
+      { $limit: limit }, // Pagination: limit records
+    ]);
   };
 
   getJoinedSquads = async (userId: string): Promise<(ISquad & { isAdmin: boolean })[]> => {
@@ -119,6 +184,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
       {
         $match: {
           category: new mongoose.Types.ObjectId(categoryId),
+          isActive: true,
         },
       },
       {

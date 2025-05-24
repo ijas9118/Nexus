@@ -177,4 +177,17 @@ export class TimeSlotRepository extends BaseRepository<ITimeSlot> implements ITi
 
     return sortedGrouped;
   }
+
+  async releaseExpiredReservations(): Promise<void> {
+    await this.model.updateMany(
+      {
+        status: 'reserved',
+        reservedUntil: { $lte: new Date() },
+      },
+      {
+        status: 'available',
+        $unset: { reservedUntil: 1 },
+      }
+    );
+  }
 }

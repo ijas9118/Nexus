@@ -46,3 +46,19 @@ export interface SquadContent {
   authorProfilePic: string;
   authorRole: string;
 }
+
+export interface Squad {
+  _id: string;
+  logo: string;
+  adminId: string;
+  adminProfilePic: string;
+  adminName: string;
+  name: string;
+  handle: string;
+  category: string;
+  membersCount: number;
+  isPremium: boolean;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}

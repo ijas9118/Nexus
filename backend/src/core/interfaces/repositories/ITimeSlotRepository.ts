@@ -6,4 +6,5 @@ export interface ITimeSlotRepository extends IBaseRepository<ITimeSlot> {
   deleteByMentorAndSlotId(mentorId: string, slotId: string): Promise<ITimeSlot | null>;
   getAllTimeSlotsGroupedByDate(mentorId: string): Promise<Record<string, ITimeSlot[]>>;
   getUnbookedTimeSlotsForNext7Days(mentorId: string): Promise<Record<string, ITimeSlot[]>>;
+  releaseExpiredReservations(): Promise<void>;
 }
