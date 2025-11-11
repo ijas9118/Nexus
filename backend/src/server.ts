@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import app from './app';
 import { connectDB } from './config/database.config';
 import logger from './config/logger';
