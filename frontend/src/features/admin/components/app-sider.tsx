@@ -11,7 +11,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -30,12 +29,10 @@ import {
   LayoutDashboard,
   MessageCircleMore,
   Users,
-  Plus,
   Leaf,
   Database,
   Target,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import CollapsibleComponent from "@/components/organisms/CollapsibleComponent";
 
 const mainItem = [
@@ -64,7 +61,6 @@ const mentorSettings = [
 ];
 
 const AdminAppSidebar = () => {
-  const navigate = useNavigate();
   const { state } = useSidebar();
 
   return (

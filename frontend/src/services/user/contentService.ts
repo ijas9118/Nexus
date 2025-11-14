@@ -12,7 +12,7 @@ const ContentService = {
         },
       });
       return response.data;
-    } catch (error) {
+    } catch {
       throw new Error("Failed to create content");
     }
   },

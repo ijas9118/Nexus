@@ -1,5 +1,5 @@
 import React from "react";
-import { Check, Pencil, Trash } from "lucide-react";
+import { Check, Pencil } from "lucide-react";
 import {
   Card,
   CardContent,

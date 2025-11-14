@@ -89,7 +89,7 @@ export function NotificationsDropdown({
   const formatDate = (dateString: string) => {
     try {
       return formatDistanceToNow(new Date(dateString), { addSuffix: true });
-    } catch (error) {
+    } catch {
       return "Unknown time";
     }
   };

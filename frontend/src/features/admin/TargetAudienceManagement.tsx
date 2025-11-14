@@ -39,7 +39,7 @@ export default function TargetAudiencesPage() {
       const data = await TargetAudienceService.getAll(includeInactive);
       setTargetAudiences(data);
       setFilteredAudiences(data);
-    } catch (error) {
+    } catch {
       toast.error("Error", {
         description: "Failed to fetch target audiences",
       });
@@ -90,7 +90,7 @@ export default function TargetAudiencesPage() {
 
       setIsCreateDialogOpen(false);
       fetchTargetAudiences();
-    } catch (error) {
+    } catch {
       toast.error("Error", {
         description: "Failed to create target audience",
       });
@@ -125,7 +125,7 @@ export default function TargetAudiencesPage() {
       setIsEditDialogOpen(false);
       setCurrentAudience(null);
       fetchTargetAudiences();
-    } catch (error) {
+    } catch {
       toast.error("Error", {
         description: "Failed to update target audience",
       });
@@ -149,7 +149,7 @@ export default function TargetAudiencesPage() {
       setIsDeleteDialogOpen(false);
       setCurrentAudience(null);
       fetchTargetAudiences();
-    } catch (error) {
+    } catch {
       toast.error("Error", {
         description: "Failed to delete target audience",
       });
@@ -173,7 +173,7 @@ export default function TargetAudiencesPage() {
       setIsRestoreDialogOpen(false);
       setCurrentAudience(null);
       fetchTargetAudiences();
-    } catch (error) {
+    } catch {
       toast.error("Error", {
         description: "Failed to restore target audience",
       });

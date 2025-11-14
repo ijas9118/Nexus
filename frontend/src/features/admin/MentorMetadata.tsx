@@ -33,7 +33,7 @@ export default function MentorMetadataPage() {
       const response = await MentorMetadataService.getAll(showInactive);
       setMetadata(response);
       setFilteredMetadata(response);
-    } catch (error) {
+    } catch {
       toast.error("Error fetching metadata", {
         description: "An unexpected error occurred",
       });
@@ -73,7 +73,7 @@ export default function MentorMetadataPage() {
         description: "The metadata has been successfully deleted",
       });
       fetchMetadata();
-    } catch (error) {
+    } catch {
       toast.error("Error deleting metadata", {
         description: "An unexpected error occurred",
       });
@@ -87,7 +87,7 @@ export default function MentorMetadataPage() {
         description: "The metadata has been successfully restored",
       });
       fetchMetadata();
-    } catch (error) {
+    } catch {
       toast.error("Error restoring metadata", {
         description: "An unexpected error occurred",
       });
@@ -109,7 +109,7 @@ export default function MentorMetadataPage() {
       setIsFormOpen(false);
       setEditingMetadata(null);
       fetchMetadata();
-    } catch (error) {
+    } catch {
       toast.error(
         editingMetadata ? "Error updating metadata" : "Error creating metadata",
         { description: "An unexpected error occurred" },

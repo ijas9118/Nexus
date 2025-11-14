@@ -55,7 +55,7 @@ export default function InviteModeratorDialog({
         });
         onOpenChange(false);
         setSelectedUser(null);
-      } catch (error) {
+      } catch {
         toast.error("Failed to send invitation");
       }
     }
