@@ -8,7 +8,7 @@ import { inject, injectable } from 'inversify';
 @injectable()
 export class GlobalSearchController implements IGlobalSearchController {
   constructor(
-    @inject(TYPES.GlobalSearchService) private globalSearchService: IGlobalSearchService
+    @inject(TYPES.GlobalSearchService) private _globalSearchService: IGlobalSearchService
   ) {}
 
   search = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -20,7 +20,7 @@ export class GlobalSearchController implements IGlobalSearchController {
     }
 
     try {
-      const results = await this.globalSearchService.search({ query, limit });
+      const results = await this._globalSearchService.search({ query, limit });
       res.json(results);
     } catch (error) {
       res.status(500).json({ message: 'Search failed', error });

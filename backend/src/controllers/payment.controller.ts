@@ -9,12 +9,12 @@ import { TYPES } from '../di/types';
 
 @injectable()
 export class PaymentController implements IPaymentController {
-  constructor(@inject(TYPES.PaymentService) private paymentService: IPaymentService) {}
+  constructor(@inject(TYPES.PaymentService) private _paymentService: IPaymentService) {}
 
   checkoutSession = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { planId, price, tier, email } = req.body;
     const customerId = req.user?._id as string;
-    const sessionUrl = await this.paymentService.checkoutSession(
+    const sessionUrl = await this._paymentService.checkoutSession(
       planId,
       tier,
       price,
@@ -26,7 +26,7 @@ export class PaymentController implements IPaymentController {
 
   handleWebhook = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const signature = req.headers['stripe-signature'] as string;
-    await this.paymentService.webhookHandler(req.body, signature);
+    await this._paymentService.webhookHandler(req.body, signature);
     res.status(StatusCodes.OK).json({ received: true });
   });
 
@@ -38,7 +38,7 @@ export class PaymentController implements IPaymentController {
       return;
     }
 
-    const isValid = await this.paymentService.verifyCheckoutSession(sessionId);
+    const isValid = await this._paymentService.verifyCheckoutSession(sessionId);
     res.status(StatusCodes.OK).json({ success: isValid });
   });
 }

@@ -10,13 +10,13 @@ import { TYPES } from '@/di/types';
 export class NotificationTypeController implements INotificationTypeController {
   constructor(
     @inject(TYPES.NotificationTypeService)
-    private notificationTypeService: INotificationTypeService
+    private _notificationTypeService: INotificationTypeService
   ) {}
 
   createNotificationType = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { name, description, icon, iconColor, roles } = req.body;
 
-    const notificationType = await this.notificationTypeService.createNotificationType({
+    const notificationType = await this._notificationTypeService.createNotificationType({
       name,
       description,
       icon,
@@ -28,7 +28,7 @@ export class NotificationTypeController implements INotificationTypeController {
   });
 
   getNotificationTypes = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const notificationTypes = await this.notificationTypeService.getNotificationTypes();
+    const notificationTypes = await this._notificationTypeService.getNotificationTypes();
     res.status(StatusCodes.OK).json(notificationTypes);
   });
 
@@ -36,7 +36,7 @@ export class NotificationTypeController implements INotificationTypeController {
     const { id } = req.params;
     const { name, description, icon, iconColor, roles } = req.body;
 
-    const updatedType = await this.notificationTypeService.updateNotificationType(id, {
+    const updatedType = await this._notificationTypeService.updateNotificationType(id, {
       name,
       description,
       icon,
@@ -49,12 +49,12 @@ export class NotificationTypeController implements INotificationTypeController {
 
   deleteNotificationType = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-    await this.notificationTypeService.deleteNotificationType(id);
+    await this._notificationTypeService.deleteNotificationType(id);
     res.status(StatusCodes.NO_CONTENT).send();
   });
 
   restoreNotificationType = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    await this.notificationTypeService.restoreNotificationType(req.params.id);
+    await this._notificationTypeService.restoreNotificationType(req.params.id);
     res.status(StatusCodes.NO_CONTENT).send();
   });
 }

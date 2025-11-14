@@ -9,7 +9,7 @@ import { StatusCodes } from 'http-status-codes';
 
 @injectable()
 export class CategoryController implements ICategoryController {
-  constructor(@inject(TYPES.CategoryService) private categoryService: ICategoryService) {}
+  constructor(@inject(TYPES.CategoryService) private _categoryService: ICategoryService) {}
 
   // Create a new category
   createCategory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -19,7 +19,7 @@ export class CategoryController implements ICategoryController {
       throw new CustomError('Category name is required', StatusCodes.BAD_REQUEST);
     }
 
-    const category = await this.categoryService.addCategory(name);
+    const category = await this._categoryService.addCategory(name);
     res.status(StatusCodes.CREATED).json(category);
   });
 
@@ -31,7 +31,7 @@ export class CategoryController implements ICategoryController {
       throw new CustomError('Category ID and new name are required', StatusCodes.BAD_REQUEST);
     }
 
-    const updatedCategory = await this.categoryService.updateCategory(id, newName);
+    const updatedCategory = await this._categoryService.updateCategory(id, newName);
 
     if (!updatedCategory) {
       throw new CustomError('Category not found', StatusCodes.NOT_FOUND);
@@ -48,7 +48,7 @@ export class CategoryController implements ICategoryController {
       throw new CustomError('Category ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const toggledCategory = await this.categoryService.toggleCategory(id);
+    const toggledCategory = await this._categoryService.toggleCategory(id);
 
     if (!toggledCategory) {
       throw new CustomError('Category not found', StatusCodes.NOT_FOUND);
@@ -66,7 +66,7 @@ export class CategoryController implements ICategoryController {
       const limit = parseInt(req.query.limit as string) || 10;
       const search = (req.query.search as string) || '';
 
-      const { categories, total } = await this.categoryService.getAllCategoriesWithPagination(
+      const { categories, total } = await this._categoryService.getAllCategoriesWithPagination(
         page,
         limit,
         search
@@ -84,7 +84,7 @@ export class CategoryController implements ICategoryController {
         totalPages: Math.ceil(total / limit),
       });
     } else {
-      const categories = await this.categoryService.getAllCategories();
+      const categories = await this._categoryService.getAllCategories();
 
       if (!categories || categories.length === 0) {
         throw new CustomError('No categories found', StatusCodes.NOT_FOUND);

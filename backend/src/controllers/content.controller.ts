@@ -12,8 +12,8 @@ import CustomError from '../utils/CustomError';
 @injectable()
 export class ContentController implements IContentController {
   constructor(
-    @inject(TYPES.ContentService) private contentService: IContentService,
-    @inject(TYPES.HistoryService) private historyService: IHistoryService
+    @inject(TYPES.ContentService) private _contentService: IContentService,
+    @inject(TYPES.HistoryService) private _historyService: IHistoryService
   ) {}
 
   createContent = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -32,7 +32,7 @@ export class ContentController implements IContentController {
       }),
     };
 
-    const content = await this.contentService.createContent(contentData, thumbnailFile, videoFile);
+    const content = await this._contentService.createContent(contentData, thumbnailFile, videoFile);
 
     res.status(StatusCodes.CREATED).json({
       success: true,
@@ -45,14 +45,14 @@ export class ContentController implements IContentController {
     const role = req.user?.role as string;
     const userId = req.user?._id as string;
 
-    const content = await this.contentService.getContentById(req.params.id, role, userId);
+    const content = await this._contentService.getContentById(req.params.id, role, userId);
 
     if (!content) {
       throw new CustomError('Content not found', StatusCodes.NOT_FOUND);
     }
 
     if (role === 'user') {
-      await this.historyService.addHistory(req.user?._id as string, content._id as string);
+      await this._historyService.addHistory(req.user?._id as string, content._id as string);
     }
 
     res.status(StatusCodes.OK).json(content);
@@ -67,10 +67,10 @@ export class ContentController implements IContentController {
     const pageNum = Number(page);
     const limitNum = Number(limit);
 
-    const contents = await this.contentService.getAllContent(req.user._id, pageNum, limitNum);
+    const contents = await this._contentService.getAllContent(req.user._id, pageNum, limitNum);
 
     // Calculate if there's a next page
-    const totalContents = await this.contentService.getContentCount();
+    const totalContents = await this._contentService.getContentCount();
     const nextPage = pageNum * limitNum < totalContents ? pageNum + 1 : null;
 
     res.status(StatusCodes.OK).json({
@@ -80,14 +80,14 @@ export class ContentController implements IContentController {
   });
 
   getPosts = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const contents = await this.contentService.getPosts();
+    const contents = await this._contentService.getPosts();
     res.status(StatusCodes.OK).json(contents);
   });
 
   verifyContent = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { contentId } = req.params;
 
-    const updatedContent = await this.contentService.verifyContent(contentId);
+    const updatedContent = await this._contentService.verifyContent(contentId);
     if (!updatedContent) {
       res.status(StatusCodes.NOT_FOUND).json({ message: 'Content not found' });
       return;
@@ -101,7 +101,7 @@ export class ContentController implements IContentController {
   getFollowingUsersContents = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?._id as string;
 
-    const contents = await this.contentService.getFollowingUsersContents(userId);
+    const contents = await this._contentService.getFollowingUsersContents(userId);
 
     res.status(200).json(contents);
   });

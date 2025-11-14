@@ -24,25 +24,25 @@ import { MESSAGES } from '@/utils/constants/message';
 @injectable()
 export class AuthController implements IAuthController {
   constructor(
-    @inject(TYPES.AuthService) private authService: IAuthService,
-    @inject(TYPES.OTPService) private otpService: IOTPService,
-    @inject(TYPES.EmailService) private emailService: IEmailService,
-    @inject(TYPES.TokenService) private tokenService: ITokenService,
-    @inject(TYPES.MentorService) private mentorService: IMentorService
+    @inject(TYPES.AuthService) private _authService: IAuthService,
+    @inject(TYPES.OTPService) private _otpService: IOTPService,
+    @inject(TYPES.EmailService) private _emailService: IEmailService,
+    @inject(TYPES.TokenService) private _tokenService: ITokenService,
+    @inject(TYPES.MentorService) private _mentorService: IMentorService
   ) {}
 
   // Register a new user and send OTP to email
   register = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userData = req.body as RegisterRequestDTO;
 
-    const existingUser = await this.authService.findUserByEmail(userData.email);
+    const existingUser = await this._authService.findUserByEmail(userData.email);
     if (existingUser) {
       throw new CustomError(MESSAGES.AUTH_MESSAGES.USER_EXISTS, StatusCodes.BAD_REQUEST);
     }
 
-    const otp = this.otpService.generateOTP();
+    const otp = this._otpService.generateOTP();
 
-    await this.emailService.sendOtpEmail(userData, otp);
+    await this._emailService.sendOtpEmail(userData, otp);
 
     res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.OTP_SENT });
   });
@@ -51,9 +51,9 @@ export class AuthController implements IAuthController {
   verifyOTP = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { email, otp } = req.body;
 
-    const userData = await this.otpService.verifyAndRetrieveUser(email, otp);
+    const userData = await this._otpService.verifyAndRetrieveUser(email, otp);
 
-    const user = await this.authService.register(userData);
+    const user = await this._authService.register(userData);
 
     setRefreshTokenCookie(res, { _id: user._id, role: 'user' });
 
@@ -66,18 +66,18 @@ export class AuthController implements IAuthController {
   resendOtp = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { email } = req.body;
 
-    await this.otpService.resendOtp(email);
+    await this._otpService.resendOtp(email);
 
     res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.OTP_RESENT });
   });
 
   // Login user and set refresh token cookie
   login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const user = await this.authService.login(req.body as LoginRequestDTO);
+    const user = await this._authService.login(req.body as LoginRequestDTO);
 
     logger.error('Errorr loggin in');
 
-    const isBlocked = await this.authService.isUserBlocked(user._id);
+    const isBlocked = await this._authService.isUserBlocked(user._id);
 
     if (isBlocked) {
       res.status(StatusCodes.FORBIDDEN).json({ message: MESSAGES.AUTH_MESSAGES.USER_BLOCKED });
@@ -107,7 +107,7 @@ export class AuthController implements IAuthController {
   forgotPassword = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { email } = req.body;
 
-    await this.emailService.sendResetEmailWithToken(email);
+    await this._emailService.sendResetEmailWithToken(email);
 
     res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.PASSWORD_RESET_LINK_SENT });
   });
@@ -116,12 +116,12 @@ export class AuthController implements IAuthController {
   resetPassword = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { email, token, password } = req.body;
 
-    const isValid = await this.tokenService.validateToken(email, token);
+    const isValid = await this._tokenService.validateToken(email, token);
     if (!isValid) {
       throw new CustomError(MESSAGES.AUTH_MESSAGES.REFRESH_TOKEN_INVALID, StatusCodes.BAD_REQUEST);
     }
 
-    await this.authService.updatePassword(email, password);
+    await this._authService.updatePassword(email, password);
 
     res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.PASSWORD_UPDATED });
   });
@@ -153,7 +153,7 @@ export class AuthController implements IAuthController {
       return;
     }
 
-    const user = await this.authService.getUserByRoleAndId(role, _id);
+    const user = await this._authService.getUserByRoleAndId(role, _id);
 
     if (!user) {
       clearRefreshTokenCookie(res);
@@ -171,7 +171,7 @@ export class AuthController implements IAuthController {
 
     // 🧙 If mentor, include mentorId
     if (role === 'mentor') {
-      const mentor = await this.mentorService.getMentorByUserId(user._id.toString());
+      const mentor = await this._mentorService.getMentorByUserId(user._id.toString());
       if (!mentor) {
         clearRefreshTokenCookie(res);
         throw new CustomError(MESSAGES.AUTH_MESSAGES.MENTOR_NOT_FOUND, StatusCodes.NOT_FOUND);
@@ -198,7 +198,7 @@ export class AuthController implements IAuthController {
       throw new CustomError(MESSAGES.AUTH_MESSAGES.GOOGLE_EMAIL_MISSING, StatusCodes.BAD_REQUEST);
     }
 
-    const user = await this.authService.handleGoogleUser({
+    const user = await this._authService.handleGoogleUser({
       googleId: googleProfile.id,
       email: googleProfile.emails[0].value,
       name: googleProfile.displayName,
@@ -221,7 +221,7 @@ export class AuthController implements IAuthController {
       throw new CustomError(MESSAGES.AUTH_MESSAGES.GITHUB_EMAIL_MISSING, StatusCodes.BAD_REQUEST);
     }
 
-    const user = await this.authService.handleGithubUser({
+    const user = await this._authService.handleGithubUser({
       githubId: githubProfile.id,
       email: githubProfile.emails[0].value,
       name: githubProfile.displayName || githubProfile.username || 'Unknown',

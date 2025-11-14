@@ -12,7 +12,7 @@ import { MESSAGES } from '@/utils/constants/message';
 
 @injectable()
 export class BookingController implements IBookingController {
-  constructor(@inject(TYPES.BookingService) private bookingService: IBookingService) {}
+  constructor(@inject(TYPES.BookingService) private _bookingService: IBookingService) {}
 
   getBookingByMeetUrl = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { meetUrl } = req.body;
@@ -23,7 +23,7 @@ export class BookingController implements IBookingController {
       return;
     }
 
-    const booking = await this.bookingService.getBookingByMeetUrl(meetUrl, userId);
+    const booking = await this._bookingService.getBookingByMeetUrl(meetUrl, userId);
 
     if (!booking) {
       res.status(404).json({ error: MESSAGES.BOOKING_MESSAGES.BOOKING_NOT_FOUND });
@@ -48,12 +48,12 @@ export class BookingController implements IBookingController {
   });
 
   getUpcomingBookings = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const bookings = await this.bookingService.getUpcomingBookings();
+    const bookings = await this._bookingService.getUpcomingBookings();
     res.status(StatusCodes.OK).json(bookings);
   });
 
   getCompletedBookings = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const bookings = await this.bookingService.getCompletedBookings();
+    const bookings = await this._bookingService.getCompletedBookings();
     res.status(StatusCodes.OK).json(bookings);
   });
 
@@ -75,7 +75,7 @@ export class BookingController implements IBookingController {
       throw new CustomError(MESSAGES.BOOKING_MESSAGES.INVALID_DATE_FORMAT, StatusCodes.BAD_REQUEST);
     }
 
-    const updatedBooking = await this.bookingService.rescheduleBooking(
+    const updatedBooking = await this._bookingService.rescheduleBooking(
       bookingId,
       timeSlotId,
       parsedDate.toDate()
@@ -99,7 +99,7 @@ export class BookingController implements IBookingController {
       parsedDate = tempDate.toDate();
     }
 
-    const bookings = await this.bookingService.getFilteredBookings(
+    const bookings = await this._bookingService.getFilteredBookings(
       parsedDate,
       mentorshipTypeId as string
     );
@@ -109,7 +109,7 @@ export class BookingController implements IBookingController {
   confirmBooking = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { bookingId } = req.params;
 
-    const updatedBooking = await this.bookingService.confirmBooking(bookingId);
+    const updatedBooking = await this._bookingService.confirmBooking(bookingId);
     res.status(StatusCodes.OK).json(updatedBooking);
   });
 }

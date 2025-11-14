@@ -7,7 +7,7 @@ import { injectable, inject } from 'inversify';
 
 @injectable()
 export class ReviewController implements IReviewController {
-  constructor(@inject(TYPES.ReviewService) private reviewService: IReviewService) {}
+  constructor(@inject(TYPES.ReviewService) private _reviewService: IReviewService) {}
 
   createReview = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { rating, feedback, mentorId } = req.body;
@@ -23,7 +23,7 @@ export class ReviewController implements IReviewController {
       return;
     }
 
-    const review = await this.reviewService.createReview({
+    const review = await this._reviewService.createReview({
       rating,
       feedback,
       mentorId,
@@ -39,7 +39,7 @@ export class ReviewController implements IReviewController {
 
   getReviewById = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-    const review = await this.reviewService.getReviewById(id);
+    const review = await this._reviewService.getReviewById(id);
 
     if (!review) {
       res.status(404).json({ error: 'Review not found' });
@@ -56,7 +56,7 @@ export class ReviewController implements IReviewController {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
 
-    const result = await this.reviewService.getAllReviews(page, limit);
+    const result = await this._reviewService.getAllReviews(page, limit);
 
     res.json({
       success: true,
@@ -69,7 +69,7 @@ export class ReviewController implements IReviewController {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
 
-    const result = await this.reviewService.getReviewsByMentor(mentorId, page, limit);
+    const result = await this._reviewService.getReviewsByMentor(mentorId, page, limit);
 
     res.json({
       success: true,
@@ -85,7 +85,7 @@ export class ReviewController implements IReviewController {
       return;
     }
 
-    const reviews = await this.reviewService.getReviewsByUser(userId);
+    const reviews = await this._reviewService.getReviewsByUser(userId);
 
     res.json({
       success: true,
@@ -103,7 +103,7 @@ export class ReviewController implements IReviewController {
       return;
     }
 
-    const review = await this.reviewService.updateReview(id, { rating, feedback }, userId);
+    const review = await this._reviewService.updateReview(id, { rating, feedback }, userId);
 
     if (!review) {
       res.status(404).json({ error: 'Review not found' });
@@ -126,7 +126,7 @@ export class ReviewController implements IReviewController {
       return;
     }
 
-    const success = await this.reviewService.deleteReview(id, userId);
+    const success = await this._reviewService.deleteReview(id, userId);
 
     if (!success) {
       res.status(404).json({ error: 'Review not found' });
@@ -141,7 +141,7 @@ export class ReviewController implements IReviewController {
 
   getMentorStats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { mentorId } = req.params;
-    const stats = await this.reviewService.getMentorStats(mentorId);
+    const stats = await this._reviewService.getMentorStats(mentorId);
 
     res.json({
       success: true,
@@ -158,7 +158,7 @@ export class ReviewController implements IReviewController {
       return;
     }
 
-    const existingReview = await this.reviewService.checkExistingReview(mentorId, userId);
+    const existingReview = await this._reviewService.checkExistingReview(mentorId, userId);
 
     res.json({
       success: true,

@@ -10,7 +10,7 @@ import { IConnectionsController } from '../core/interfaces/controllers/IConnecti
 
 @injectable()
 export class ConnectionsController implements IConnectionsController {
-  constructor(@inject(TYPES.ConnectionService) private connectionsService: IConnectionService) {}
+  constructor(@inject(TYPES.ConnectionService) private _connectionsService: IConnectionService) {}
 
   searchConnections = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
@@ -30,7 +30,7 @@ export class ConnectionsController implements IConnectionsController {
       return;
     }
 
-    const result = await this.connectionsService.searchConnections(userId, sanitizedSearchTerm);
+    const result = await this._connectionsService.searchConnections(userId, sanitizedSearchTerm);
 
     res.status(StatusCodes.OK).json(result);
   });
@@ -43,7 +43,7 @@ export class ConnectionsController implements IConnectionsController {
       throw new CustomError('Recipient ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const result = await this.connectionsService.sendConnectionRequest(requesterId, recipientId);
+    const result = await this._connectionsService.sendConnectionRequest(requesterId, recipientId);
 
     if (result === 'ALREADY_SENT') {
       res
@@ -65,7 +65,7 @@ export class ConnectionsController implements IConnectionsController {
       throw new CustomError('Requester ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const result = await this.connectionsService.acceptConnectionRequest(userId, requesterId);
+    const result = await this._connectionsService.acceptConnectionRequest(userId, requesterId);
 
     if (!result) {
       throw new CustomError('Failed to accept connection request', StatusCodes.BAD_REQUEST);
@@ -82,7 +82,10 @@ export class ConnectionsController implements IConnectionsController {
       throw new CustomError('Recipient ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const result = await this.connectionsService.hasSentConnectionRequest(requesterId, recipientId);
+    const result = await this._connectionsService.hasSentConnectionRequest(
+      requesterId,
+      recipientId
+    );
 
     res.status(StatusCodes.OK).json({ result });
   });
@@ -95,7 +98,7 @@ export class ConnectionsController implements IConnectionsController {
       throw new CustomError('Recipient ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const result = await this.connectionsService.withdrawConnectionRequest(
+    const result = await this._connectionsService.withdrawConnectionRequest(
       requesterId,
       recipientId
     );
@@ -115,7 +118,7 @@ export class ConnectionsController implements IConnectionsController {
       throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const result = await this.connectionsService.isConnected(userId1, userId2);
+    const result = await this._connectionsService.isConnected(userId1, userId2);
 
     res.status(StatusCodes.OK).json({ result });
   });
@@ -123,7 +126,7 @@ export class ConnectionsController implements IConnectionsController {
   getAllConnections = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
 
-    const data = await this.connectionsService.getAllConnections(userId);
+    const data = await this._connectionsService.getAllConnections(userId);
 
     res.status(StatusCodes.OK).json({ data });
   });
@@ -131,7 +134,7 @@ export class ConnectionsController implements IConnectionsController {
   getPendingRequests = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
 
-    const result = await this.connectionsService.getPendingRequest(userId);
+    const result = await this._connectionsService.getPendingRequest(userId);
 
     res.status(StatusCodes.OK).json(result);
   });
@@ -139,7 +142,7 @@ export class ConnectionsController implements IConnectionsController {
   getSentConnectionRequests = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
 
-    const result = await this.connectionsService.getSentConnectionRequests(userId);
+    const result = await this._connectionsService.getSentConnectionRequests(userId);
 
     res.status(StatusCodes.OK).json(result);
   });

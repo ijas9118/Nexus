@@ -10,15 +10,15 @@ import { IMentorService } from '@/core/interfaces/services/IMentorService';
 @injectable()
 export class BookingPaymentController implements IBookingPaymentController {
   constructor(
-    @inject(TYPES.BookingPaymentService) private bookingPaymentService: IBookingPaymentService,
-    @inject(TYPES.MentorService) private mentorService: IMentorService
+    @inject(TYPES.BookingPaymentService) private _bookingPaymentService: IBookingPaymentService,
+    @inject(TYPES.MentorService) private _mentorService: IMentorService
   ) {}
 
   checkoutSession = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { mentorId, mentorshipType, date, timeSlot, reason, email } = req.body;
     const customerId = req.user?._id as string;
-    const mentorUserId = await this.mentorService.getUserIdByMentorId(mentorId);
-    const sessionUrl = await this.bookingPaymentService.checkoutSession(
+    const mentorUserId = await this._mentorService.getUserIdByMentorId(mentorId);
+    const sessionUrl = await this._bookingPaymentService.checkoutSession(
       mentorId,
       mentorshipType,
       mentorUserId,
@@ -39,7 +39,7 @@ export class BookingPaymentController implements IBookingPaymentController {
       return;
     }
 
-    const isValid = await this.bookingPaymentService.verifyCheckoutSession(sessionId);
+    const isValid = await this._bookingPaymentService.verifyCheckoutSession(sessionId);
     res.status(StatusCodes.OK).json({ success: isValid });
   });
 }

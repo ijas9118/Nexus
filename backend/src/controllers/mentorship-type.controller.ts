@@ -10,10 +10,10 @@ import { MentorshipTypeResponseDto } from '@/dtos/responses/mentorship-type.dto'
 
 @injectable()
 export class MentorshipTypeController implements IMentorshipTypeController {
-  constructor(@inject(TYPES.MentorshipTypeService) private service: IMentorshipTypeService) {}
+  constructor(@inject(TYPES.MentorshipTypeService) private _service: IMentorshipTypeService) {}
 
   create = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const mentorshipType = await this.service.createMentorshipType(
+    const mentorshipType = await this._service.createMentorshipType(
       req.body as CreateMentorshipTypeRequestDto
     );
     const responseDto = MentorshipTypeResponseDto.fromEntity(mentorshipType);
@@ -21,7 +21,7 @@ export class MentorshipTypeController implements IMentorshipTypeController {
   });
 
   getById = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const mentorshipType = await this.service.getMentorshipType(req.params.id);
+    const mentorshipType = await this._service.getMentorshipType(req.params.id);
     res.status(StatusCodes.OK).json(MentorshipTypeResponseDto.fromEntity(mentorshipType));
   });
 
@@ -30,25 +30,25 @@ export class MentorshipTypeController implements IMentorshipTypeController {
     const includeAll = isAdmin && req.query.all === 'true';
 
     const mentorshipTypes = includeAll
-      ? await this.service.getAllMentorshipTypes({ includeInactive: true })
-      : await this.service.getAllMentorshipTypes();
+      ? await this._service.getAllMentorshipTypes({ includeInactive: true })
+      : await this._service.getAllMentorshipTypes();
 
     const responseDtos = MentorshipTypeResponseDto.fromEntities(mentorshipTypes);
     res.status(StatusCodes.OK).json(responseDtos);
   });
 
   update = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const mentorshipType = await this.service.updateMentorshipType(req.params.id, req.body);
+    const mentorshipType = await this._service.updateMentorshipType(req.params.id, req.body);
     res.status(StatusCodes.OK).json(MentorshipTypeResponseDto.fromEntity(mentorshipType));
   });
 
   delete = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    await this.service.deleteMentorshipType(req.params.id);
+    await this._service.deleteMentorshipType(req.params.id);
     res.status(StatusCodes.NO_CONTENT).send();
   });
 
   restore = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    await this.service.restoreMentorshipType(req.params.id);
+    await this._service.restoreMentorshipType(req.params.id);
     res.status(StatusCodes.NO_CONTENT).send();
   });
 }

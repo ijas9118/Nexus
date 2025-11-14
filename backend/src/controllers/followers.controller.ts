@@ -10,7 +10,7 @@ import { StatusCodes } from 'http-status-codes';
 
 @injectable()
 export class FollowersController implements IFollowersController {
-  constructor(@inject(TYPES.FollowersService) private followersService: IFollowersService) {}
+  constructor(@inject(TYPES.FollowersService) private _followersService: IFollowersService) {}
 
   followUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { followedId } = req.body;
@@ -20,7 +20,7 @@ export class FollowersController implements IFollowersController {
       throw new CustomError('Followed user ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const result = await this.followersService.followUser(followerId, followedId);
+    const result = await this._followersService.followUser(followerId, followedId);
 
     if (!result) {
       throw new CustomError('Already following this user', StatusCodes.BAD_REQUEST);
@@ -37,7 +37,7 @@ export class FollowersController implements IFollowersController {
       throw new CustomError('Followed user ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const result = await this.followersService.unfollowUser(followerId, followedId);
+    const result = await this._followersService.unfollowUser(followerId, followedId);
 
     if (!result) {
       throw new CustomError('Not following this user', StatusCodes.BAD_REQUEST);
@@ -55,7 +55,7 @@ export class FollowersController implements IFollowersController {
       throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const followers = await this.followersService.getFollowers(userId, currentUserId);
+    const followers = await this._followersService.getFollowers(userId, currentUserId);
 
     res.status(StatusCodes.OK).json(followers);
   });
@@ -68,7 +68,7 @@ export class FollowersController implements IFollowersController {
       throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const following = await this.followersService.getFollowing(userId);
+    const following = await this._followersService.getFollowing(userId);
 
     res.status(StatusCodes.OK).json(following);
   });
@@ -80,7 +80,7 @@ export class FollowersController implements IFollowersController {
       throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const connections = await this.followersService.getConnections(userId);
+    const connections = await this._followersService.getConnections(userId);
 
     res.status(StatusCodes.OK).json(connections);
   });
@@ -92,7 +92,7 @@ export class FollowersController implements IFollowersController {
       throw new CustomError('Missing required query parameters', StatusCodes.BAD_REQUEST);
     }
 
-    const result = await this.followersService.isFollowing(
+    const result = await this._followersService.isFollowing(
       followerId as string,
       followedId as string
     );
@@ -107,7 +107,7 @@ export class FollowersController implements IFollowersController {
       throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const stats = await this.followersService.getFollowStats(userId);
+    const stats = await this._followersService.getFollowStats(userId);
 
     res.status(StatusCodes.OK).json(stats);
   });

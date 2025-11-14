@@ -8,12 +8,12 @@ import { injectable, inject } from 'inversify';
 
 @injectable()
 export class MentorMetadataController implements IMentorMetadataController {
-  constructor(@inject(TYPES.MentorMetadataService) private service: IMentorMetadataService) {}
+  constructor(@inject(TYPES.MentorMetadataService) private _service: IMentorMetadataService) {}
 
   create = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     try {
       const data: Partial<IMentorMetadata> = req.body;
-      const metadata = await this.service.create(data);
+      const metadata = await this._service.create(data);
       res.status(201).json(metadata);
     } catch (error) {
       res.status(400).json({ message: (error as Error).message });
@@ -22,7 +22,7 @@ export class MentorMetadataController implements IMentorMetadataController {
 
   findById = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     try {
-      const metadata = await this.service.findById(req.params.id);
+      const metadata = await this._service.findById(req.params.id);
       if (!metadata) {
         res.status(404).json({ message: 'Metadata not found' });
         return;
@@ -39,7 +39,7 @@ export class MentorMetadataController implements IMentorMetadataController {
 
     try {
       const query = includeAll ? {} : { isActive: true };
-      const metadata = await this.service.find(query);
+      const metadata = await this._service.find(query);
       res.json(metadata);
     } catch (error) {
       res.status(400).json({ message: (error as Error).message });
@@ -50,7 +50,7 @@ export class MentorMetadataController implements IMentorMetadataController {
     try {
       const { type } = req.params;
       const isActive = req.query.isActive !== 'false';
-      const metadata = await this.service.findByType(type, isActive);
+      const metadata = await this._service.findByType(type, isActive);
       res.json(metadata);
     } catch (error) {
       res.status(400).json({ message: (error as Error).message });
@@ -59,7 +59,7 @@ export class MentorMetadataController implements IMentorMetadataController {
 
   update = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     try {
-      const metadata = await this.service.update(req.params.id, req.body);
+      const metadata = await this._service.update(req.params.id, req.body);
       if (!metadata) {
         res.status(404).json({ message: 'Metadata not found' });
         return;
@@ -72,7 +72,7 @@ export class MentorMetadataController implements IMentorMetadataController {
 
   softDelete = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     try {
-      const metadata = await this.service.softDelete(req.params.id);
+      const metadata = await this._service.softDelete(req.params.id);
       if (!metadata) {
         res.status(404).json({ message: 'Metadata not found' });
         return;
@@ -85,7 +85,7 @@ export class MentorMetadataController implements IMentorMetadataController {
 
   restore = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     try {
-      const metadata = await this.service.restore(req.params.id);
+      const metadata = await this._service.restore(req.params.id);
       if (!metadata) {
         res.status(404).json({ message: 'Metadata not found' });
         return;

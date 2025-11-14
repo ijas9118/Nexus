@@ -10,7 +10,7 @@ import { StatusCodes } from 'http-status-codes';
 
 @injectable()
 export class HistoryController implements IHistoryController {
-  constructor(@inject(TYPES.HistoryService) private historyService: IHistoryService) {}
+  constructor(@inject(TYPES.HistoryService) private _historyService: IHistoryService) {}
 
   removeFromHistory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
@@ -20,7 +20,7 @@ export class HistoryController implements IHistoryController {
       throw new CustomError('Content ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const result = await this.historyService.removeFromHistory(userId, contentId);
+    const result = await this._historyService.removeFromHistory(userId, contentId);
 
     if (!result) {
       throw new CustomError('Failed to remove from history', StatusCodes.INTERNAL_SERVER_ERROR);
@@ -32,7 +32,7 @@ export class HistoryController implements IHistoryController {
   getAllHistory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
 
-    const history = await this.historyService.getAllHistory(userId);
+    const history = await this._historyService.getAllHistory(userId);
 
     if (!history) {
       throw new CustomError('Failed to fetch history', StatusCodes.INTERNAL_SERVER_ERROR);

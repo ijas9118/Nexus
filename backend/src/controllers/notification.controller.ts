@@ -11,7 +11,7 @@ import { INotificationController } from '@/core/interfaces/controllers/INotifica
 export class NotificationController implements INotificationController {
   constructor(
     @inject(TYPES.NotificationService)
-    private notificationService: INotificationService
+    private _notificationService: INotificationService
   ) {}
 
   getUserNotifications = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -19,13 +19,13 @@ export class NotificationController implements INotificationController {
     const { read } = req.query; // Optional: 'true' or 'false'
     const readStatus = read !== undefined ? read === 'true' : undefined;
 
-    const notifications = await this.notificationService.getUserNotifications(userId, readStatus);
+    const notifications = await this._notificationService.getUserNotifications(userId, readStatus);
     res.status(StatusCodes.OK).json(notifications);
   });
 
   markAsRead = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-    const notification = await this.notificationService.markAsRead(id);
+    const notification = await this._notificationService.markAsRead(id);
     if (!notification) {
       throw new CustomError('Notification not found');
     }
@@ -34,13 +34,13 @@ export class NotificationController implements INotificationController {
 
   markAllAsRead = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId } = req.params;
-    const modifiedCount = await this.notificationService.markAllAsRead(userId);
+    const modifiedCount = await this._notificationService.markAllAsRead(userId);
     res.status(StatusCodes.OK).json({ modifiedCount });
   });
 
   deleteNotification = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-    const notification = await this.notificationService.delete(id);
+    const notification = await this._notificationService.delete(id);
     if (!notification) {
       throw new CustomError('Notification not found');
     }
@@ -53,7 +53,7 @@ export class NotificationController implements INotificationController {
       throw new CustomError('Provide an array of notification IDs');
     }
 
-    const deletedCount = await this.notificationService.deleteManyByIds(ids);
+    const deletedCount = await this._notificationService.deleteManyByIds(ids);
     res.status(StatusCodes.OK).json({ deletedCount });
   });
 }

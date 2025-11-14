@@ -10,7 +10,7 @@ import { TYPES } from '../di/types';
 
 @injectable()
 export class CommentController implements ICommentController {
-  constructor(@inject(TYPES.CommentService) private commentService: ICommentService) {}
+  constructor(@inject(TYPES.CommentService) private _commentService: ICommentService) {}
 
   addComment = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { contentId, text, parentCommentId } = req.body;
@@ -20,7 +20,7 @@ export class CommentController implements ICommentController {
       throw new CustomError('Content ID and text are required', StatusCodes.BAD_REQUEST);
     }
 
-    const comment = await this.commentService.addComment({
+    const comment = await this._commentService.addComment({
       userId,
       contentId,
       text,
@@ -37,12 +37,12 @@ export class CommentController implements ICommentController {
       throw new CustomError('Content ID is required', StatusCodes.BAD_REQUEST);
     }
 
-    const comments = await this.commentService.getCommentsByContentId(contentId as string);
+    const comments = await this._commentService.getCommentsByContentId(contentId as string);
     res.status(StatusCodes.OK).json(comments);
   });
 
   getAllComments = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const comments = await this.commentService.getAllComments();
+    const comments = await this._commentService.getAllComments();
     res.status(StatusCodes.OK).json(comments);
   });
 }
