@@ -50,8 +50,11 @@ export default function EditCategoryDialog({
     try {
       await onUpdate(category.id, name);
       onClose();
-    } catch (err) {
-      setError("Failed to update category. Please try again.");
+    } catch (err: any) {
+      setError(
+        err.response.data.message ||
+          "Failed to add category. Please try again.",
+      );
     } finally {
       setIsSubmitting(false);
     }

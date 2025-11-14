@@ -3,7 +3,6 @@ import { verifyAccessToken, verifyRefreshToken } from '../utils/jwt.util';
 import { StatusCodes } from 'http-status-codes';
 import { UserRole } from '@/core/types/UserTypes';
 import logger from '@/config/logger';
-import redisClient from '@/config/redisClient.config';
 
 interface IUser {
   _id: string;

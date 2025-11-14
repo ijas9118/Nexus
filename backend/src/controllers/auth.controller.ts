@@ -19,6 +19,7 @@ import { LoginRequestDTO, RegisterRequestDTO } from '@/dtos/requests/auth.dto';
 import { UserRole } from '@/core/types/UserTypes';
 import logger from '@/config/logger';
 import redisClient from '@/config/redisClient.config';
+import { MESSAGES } from '@/utils/constants/message';
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -36,16 +37,14 @@ export class AuthController implements IAuthController {
 
     const existingUser = await this.authService.findUserByEmail(userData.email);
     if (existingUser) {
-      throw new CustomError('User already exists', StatusCodes.BAD_REQUEST);
+      throw new CustomError(MESSAGES.AUTH_MESSAGES.USER_EXISTS, StatusCodes.BAD_REQUEST);
     }
 
     const otp = this.otpService.generateOTP();
 
     await this.emailService.sendOtpEmail(userData, otp);
 
-    res
-      .status(StatusCodes.OK)
-      .json({ message: 'OTP sent to email. Please verify within 15 minutes' });
+    res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.OTP_SENT });
   });
 
   // Verify OTP and register user if OTP is correct and not expired
@@ -69,7 +68,7 @@ export class AuthController implements IAuthController {
 
     await this.otpService.resendOtp(email);
 
-    res.status(StatusCodes.OK).json({ message: 'New OTP sent to your email.' });
+    res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.OTP_RESENT });
   });
 
   // Login user and set refresh token cookie
@@ -81,7 +80,7 @@ export class AuthController implements IAuthController {
     const isBlocked = await this.authService.isUserBlocked(user._id);
 
     if (isBlocked) {
-      res.status(StatusCodes.FORBIDDEN).json({ message: 'User is blocked' });
+      res.status(StatusCodes.FORBIDDEN).json({ message: MESSAGES.AUTH_MESSAGES.USER_BLOCKED });
       return;
     }
 
@@ -101,7 +100,7 @@ export class AuthController implements IAuthController {
   // Logout user and clear refresh token cookie
   logout = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     clearRefreshTokenCookie(res);
-    res.status(StatusCodes.OK).json({ message: 'Logged out successfully.' });
+    res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.LOGOUT_SUCCESS });
   });
 
   // Send password reset link to email with token
@@ -110,7 +109,7 @@ export class AuthController implements IAuthController {
 
     await this.emailService.sendResetEmailWithToken(email);
 
-    res.status(StatusCodes.OK).json({ message: 'Password reset link sent to your email.' });
+    res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.PASSWORD_RESET_LINK_SENT });
   });
 
   // Verify token and update password if token is valid
@@ -119,12 +118,12 @@ export class AuthController implements IAuthController {
 
     const isValid = await this.tokenService.validateToken(email, token);
     if (!isValid) {
-      throw new CustomError('Invalid or expired token.', StatusCodes.BAD_REQUEST);
+      throw new CustomError(MESSAGES.AUTH_MESSAGES.REFRESH_TOKEN_INVALID, StatusCodes.BAD_REQUEST);
     }
 
     await this.authService.updatePassword(email, password);
 
-    res.status(StatusCodes.OK).json({ message: 'Password updated successfully.' });
+    res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.PASSWORD_UPDATED });
   });
 
   // Refresh access token using refresh token
@@ -132,17 +131,17 @@ export class AuthController implements IAuthController {
     const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
-      throw new CustomError('Refresh token not found', StatusCodes.UNAUTHORIZED);
+      throw new CustomError(MESSAGES.AUTH_MESSAGES.REFRESH_TOKEN_MISSING, StatusCodes.UNAUTHORIZED);
     }
 
     const decodedToken = verifyRefreshToken(refreshToken);
     if (!decodedToken) {
       clearRefreshTokenCookie(res);
-      throw new CustomError('Invalid token', StatusCodes.FORBIDDEN);
+      throw new CustomError(MESSAGES.AUTH_MESSAGES.REFRESH_TOKEN_INVALID, StatusCodes.FORBIDDEN);
     }
     const isBlocked = await redisClient.get(`blocked_user:${decodedToken.user._id}`);
     if (isBlocked) {
-      res.status(StatusCodes.FORBIDDEN).json({ message: 'User is blocked' });
+      res.status(StatusCodes.FORBIDDEN).json({ message: MESSAGES.AUTH_MESSAGES.USER_BLOCKED });
       return;
     }
 
@@ -158,7 +157,7 @@ export class AuthController implements IAuthController {
 
     if (!user) {
       clearRefreshTokenCookie(res);
-      throw new CustomError('User not found', StatusCodes.NOT_FOUND);
+      throw new CustomError(MESSAGES.AUTH_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     const payload: any = {
@@ -175,7 +174,7 @@ export class AuthController implements IAuthController {
       const mentor = await this.mentorService.getMentorByUserId(user._id.toString());
       if (!mentor) {
         clearRefreshTokenCookie(res);
-        throw new CustomError('Mentor profile not found', StatusCodes.NOT_FOUND);
+        throw new CustomError(MESSAGES.AUTH_MESSAGES.MENTOR_NOT_FOUND, StatusCodes.NOT_FOUND);
       }
 
       const mentorWithId = mentor as { _id: string };
@@ -196,7 +195,7 @@ export class AuthController implements IAuthController {
     const googleProfile = req.user as unknown as Profile;
 
     if (!googleProfile.emails || googleProfile.emails.length === 0) {
-      throw new CustomError('No email provided by Google', StatusCodes.BAD_REQUEST);
+      throw new CustomError(MESSAGES.AUTH_MESSAGES.GOOGLE_EMAIL_MISSING, StatusCodes.BAD_REQUEST);
     }
 
     const user = await this.authService.handleGoogleUser({
@@ -219,7 +218,7 @@ export class AuthController implements IAuthController {
     const githubProfile = req.user as unknown as GitHubProfile;
 
     if (!githubProfile.emails || githubProfile.emails.length === 0) {
-      throw new CustomError('No email provided by GitHub', StatusCodes.BAD_REQUEST);
+      throw new CustomError(MESSAGES.AUTH_MESSAGES.GITHUB_EMAIL_MISSING, StatusCodes.BAD_REQUEST);
     }
 
     const user = await this.authService.handleGithubUser({

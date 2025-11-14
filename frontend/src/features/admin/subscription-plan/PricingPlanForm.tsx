@@ -1,5 +1,5 @@
 // AddPlanForm.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
@@ -25,6 +25,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import PlanService from "@/services/planService";
 import { toast } from "sonner";
+import { IPlan } from "@/types/plans";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -48,9 +49,10 @@ const itemVariants = {
 
 interface PricingPlanFormProps {
   onClose: () => void;
+  initialData?: IPlan | null;
 }
 
-const PricingPlanForm = ({ onClose }: PricingPlanFormProps) => {
+const PricingPlanForm = ({ onClose, initialData }: PricingPlanFormProps) => {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     name: "",
@@ -62,6 +64,34 @@ const PricingPlanForm = ({ onClose }: PricingPlanFormProps) => {
     featured: false,
     features: [""],
   });
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        name: initialData.tier || "",
+        price: initialData.price?.toString() || "",
+        description: initialData.description || "",
+        billingInterval: initialData.interval || "",
+        buttonText: initialData.ctaText || "",
+        icon: initialData.logo || "",
+        featured: initialData.featured || false,
+        features: initialData.highlights?.length
+          ? [...initialData.highlights]
+          : [""],
+      });
+    } else {
+      setFormData({
+        name: "",
+        price: "",
+        description: "",
+        billingInterval: "",
+        buttonText: "",
+        icon: "",
+        featured: false,
+        features: [""],
+      });
+    }
+  }, [initialData]);
 
   const iconOptions = [
     { name: "Sparkles", component: SparkIcon, value: "spark" },
@@ -157,11 +187,27 @@ const PricingPlanForm = ({ onClose }: PricingPlanFormProps) => {
       });
       onClose(); // Close the dialog
     },
-    onError: (error: unknown) => {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to create plan";
+    onError: (error: any) => {
+      const errorMessage = error.message || "Failed to create plan";
       toast.error("Error", {
         description: errorMessage,
+      });
+    },
+  });
+
+  const updatePlanMutation = useMutation({
+    mutationFn: (updatedData: any) =>
+      PlanService.updatePlan(initialData!._id as string, updatedData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["plans"] });
+      toast.success("Success", {
+        description: "Plan updated successfully!",
+      });
+      onClose();
+    },
+    onError: (error: any) => {
+      toast.error("Error", {
+        description: error.message || "Failed to update plan",
       });
     },
   });
@@ -175,15 +221,35 @@ const PricingPlanForm = ({ onClose }: PricingPlanFormProps) => {
       });
       return;
     }
-    createPlanMutation.mutate();
+
+    const payload = {
+      tier: formData.name,
+      price: Number(formData.price),
+      description: formData.description,
+      interval: formData.billingInterval.replace("/", ""),
+      ctaText: formData.buttonText,
+      logo: formData.icon,
+      highlights: formData.features,
+      featured: formData.featured,
+    };
+
+    if (initialData) {
+      updatePlanMutation.mutate(payload);
+    } else {
+      createPlanMutation.mutate();
+    }
   };
 
   return (
     <DialogContent className="sm:max-w-5xl p-0 overflow-hidden">
       <DialogHeader className="px-6 pt-6 pb-2">
-        <DialogTitle>Create New Plan</DialogTitle>
+        <DialogTitle>
+          {initialData ? "Edit Plan" : "Create New Plan"}
+        </DialogTitle>
         <DialogDescription>
-          Fill in the details to create a new pricing plan.
+          {initialData
+            ? "Edit the details of an existing plan."
+            : "Fill in the details to create a new pricing plan."}
         </DialogDescription>
       </DialogHeader>
 
@@ -344,9 +410,15 @@ const PricingPlanForm = ({ onClose }: PricingPlanFormProps) => {
         <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
           <Button
             onClick={handleSubmit}
-            disabled={createPlanMutation.isPending}
+            disabled={
+              createPlanMutation.isPending || updatePlanMutation.isPending
+            }
           >
-            {createPlanMutation.isPending ? "Saving..." : "Save Plan"}
+            {createPlanMutation.isPending || updatePlanMutation.isPending
+              ? "Saving..."
+              : initialData
+                ? "Save Changes"
+                : "Save Plan"}
           </Button>
         </motion.div>
       </DialogFooter>

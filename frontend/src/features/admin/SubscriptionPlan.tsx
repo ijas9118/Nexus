@@ -5,13 +5,17 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import PriceCard from "../../components/organisms/PricingCard";
 import PricingPlanForm from "./subscription-plan/PricingPlanForm";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import PlanService from "@/services/planService";
 import { IPlan } from "@/types/plans";
 import { getPlanLogo } from "@/utils/planLogo";
+import ConfirmDialog from "@/components/molecules/ConfirmDialog";
 
 const SubscriptionPlan = () => {
+  const queryClient = useQueryClient();
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<IPlan | null>(null);
 
   const {
     data: plans,
@@ -21,6 +25,21 @@ const SubscriptionPlan = () => {
     queryKey: ["plans"],
     queryFn: PlanService.getAllPlans,
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => PlanService.deletePlan(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["plans"] }); // Refresh list
+    },
+    onError: (error: any) => {
+      console.error("Delete Error:", error);
+      alert(error?.message || "Failed to delete plan");
+    },
+  });
+
+  const handleDelete = (id: string) => {
+    deleteMutation.mutate(id);
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) {
@@ -46,7 +65,13 @@ const SubscriptionPlan = () => {
                 <Plus className="h-4 w-4 mr-2" /> Add Plan
               </Button>
             </DialogTrigger>
-            <PricingPlanForm onClose={() => setIsDialogOpen(false)} />
+            <PricingPlanForm
+              onClose={() => {
+                setIsDialogOpen(false);
+                setSelectedPlan(null);
+              }}
+              initialData={selectedPlan}
+            />
           </Dialog>
         </div>
       </div>
@@ -67,12 +92,19 @@ const SubscriptionPlan = () => {
             isAdminView={true}
             featured={plan.featured}
             onEdit={() => {
-              setIsDialogOpen(true); // Add logic to prefill form for editing
+              setSelectedPlan(plan);
+              setIsDialogOpen(true);
             }}
-            onDelete={() => {
-              console.log(`Deleting ${plan.tier} plan...`);
-              // Add delete mutation here
-            }}
+            onDelete={
+              <ConfirmDialog
+                triggerLabel="Delete"
+                triggerVariant="destructive"
+                title="Delete this plan?"
+                description={`This will permanently delete the "${plan.tier}" plan.`}
+                confirmLabel="Delete"
+                onConfirm={() => handleDelete(plan._id as string)}
+              />
+            }
           />
         ))}
       </div>

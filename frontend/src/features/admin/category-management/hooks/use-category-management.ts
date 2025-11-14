@@ -68,10 +68,9 @@ export function useCategoryManagement() {
         description: "Category added successfully",
       });
       fetchCategories();
-    } catch (err) {
-      console.error("Failed to add category:", err);
+    } catch (err: any) {
       toast.error("Error", {
-        description: "Failed to add category",
+        description: err.response.data.message || "Failed to add category",
       });
       throw err;
     }
@@ -84,10 +83,9 @@ export function useCategoryManagement() {
         description: "Category updated successfully",
       });
       fetchCategories();
-    } catch (err) {
-      console.error("Failed to update category:", err);
+    } catch (err: any) {
       toast.error("Error", {
-        description: "Failed to update category",
+        description: err.response.data.message || "Failed to add category",
       });
       throw err;
     }

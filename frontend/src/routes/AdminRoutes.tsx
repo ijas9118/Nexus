@@ -48,8 +48,8 @@ const AdminRoutes: React.FC = () => {
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<AdminLayout />}>
-          <Route element={<ProtectedRoute requiredRoles={["admin"]} />}>
+        <Route element={<ProtectedRoute requiredRoles={["admin"]} />}>
+          <Route path="/" element={<AdminLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="category" element={<CategoryManagement />} />

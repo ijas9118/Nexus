@@ -8,6 +8,7 @@ import CustomError from '@/utils/CustomError';
 import dayjs from 'dayjs';
 import asyncHandler from 'express-async-handler';
 import { RescheduleBookingRequestDTO } from '@/dtos/requests/booking.dto';
+import { MESSAGES } from '@/utils/constants/message';
 
 @injectable()
 export class BookingController implements IBookingController {
@@ -18,14 +19,14 @@ export class BookingController implements IBookingController {
     const userId = req.user?._id as string;
 
     if (!userId) {
-      res.status(401).json({ error: 'Authentication required' });
+      res.status(401).json({ error: MESSAGES.BOOKING_MESSAGES.AUTH_REQUIRED });
       return;
     }
 
     const booking = await this.bookingService.getBookingByMeetUrl(meetUrl, userId);
 
     if (!booking) {
-      res.status(404).json({ error: 'Booking not found or access denied' });
+      res.status(404).json({ error: MESSAGES.BOOKING_MESSAGES.BOOKING_NOT_FOUND });
       return;
     }
 
@@ -62,16 +63,16 @@ export class BookingController implements IBookingController {
 
     // Validate input
     if (!timeSlotId || !bookingDate) {
-      throw new CustomError('timeSlotId and bookingDate are required.', StatusCodes.BAD_REQUEST);
+      throw new CustomError(
+        MESSAGES.BOOKING_MESSAGES.RESCHEDULE_FIELDS_REQUIRED,
+        StatusCodes.BAD_REQUEST
+      );
     }
 
     // Validate date format
     const parsedDate = dayjs(bookingDate);
     if (!parsedDate.isValid()) {
-      throw new CustomError(
-        'Invalid bookingDate format. Use ISO 8601 (e.g., "2025-05-10T00:00:00.000Z").',
-        StatusCodes.BAD_REQUEST
-      );
+      throw new CustomError(MESSAGES.BOOKING_MESSAGES.INVALID_DATE_FORMAT, StatusCodes.BAD_REQUEST);
     }
 
     const updatedBooking = await this.bookingService.rescheduleBooking(
@@ -91,7 +92,7 @@ export class BookingController implements IBookingController {
       const tempDate = dayjs(date as string);
       if (!tempDate.isValid()) {
         throw new CustomError(
-          'Invalid date format. Use ISO 8601 (e.g., "2025-05-10T00:00:00.000Z").',
+          MESSAGES.BOOKING_MESSAGES.INVALID_DATE_FORMAT,
           StatusCodes.BAD_REQUEST
         );
       }

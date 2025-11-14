@@ -43,8 +43,11 @@ export default function AddCategoryDialog({
       await onAdd(name);
       setName("");
       onClose();
-    } catch (err) {
-      setError("Failed to add category. Please try again.");
+    } catch (err: any) {
+      setError(
+        err.response.data.message ||
+          "Failed to add category. Please try again.",
+      );
     } finally {
       setIsSubmitting(false);
     }

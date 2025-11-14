@@ -1,0 +1,33 @@
+export const MESSAGES = {
+  AUTH_MESSAGES: {
+    USER_EXISTS: 'User already exists',
+    OTP_SENT: 'OTP sent to email. Please verify within 15 minutes.',
+    OTP_RESENT: 'New OTP sent to your email.',
+    OTP_INVALID: 'Invalid or expired OTP.',
+    REGISTER_SUCCESS: 'User registered successfully.',
+    LOGIN_SUCCESS: 'Logged in successfully.',
+    USER_BLOCKED: 'User is blocked',
+    LOGOUT_SUCCESS: 'Logged out successfully.',
+    PASSWORD_RESET_LINK_SENT: 'Password reset link sent to your email.',
+    PASSWORD_UPDATED: 'Password updated successfully.',
+    REFRESH_TOKEN_MISSING: 'Refresh token not found',
+    REFRESH_TOKEN_INVALID: 'Invalid token',
+    USER_NOT_FOUND: 'User not found',
+    MENTOR_NOT_FOUND: 'Mentor profile not found',
+    GOOGLE_EMAIL_MISSING: 'No email provided by Google',
+    GITHUB_EMAIL_MISSING: 'No email provided by GitHub',
+  },
+  BOOKING_MESSAGES: {
+    AUTH_REQUIRED: 'Authentication required',
+    BOOKING_NOT_FOUND: 'Booking not found or access denied',
+    UPCOMING_FETCH_SUCCESS: 'Upcoming bookings fetched successfully',
+    COMPLETED_FETCH_SUCCESS: 'Completed bookings fetched successfully',
+    RESCHEDULE_FIELDS_REQUIRED: 'timeSlotId and bookingDate are required.',
+    INVALID_DATE_FORMAT:
+      'Invalid bookingDate format. Use ISO 8601 (e.g., "2025-05-10T00:00:00.000Z").',
+    RESCHEDULE_SUCCESS: 'Booking rescheduled successfully',
+    INVALID_FILTER_DATE: 'Invalid date format. Use ISO 8601 (e.g., "2025-05-10T00:00:00.000Z").',
+    FILTER_SUCCESS: 'Filtered bookings fetched successfully',
+    CONFIRM_SUCCESS: 'Booking confirmed successfully',
+  },
+};

@@ -88,7 +88,7 @@ const AdminAppSidebar = () => {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
+        {/* <SidebarGroup>
           <SidebarMenuButton
             asChild
             onClick={() => navigate("/admin/create-announcement")}
@@ -98,7 +98,7 @@ const AdminAppSidebar = () => {
               <span>New Announcement</span>
             </div>
           </SidebarMenuButton>
-        </SidebarGroup>
+        </SidebarGroup> */}
         <div className="w-full flex items-center justify-center"></div>
         <Collapsible defaultOpen className="group/collapsible">
           <CollapsibleComponent title="Main" items={mainItem} />

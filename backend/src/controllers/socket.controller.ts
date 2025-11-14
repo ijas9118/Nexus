@@ -4,7 +4,6 @@ import { IMessageService } from '@/core/interfaces/services/IMessageService';
 import { TYPES } from '@/di/types';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { inject, injectable } from 'inversify';
-import mongoose from 'mongoose';
 import logger from '@/config/logger';
 
 @injectable()

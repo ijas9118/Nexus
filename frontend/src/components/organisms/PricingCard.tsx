@@ -22,7 +22,7 @@ interface PriceCardProps {
   logo: React.ReactNode;
   isAdminView: boolean; // <- New
   onEdit?: () => void; // <- New
-  onDelete?: () => void;
+  onDelete?: React.ReactNode;
   onCTAClick?: () => void;
 }
 
@@ -57,9 +57,7 @@ export default function PriceCard({
             <Button variant="ghost" size="icon" onClick={onEdit}>
               <Pencil className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={onDelete}>
-              <Trash className="h-4 w-4" />
-            </Button>
+            {onDelete}
           </div>
         )}
         {logo && <div className="mb-4">{logo}</div>}

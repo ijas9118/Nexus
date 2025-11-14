@@ -17,6 +17,8 @@ export class PlanService implements IPlanService {
     if (!data.interval) {
       throw new Error('Interval is required');
     }
+
+    if (data.price! < 0) throw new Error('Price cannot be negative');
     return this.planRepository.create(data);
   };
 
