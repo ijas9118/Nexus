@@ -1,12 +1,38 @@
-name: CI/CD Pipeline
+name: CD Pipeline
 
 on:
   push:
     branches:
-      - master
+      - main
+
+permissions:
+  contents: read
 
 jobs:
+  # This job waits for CI to complete successfully
+  check-ci:
+    name: Wait for CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for CI workflow
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.sha }}
+          check-name: 'Backend - Lint & Format'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
+      - name: Wait for CI workflow (Frontend)
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.sha }}
+          check-name: 'Frontend - Lint & Format'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
   build-and-push:
+    name: Build & Push Docker Images
+    needs: check-ci
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -38,6 +64,7 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/nexus-nginx-image:latest
 
   deploy:
+    name: Deploy to EC2
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
