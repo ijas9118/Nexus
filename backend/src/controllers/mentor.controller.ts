@@ -15,6 +15,7 @@ import {
 import { PersonalInfo } from '@/core/types';
 import { IMentor } from '@/models/mentor.model';
 import CustomError from '@/utils/CustomError';
+import logger from '@/config/logger';
 
 @injectable()
 export class MentorController implements IMentorController {
@@ -47,7 +48,7 @@ export class MentorController implements IMentorController {
       );
     }
 
-    console.log('Received mentor application data:', mentorData);
+    logger.debug('Received mentor application data', { userId, mentorData });
 
     const mentor = await this._mentorService.applyAsMentor(userId, mentorData);
     res.status(StatusCodes.CREATED).json({ success: true, data: mentor });

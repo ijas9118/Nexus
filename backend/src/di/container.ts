@@ -171,7 +171,7 @@ import { ITargetAudienceController } from '@/core/interfaces/controllers/ITarget
 import { TargetAudienceController } from '@/controllers/targetAudience.controller';
 
 import { IBookingRepository } from '@/core/interfaces/repositories/IBookingRepository';
-import { BookingRepository } from '@/repositories/ booking.repository';
+import { BookingRepository } from '@/repositories/booking.repository';
 import { IBookingService } from '@/core/interfaces/services/IBookingService';
 import { BookingService } from '@/services/booking.service';
 import { IBookingController } from '@/core/interfaces/controllers/IBookingController';

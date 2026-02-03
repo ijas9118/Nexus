@@ -35,8 +35,7 @@ export class MentorMetadataService implements IMentorMetadataService {
   }
 
   async find(query: FilterQuery<IMentorMetadata> = {}): Promise<IMentorMetadata[]> {
-    console.log(query);
-
+    // Removed console.log - query is already logged by HTTP logger
     return this.repository.find(query);
   }
 

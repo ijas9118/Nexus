@@ -7,6 +7,7 @@ import asyncHandler from 'express-async-handler';
 import CustomError from '../utils/CustomError';
 import { StatusCodes } from 'http-status-codes';
 import { Express } from 'express';
+import logger from '@/config/logger';
 
 @injectable()
 export class SquadController implements ISquadController {
@@ -69,7 +70,9 @@ export class SquadController implements ISquadController {
   getSquadsByCategory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
     const category = req.query.category as string;
-    console.log(category);
+
+    logger.debug('Fetching squads by category', { userId, category });
+
     if (!category) {
       throw new CustomError('Category is required', StatusCodes.BAD_REQUEST);
     }
