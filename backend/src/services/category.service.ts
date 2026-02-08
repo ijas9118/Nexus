@@ -1,9 +1,12 @@
-import { inject, injectable } from 'inversify';
-import { ICategoryService } from '../core/interfaces/services/ICategoryService';
-import { ICategory } from '../models/categories.model';
-import { TYPES } from '../di/types';
-import { ICategoryRepository } from '../core/interfaces/repositories/ICategoryRepository';
-import CustomError from '@/utils/CustomError';
+import { inject, injectable } from "inversify";
+
+import CustomError from "@/utils/custom-error";
+
+import type { ICategoryRepository } from "../core/interfaces/repositories/i-category-repository";
+import type { ICategoryService } from "../core/interfaces/services/i-category-service";
+import type { ICategory } from "../models/categories.model";
+
+import { TYPES } from "../di/types";
 
 @injectable()
 export class CategoryService implements ICategoryService {
@@ -13,7 +16,7 @@ export class CategoryService implements ICategoryService {
     const existingCategory = await this.categoryRepository.findOne({ name });
 
     if (existingCategory) {
-      throw new CustomError('Category already exists', 409);
+      throw new CustomError("Category already exists", 409);
     }
 
     return await this.categoryRepository.addCategory(name);
@@ -23,7 +26,7 @@ export class CategoryService implements ICategoryService {
     const existingCategory = await this.categoryRepository.findOne({ name: newName });
 
     if (existingCategory) {
-      throw new CustomError('Category already exists', 409);
+      throw new CustomError("Category already exists", 409);
     }
     return await this.categoryRepository.updateCategory(id, newName);
   }
@@ -39,7 +42,7 @@ export class CategoryService implements ICategoryService {
   async getAllCategoriesWithPagination(
     page: number,
     limit: number,
-    search: string
+    search: string,
   ): Promise<{ categories: ICategory[]; total: number }> {
     return await this.categoryRepository.findAllWithPagination(page, limit, search);
   }

@@ -1,4 +1,4 @@
-import { IContent } from '@/models/content.model';
+import type { IContent } from "@/models/content.model";
 
 export type EnrichedContent = IContent & {
   isUpvoted: boolean;

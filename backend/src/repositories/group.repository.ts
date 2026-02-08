@@ -1,7 +1,10 @@
-import { BaseRepository } from '@/core/abstracts/base.repository';
-import { IGroupRepository } from '@/core/interfaces/repositories/IGroupRepository';
-import { GroupModel, IGroup } from '@/models/group.model';
-import { injectable } from 'inversify';
+import { injectable } from "inversify";
+
+import type { IGroupRepository } from "@/core/interfaces/repositories/i-group-repository";
+import type { IGroup } from "@/models/group.model";
+
+import { BaseRepository } from "@/core/abstracts/base.repository";
+import { GroupModel } from "@/models/group.model";
 
 @injectable()
 export class GroupRepository extends BaseRepository<IGroup> implements IGroupRepository {

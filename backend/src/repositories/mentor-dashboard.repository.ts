@@ -1,11 +1,13 @@
-import { IMentorDashboardRepository } from '@/core/interfaces/repositories/IMentorDashboardRepository';
-import { PendingWithdrawalsResponse, SessionStatsResponse } from '@/core/types/mentorDashboard';
-import { BookingModel } from '@/models/booking.model';
-import { TransactionModel } from '@/models/transaction.model';
-import { WalletModel } from '@/models/wallet.model';
-import { WithdrawalRequestModel } from '@/models/withdrawalRequest.model';
-import { injectable } from 'inversify';
-import mongoose from 'mongoose';
+import { injectable } from "inversify";
+import mongoose from "mongoose";
+
+import type { IMentorDashboardRepository } from "@/core/interfaces/repositories/i-mentor-dashboard-repository";
+import type { PendingWithdrawalsResponse, SessionStatsResponse } from "@/core/types/mentor-dashboard";
+
+import { BookingModel } from "@/models/booking.model";
+import { TransactionModel } from "@/models/transaction.model";
+import { WalletModel } from "@/models/wallet.model";
+import { WithdrawalRequestModel } from "@/models/withdrawal-request.model";
 
 @injectable()
 export class MentorDashboardRepository implements IMentorDashboardRepository {
@@ -20,14 +22,14 @@ export class MentorDashboardRepository implements IMentorDashboardRepository {
         {
           $match: {
             userId: new mongoose.Types.ObjectId(userId),
-            type: 'incoming',
+            type: "incoming",
             date: { $gte: startOfThisMonth },
           },
         },
         {
           $group: {
             _id: null,
-            total: { $sum: '$amount' },
+            total: { $sum: "$amount" },
           },
         },
       ]),
@@ -35,14 +37,14 @@ export class MentorDashboardRepository implements IMentorDashboardRepository {
         {
           $match: {
             userId: new mongoose.Types.ObjectId(userId),
-            type: 'incoming',
+            type: "incoming",
             date: { $gte: startOfLastMonth, $lte: endOfLastMonth },
           },
         },
         {
           $group: {
             _id: null,
-            total: { $sum: '$amount' },
+            total: { $sum: "$amount" },
           },
         },
       ]),
@@ -60,17 +62,17 @@ export class MentorDashboardRepository implements IMentorDashboardRepository {
         {
           $match: {
             userId: new mongoose.Types.ObjectId(userId),
-            status: 'pending',
+            status: "pending",
           },
         },
         {
           $group: {
             _id: null,
-            total: { $sum: '$amount' },
+            total: { $sum: "$amount" },
           },
         },
       ]),
-      WalletModel.findOne({ userId }).select('balance'),
+      WalletModel.findOne({ userId }).select("balance"),
     ]);
 
     return {
@@ -83,15 +85,15 @@ export class MentorDashboardRepository implements IMentorDashboardRepository {
     const [completed, upcoming, pending] = await Promise.all([
       BookingModel.countDocuments({
         mentorUserId: new mongoose.Types.ObjectId(userId),
-        status: 'completed',
+        status: "completed",
       }),
       BookingModel.countDocuments({
         mentorUserId: new mongoose.Types.ObjectId(userId),
-        status: 'upcoming',
+        status: "upcoming",
       }),
       BookingModel.countDocuments({
         mentorUserId: new mongoose.Types.ObjectId(userId),
-        status: 'pending',
+        status: "pending",
       }),
     ]);
     return { completed, upcoming, pending };
@@ -104,11 +106,11 @@ export class MentorDashboardRepository implements IMentorDashboardRepository {
   async getMentorshipTypeStats(userId: string) {
     const stats = await BookingModel.aggregate([
       { $match: { mentorId: userId } },
-      { $group: { _id: '$type', bookings: { $sum: 1 } } },
+      { $group: { _id: "$type", bookings: { $sum: 1 } } },
     ]);
 
     const total = stats.reduce((acc, s) => acc + s.bookings, 0);
-    return stats.map((s) => ({
+    return stats.map(s => ({
       name: s._id,
       bookings: s.bookings,
       percentage: Math.round((s.bookings / total) * 100),

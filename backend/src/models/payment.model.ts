@@ -1,4 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import type { Document } from "mongoose";
+
+import mongoose, { Schema } from "mongoose";
 
 interface IPayment extends Document {
   userId: mongoose.Types.ObjectId | string;
@@ -17,12 +19,12 @@ const PaymentSchema: Schema = new Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     planId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Plan',
+      ref: "Plan",
       required: true,
     },
     stripeSessionId: {
@@ -46,7 +48,7 @@ const PaymentSchema: Schema = new Schema(
     paymentStatus: {
       type: String,
       required: true,
-      enum: ['paid', 'unpaid', 'failed'],
+      enum: ["paid", "unpaid", "failed"],
     },
     customerEmail: {
       type: String,
@@ -63,8 +65,8 @@ const PaymentSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-const PaymentModel = mongoose.model<IPayment>('Payment', PaymentSchema);
+const PaymentModel = mongoose.model<IPayment>("Payment", PaymentSchema);
 export { IPayment, PaymentModel };

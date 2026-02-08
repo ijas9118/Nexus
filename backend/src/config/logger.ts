@@ -1,37 +1,38 @@
-import { NODE_ENV } from '@/utils/constants';
-import winston from 'winston';
+import winston from "winston";
+
+import { NODE_ENV } from "@/utils/constants";
 
 const customColors = {
-  error: 'brightRed',
-  warn: 'brightYellow',
-  info: 'brightGreen',
-  http: 'brightCyan',
-  debug: 'brightBlue',
+  error: "brightRed",
+  warn: "brightYellow",
+  info: "brightGreen",
+  http: "brightCyan",
+  debug: "brightBlue",
 };
 
 winston.addColors(customColors);
 
-const env = NODE_ENV || 'development';
+const env = NODE_ENV || "development";
 
 const transports: winston.transport[] = [
   new winston.transports.Console({
-    level: 'debug',
+    level: "debug",
     format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
   }),
 ];
 
-if (env !== 'development') {
+if (env !== "development") {
   transports.push(
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/combined.log', level: 'info' })
+    new winston.transports.File({ filename: "logs/error.log", level: "error" }),
+    new winston.transports.File({ filename: "logs/combined.log", level: "info" }),
   );
 }
 
 const logger = winston.createLogger({
-  level: 'http',
+  level: "http",
   format: winston.format.combine(
-    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    winston.format.json()
+    winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+    winston.format.json(),
   ),
   transports,
 });

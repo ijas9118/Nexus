@@ -1,4 +1,6 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
+import type { Document, Types } from "mongoose";
+
+import mongoose, { Schema } from "mongoose";
 
 export interface IComment extends Document {
   _id: Types.ObjectId;
@@ -11,24 +13,24 @@ export interface IComment extends Document {
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
-  status: 'active' | 'reported' | 'deleted';
+  status: "active" | "reported" | "deleted";
 }
 
 const CommentSchema: Schema = new Schema(
   {
     contentId: {
       type: Schema.Types.ObjectId,
-      ref: 'Content',
+      ref: "Content",
       required: true,
     },
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     parentCommentId: {
       type: Schema.Types.ObjectId,
-      ref: 'Comment',
+      ref: "Comment",
       default: null, // Null for top-level comments
     },
     text: {
@@ -38,13 +40,13 @@ const CommentSchema: Schema = new Schema(
     likes: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
       },
     ],
     replies: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Comment',
+        ref: "Comment",
       },
     ],
     isDeleted: {
@@ -53,12 +55,12 @@ const CommentSchema: Schema = new Schema(
     },
     status: {
       type: String,
-      enum: ['active', 'reported', 'deleted'],
-      default: 'active',
+      enum: ["active", "reported", "deleted"],
+      default: "active",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const CommentModel = mongoose.model<IComment>('Comment', CommentSchema);
+const CommentModel = mongoose.model<IComment>("Comment", CommentSchema);
 export default CommentModel;

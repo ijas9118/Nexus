@@ -1,33 +1,24 @@
 {
   "compilerOptions": {
-    /* Basic Options */
-    "target": "ES6",                          // Use modern JavaScript features (e.g., ES6+)
-    "module": "CommonJS",                     // Use CommonJS module system (default for Node.js)
-    "outDir": "dist",                         // Output directory for compiled JavaScript
-    "rootDir": "src",                         // Root directory of your TypeScript source files
-    "strict": true,                           // Enable strict type checking
-    "esModuleInterop": true,                  // Allow default imports from CommonJS modules
-    "forceConsistentCasingInFileNames": true, // Ensure file names are case-sensitive
-    "experimentalDecorators": true,
+    "target": "ES2020",
     "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
 
-    /* Additional Options */
-    "resolveJsonModule": true,                // Support importing JSON files
-    "skipLibCheck": true,                     // Skip type checking of declaration files
-
-    /* Source Map Options */
-    "sourceMap": true,                        // Generate `.map` files for debugging
-
-    /* Node.js Specific Options */
-    "moduleResolution": "node",              // Use Node.js module resolution
-    "allowSyntheticDefaultImports": true,    // Allow default imports from modules with no default export
-    "types": ["node"],                        // Include Node.js type definitions
-
-    "baseUrl": ".", // Base directory for resolving paths
+    "baseUrl": ".",
+    "rootDir": "src",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "strict": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
-  "include": ["src/**/*"],                    // Include all TypeScript files in the src directory
-  "exclude": ["node_modules", "dist"]         // Exclude unnecessary folders
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

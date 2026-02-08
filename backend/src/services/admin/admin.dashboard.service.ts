@@ -1,22 +1,26 @@
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../../di/types';
-import { IAdminDashboardService } from '@/core/interfaces/services/IAdminDashboardService';
-import { IUserRepository } from '@/core/interfaces/repositories/IUserRepository';
-import { IContentRepository } from '@/core/interfaces/repositories/IContentRepository';
-import { ISquadRepository } from '@/core/interfaces/repositories/ISquadRepository';
-import { ISubscriptionRepository } from '@/core/interfaces/repositories/ISubscriptionRepository';
-import { AdminDashboardStatsDTO } from '@/dtos/responses/admin/AdminDashboardStats.dto';
-import {
-  SubscriptionPlanStatsDTO,
-  SubscriptionStatsDTO,
-} from '@/dtos/responses/admin/SubscriptionStatsDTO';
-import { RevenueDataPointDTO, RevenueStatsDTO } from '@/dtos/responses/admin/RevenueStatsDTO';
-import { ITransactionRepository } from '@/core/interfaces/repositories/ITransactionRepository';
+import { inject, injectable } from "inversify";
+
+import type { IContentRepository } from "@/core/interfaces/repositories/i-content-repository";
+import type { IMentorRepository } from "@/core/interfaces/repositories/i-mentor-repository";
+import type { ISquadRepository } from "@/core/interfaces/repositories/i-squad-repository";
+import type { ISubscriptionRepository } from "@/core/interfaces/repositories/i-subscription-repository";
+import type { ITransactionRepository } from "@/core/interfaces/repositories/i-transaction-repository";
+import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repository";
+import type { IAdminDashboardService } from "@/core/interfaces/services/i-admin-dashboard-service";
+import type { RevenueDataPointDTO } from "@/dtos/responses/admin/revenue-stats-dto";
+
+import { AdminDashboardStatsDTO } from "@/dtos/responses/admin/admin-dashboard-stats.dto";
 import {
   MentorApplicationStatsDTO,
   MentorApplicationStatusDTO,
-} from '@/dtos/responses/admin/MentorApplicationStatsDTO';
-import { IMentorRepository } from '@/core/interfaces/repositories/IMentorRepository';
+} from "@/dtos/responses/admin/mentor-application-stats-dto";
+import { RevenueStatsDTO } from "@/dtos/responses/admin/revenue-stats-dto";
+import {
+  SubscriptionPlanStatsDTO,
+  SubscriptionStatsDTO,
+} from "@/dtos/responses/admin/subscription-stats-dto";
+
+import { TYPES } from "../../di/types";
 
 @injectable()
 export class AdminDashboardService implements IAdminDashboardService {
@@ -26,7 +30,7 @@ export class AdminDashboardService implements IAdminDashboardService {
     @inject(TYPES.SquadRepository) private squadRepo: ISquadRepository,
     @inject(TYPES.SubscriptionRepository) private subscriptionRepo: ISubscriptionRepository,
     @inject(TYPES.TransactionRepository) private transactionRepo: ITransactionRepository,
-    @inject(TYPES.MentorRepository) private mentorRepo: IMentorRepository
+    @inject(TYPES.MentorRepository) private mentorRepo: IMentorRepository,
   ) {}
 
   getStats = async (): Promise<AdminDashboardStatsDTO> => {
@@ -45,8 +49,8 @@ export class AdminDashboardService implements IAdminDashboardService {
     const prevMonthMentors = await this.userRepository.countMentorsBefore(prevMonthDate);
     const prevMonthContents = await this.contentRepo.countContentsBefore(prevMonthDate);
     const prevMonthSquads = await this.squadRepo.countSquadsBefore(prevMonthDate);
-    const prevMonthSubscription =
-      await this.subscriptionRepo.countSubscriptionBefore(prevMonthDate);
+    const prevMonthSubscription
+      = await this.subscriptionRepo.countSubscriptionBefore(prevMonthDate);
 
     return AdminDashboardStatsDTO.fromCounts(
       totalUsers,
@@ -58,7 +62,7 @@ export class AdminDashboardService implements IAdminDashboardService {
       totalSquads,
       prevMonthSquads,
       totalSubscription,
-      prevMonthSubscription
+      prevMonthSubscription,
     );
   };
 
@@ -67,17 +71,17 @@ export class AdminDashboardService implements IAdminDashboardService {
 
     // Define colors for each tier
     const tierColors = {
-      Spark: '#3b82f6', // Blue
-      Flame: '#8b5cf6', // Purple
-      Fire: '#ec4899', // Pink
+      Spark: "#3b82f6", // Blue
+      Flame: "#8b5cf6", // Purple
+      Fire: "#ec4899", // Pink
       // Default color for any other tiers
-      default: '#94a3b8',
+      default: "#94a3b8",
     };
 
     // Calculate percentages and create DTOs
     const planDTOs: SubscriptionPlanStatsDTO[] = stats.planStats.map((plan) => {
-      const percentage =
-        stats.totalSubscriptions > 0 ? (plan.count / stats.totalSubscriptions) * 100 : 0;
+      const percentage
+        = stats.totalSubscriptions > 0 ? (plan.count / stats.totalSubscriptions) * 100 : 0;
 
       const dto = new SubscriptionPlanStatsDTO();
       dto.tier = plan.tier;
@@ -90,7 +94,7 @@ export class AdminDashboardService implements IAdminDashboardService {
     });
 
     // Sort by tier in a specific order: Spark, Flame, Fire
-    const tierOrder = ['Spark', 'Flame', 'Fire'];
+    const tierOrder = ["Spark", "Flame", "Fire"];
     planDTOs.sort((a, b) => {
       const indexA = tierOrder.indexOf(a.tier);
       const indexB = tierOrder.indexOf(b.tier);
@@ -107,39 +111,39 @@ export class AdminDashboardService implements IAdminDashboardService {
     let groupByFormat: string;
 
     switch (timeRange) {
-      case '7days':
+      case "7days":
         startDate.setDate(endDate.getDate() - 7);
-        groupByFormat = 'day';
+        groupByFormat = "day";
         break;
-      case '30days':
+      case "30days":
         startDate.setDate(endDate.getDate() - 30);
-        groupByFormat = 'day';
+        groupByFormat = "day";
         break;
-      case '90days':
+      case "90days":
         startDate.setDate(endDate.getDate() - 90);
-        groupByFormat = 'week';
+        groupByFormat = "week";
         break;
-      case 'year':
+      case "year":
         startDate.setFullYear(endDate.getFullYear() - 1);
-        groupByFormat = 'month';
+        groupByFormat = "month";
         break;
       default:
         startDate.setDate(endDate.getDate() - 30); // Default to 30 days
-        groupByFormat = 'day';
+        groupByFormat = "day";
     }
 
     // Get platform fees from transactions (20% of transaction amount)
     const platformFees = await this.transactionRepo.getTransactionRevenueByDateGroups(
       startDate,
       endDate,
-      groupByFormat
+      groupByFormat,
     );
 
     // Get subscription revenue
     const subscriptionRevenue = await this.subscriptionRepo.getSubscriptionRevenueByDateGroups(
       startDate,
       endDate,
-      groupByFormat
+      groupByFormat,
     );
 
     // Combine the data and calculate totals
@@ -193,27 +197,27 @@ export class AdminDashboardService implements IAdminDashboardService {
 
     // Define colors for each status
     const statusColors = {
-      pending: '#3b82f6', // Blue
-      approved: '#22c55e', // Green
-      rejected: '#ef4444', // Red
+      pending: "#3b82f6", // Blue
+      approved: "#22c55e", // Green
+      rejected: "#ef4444", // Red
     };
 
     // Calculate percentages and create DTOs
     const statusDTOs: MentorApplicationStatusDTO[] = stats.statusCounts.map((statusCount) => {
-      const percentage =
-        stats.totalApplications > 0 ? (statusCount.count / stats.totalApplications) * 100 : 0;
+      const percentage
+        = stats.totalApplications > 0 ? (statusCount.count / stats.totalApplications) * 100 : 0;
 
       const dto = new MentorApplicationStatusDTO();
       dto.status = statusCount.status;
       dto.count = statusCount.count;
       dto.percentage = Number.parseFloat(percentage.toFixed(1));
-      dto.color = statusColors[statusCount.status as keyof typeof statusColors] || '#94a3b8';
+      dto.color = statusColors[statusCount.status as keyof typeof statusColors] || "#94a3b8";
 
       return dto;
     });
 
     // Sort by status in a specific order: pending, approved, rejected
-    const statusOrder = ['pending', 'approved', 'rejected'];
+    const statusOrder = ["pending", "approved", "rejected"];
     statusDTOs.sort((a, b) => {
       const indexA = statusOrder.indexOf(a.status);
       const indexB = statusOrder.indexOf(b.status);
@@ -226,59 +230,41 @@ export class AdminDashboardService implements IAdminDashboardService {
   private generateDateRange(startDate: Date, endDate: Date, groupByFormat: string): string[] {
     const dates: string[] = [];
     const currentDate = new Date(startDate);
-    const formatOptions: Intl.DateTimeFormatOptions = {};
+    const endTime = endDate.getTime();
 
-    switch (groupByFormat) {
-      case 'day':
-        formatOptions.year = 'numeric';
-        formatOptions.month = '2-digit';
-        formatOptions.day = '2-digit';
-        break;
-      case 'week':
-        formatOptions.year = 'numeric';
-        // formatOptions.week = '2-digit';
-        break;
-      case 'month':
-        formatOptions.year = 'numeric';
-        formatOptions.month = '2-digit';
-        break;
-      default:
-        formatOptions.year = 'numeric';
-        formatOptions.month = '2-digit';
-        formatOptions.day = '2-digit';
-    }
-
-    while (currentDate <= endDate) {
+    while (currentDate.getTime() <= endTime) {
       let dateStr: string;
-
-      if (groupByFormat === 'day') {
-        dateStr = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD
-      } else if (groupByFormat === 'week') {
+      if (groupByFormat === "day") {
+        dateStr = currentDate.toISOString().split("T")[0];
+      }
+      else if (groupByFormat === "week") {
         const year = currentDate.getFullYear();
         const weekNum = this.getWeekNumber(currentDate);
-        dateStr = `${year}-${weekNum.toString().padStart(2, '0')}`;
-      } else if (groupByFormat === 'month') {
-        const year = currentDate.getFullYear();
-        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-        dateStr = `${year}-${month}`;
-      } else {
-        dateStr = currentDate.toISOString().split('T')[0];
+        dateStr = `${year}-${weekNum.toString().padStart(2, "0")}`;
       }
-
+      else if (groupByFormat === "month") {
+        const year = currentDate.getFullYear();
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+        dateStr = `${year}-${month}`;
+      }
+      else {
+        dateStr = currentDate.toISOString().split("T")[0];
+      }
       dates.push(dateStr);
 
-      // Increment date based on grouping
-      if (groupByFormat === 'day') {
+      if (groupByFormat === "day") {
         currentDate.setDate(currentDate.getDate() + 1);
-      } else if (groupByFormat === 'week') {
+      }
+      else if (groupByFormat === "week") {
         currentDate.setDate(currentDate.getDate() + 7);
-      } else if (groupByFormat === 'month') {
+      }
+      else if (groupByFormat === "month") {
         currentDate.setMonth(currentDate.getMonth() + 1);
-      } else {
+      }
+      else {
         currentDate.setDate(currentDate.getDate() + 1);
       }
     }
-
     return dates;
   }
 

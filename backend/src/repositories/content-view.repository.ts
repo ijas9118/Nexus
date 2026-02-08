@@ -1,13 +1,15 @@
-import { BaseRepository } from '@/core/abstracts/base.repository';
-import { IContentViewRepository } from '@/core/interfaces/repositories/IContentViewRepository';
-import ContentViewModel, { IContentView } from '@/models/content-view.model';
-import { injectable } from 'inversify';
+import { injectable } from "inversify";
+
+import type { IContentViewRepository } from "@/core/interfaces/repositories/i-content-view-repository";
+import type { IContentView } from "@/models/content-view.model";
+
+import { BaseRepository } from "@/core/abstracts/base.repository";
+import ContentViewModel from "@/models/content-view.model";
 
 @injectable()
 export class ContentViewRepository
   extends BaseRepository<IContentView>
-  implements IContentViewRepository
-{
+  implements IContentViewRepository {
   constructor() {
     super(ContentViewModel);
   }

@@ -1,14 +1,17 @@
-import { BaseRepository } from '@/core/abstracts/base.repository';
-import { IMentorMetadataRepository } from '@/core/interfaces/repositories/IMentorMetadataRepository';
-import { IMentorMetadata, MentorMetadataModel } from '@/models/mentor-metadata.model';
-import { injectable } from 'inversify';
-import { FilterQuery } from 'mongoose';
+import type { FilterQuery } from "mongoose";
+
+import { injectable } from "inversify";
+
+import type { IMentorMetadataRepository } from "@/core/interfaces/repositories/i-mentor-metadata-repository";
+import type { IMentorMetadata } from "@/models/mentor-metadata.model";
+
+import { BaseRepository } from "@/core/abstracts/base.repository";
+import { MentorMetadataModel } from "@/models/mentor-metadata.model";
 
 @injectable()
 export class MentorMetadataRepository
   extends BaseRepository<IMentorMetadata>
-  implements IMentorMetadataRepository
-{
+  implements IMentorMetadataRepository {
   constructor() {
     super(MentorMetadataModel);
   }

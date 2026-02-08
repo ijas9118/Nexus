@@ -1,15 +1,18 @@
-import { Request, Response } from 'express';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../../di/types';
-import { StatusCodes } from 'http-status-codes';
-import asyncHandler from 'express-async-handler';
-import { IAdminDashboardController } from '@/core/interfaces/controllers/IAdminDashboardController';
-import { IAdminDashboardService } from '@/core/interfaces/services/IAdminDashboardService';
+import type { Request, Response } from "express";
+
+import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
+
+import type { IAdminDashboardController } from "@/core/interfaces/controllers/i-admin-dashboard-controller";
+import type { IAdminDashboardService } from "@/core/interfaces/services/i-admin-dashboard-service";
+
+import { TYPES } from "../../di/types";
 
 @injectable()
 export class AdminDashboardController implements IAdminDashboardController {
   constructor(
-    @inject(TYPES.AdminDashboardService) private adminDashboardService: IAdminDashboardService
+    @inject(TYPES.AdminDashboardService) private adminDashboardService: IAdminDashboardService,
   ) {}
 
   getDashboardStats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -23,7 +26,7 @@ export class AdminDashboardController implements IAdminDashboardController {
   });
 
   getRevenueStats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const timeRange = (req.query.timeRange as string) || '30days';
+    const timeRange = (req.query.timeRange as string) || "30days";
     const stats = await this.adminDashboardService.getRevenueStats(timeRange);
     res.status(StatusCodes.OK).json(stats);
   });

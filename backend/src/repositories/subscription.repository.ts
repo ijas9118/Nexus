@@ -1,14 +1,16 @@
-import { BaseRepository } from '@/core/abstracts/base.repository';
-import { ISubscriptionRepository } from '@/core/interfaces/repositories/ISubscriptionRepository';
-import { PlanModel } from '@/models/plan.model';
-import { ISubscription, SubscriptionModel } from '@/models/subscription.model';
-import { injectable } from 'inversify';
+import { injectable } from "inversify";
+
+import type { ISubscriptionRepository } from "@/core/interfaces/repositories/i-subscription-repository";
+import type { ISubscription } from "@/models/subscription.model";
+
+import { BaseRepository } from "@/core/abstracts/base.repository";
+import { PlanModel } from "@/models/plan.model";
+import { SubscriptionModel } from "@/models/subscription.model";
 
 @injectable()
 export class SubscriptionRepository
   extends BaseRepository<ISubscription>
-  implements ISubscriptionRepository
-{
+  implements ISubscriptionRepository {
   constructor() {
     super(SubscriptionModel);
   }
@@ -19,21 +21,21 @@ export class SubscriptionRepository
 
   async getUserCurrentSubscription(userId: string): Promise<ISubscription | null> {
     return this.model
-      .findOne({ userId, status: { $in: ['active'] } })
-      .populate('planId')
+      .findOne({ userId, status: { $in: ["active"] } })
+      .populate("planId")
       .sort({ createdAt: -1 })
       .exec();
   }
 
   async countSubscription(): Promise<number> {
     return this.model.countDocuments({
-      status: 'active',
+      status: "active",
     });
   }
 
   async countSubscriptionBefore(date: Date): Promise<number> {
     return this.model.countDocuments({
-      status: 'active',
+      status: "active",
       createdAt: { $lt: date },
     });
   }
@@ -48,7 +50,7 @@ export class SubscriptionRepository
     }>;
   }> {
     // Get all active subscriptions with plan details
-    const subscriptions = await this.model.find({ status: 'active' }).populate('planId').lean();
+    const subscriptions = await this.model.find({ status: "active" }).populate("planId").lean();
 
     // Initialize result object
     const result = {
@@ -86,7 +88,8 @@ export class SubscriptionRepository
     // Calculate stats for each subscription
     subscriptions.forEach((subscription) => {
       const plan = subscription.planId as any; // Type assertion for populated field
-      if (!plan) return; // Skip if plan not found
+      if (!plan)
+        return; // Skip if plan not found
 
       const planPrice = plan.price || 0;
       result.totalRevenue += planPrice;
@@ -112,53 +115,53 @@ export class SubscriptionRepository
   async getSubscriptionRevenueByDateGroups(
     startDate: Date,
     endDate: Date,
-    groupByFormat: string
+    groupByFormat: string,
   ): Promise<Array<{ date: string; revenue: number }>> {
     // Determine the date format for grouping based on the time range
     let dateFormat;
     switch (groupByFormat) {
-      case 'day':
-        dateFormat = '%Y-%m-%d'; // Group by day
+      case "day":
+        dateFormat = "%Y-%m-%d"; // Group by day
         break;
-      case 'week':
-        dateFormat = '%Y-%U'; // Group by week
+      case "week":
+        dateFormat = "%Y-%U"; // Group by week
         break;
-      case 'month':
-        dateFormat = '%Y-%m'; // Group by month
+      case "month":
+        dateFormat = "%Y-%m"; // Group by month
         break;
       default:
-        dateFormat = '%Y-%m-%d'; // Default to day
+        dateFormat = "%Y-%m-%d"; // Default to day
     }
 
     const result = await this.model.aggregate([
       {
         $match: {
           startDate: { $gte: startDate, $lte: endDate },
-          status: 'active',
+          status: "active",
         },
       },
       {
         $lookup: {
-          from: 'plans',
-          localField: 'planId',
-          foreignField: '_id',
-          as: 'plan',
+          from: "plans",
+          localField: "planId",
+          foreignField: "_id",
+          as: "plan",
         },
       },
       {
-        $unwind: '$plan',
+        $unwind: "$plan",
       },
       {
         $group: {
-          _id: { $dateToString: { format: dateFormat, date: '$startDate' } },
-          revenue: { $sum: '$plan.price' },
+          _id: { $dateToString: { format: dateFormat, date: "$startDate" } },
+          revenue: { $sum: "$plan.price" },
           count: { $sum: 1 },
         },
       },
       {
         $project: {
           _id: 0,
-          date: '$_id',
+          date: "$_id",
           revenue: 1,
           count: 1,
         },

@@ -1,25 +1,30 @@
-import { injectable, inject } from 'inversify';
-import { Request, Response } from 'express';
-import { TYPES } from '../di/types';
-import { IAuthController } from '../core/interfaces/controllers/IAuthController';
-import { generateAccessToken, verifyRefreshToken } from '../utils/jwt.util';
-import { clearRefreshTokenCookie, setRefreshTokenCookie } from '../utils/cookieUtils';
-import { IAuthService } from '../core/interfaces/services/IAuthService';
-import asyncHandler from 'express-async-handler';
-import CustomError from '../utils/CustomError';
-import { StatusCodes } from 'http-status-codes';
-import { IOTPService } from '../core/interfaces/services/IOTPService';
-import { IEmailService } from '../core/interfaces/services/IEmailService';
-import { ITokenService } from '../core/interfaces/services/ITokenService';
-import { CLIENT_URL } from '@/utils/constants/index';
-import { Profile } from 'passport-google-oauth20';
-import { Profile as GitHubProfile } from 'passport-github2';
-import { IMentorService } from '@/core/interfaces/services/IMentorService';
-import { LoginRequestDTO, RegisterRequestDTO } from '@/dtos/requests/auth.dto';
-import { UserRole } from '@/core/types/UserTypes';
-import logger from '@/config/logger';
-import redisClient from '@/config/redisClient.config';
-import { MESSAGES } from '@/utils/constants/message';
+import type { Request, Response } from "express";
+import type { Profile as GitHubProfile } from "passport-github2";
+import type { Profile } from "passport-google-oauth20";
+
+import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
+
+import type { IMentorService } from "@/core/interfaces/services/i-mentor-service";
+import type { UserRole } from "@/core/types/user-types";
+import type { LoginRequestDTO, RegisterRequestDTO } from "@/dtos/requests/auth.dto";
+
+import logger from "@/config/logger";
+import redisClient from "@/config/redis-client.config";
+import { CLIENT_URL } from "@/utils/constants/index";
+import { MESSAGES } from "@/utils/constants/message";
+
+import type { IAuthController } from "../core/interfaces/controllers/i-auth-controller";
+import type { IAuthService } from "../core/interfaces/services/i-auth-service";
+import type { IEmailService } from "../core/interfaces/services/i-email-service";
+import type { IOTPService } from "../core/interfaces/services/i-otp-service";
+import type { ITokenService } from "../core/interfaces/services/i-token-service";
+
+import { TYPES } from "../di/types";
+import { clearRefreshTokenCookie, setRefreshTokenCookie } from "../utils/cookie-utils";
+import CustomError from "../utils/custom-error";
+import { generateAccessToken, verifyRefreshToken } from "../utils/jwt.util";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -28,7 +33,7 @@ export class AuthController implements IAuthController {
     @inject(TYPES.OTPService) private _otpService: IOTPService,
     @inject(TYPES.EmailService) private _emailService: IEmailService,
     @inject(TYPES.TokenService) private _tokenService: ITokenService,
-    @inject(TYPES.MentorService) private _mentorService: IMentorService
+    @inject(TYPES.MentorService) private _mentorService: IMentorService,
   ) {}
 
   // Register a new user and send OTP to email
@@ -55,7 +60,7 @@ export class AuthController implements IAuthController {
 
     const user = await this._authService.register(userData);
 
-    setRefreshTokenCookie(res, { _id: user._id, role: 'user' });
+    setRefreshTokenCookie(res, { _id: user._id, role: "user" });
 
     const accessToken = generateAccessToken({ ...user });
 
@@ -75,7 +80,7 @@ export class AuthController implements IAuthController {
   login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const user = await this._authService.login(req.body as LoginRequestDTO);
 
-    logger.error('Errorr loggin in');
+    logger.error("Errorr loggin in");
 
     const isBlocked = await this._authService.isUserBlocked(user._id);
 
@@ -94,7 +99,7 @@ export class AuthController implements IAuthController {
       role: user.role as UserRole,
     });
 
-    res.status(StatusCodes.OK).json({ message: 'success', accessToken, user });
+    res.status(StatusCodes.OK).json({ message: "success", accessToken, user });
   });
 
   // Logout user and clear refresh token cookie
@@ -147,7 +152,7 @@ export class AuthController implements IAuthController {
 
     const { _id, name, email, role } = decodedToken.user;
 
-    if (role === 'admin') {
+    if (role === "admin") {
       const accessToken = generateAccessToken({ _id, name, email, role });
       res.status(StatusCodes.OK).json({ accessToken, user: decodedToken.user });
       return;
@@ -170,7 +175,7 @@ export class AuthController implements IAuthController {
     let fullUser = user.toObject ? user.toObject() : user;
 
     // 🧙 If mentor, include mentorId
-    if (role === 'mentor') {
+    if (role === "mentor") {
       const mentor = await this._mentorService.getMentorByUserId(user._id.toString());
       if (!mentor) {
         clearRefreshTokenCookie(res);
@@ -178,7 +183,7 @@ export class AuthController implements IAuthController {
       }
 
       const mentorWithId = mentor as { _id: string };
-      payload['mentorId'] = mentor._id;
+      payload.mentorId = mentor._id;
       fullUser = { ...fullUser, mentorId: mentorWithId._id.toString() };
     }
 
@@ -189,7 +194,7 @@ export class AuthController implements IAuthController {
 
   handleGoogleUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     if (!req.user) {
-      return res.redirect('http://localhost:3000/login');
+      return res.redirect("http://localhost:3000/login");
     }
 
     const googleProfile = req.user as unknown as Profile;
@@ -205,14 +210,14 @@ export class AuthController implements IAuthController {
       profile: googleProfile._json.picture as string,
     });
 
-    setRefreshTokenCookie(res, { _id: user._id.toString(), role: 'user' });
+    setRefreshTokenCookie(res, { _id: user._id.toString(), role: "user" });
 
     res.redirect(`${CLIENT_URL}/myFeed`);
   });
 
   handleGithubUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     if (!req.user) {
-      return res.redirect('http://localhost:3000/login');
+      return res.redirect("http://localhost:3000/login");
     }
 
     const githubProfile = req.user as unknown as GitHubProfile;
@@ -224,11 +229,11 @@ export class AuthController implements IAuthController {
     const user = await this._authService.handleGithubUser({
       githubId: githubProfile.id,
       email: githubProfile.emails[0].value,
-      name: githubProfile.displayName || githubProfile.username || 'Unknown',
-      profile: githubProfile.photos ? githubProfile.photos[0].value : '',
+      name: githubProfile.displayName || githubProfile.username || "Unknown",
+      profile: githubProfile.photos ? githubProfile.photos[0].value : "",
     });
 
-    setRefreshTokenCookie(res, { _id: user._id.toString(), role: 'user' });
+    setRefreshTokenCookie(res, { _id: user._id.toString(), role: "user" });
     res.redirect(`${CLIENT_URL}/myFeed`);
   });
 }

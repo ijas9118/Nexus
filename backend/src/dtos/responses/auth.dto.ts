@@ -1,6 +1,7 @@
-import { UserRole } from '@/core/types/UserTypes';
-import { IUser } from '@/models/user.model';
-import { IsArray, IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsEmail, IsOptional, IsString } from "class-validator";
+
+import type { UserRole } from "@/core/types/user-types";
+import type { IUser } from "@/models/user.model";
 
 export class RegisterResponseDTO {
   @IsString()

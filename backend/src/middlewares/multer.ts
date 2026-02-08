@@ -1,5 +1,5 @@
-import multer from 'multer';
-import path from 'path';
+import multer from "multer";
+import path from "node:path";
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -9,9 +9,9 @@ const upload = multer({
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
 
     const allowedMimeTypes = {
-      image: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
-      video: ['video/mp4', 'video/quicktime', 'video/x-msvideo'],
-      pdf: ['application/pdf'],
+      image: ["image/jpeg", "image/jpg", "image/png", "image/webp"],
+      video: ["video/mp4", "video/quicktime", "video/x-msvideo"],
+      pdf: ["application/pdf"],
     };
 
     const sizeLimits = {
@@ -20,28 +20,30 @@ const upload = multer({
       pdf: 10 * 1024 * 1024, // 10MB for PDFs
     };
 
-    let fileCategory: 'image' | 'video' | 'pdf' | null = null;
+    let fileCategory: "image" | "video" | "pdf" | null = null;
     if (allowedMimeTypes.image.includes(file.mimetype)) {
-      fileCategory = 'image';
-    } else if (allowedMimeTypes.video.includes(file.mimetype)) {
-      fileCategory = 'video';
-    } else if (allowedMimeTypes.pdf.includes(file.mimetype)) {
-      fileCategory = 'pdf';
+      fileCategory = "image";
+    }
+    else if (allowedMimeTypes.video.includes(file.mimetype)) {
+      fileCategory = "video";
+    }
+    else if (allowedMimeTypes.pdf.includes(file.mimetype)) {
+      fileCategory = "pdf";
     }
 
     if (!extname || !fileCategory) {
       return cb(
         new Error(
-          'Only images (JPEG, JPG, PNG, WEBP), videos (MP4, MOV, AVI), and PDFs are allowed'
-        )
+          "Only images (JPEG, JPG, PNG, WEBP), videos (MP4, MOV, AVI), and PDFs are allowed",
+        ),
       );
     }
 
     if (file.size > sizeLimits[fileCategory]) {
       return cb(
         new Error(
-          `${fileCategory === 'image' ? 'Images' : fileCategory === 'video' ? 'Videos' : 'PDFs'} must be smaller than ${sizeLimits[fileCategory] / (1024 * 1024)}MB`
-        )
+          `${fileCategory === "image" ? "Images" : fileCategory === "video" ? "Videos" : "PDFs"} must be smaller than ${sizeLimits[fileCategory] / (1024 * 1024)}MB`,
+        ),
       );
     }
 

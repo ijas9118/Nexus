@@ -1,10 +1,11 @@
+import { v2 as cloudinary } from "cloudinary";
+import dotenv from "dotenv";
+
 import {
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
   CLOUDINARY_CLOUD_NAME,
-} from '@/utils/constants/index';
-import { v2 as cloudinary } from 'cloudinary';
-import dotenv from 'dotenv';
+} from "@/utils/constants/index";
 
 dotenv.config();
 

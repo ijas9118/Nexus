@@ -1,5 +1,6 @@
-import { IMentorshipType } from '@/models/mentorship-type.model';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from "class-validator";
+
+import type { IMentorshipType } from "@/models/mentorship-type.model";
 
 export class MentorshipTypeResponseDto {
   @IsString()
@@ -28,6 +29,6 @@ export class MentorshipTypeResponseDto {
   }
 
   static fromEntities(entities: IMentorshipType[]): MentorshipTypeResponseDto[] {
-    return entities.map((entity) => this.fromEntity(entity));
+    return entities.map(entity => this.fromEntity(entity));
   }
 }

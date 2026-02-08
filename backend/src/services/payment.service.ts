@@ -1,14 +1,20 @@
-import { inject, injectable } from 'inversify';
-import { IPaymentService } from '../core/interfaces/services/IPaymentService';
-import { stripe } from '../config/stripe.cofig';
-import { CLIENT_URL, STRIPE_WEBHOOK_SECRET } from '../utils/constants';
-import Stripe from 'stripe';
-import { IUserRepository } from '@/core/interfaces/repositories/IUserRepository';
-import { IPaymentRepository } from '@/core/interfaces/repositories/IPaymentRepository';
-import { ISubscriptionRepository } from '@/core/interfaces/repositories/ISubscriptionRepository';
-import { TYPES } from '@/di/types';
-import { IBookingPaymentService } from '@/core/interfaces/services/IBookingPaymentService';
-import logger from '@/config/logger';
+import type { Buffer } from "node:buffer";
+import type Stripe from "stripe";
+
+import { inject, injectable } from "inversify";
+
+import type { IPaymentRepository } from "@/core/interfaces/repositories/i-payment-repository";
+import type { ISubscriptionRepository } from "@/core/interfaces/repositories/i-subscription-repository";
+import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repository";
+import type { IBookingPaymentService } from "@/core/interfaces/services/i-booking-payment-service";
+
+import logger from "@/config/logger";
+import { TYPES } from "@/di/types";
+
+import type { IPaymentService } from "../core/interfaces/services/i-payment-service";
+
+import { stripe } from "../config/stripe.cofig";
+import { env } from "../utils/env-validation";
 
 @injectable()
 export class PaymentServce implements IPaymentService {
@@ -16,7 +22,7 @@ export class PaymentServce implements IPaymentService {
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
     @inject(TYPES.PaymentRepository) private paymentRepository: IPaymentRepository,
     @inject(TYPES.SubscriptionRepository) private subscriptionRepository: ISubscriptionRepository,
-    @inject(TYPES.BookingPaymentService) private bookingPaymentService: IBookingPaymentService
+    @inject(TYPES.BookingPaymentService) private bookingPaymentService: IBookingPaymentService,
   ) {}
 
   checkoutSession = async (
@@ -24,39 +30,39 @@ export class PaymentServce implements IPaymentService {
     tier: string,
     price: number,
     customerId: string,
-    email: string
+    email: string,
   ): Promise<string> => {
-    const currentSubscription =
-      await this.subscriptionRepository.getUserCurrentSubscription(customerId);
+    const currentSubscription
+      = await this.subscriptionRepository.getUserCurrentSubscription(customerId);
     if (
-      currentSubscription &&
-      typeof currentSubscription.planId !== 'string' &&
-      currentSubscription.planId._id.toString() === planId
+      currentSubscription
+      && typeof currentSubscription.planId !== "string"
+      && currentSubscription.planId._id.toString() === planId
     ) {
-      throw new Error('User is already subscribed to this plan with an active subscription.');
+      throw new Error("User is already subscribed to this plan with an active subscription.");
     }
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ["card"],
       customer_email: email,
       line_items: [
         {
           price_data: {
-            currency: 'inr',
+            currency: "inr",
             product_data: { name: tier },
             unit_amount: price * 100,
           },
           quantity: 1,
         },
       ],
-      mode: 'payment',
-      success_url: `${CLIENT_URL}/payment?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${CLIENT_URL}/payment?canceled=true`,
+      mode: "payment",
+      success_url: `${env.CLIENT_URL}/payment?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${env.CLIENT_URL}/payment?canceled=true`,
       metadata: {
         planId,
         customerId,
         tier,
-        type: 'subscription',
+        type: "subscription",
       },
     });
 
@@ -67,20 +73,22 @@ export class PaymentServce implements IPaymentService {
     const event: Stripe.Event = stripe.webhooks.constructEvent(
       bodyData,
       signature,
-      STRIPE_WEBHOOK_SECRET
+      env.STRIPE_WEBHOOK_SECRET,
     );
 
     switch (event.type) {
-      case 'checkout.session.completed': {
+      case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
         const metadata = session.metadata;
 
-        if (metadata?.type === 'booking') {
+        if (metadata?.type === "booking") {
           await this.bookingPaymentService.webhookHandler(bodyData, signature);
-        } else if (metadata?.type === 'subscription') {
+        }
+        else if (metadata?.type === "subscription") {
           await this.handleCheckoutSessionCompleted(session);
-        } else {
-          logger.error('Unknown checkout session type');
+        }
+        else {
+          logger.error("Unknown checkout session type");
         }
         break;
       }
@@ -93,7 +101,7 @@ export class PaymentServce implements IPaymentService {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     // Check for completed status
-    return session.payment_status === 'paid' && session.status === 'complete';
+    return session.payment_status === "paid" && session.status === "complete";
   }
 
   private async handleCheckoutSessionCompleted(session: Stripe.Checkout.Session): Promise<void> {
@@ -108,16 +116,16 @@ export class PaymentServce implements IPaymentService {
     } = session;
 
     if (
-      !metadata?.planId ||
-      !metadata?.customerId ||
-      !metadata?.tier ||
-      !amount_total ||
-      !currency ||
-      !payment_intent ||
-      !customer_details?.email ||
-      !customer_details?.name
+      !metadata?.planId
+      || !metadata?.customerId
+      || !metadata?.tier
+      || !amount_total
+      || !currency
+      || !payment_intent
+      || !customer_details?.email
+      || !customer_details?.name
     ) {
-      throw new Error('Missing required metadata or session details');
+      throw new Error("Missing required metadata or session details");
     }
 
     const payment = await this.paymentRepository.createPayment({
@@ -143,15 +151,15 @@ export class PaymentServce implements IPaymentService {
       planId: metadata.planId,
       paymentId: payment._id as string,
       tier: metadata.tier,
-      status: 'active',
+      status: "active",
       startDate,
       endDate,
-      interval: 'month',
+      interval: "month",
     });
 
     const user = await this.userRepository.updatePremiumStatus(metadata.customerId, true);
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
   }
 }

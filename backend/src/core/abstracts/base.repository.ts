@@ -1,13 +1,14 @@
-import {
-  Document,
-  Model,
-  FilterQuery,
-  UpdateQuery,
+import type {
   DeleteResult,
+  Document,
+  FilterQuery,
+  Model,
   Types,
+  UpdateQuery,
   UpdateWriteOpResult,
-} from 'mongoose';
-import { IBaseRepository } from '../interfaces/repositories/IBaseRepository';
+} from "mongoose";
+
+import type { IBaseRepository } from "../interfaces/repositories/i-base-repository";
 
 export abstract class BaseRepository<T extends Document> implements IBaseRepository<T> {
   constructor(protected model: Model<T>) {}
@@ -25,8 +26,7 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
   }
 
   async create(data: Partial<T>): Promise<T> {
-    const document = new this.model(data);
-    return document.save();
+    return this.model.create(data);
   }
 
   async update(id: Types.ObjectId | string, data: Partial<T>): Promise<T | null> {

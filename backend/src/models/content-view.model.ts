@@ -1,4 +1,6 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import type { Document } from "mongoose";
+
+import mongoose, { Schema } from "mongoose";
 
 export interface IContentView extends Document {
   userId: mongoose.Types.ObjectId;
@@ -10,17 +12,17 @@ const ContentViewSchema = new Schema<IContentView>(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     contentId: {
       type: Schema.Types.ObjectId,
-      ref: 'Content',
+      ref: "Content",
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const ContentViewModel = mongoose.model<IContentView>('ContentView', ContentViewSchema);
+const ContentViewModel = mongoose.model<IContentView>("ContentView", ContentViewSchema);
 export default ContentViewModel;

@@ -1,4 +1,6 @@
-import { Schema, model, Document, Types } from 'mongoose';
+import type { Document, Types } from "mongoose";
+
+import { model, Schema } from "mongoose";
 
 export interface IReview extends Document<string> {
   rating: number;
@@ -18,10 +20,10 @@ const reviewSchema = new Schema<IReview>(
       min: 0.5,
       max: 5,
       validate: {
-        validator: function (value: number) {
+        validator(value: number) {
           return (value * 2) % 1 === 0;
         },
-        message: 'Rating must be in increments of 0.5',
+        message: "Rating must be in increments of 0.5",
       },
     },
     feedback: {
@@ -31,13 +33,13 @@ const reviewSchema = new Schema<IReview>(
     },
     mentorId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
       index: true,
     },
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
       index: true,
     },
@@ -49,7 +51,7 @@ const reviewSchema = new Schema<IReview>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Compound index to prevent duplicate reviews from same user to same mentor
@@ -59,4 +61,4 @@ reviewSchema.index({ mentorId: 1, userId: 1 }, { unique: true });
 reviewSchema.index({ mentorId: 1, isActive: 1 });
 reviewSchema.index({ userId: 1, isActive: 1 });
 
-export const Review = model<IReview>('Review', reviewSchema);
+export const Review = model<IReview>("Review", reviewSchema);

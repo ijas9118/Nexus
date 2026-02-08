@@ -1,5 +1,6 @@
-import { IUser } from '@/models/user.model';
-import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsString } from "class-validator";
+
+import type { IUser } from "@/models/user.model";
 
 export class UsersResponseDTO {
   @IsNotEmpty()
@@ -44,6 +45,6 @@ export class UsersResponseDTO {
   }
 
   static fromEntities(entities: IUser[]): UsersResponseDTO[] {
-    return entities.map((entity) => this.fromEntity(entity));
+    return entities.map(entity => this.fromEntity(entity));
   }
 }

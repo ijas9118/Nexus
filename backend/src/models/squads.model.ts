@@ -1,4 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import type { Document } from "mongoose";
+
+import mongoose, { Schema } from "mongoose";
 
 interface ISquad extends Document<string> {
   name: string;
@@ -26,7 +28,7 @@ const SquadSchema: Schema = new Schema(
     },
     admin: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
     description: {
       type: String,
@@ -43,7 +45,7 @@ const SquadSchema: Schema = new Schema(
     members: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
       },
     ],
     logo: {
@@ -53,7 +55,7 @@ const SquadSchema: Schema = new Schema(
     category: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'Category',
+      ref: "Category",
     },
     postCount: {
       type: Number,
@@ -82,10 +84,10 @@ const SquadSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-SquadSchema.index({ name: 'text', category: 'text' });
+SquadSchema.index({ name: "text", category: "text" });
 
-const SquadModel = mongoose.model<ISquad>('Squad', SquadSchema);
+const SquadModel = mongoose.model<ISquad>("Squad", SquadSchema);
 export { ISquad, SquadModel };

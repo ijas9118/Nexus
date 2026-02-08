@@ -1,15 +1,17 @@
-import { IWalletRepository } from '@/core/interfaces/repositories/IWalletRepository';
-import { IWithdrawalRequestRepository } from '@/core/interfaces/repositories/IWithdrawalRequestRepository';
-import { INexusPointRepository } from '@/core/interfaces/repositories/INexusPointRepository';
-import { IBookingService } from '@/core/interfaces/services/IBookingService';
-import { IWalletService } from '@/core/interfaces/services/IWalletService';
-import { WalletInfo } from '@/core/types/wallet.types';
-import { TYPES } from '@/di/types';
-import CustomError from '@/utils/CustomError';
-import { generateTransactionId } from '@/utils/transactionUtils';
-import { StatusCodes } from 'http-status-codes';
-import { injectable, inject } from 'inversify';
-import mongoose from 'mongoose';
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
+import mongoose from "mongoose";
+
+import type { INexusPointRepository } from "@/core/interfaces/repositories/i-nexus-point-repository";
+import type { IWalletRepository } from "@/core/interfaces/repositories/i-wallet-repository";
+import type { IWithdrawalRequestRepository } from "@/core/interfaces/repositories/i-withdrawal-request-repository";
+import type { IBookingService } from "@/core/interfaces/services/i-booking-service";
+import type { IWalletService } from "@/core/interfaces/services/i-wallet-service";
+import type { WalletInfo } from "@/core/types/wallet.types";
+
+import { TYPES } from "@/di/types";
+import CustomError from "@/utils/custom-error";
+import { generateTransactionId } from "@/utils/transaction-utils";
 
 @injectable()
 export class WalletService implements IWalletService {
@@ -20,19 +22,19 @@ export class WalletService implements IWalletService {
     @inject(TYPES.BookingService) private bookingService: IBookingService,
     @inject(TYPES.WithdrawalRequestRepository)
     private withdrawalRequestRepository: IWithdrawalRequestRepository,
-    @inject(TYPES.NexusPointRepository) private nexusPointRepository: INexusPointRepository
+    @inject(TYPES.NexusPointRepository) private nexusPointRepository: INexusPointRepository,
   ) {}
 
   async addMoney(
     userId: string,
     amount: number,
     bookingId?: string,
-    menteeId?: string
+    menteeId?: string,
   ): Promise<WalletInfo> {
     if (bookingId) {
       const booking = await this.bookingService.getBookingById(bookingId);
       if (!booking) {
-        throw new CustomError('Booking not found', StatusCodes.BAD_REQUEST);
+        throw new CustomError("Booking not found", StatusCodes.BAD_REQUEST);
       }
     }
 
@@ -49,19 +51,19 @@ export class WalletService implements IWalletService {
     const transactionId = generateTransactionId();
 
     const transaction = await this.repository.addTransaction({
-      type: 'incoming',
+      type: "incoming",
       transactionId,
       bookingId: bookingId ? new mongoose.Types.ObjectId(bookingId) : undefined,
       amount,
       userId: new mongoose.Types.ObjectId(userId),
       menteeId: menteeId ? new mongoose.Types.ObjectId(menteeId) : undefined,
-      status: 'completed',
+      status: "completed",
     });
 
     await this.repository.updateWalletBalance(
       wallet._id.toString(),
       amount,
-      transaction._id.toString()
+      transaction._id.toString(),
     );
 
     return this.getWalletInfo(userId);
@@ -71,31 +73,32 @@ export class WalletService implements IWalletService {
     userId: string,
     amount: number,
     withdrawalNote: string,
-    nexusPoints?: number
+    nexusPoints?: number,
   ): Promise<void> {
     const wallet = await this.repository.getWalletByUserId(userId);
-    if (!wallet) throw new CustomError('Wallet not found', StatusCodes.NOT_FOUND);
+    if (!wallet)
+      throw new CustomError("Wallet not found", StatusCodes.NOT_FOUND);
     if (amount > 0 && wallet.balance < amount)
-      throw new CustomError('Insufficient balance', StatusCodes.BAD_REQUEST);
+      throw new CustomError("Insufficient balance", StatusCodes.BAD_REQUEST);
     if (nexusPoints && wallet.nexusPoints < nexusPoints)
-      throw new CustomError('Insufficient nexus points', StatusCodes.BAD_REQUEST);
+      throw new CustomError("Insufficient nexus points", StatusCodes.BAD_REQUEST);
 
-    const calculatedAmount =
-      (amount || 0) + (nexusPoints ? nexusPoints * this.NEXUS_COIN_VALUE : 0);
+    const calculatedAmount
+      = (amount || 0) + (nexusPoints ? nexusPoints * this.NEXUS_COIN_VALUE : 0);
 
     await this.withdrawalRequestRepository.create({
       userId: new mongoose.Types.ObjectId(userId),
       amount: calculatedAmount,
       nexusPoints: nexusPoints || 0,
       withdrawalNote,
-      status: 'pending',
+      status: "pending",
     });
 
     if (nexusPoints) {
       await this.nexusPointRepository.addPointsTransaction({
         userId: new mongoose.Types.ObjectId(userId),
         points: -nexusPoints,
-        type: 'redeemed',
+        type: "redeemed",
         description: `Redeemed ${nexusPoints} nexus points for withdrawal`,
       });
 
@@ -107,21 +110,23 @@ export class WalletService implements IWalletService {
 
   async approveWithdrawal(requestId: string): Promise<WalletInfo> {
     const request = await this.withdrawalRequestRepository.findById(requestId);
-    if (!request) throw new CustomError('Withdrawal request not found', StatusCodes.NOT_FOUND);
-    if (request.status !== 'pending')
-      throw new CustomError('Request already processed', StatusCodes.BAD_REQUEST);
+    if (!request)
+      throw new CustomError("Withdrawal request not found", StatusCodes.NOT_FOUND);
+    if (request.status !== "pending")
+      throw new CustomError("Request already processed", StatusCodes.BAD_REQUEST);
 
     const wallet = await this.repository.getWalletByUserId(request.userId.toString());
-    if (!wallet) throw new CustomError('Wallet not found', StatusCodes.NOT_FOUND);
+    if (!wallet)
+      throw new CustomError("Wallet not found", StatusCodes.NOT_FOUND);
     if (request.amount > wallet.balance)
-      throw new CustomError('Insufficient balance', StatusCodes.BAD_REQUEST);
+      throw new CustomError("Insufficient balance", StatusCodes.BAD_REQUEST);
 
     const transactionId = generateTransactionId();
     const transaction = await this.repository.addTransaction({
-      type: 'withdrawal',
+      type: "withdrawal",
       amount: request.amount,
       userId: request.userId,
-      status: 'completed',
+      status: "completed",
       withdrawalNote: request.withdrawalNote,
       transactionId,
     });
@@ -129,13 +134,13 @@ export class WalletService implements IWalletService {
     await this.repository.updateWalletBalance(
       wallet._id.toString(),
       -request.amount,
-      transaction._id.toString()
+      transaction._id.toString(),
     );
 
     await this.withdrawalRequestRepository.updateRequestStatus(
       requestId,
-      'approved',
-      transaction._id.toString()
+      "approved",
+      transaction._id.toString(),
     );
 
     return this.getWalletInfo(request.userId.toString());
@@ -143,9 +148,10 @@ export class WalletService implements IWalletService {
 
   async rejectWithdrawal(requestId: string): Promise<void> {
     const request = await this.withdrawalRequestRepository.findById(requestId);
-    if (!request) throw new CustomError('Withdrawal request not found', StatusCodes.NOT_FOUND);
-    if (request.status !== 'pending')
-      throw new CustomError('Request already processed', StatusCodes.BAD_REQUEST);
+    if (!request)
+      throw new CustomError("Withdrawal request not found", StatusCodes.NOT_FOUND);
+    if (request.status !== "pending")
+      throw new CustomError("Request already processed", StatusCodes.BAD_REQUEST);
 
     if ((request.nexusPoints ?? 0) > 0) {
       const wallet = await this.repository.getWalletByUserId(request.userId.toString());
@@ -157,13 +163,13 @@ export class WalletService implements IWalletService {
         await this.nexusPointRepository.addPointsTransaction({
           userId: request.userId,
           points: request.nexusPoints,
-          type: 'earned',
+          type: "earned",
           description: `Restored ${request.nexusPoints} nexus points due to rejected withdrawal`,
         });
       }
     }
 
-    await this.withdrawalRequestRepository.updateRequestStatus(requestId, 'rejected');
+    await this.withdrawalRequestRepository.updateRequestStatus(requestId, "rejected");
   }
 
   async addNexusPoints(userId: string, points: number, description: string): Promise<WalletInfo> {
@@ -180,7 +186,7 @@ export class WalletService implements IWalletService {
     await this.nexusPointRepository.addPointsTransaction({
       userId: new mongoose.Types.ObjectId(userId),
       points,
-      type: 'earned',
+      type: "earned",
       description,
     });
 
@@ -191,7 +197,7 @@ export class WalletService implements IWalletService {
     return this.getWalletInfo(userId);
   }
 
-  async getWalletInfo(userId: string, status?: 'pending' | 'completed'): Promise<WalletInfo> {
+  async getWalletInfo(userId: string, status?: "pending" | "completed"): Promise<WalletInfo> {
     const wallet = await this.repository.getWalletByUserId(userId);
     const transactions = await this.repository.getTransactionsByUserId(userId, status);
     const pointTransactions = await this.nexusPointRepository.getPointsByUserId(userId);
@@ -200,7 +206,7 @@ export class WalletService implements IWalletService {
       balance: wallet?.balance || 0,
       nexusPoints: wallet?.nexusPoints || 0,
       transactions,
-      pointTransactions: pointTransactions.map((pt) => ({
+      pointTransactions: pointTransactions.map(pt => ({
         _id: pt._id.toString(),
         points: pt.points,
         type: pt.type,

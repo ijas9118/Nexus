@@ -1,14 +1,19 @@
-import { injectable } from 'inversify';
-import { FilterQuery, Types } from 'mongoose';
-import { INotification, NotificationModel } from '../models/notification.model';
-import { BaseRepository } from '@/core/abstracts/base.repository';
-import { INotificationRepository } from '@/core/interfaces/repositories/INotificationRepository';
+import type { FilterQuery, Types } from "mongoose";
+
+import { injectable } from "inversify";
+
+import type { INotificationRepository } from "@/core/interfaces/repositories/i-notification-repository";
+
+import { BaseRepository } from "@/core/abstracts/base.repository";
+
+import type { INotification } from "../models/notification.model";
+
+import { NotificationModel } from "../models/notification.model";
 
 @injectable()
 export class NotificationRepository
   extends BaseRepository<INotification>
-  implements INotificationRepository
-{
+  implements INotificationRepository {
   constructor() {
     super(NotificationModel);
   }
@@ -20,7 +25,7 @@ export class NotificationRepository
     }
     const notification = await this.model
       .find({ recipientId: userId })
-      .populate('notificationTypeId', 'name icon iconColor')
+      .populate("notificationTypeId", "name icon iconColor")
       .sort({ createdAt: -1 })
       .exec();
 
@@ -30,7 +35,7 @@ export class NotificationRepository
   async markAsRead(id: Types.ObjectId | string): Promise<INotification | null> {
     return this.model
       .findByIdAndUpdate(id, { read: true }, { new: true })
-      .populate('notificationTypeId', 'name icon iconColor')
+      .populate("notificationTypeId", "name icon iconColor")
       .exec();
   }
 
