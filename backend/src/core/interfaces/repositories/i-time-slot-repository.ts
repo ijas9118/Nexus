@@ -1,6 +1,6 @@
-import type { ITimeSlot } from "@/models/timeslots.model";
+import type { ITimeSlot } from '@/models/timeslots.model';
 
-import type { IBaseRepository } from "./i-base-repository";
+import type { IBaseRepository } from './i-base-repository';
 
 export interface ITimeSlotRepository extends IBaseRepository<ITimeSlot> {
   findByMentorAndDate: (mentorId: string, date: Date) => Promise<ITimeSlot[]>;

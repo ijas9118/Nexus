@@ -1,12 +1,12 @@
-import { inject, injectable } from "inversify";
+import { inject, injectable } from 'inversify';
 
-import type { INotificationRepository } from "@/core/interfaces/repositories/i-notification-repository";
-import type { INotificationTypeRepository } from "@/core/interfaces/repositories/i-notification-type-repository";
-import type { INotificationService } from "@/core/interfaces/services/i-notification-service";
-import type { INotification } from "@/models/notification.model";
+import type { INotificationRepository } from '@/core/interfaces/repositories/i-notification-repository';
+import type { INotificationTypeRepository } from '@/core/interfaces/repositories/i-notification-type-repository';
+import type { INotificationService } from '@/core/interfaces/services/i-notification-service';
+import type { INotification } from '@/models/notification.model';
 
-import { TYPES } from "@/di/types";
-import CustomError from "@/utils/custom-error";
+import { TYPES } from '@/di/types';
+import CustomError from '@/utils/custom-error';
 
 @injectable()
 export class NotificationService implements INotificationService {
@@ -14,7 +14,7 @@ export class NotificationService implements INotificationService {
     @inject(TYPES.NotificationRepository)
     protected repository: INotificationRepository,
     @inject(TYPES.NotificationTypeRepository)
-    protected notificationTypeRepo: INotificationTypeRepository,
+    protected notificationTypeRepo: INotificationTypeRepository
   ) {}
 
   async getNotificationTypeIdByName(name: string): Promise<string> {
@@ -29,12 +29,12 @@ export class NotificationService implements INotificationService {
     notificationTypeId: string,
     recipientId: string,
     heading: string,
-    message: string,
+    message: string
   ): Promise<INotification> {
     const notificationType = await this.notificationTypeRepo.findById(notificationTypeId);
 
     if (!notificationType || !notificationType.isActive) {
-      throw new CustomError("Invalid or inactive notification type");
+      throw new CustomError('Invalid or inactive notification type');
     }
 
     const notificationData: Partial<INotification> = {

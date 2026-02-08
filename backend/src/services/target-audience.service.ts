@@ -1,24 +1,24 @@
-import type { FilterQuery } from "mongoose";
+import type { QueryFilter } from 'mongoose';
 
-import { inject, injectable } from "inversify";
+import { inject, injectable } from 'inversify';
 
-import type { ITargetAudienceRepository } from "@/core/interfaces/repositories/i-target-audience-repository";
-import type { ITargetAudienceService } from "@/core/interfaces/services/i-target-audience-service";
-import type { ITargetAudience } from "@/models/target-audience.model";
+import type { ITargetAudienceRepository } from '@/core/interfaces/repositories/i-target-audience-repository';
+import type { ITargetAudienceService } from '@/core/interfaces/services/i-target-audience-service';
+import type { ITargetAudience } from '@/models/target-audience.model';
 
-import { TYPES } from "@/di/types";
-import CustomError from "@/utils/custom-error";
+import { TYPES } from '@/di/types';
+import CustomError from '@/utils/custom-error';
 
 @injectable()
 export class TargetAudienceService implements ITargetAudienceService {
   constructor(
-    @inject(TYPES.TargetAudienceRepository) private repository: ITargetAudienceRepository,
+    @inject(TYPES.TargetAudienceRepository) private repository: ITargetAudienceRepository
   ) {}
 
   async create(data: Partial<ITargetAudience>): Promise<ITargetAudience> {
     const existingAudience = await this.repository.findOne({ name: data.name });
     if (existingAudience) {
-      throw new CustomError("Target audience with this name already exists");
+      throw new CustomError('Target audience with this name already exists');
     }
     return this.repository.create(data);
   }
@@ -30,13 +30,13 @@ export class TargetAudienceService implements ITargetAudienceService {
         _id: { $ne: id },
       });
       if (existingAudience) {
-        throw new CustomError("Target audience with this name already exists");
+        throw new CustomError('Target audience with this name already exists');
       }
     }
     return this.repository.update(id, data);
   }
 
-  async find(query: FilterQuery<ITargetAudience> = {}): Promise<ITargetAudience[]> {
+  async find(query: QueryFilter<ITargetAudience> = {}): Promise<ITargetAudience[]> {
     return this.repository.find(query);
   }
 

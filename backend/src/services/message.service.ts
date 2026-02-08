@@ -1,33 +1,33 @@
-import type { Server as SocketIOServer } from "socket.io";
+import type { Server as SocketIOServer } from 'socket.io';
 
-import { inject, injectable } from "inversify";
-import mongoose, { Types } from "mongoose";
+import { inject, injectable } from 'inversify';
+import mongoose, { Types } from 'mongoose';
 
-import type { IChatRepository } from "@/core/interfaces/repositories/i-chat-repository";
-import type { IGroupRepository } from "@/core/interfaces/repositories/i-group-repository";
-import type { IMessageRepository } from "@/core/interfaces/repositories/i-message-repository";
-import type { IMessageService } from "@/core/interfaces/services/i-message-service";
-import type { IMessage } from "@/models/message.model";
+import type { IChatRepository } from '@/core/interfaces/repositories/i-chat-repository';
+import type { IGroupRepository } from '@/core/interfaces/repositories/i-group-repository';
+import type { IMessageRepository } from '@/core/interfaces/repositories/i-message-repository';
+import type { IMessageService } from '@/core/interfaces/services/i-message-service';
+import type { IMessage } from '@/models/message.model';
 
-import { TYPES } from "@/di/types";
+import { TYPES } from '@/di/types';
 
 @injectable()
 export class MessageService implements IMessageService {
   constructor(
     @inject(TYPES.MessageRepository) protected repository: IMessageRepository,
     @inject(TYPES.ChatRepository) private chatRepository: IChatRepository,
-    @inject(TYPES.GroupRepository) private groupRepository: IGroupRepository,
+    @inject(TYPES.GroupRepository) private groupRepository: IGroupRepository
   ) {}
 
   async sendMessage(
     userId: string,
     chatId: string,
-    chatType: "Chat" | "Group",
+    chatType: 'Chat' | 'Group',
     content?: string,
     fileUrl?: string,
-    fileType?: "image" | "video" | "pdf",
+    fileType?: 'image' | 'video' | 'pdf',
     replyTo?: string,
-    io?: SocketIOServer,
+    io?: SocketIOServer
   ): Promise<IMessage> {
     await this.validateChatAccess(userId, chatId, chatType);
 
@@ -50,25 +50,23 @@ export class MessageService implements IMessageService {
       createdAt: message.createdAt,
     };
 
-    if (message.chatType === "Chat") {
+    if (message.chatType === 'Chat') {
       await this.chatRepository.findByIdAndUpdate(new mongoose.Types.ObjectId(message.chatId), {
         lastMessage: lastMessagePayload,
       });
-    }
-    else {
+    } else {
       await this.groupRepository.findByIdAndUpdate(new mongoose.Types.ObjectId(message.chatId), {
         lastMessage: lastMessagePayload,
       });
     }
 
-    if (chatType === "Chat") {
+    if (chatType === 'Chat') {
       const chat = await this.chatRepository.findById(new Types.ObjectId(chatId));
       if (chat) {
         const updatedUnreadCounts = chat.participants.map((participantId) => {
-          if (participantId === userId)
-            return { userId: participantId, count: 0 };
+          if (participantId === userId) return { userId: participantId, count: 0 };
 
-          const existing = chat.unreadCounts.find(uc => uc.userId === participantId);
+          const existing = chat.unreadCounts.find((uc) => uc.userId === participantId);
           return {
             userId: participantId,
             count: existing ? existing.count + 1 : 1,
@@ -77,18 +75,16 @@ export class MessageService implements IMessageService {
 
         await this.chatRepository.updateOne(
           { _id: chatId },
-          { $set: { unreadCounts: updatedUnreadCounts } },
+          { $set: { unreadCounts: updatedUnreadCounts } }
         );
       }
-    }
-    else {
+    } else {
       const group = await this.groupRepository.findById(new Types.ObjectId(chatId));
       if (group) {
         const updatedUnreadCounts = group.members.map((memberId) => {
-          if (memberId === userId)
-            return { userId: memberId, count: 0 };
+          if (memberId === userId) return { userId: memberId, count: 0 };
 
-          const existing = group.unreadCounts.find(uc => uc.userId === memberId);
+          const existing = group.unreadCounts.find((uc) => uc.userId === memberId);
           return {
             userId: memberId,
             count: existing ? existing.count + 1 : 1,
@@ -97,13 +93,13 @@ export class MessageService implements IMessageService {
 
         await this.groupRepository.updateOne(
           { _id: chatId },
-          { $set: { unreadCounts: updatedUnreadCounts } },
+          { $set: { unreadCounts: updatedUnreadCounts } }
         );
       }
     }
 
     if (io) {
-      io.to(chatId).emit("newMessage", message);
+      io.to(chatId).emit('newMessage', message);
     }
 
     return message;
@@ -113,16 +109,15 @@ export class MessageService implements IMessageService {
     userId: string,
     messageId: string,
     reaction: string,
-    io?: SocketIOServer,
+    io?: SocketIOServer
   ): Promise<IMessage> {
     const message = await this.repository.findById(new Types.ObjectId(messageId));
-    if (!message || message.isDeleted)
-      throw new Error("Message not found");
+    if (!message || message.isDeleted) throw new Error('Message not found');
 
     await this.validateChatAccess(userId, message.chatId, message.chatType);
 
     // Ensure one reaction per user
-    const existingReaction = message.reactions.find(r => r.userId === userId);
+    const existingReaction = message.reactions.find((r) => r.userId === userId);
     if (existingReaction) {
       await this.repository.removeReaction(messageId, userId);
     }
@@ -130,39 +125,36 @@ export class MessageService implements IMessageService {
     const updatedMessage = await this.repository.addReaction(messageId, userId, reaction);
 
     if (io && updatedMessage) {
-      io.to(message.chatId).emit("messageReaction", updatedMessage);
+      io.to(message.chatId).emit('messageReaction', updatedMessage);
     }
     return updatedMessage!;
   }
 
   async removeReaction(userId: string, messageId: string, io?: SocketIOServer): Promise<IMessage> {
     const message = await this.repository.findById(new Types.ObjectId(messageId));
-    if (!message || message.isDeleted)
-      throw new Error("Message not found");
+    if (!message || message.isDeleted) throw new Error('Message not found');
 
     await this.validateChatAccess(userId, message.chatId, message.chatType);
 
     const updatedMessage = await this.repository.removeReaction(messageId, userId);
 
     if (io && updatedMessage) {
-      io.to(message.chatId).emit("reactionRemoved", updatedMessage);
+      io.to(message.chatId).emit('reactionRemoved', updatedMessage);
     }
     return updatedMessage!;
   }
 
   async deleteMessage(userId: string, messageId: string, io?: SocketIOServer): Promise<IMessage> {
     const message = await this.repository.findById(new Types.ObjectId(messageId));
-    if (!message || message.isDeleted)
-      throw new Error("Message not found");
-    if (message.sender !== userId)
-      throw new Error("Only the sender can delete a message");
+    if (!message || message.isDeleted) throw new Error('Message not found');
+    if (message.sender !== userId) throw new Error('Only the sender can delete a message');
 
     await this.validateChatAccess(userId, message.chatId, message.chatType);
 
     const updatedMessage = await this.repository.softDeleteMessage(messageId);
 
     if (io && updatedMessage) {
-      io.to(message.chatId).emit("messageDeleted", updatedMessage);
+      io.to(message.chatId).emit('messageDeleted', updatedMessage);
     }
     return updatedMessage!;
   }
@@ -170,7 +162,7 @@ export class MessageService implements IMessageService {
   async getMessages(
     userId: string,
     chatId: string,
-    chatType: "Chat" | "Group",
+    chatType: 'Chat' | 'Group'
   ): Promise<IMessage[]> {
     await this.validateChatAccess(userId, chatId, chatType);
 
@@ -180,7 +172,7 @@ export class MessageService implements IMessageService {
   async getUnreadCount(
     userId: string,
     chatId: string,
-    chatType: "Chat" | "Group",
+    chatType: 'Chat' | 'Group'
   ): Promise<number> {
     await this.validateChatAccess(userId, chatId, chatType);
 
@@ -190,14 +182,14 @@ export class MessageService implements IMessageService {
   async markMessagesAsRead(
     userId: string,
     chatId: string,
-    chatType: "Chat" | "Group",
-    io?: SocketIOServer,
+    chatType: 'Chat' | 'Group',
+    io?: SocketIOServer
   ): Promise<void> {
     await this.validateChatAccess(userId, chatId, chatType);
 
     await this.repository.markMessagesAsRead(chatId, chatType, userId);
 
-    if (chatType === "Chat") {
+    if (chatType === 'Chat') {
       const chat = await this.chatRepository.findById(new Types.ObjectId(chatId));
       if (chat) {
         const updatedUnreadCounts = chat.unreadCounts.map((uc) => {
@@ -215,11 +207,10 @@ export class MessageService implements IMessageService {
 
         await this.chatRepository.updateOne(
           { _id: chatId },
-          { $set: { unreadCounts: updatedUnreadCounts } },
+          { $set: { unreadCounts: updatedUnreadCounts } }
         );
       }
-    }
-    else {
+    } else {
       const group = await this.groupRepository.findById(new Types.ObjectId(chatId));
       if (group) {
         const updatedUnreadCounts = group.unreadCounts.map((uc) => {
@@ -237,31 +228,30 @@ export class MessageService implements IMessageService {
 
         await this.groupRepository.updateOne(
           { _id: chatId },
-          { $set: { unreadCounts: updatedUnreadCounts } },
+          { $set: { unreadCounts: updatedUnreadCounts } }
         );
       }
     }
 
     if (io) {
-      io.to(chatId).emit("messagesRead", { chatId, userId, chatType });
+      io.to(chatId).emit('messagesRead', { chatId, userId, chatType });
     }
   }
 
   private async validateChatAccess(
     userId: string,
     chatId: string,
-    chatType: "Chat" | "Group",
+    chatType: 'Chat' | 'Group'
   ): Promise<void> {
-    if (chatType === "Chat") {
+    if (chatType === 'Chat') {
       const chat = await this.chatRepository.findById(new Types.ObjectId(chatId));
       if (!chat || !chat.participants.includes(userId)) {
-        throw new Error("User does not have access to this chat");
+        throw new Error('User does not have access to this chat');
       }
-    }
-    else {
+    } else {
       const group = await this.groupRepository.findById(new Types.ObjectId(chatId));
       if (!group || !group.members.includes(userId)) {
-        throw new Error("User does not have access to this group");
+        throw new Error('User does not have access to this group');
       }
     }
   }

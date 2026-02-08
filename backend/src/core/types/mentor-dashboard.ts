@@ -16,10 +16,10 @@ export interface MentorDashboardData {
   }[];
   recentTransactions: {
     id: string;
-    type: "incoming" | "withdrawal";
+    type: 'incoming' | 'withdrawal';
     amount: number;
     date: string;
-    status: "completed" | "pending" | "failed";
+    status: 'completed' | 'pending' | 'failed';
     from?: string;
   }[];
   mentorshipTypes: {
@@ -32,7 +32,7 @@ export interface MentorDashboardData {
 export type EarningsResponse = {
   totalEarnings: number;
   percentageChange: number;
-  changeDirection: "increase" | "decrease" | "noChange";
+  changeDirection: 'increase' | 'decrease' | 'noChange';
 };
 
 export type PendingWithdrawalsResponse = {
@@ -58,7 +58,7 @@ export type RecentBooking = {
     startTime: string;
   };
   bookingDate: string;
-  status: "unpaid" | "pending" | "confirmed" | "completed";
+  status: 'unpaid' | 'pending' | 'confirmed' | 'completed';
 };
 
 export type RecentTransaction = {

@@ -1,8 +1,8 @@
-import type { Document } from "mongoose";
+import type { Document } from 'mongoose';
 
-import { model, Schema } from "mongoose";
+import { model, Schema } from 'mongoose';
 
-interface ICategory extends Document {
+interface ICategory extends Document<string> {
   name: string;
   squadCount: number;
   squads: string[];
@@ -22,7 +22,7 @@ const CategorySchema = new Schema<ICategory>(
     squads: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Squads",
+        ref: 'Squads',
       },
     ],
     isActive: {
@@ -32,9 +32,9 @@ const CategorySchema = new Schema<ICategory>(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
-const CategoryModel = model<ICategory>("Category", CategorySchema);
+const CategoryModel = model<ICategory>('Category', CategorySchema);
 
 export { CategoryModel, ICategory };

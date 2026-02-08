@@ -1,15 +1,16 @@
-import { injectable } from "inversify";
+import { injectable } from 'inversify';
 
-import type { INotificationTypeRepository } from "@/core/interfaces/repositories/i-notification-type-repository";
-import type { INotificationType } from "@/models/notification-type.model";
+import type { INotificationTypeRepository } from '@/core/interfaces/repositories/i-notification-type-repository';
+import type { INotificationType } from '@/models/notification-type.model';
 
-import { BaseRepository } from "@/core/abstracts/base.repository";
-import { NotificationTypeModel } from "@/models/notification-type.model";
+import { BaseRepository } from '@/core/abstracts/base.repository';
+import { NotificationTypeModel } from '@/models/notification-type.model';
 
 @injectable()
 export class NotificationTypeRepository
   extends BaseRepository<INotificationType>
-  implements INotificationTypeRepository {
+  implements INotificationTypeRepository
+{
   constructor() {
     super(NotificationTypeModel);
   }

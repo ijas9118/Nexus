@@ -1,30 +1,31 @@
-import type { Express } from "express";
+import type { Express } from 'express';
 
-import { inject, injectable } from "inversify";
+import { inject, injectable } from 'inversify';
 
-import type { IContentViewService } from "@/core/interfaces/services/i-content-view-service";
+import type { IContentViewService } from '@/core/interfaces/services/i-content-view-service';
+import type { UserRole } from '@/core/types/user-types';
 
-import { uploadToCloudinary } from "@/utils/cloudinary-utils";
+import { uploadToCloudinary } from '@/utils/cloudinary-utils';
 
-import type { IContentRepository } from "../core/interfaces/repositories/i-content-repository";
-import type { IUserRepository } from "../core/interfaces/repositories/i-user-repository";
-import type { IContentService } from "../core/interfaces/services/i-content-service";
-import type { IContent } from "../models/content.model";
+import type { IContentRepository } from '../core/interfaces/repositories/i-content-repository';
+import type { IUserRepository } from '../core/interfaces/repositories/i-user-repository';
+import type { IContentService } from '../core/interfaces/services/i-content-service';
+import type { IContent } from '../models/content.model';
 
-import { TYPES } from "../di/types";
+import { TYPES } from '../di/types';
 
 @injectable()
 export class ContentService implements IContentService {
   constructor(
     @inject(TYPES.ContentRepository) private contentRepository: IContentRepository,
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-    @inject(TYPES.ContentViewService) private viewService: IContentViewService,
+    @inject(TYPES.ContentViewService) private viewService: IContentViewService
   ) {}
 
   async createContent(
     contentData: Partial<IContent>,
     thumbnailFile?: Express.Multer.File,
-    videoFile?: Express.Multer.File,
+    videoFile?: Express.Multer.File
   ): Promise<IContent> {
     let thumbnailUrl: string | undefined;
     let videoUrl: string | undefined;
@@ -32,9 +33,9 @@ export class ContentService implements IContentService {
     // Upload thumbnail to Cloudinary if provided
     if (thumbnailFile) {
       const result = await uploadToCloudinary(thumbnailFile, {
-        baseFolder: "images",
-        subFolder: "blog-thumbnails",
-        resourceType: "image",
+        baseFolder: 'images',
+        subFolder: 'blog-thumbnails',
+        resourceType: 'image',
       });
       thumbnailUrl = result.url;
     }
@@ -42,9 +43,9 @@ export class ContentService implements IContentService {
     // Upload video to Cloudinary if provided
     if (videoFile) {
       const result = await uploadToCloudinary(videoFile, {
-        baseFolder: "videos",
-        subFolder: "content-videos",
-        resourceType: "video",
+        baseFolder: 'videos',
+        subFolder: 'content-videos',
+        resourceType: 'video',
       });
       videoUrl = result.url;
     }
@@ -67,7 +68,7 @@ export class ContentService implements IContentService {
     return createdContent;
   }
 
-  async getContentById(id: string, role: string, userId: string): Promise<IContent | null> {
+  async getContentById(id: string, role: UserRole, userId: string): Promise<IContent | null> {
     const content = await this.contentRepository.findContent(id, role, userId);
 
     if (content && userId) {

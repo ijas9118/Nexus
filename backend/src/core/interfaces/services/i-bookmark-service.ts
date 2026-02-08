@@ -1,4 +1,4 @@
-import type { IContent } from "@/models/content.model";
+import type { IContent } from '@/models/content.model';
 
 export interface IBookmarkService {
   toggleBookmark: (contentId: string, userId: string) => Promise<{ status: boolean }>;

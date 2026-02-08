@@ -1,19 +1,19 @@
-import type { Server } from "node:http";
+import type { Server } from 'node:http';
 
-import { Server as SocketIOServer } from "socket.io";
+import { Server as SocketIOServer } from 'socket.io';
 
-import type { SocketController } from "@/controllers/socket.controller";
+import type { SocketController } from '@/controllers/socket.controller';
 
-import { container } from "@/di/container";
-import { TYPES } from "@/di/types";
+import { container } from '@/di/container';
+import { TYPES } from '@/di/types';
 
-import { env } from "../utils/env-validation";
+import { env } from '../utils/env-validation';
 
 function setUpSocket(server: Server) {
   const io = new SocketIOServer(server, {
     cors: {
       origin: env.CLIENT_URL,
-      methods: ["GET", "POST"],
+      methods: ['GET', 'POST'],
       credentials: true,
     },
   });

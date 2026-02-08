@@ -1,17 +1,18 @@
-import { injectable } from "inversify";
-import { Types } from "mongoose";
+import { injectable } from 'inversify';
+import { Types } from 'mongoose';
 
-import type { IFollowersRepository } from "../core/interfaces/repositories/i-followers-repository";
-import type { IUserWhoFollow } from "../core/types/user-types";
-import type { IUserFollow } from "../models/followers.model";
+import type { IFollowersRepository } from '../core/interfaces/repositories/i-followers-repository';
+import type { IUserWhoFollow } from '../core/types/user-types';
+import type { IUserFollow } from '../models/followers.model';
 
-import { BaseRepository } from "../core/abstracts/base.repository";
-import UserFollowModel from "../models/followers.model";
+import { BaseRepository } from '../core/abstracts/base.repository';
+import UserFollowModel from '../models/followers.model';
 
 @injectable()
 export class FollowersRepository
   extends BaseRepository<IUserFollow>
-  implements IFollowersRepository {
+  implements IFollowersRepository
+{
   constructor() {
     super(UserFollowModel);
   }
@@ -31,12 +32,12 @@ export class FollowersRepository
 
     await this.findOneAndUpdate(
       { userId: followerObjectId },
-      { $addToSet: { following: followedObjectId } },
+      { $addToSet: { following: followedObjectId } }
     );
 
     await this.findOneAndUpdate(
       { userId: followedObjectId },
-      { $addToSet: { followers: followerObjectId } },
+      { $addToSet: { followers: followerObjectId } }
     );
 
     return true;
@@ -48,12 +49,12 @@ export class FollowersRepository
 
     await this.findOneAndUpdate(
       { userId: followerObjectId },
-      { $pull: { following: followedObjectId } },
+      { $pull: { following: followedObjectId } }
     );
 
     await this.findOneAndUpdate(
       { userId: followedObjectId },
-      { $pull: { followers: followerObjectId } },
+      { $pull: { followers: followerObjectId } }
     );
 
     return true;
@@ -61,10 +62,10 @@ export class FollowersRepository
 
   getFollowers = async (
     userId: string, // the user whose followers you want
-    currentUserId: string, // the currently logged-in user
+    currentUserId: string // the currently logged-in user
   ): Promise<(IUserWhoFollow & { isFollowing: boolean })[]> => {
     const userFollow = await UserFollowModel.findOne({ userId })
-      .populate<{ followers: IUserWhoFollow[] }>("followers", "name profilePic username")
+      .populate<{ followers: IUserWhoFollow[] }>('followers', 'name profilePic username')
       .lean();
 
     const followers = userFollow?.followers || [];
@@ -73,10 +74,10 @@ export class FollowersRepository
     const currentUserFollow = await UserFollowModel.findOne({ userId: currentUserId }).lean();
 
     const currentUserFollowingIds = new Set(
-      currentUserFollow?.following.map((id: Types.ObjectId) => id.toString()) || [],
+      currentUserFollow?.following.map((id: Types.ObjectId) => id.toString()) || []
     );
 
-    return followers.map(follower => ({
+    return followers.map((follower) => ({
       ...follower,
       isFollowing: currentUserFollowingIds.has(follower._id.toString()),
     }));
@@ -84,14 +85,14 @@ export class FollowersRepository
 
   getFollowing = async (userId: string): Promise<IUserWhoFollow[]> => {
     const userFollow = await UserFollowModel.findOne({ userId })
-      .populate<{ following: IUserWhoFollow[] }>("following", "name profilePic username")
+      .populate<{ following: IUserWhoFollow[] }>('following', 'name profilePic username')
       .lean();
     return userFollow?.following || [];
   };
 
   getConnections = async (userId: string): Promise<IUserWhoFollow[]> => {
     const userFollow = await UserFollowModel.findOne({ userId })
-      .populate<{ connections: IUserWhoFollow[] }>("connections", "name profilePic username")
+      .populate<{ connections: IUserWhoFollow[] }>('connections', 'name profilePic username')
       .lean();
 
     return userFollow?.connections || [];
@@ -107,7 +108,7 @@ export class FollowersRepository
   };
 
   getFollowStats = async (
-    userId: string,
+    userId: string
   ): Promise<{
     followersCount: number;
     followingCount: number;

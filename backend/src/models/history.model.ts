@@ -1,6 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
-interface IHistory extends mongoose.Document {
+interface IHistory extends mongoose.Document<string> {
   userId: mongoose.Types.ObjectId;
   readHistory: mongoose.Types.ObjectId[];
 }
@@ -8,16 +8,16 @@ interface IHistory extends mongoose.Document {
 const HistorySchema = new Schema<IHistory>({
   userId: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   readHistory: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Content",
+      ref: 'Content',
     },
   ],
 });
 
-const HistoryModel = mongoose.model<IHistory>("History", HistorySchema);
+const HistoryModel = mongoose.model<IHistory>('History', HistorySchema);
 export { HistoryModel, IHistory };

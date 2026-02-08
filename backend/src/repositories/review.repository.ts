@@ -1,11 +1,11 @@
-import { injectable } from "inversify";
-import { Types } from "mongoose";
+import { injectable } from 'inversify';
+import { Types } from 'mongoose';
 
-import type { IReviewRepository } from "@/core/interfaces/repositories/i-review-repository";
-import type { IReview } from "@/models/review.model";
+import type { IReviewRepository } from '@/core/interfaces/repositories/i-review-repository';
+import type { IReview } from '@/models/review.model';
 
-import { BaseRepository } from "@/core/abstracts/base.repository";
-import { Review } from "@/models/review.model";
+import { BaseRepository } from '@/core/abstracts/base.repository';
+import { Review } from '@/models/review.model';
 
 @injectable()
 export class ReviewRepository extends BaseRepository<IReview> implements IReviewRepository {
@@ -16,20 +16,20 @@ export class ReviewRepository extends BaseRepository<IReview> implements IReview
   async findByMentorId(mentorId: Types.ObjectId | string): Promise<IReview[]> {
     return this.model
       .find({ mentorId, isActive: true })
-      .populate("userId", "name email avatar")
+      .populate('userId', 'name email avatar')
       .sort({ createdAt: -1 });
   }
 
   async findByUserId(userId: Types.ObjectId | string): Promise<IReview[]> {
     return this.model
       .find({ userId, isActive: true })
-      .populate("mentorId", "name email avatar")
+      .populate('mentorId', 'name email avatar')
       .sort({ createdAt: -1 });
   }
 
   async findByMentorAndUser(
     mentorId: Types.ObjectId | string,
-    userId: Types.ObjectId | string,
+    userId: Types.ObjectId | string
   ): Promise<IReview | null> {
     return this.model.findOne({ mentorId, userId, isActive: true });
   }
@@ -37,7 +37,7 @@ export class ReviewRepository extends BaseRepository<IReview> implements IReview
   async getAverageRatingByMentor(mentorId: Types.ObjectId | string): Promise<number> {
     const result = await this.model.aggregate([
       { $match: { mentorId: new Types.ObjectId(mentorId), isActive: true } },
-      { $group: { _id: null, averageRating: { $avg: "$rating" } } },
+      { $group: { _id: null, averageRating: { $avg: '$rating' } } },
     ]);
 
     return result.length > 0 ? Math.round(result[0].averageRating * 10) / 10 : 0;
@@ -51,18 +51,18 @@ export class ReviewRepository extends BaseRepository<IReview> implements IReview
     const [avgResult, countResult, distributionResult] = await Promise.all([
       this.model.aggregate([
         { $match: { mentorId: new Types.ObjectId(mentorId), isActive: true } },
-        { $group: { _id: null, averageRating: { $avg: "$rating" } } },
+        { $group: { _id: null, averageRating: { $avg: '$rating' } } },
       ]),
       this.model.countDocuments({ mentorId, isActive: true }),
       this.model.aggregate([
         { $match: { mentorId: new Types.ObjectId(mentorId), isActive: true } },
-        { $group: { _id: "$rating", count: { $sum: 1 } } },
+        { $group: { _id: '$rating', count: { $sum: 1 } } },
         { $sort: { _id: 1 } },
       ]),
     ]);
 
-    const averageRating
-      = avgResult.length > 0 ? Math.round(avgResult[0].averageRating * 10) / 10 : 0;
+    const averageRating =
+      avgResult.length > 0 ? Math.round(avgResult[0].averageRating * 10) / 10 : 0;
     const totalReviews = countResult;
     const ratingDistribution: { [key: string]: number } = {};
 
@@ -82,15 +82,15 @@ export class ReviewRepository extends BaseRepository<IReview> implements IReview
   async findActiveReviews(): Promise<IReview[]> {
     return this.model
       .find({ isActive: true })
-      .populate("userId", "name email avatar")
-      .populate("mentorId", "name email avatar")
+      .populate('userId', 'name email avatar')
+      .populate('mentorId', 'name email avatar')
       .sort({ createdAt: -1 });
   }
 
   async findReviewsWithPagination(
     page: number,
     limit: number,
-    mentorId?: Types.ObjectId | string,
+    mentorId?: Types.ObjectId | string
   ): Promise<{
     reviews: IReview[];
     total: number;
@@ -107,8 +107,8 @@ export class ReviewRepository extends BaseRepository<IReview> implements IReview
     const [reviews, total] = await Promise.all([
       this.model
         .find(filter)
-        .populate("userId", "name email avatar")
-        .populate("mentorId", "name email avatar")
+        .populate('userId', 'name email avatar')
+        .populate('mentorId', 'name email avatar')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),

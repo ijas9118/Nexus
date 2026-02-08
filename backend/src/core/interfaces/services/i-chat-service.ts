@@ -1,4 +1,4 @@
-import type { IChat } from "@/models/chat.model";
+import type { IChat } from '@/models/chat.model';
 
 export interface IChatService {
   createChat: (userId: string, otherUserId: string) => Promise<IChat>;

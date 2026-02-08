@@ -1,8 +1,8 @@
-import type { Document } from "mongoose";
+import type { Document } from 'mongoose';
 
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
-interface ISubscription extends Document {
+interface ISubscription extends Document<string> {
   userId: mongoose.Types.ObjectId | string;
   planId: mongoose.Types.ObjectId | string;
   paymentId: mongoose.Types.ObjectId | string;
@@ -19,17 +19,17 @@ const SubscriptionSchema: Schema = new Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     planId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Plan",
+      ref: 'Plan',
       required: true,
     },
     paymentId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Payment",
+      ref: 'Payment',
       required: true,
     },
     tier: {
@@ -39,8 +39,8 @@ const SubscriptionSchema: Schema = new Schema(
     status: {
       type: String,
       required: true,
-      enum: ["active", "canceled", "expired"],
-      default: "active",
+      enum: ['active', 'canceled', 'expired'],
+      default: 'active',
     },
     startDate: {
       type: Date,
@@ -53,8 +53,8 @@ const SubscriptionSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
-const SubscriptionModel = mongoose.model<ISubscription>("Subscription", SubscriptionSchema);
+const SubscriptionModel = mongoose.model<ISubscription>('Subscription', SubscriptionSchema);
 export { ISubscription, SubscriptionModel };

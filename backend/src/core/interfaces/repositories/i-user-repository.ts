@@ -1,8 +1,8 @@
-import type { SearchResultItem } from "@/core/types/search";
+import type { SearchResultItem } from '@/core/types/search';
 
-import type { ISquad } from "../../../models/squads.model";
-import type { IUser } from "../../../models/user.model";
-import type { BaseRepository } from "../../abstracts/base.repository";
+import type { ISquad } from '../../../models/squads.model';
+import type { IUser } from '../../../models/user.model';
+import type { BaseRepository } from '../../abstracts/base.repository';
 
 export interface IUserRepository extends BaseRepository<IUser> {
   getUserJoinedSquads: (userId: string) => Promise<ISquad[]>;

@@ -1,16 +1,17 @@
-import { StatusCodes } from "http-status-codes";
-import { inject, injectable } from "inversify";
+import { StatusCodes } from 'http-status-codes';
+import { inject, injectable } from 'inversify';
 
-import type { RegisterRequestDTO } from "@/dtos/requests/auth.dto";
+import type { RegisterRequestDTO } from '@/dtos/requests/auth.dto';
 
-import type { IEmailService } from "../../core/interfaces/services/i-email-service";
-import type { ITokenService } from "../../core/interfaces/services/i-token-service";
+import { env } from '@/utils/env-validation';
 
-import redisClient from "../../config/redis-client.config";
-import { TYPES } from "../../di/types";
-import { CLIENT_URL, USER_EMAIL } from "../../utils/constants";
-import CustomError from "../../utils/custom-error";
-import { transporter } from "../../utils/nodemailer-transporter";
+import type { IEmailService } from '../../core/interfaces/services/i-email-service';
+import type { ITokenService } from '../../core/interfaces/services/i-token-service';
+
+import redisClient from '../../config/redis-client.config';
+import { TYPES } from '../../di/types';
+import CustomError from '../../utils/custom-error';
+import { transporter } from '../../utils/nodemailer-transporter';
 
 @injectable()
 export class EmailService implements IEmailService {
@@ -24,9 +25,9 @@ export class EmailService implements IEmailService {
     await redisClient.setex(`otp:${userData.email}`, expirationTime, data);
 
     const mailOptions = {
-      from: USER_EMAIL,
+      from: env.USER_EMAIL,
       to: userData.email,
-      subject: "Your OTP for Verification - Nexus",
+      subject: 'Your OTP for Verification - Nexus',
       text: `Your OTP for verification is ${otp}. It is valid for ${expirationTime}.`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
@@ -57,10 +58,9 @@ export class EmailService implements IEmailService {
 
     try {
       await transporter.sendMail(mailOptions);
-    }
-    catch (error) {
-      console.error("Error sending OTP email:", error);
-      throw new CustomError("Failed to send OTP. Please try again later.", StatusCodes.BAD_REQUEST);
+    } catch (error) {
+      console.error('Error sending OTP email:', error);
+      throw new CustomError('Failed to send OTP. Please try again later.', StatusCodes.BAD_REQUEST);
     }
   }
 
@@ -71,7 +71,7 @@ export class EmailService implements IEmailService {
 
     await redisClient.setex(`forgotPassword:${email}`, expirationTime, token);
 
-    const resetLink = `${CLIENT_URL}/login/reset-password?token=${token}&email=${email}`;
+    const resetLink = `${env.CLIENT_URL}/login/reset-password?token=${token}&email=${email}`;
 
     await this.sendResetEmail(email, resetLink);
   }
@@ -79,9 +79,9 @@ export class EmailService implements IEmailService {
   // Send password reset link to the user
   async sendResetEmail(email: string, resetLink: string): Promise<void> {
     const mailOptions = {
-      from: USER_EMAIL,
+      from: env.USER_EMAIL,
       to: email,
-      subject: "Password Reset Request - Nexus",
+      subject: 'Password Reset Request - Nexus',
       text: `You requested to reset your password. Click the link below to reset your password:\n\n${resetLink}\n\nThis link is valid for 15 minutes.`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
@@ -110,10 +110,9 @@ export class EmailService implements IEmailService {
     };
     try {
       await transporter.sendMail(mailOptions);
-    }
-    catch (error) {
-      console.error("Error sending OTP email:", error);
-      throw new CustomError("Failed to send OTP. Please try again later.");
+    } catch (error) {
+      console.error('Error sending OTP email:', error);
+      throw new CustomError('Failed to send OTP. Please try again later.');
     }
   }
 }

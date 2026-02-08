@@ -1,13 +1,13 @@
-import { injectable } from "inversify";
-import mongoose from "mongoose";
+import { injectable } from 'inversify';
+import mongoose from 'mongoose';
 
-import type { IContent } from "@/models/content.model";
+import type { IContent } from '@/models/content.model';
 
-import type { IBookmarkRepository } from "../core/interfaces/repositories/i-bookmarn-repository";
-import type { IBookmark } from "../models/bookmarks.model";
+import type { IBookmarkRepository } from '../core/interfaces/repositories/i-bookmarn-repository';
+import type { IBookmark } from '../models/bookmarks.model';
 
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { BookmarkModel } from "../models/bookmarks.model";
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { BookmarkModel } from '../models/bookmarks.model';
 
 @injectable()
 export class BookmarkRepository extends BaseRepository<IBookmark> implements IBookmarkRepository {
@@ -18,7 +18,7 @@ export class BookmarkRepository extends BaseRepository<IBookmark> implements IBo
   // Update bookmarked contents for a user by userId and contentIds
   async updateBookmark(
     userId: mongoose.Types.ObjectId,
-    contentIds: mongoose.Types.ObjectId[],
+    contentIds: mongoose.Types.ObjectId[]
   ): Promise<void> {
     await this.updateOne({ userId }, { contentIds });
   }
@@ -28,67 +28,67 @@ export class BookmarkRepository extends BaseRepository<IBookmark> implements IBo
 
     const bookmarkedContents = await this.model.aggregate([
       { $match: { userId: userObjectId } },
-      { $unwind: "$contentIds" },
+      { $unwind: '$contentIds' },
 
       {
         $lookup: {
-          from: "contents",
-          localField: "contentIds",
-          foreignField: "_id",
-          as: "content",
+          from: 'contents',
+          localField: 'contentIds',
+          foreignField: '_id',
+          as: 'content',
         },
       },
-      { $unwind: "$content" },
+      { $unwind: '$content' },
 
       // Replace root with the actual content document
       {
-        $replaceRoot: { newRoot: "$content" },
+        $replaceRoot: { newRoot: '$content' },
       },
 
       // Join author info
       {
         $lookup: {
-          from: "users",
-          localField: "author",
-          foreignField: "_id",
-          as: "authorInfo",
+          from: 'users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'authorInfo',
         },
       },
-      { $unwind: "$authorInfo" },
+      { $unwind: '$authorInfo' },
 
       // Join vote info for current user
       {
         $lookup: {
-          from: "votes",
-          let: { contentId: "$_id" },
+          from: 'votes',
+          let: { contentId: '$_id' },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$contentId", "$$contentId"] },
-                    { $eq: ["$userId", userObjectId] },
+                    { $eq: ['$contentId', '$$contentId'] },
+                    { $eq: ['$userId', userObjectId] },
                   ],
                 },
               },
             },
           ],
-          as: "userVote",
+          as: 'userVote',
         },
       },
 
       // Join squad info (if any)
       {
         $lookup: {
-          from: "squads",
-          localField: "squad",
-          foreignField: "_id",
-          as: "squadInfo",
+          from: 'squads',
+          localField: 'squad',
+          foreignField: '_id',
+          as: 'squadInfo',
         },
       },
       {
         $unwind: {
-          path: "$squadInfo",
+          path: '$squadInfo',
           preserveNullAndEmptyArrays: true,
         },
       },
@@ -101,9 +101,9 @@ export class BookmarkRepository extends BaseRepository<IBookmark> implements IBo
               {
                 $size: {
                   $filter: {
-                    input: "$userVote",
-                    as: "vote",
-                    cond: { $eq: ["$$vote.voteType", "upvote"] },
+                    input: '$userVote',
+                    as: 'vote',
+                    cond: { $eq: ['$$vote.voteType', 'upvote'] },
                   },
                 },
               },
@@ -115,9 +115,9 @@ export class BookmarkRepository extends BaseRepository<IBookmark> implements IBo
               {
                 $size: {
                   $filter: {
-                    input: "$userVote",
-                    as: "vote",
-                    cond: { $eq: ["$$vote.voteType", "downvote"] },
+                    input: '$userVote',
+                    as: 'vote',
+                    cond: { $eq: ['$$vote.voteType', 'downvote'] },
                   },
                 },
               },
@@ -125,11 +125,11 @@ export class BookmarkRepository extends BaseRepository<IBookmark> implements IBo
             ],
           },
           isBookmarked: true, // Always true in this context
-          username: "$authorInfo.username",
-          profilePic: "$authorInfo.profilePic",
+          username: '$authorInfo.username',
+          profilePic: '$authorInfo.profilePic',
           squad: {
-            _id: "$squadInfo._id",
-            name: "$squadInfo.name",
+            _id: '$squadInfo._id',
+            name: '$squadInfo.name',
           },
         },
       },

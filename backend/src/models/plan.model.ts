@@ -1,8 +1,8 @@
-import type { Document } from "mongoose";
+import type { Document } from 'mongoose';
 
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
-interface IPlan extends Document {
+interface IPlan extends Document<string> {
   tier: string;
   description: string;
   price: number;
@@ -61,25 +61,8 @@ const PlanSchema = new Schema<IPlan>(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
-PlanSchema.pre("save", function (next) {
-  const plan = this as IPlan;
-  const interval = plan.interval.toLowerCase().trim();
-
-  // Parse interval (e.g., "month", "6 months", "12 months")
-  const match = interval.match(/^(\d+)?\s*(month|months)$/);
-  if (!match) {
-    return next(new Error("Invalid interval format. Expected \"month\" or \"<number> months\""));
-  }
-
-  const numMonths = match[1] ? Number.parseInt(match[1], 10) : 1; // Default to 1 month if no number
-  const daysPerMonth = 30; // Approximation (30 days per month for simplicity)
-  plan.durationInDays = numMonths * daysPerMonth;
-
-  next();
-});
-
-const PlanModel = mongoose.model<IPlan>("Plan", PlanSchema);
+const PlanModel = mongoose.model<IPlan>('Plan', PlanSchema);
 export { IPlan, PlanModel };

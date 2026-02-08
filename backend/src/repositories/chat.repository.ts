@@ -1,10 +1,10 @@
-import { injectable } from "inversify";
+import { injectable } from 'inversify';
 
-import type { IChatRepository } from "@/core/interfaces/repositories/i-chat-repository";
-import type { IChat } from "@/models/chat.model";
+import type { IChatRepository } from '@/core/interfaces/repositories/i-chat-repository';
+import type { IChat } from '@/models/chat.model';
 
-import { BaseRepository } from "@/core/abstracts/base.repository";
-import { ChatModel } from "@/models/chat.model";
+import { BaseRepository } from '@/core/abstracts/base.repository';
+import { ChatModel } from '@/models/chat.model';
 
 @injectable()
 export class ChatRepository extends BaseRepository<IChat> implements IChatRepository {
@@ -22,8 +22,8 @@ export class ChatRepository extends BaseRepository<IChat> implements IChatReposi
     return this.model
       .find({ participants: userId })
       .populate({
-        path: "participants",
-        select: "name username profilePic",
+        path: 'participants',
+        select: 'name username profilePic',
       })
       .sort({ updatedAt: -1 });
   }

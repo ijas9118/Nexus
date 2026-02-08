@@ -1,17 +1,17 @@
 // connection.service.ts
-import { inject, injectable } from "inversify";
+import { inject, injectable } from 'inversify';
 
-import type { IConnectionsRepository } from "../core/interfaces/repositories/i-connections-repository";
-import type { IConnectionService } from "../core/interfaces/services/i-connection-service";
-import type { IPendingRequestUser, SearchConnections } from "../core/types/user-types";
+import type { IConnectionsRepository } from '../core/interfaces/repositories/i-connections-repository';
+import type { IConnectionService } from '../core/interfaces/services/i-connection-service';
+import type { IPendingRequestUser, SearchConnections } from '../core/types/user-types';
 
-import { TYPES } from "../di/types";
+import { TYPES } from '../di/types';
 
 @injectable()
 export class ConnectionService implements IConnectionService {
   constructor(
     @inject(TYPES.ConnectionsRepository)
-    private connectionsRepository: IConnectionsRepository,
+    private connectionsRepository: IConnectionsRepository
   ) {}
 
   searchConnections = async (userId: string, search?: string): Promise<SearchConnections[]> => {
@@ -28,8 +28,8 @@ export class ConnectionService implements IConnectionService {
 
   sendConnectionRequest = async (
     requesterId: string,
-    recipientId: string,
-  ): Promise<"ALREADY_SENT" | "SUCCESS"> => {
+    recipientId: string
+  ): Promise<'ALREADY_SENT' | 'SUCCESS'> => {
     return this.connectionsRepository.sendConnectionRequest(requesterId, recipientId);
   };
 
@@ -43,7 +43,7 @@ export class ConnectionService implements IConnectionService {
 
   withdrawConnectionRequest = async (
     requesterId: string,
-    recipientId: string,
+    recipientId: string
   ): Promise<boolean> => {
     return this.connectionsRepository.withdrawConnectionRequest(requesterId, recipientId);
   };

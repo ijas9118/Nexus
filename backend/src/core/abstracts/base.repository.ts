@@ -1,16 +1,16 @@
 import type {
   DeleteResult,
   Document,
-  FilterQuery,
   Model,
+  QueryFilter,
   Types,
   UpdateQuery,
   UpdateWriteOpResult,
-} from "mongoose";
+} from 'mongoose';
 
-import type { IBaseRepository } from "../interfaces/repositories/i-base-repository";
+import type { IBaseRepository } from '../interfaces/repositories/i-base-repository';
 
-export abstract class BaseRepository<T extends Document> implements IBaseRepository<T> {
+export abstract class BaseRepository<T extends Document<string>> implements IBaseRepository<T> {
   constructor(protected model: Model<T>) {}
 
   async findById(id: Types.ObjectId | string): Promise<T | null> {
@@ -33,7 +33,7 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
     return this.model.findByIdAndUpdate(id, data, { new: true });
   }
 
-  async updateOne(filter: FilterQuery<T>, update: UpdateQuery<T>): Promise<UpdateWriteOpResult> {
+  async updateOne(filter: QueryFilter<T>, update: UpdateQuery<T>): Promise<UpdateWriteOpResult> {
     return this.model.updateOne(filter, update);
   }
 
@@ -41,23 +41,23 @@ export abstract class BaseRepository<T extends Document> implements IBaseReposit
     return this.model.findByIdAndDelete(id);
   }
 
-  async deleteOne(filter: FilterQuery<T>): Promise<DeleteResult> {
+  async deleteOne(filter: QueryFilter<T>): Promise<DeleteResult> {
     return this.model.deleteOne(filter);
   }
 
-  async find(filter: FilterQuery<T>): Promise<T[]> {
+  async find(filter: QueryFilter<T>): Promise<T[]> {
     return await this.model.find(filter);
   }
 
-  async findOne(filter: FilterQuery<T>): Promise<T | null> {
+  async findOne(filter: QueryFilter<T>): Promise<T | null> {
     return this.model.findOne(filter);
   }
 
-  async findOneAndUpdate(filter: FilterQuery<T>, update: UpdateQuery<T>): Promise<T> {
+  async findOneAndUpdate(filter: QueryFilter<T>, update: UpdateQuery<T>): Promise<T> {
     return this.model.findOneAndUpdate(filter, update, { upsert: true, new: true });
   }
 
-  async findOneAndDelete(filter: FilterQuery<T>): Promise<T | null> {
+  async findOneAndDelete(filter: QueryFilter<T>): Promise<T | null> {
     return this.model.findOneAndDelete(filter);
   }
 

@@ -1,7 +1,7 @@
-import type { LoginRequestDTO, RegisterRequestDTO } from "@/dtos/requests/auth.dto";
-import type { LoginResponseDTO, RegisterResponseDTO } from "@/dtos/responses/auth.dto";
+import type { LoginRequestDTO, RegisterRequestDTO } from '@/dtos/requests/auth.dto';
+import type { LoginResponseDTO, RegisterResponseDTO } from '@/dtos/responses/auth.dto';
 
-import type { IUser } from "../../../models/user.model";
+import type { IUser } from '../../../models/user.model';
 
 export interface IAuthService {
   findUserByEmail: (email: string) => Promise<boolean>;

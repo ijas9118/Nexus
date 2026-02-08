@@ -1,15 +1,16 @@
-import { injectable } from "inversify";
+import { injectable } from 'inversify';
 
-import type { IBookingPaymentRepository } from "@/core/interfaces/repositories/i-booking-payment-repository";
-import type { IBookingPayment } from "@/models/booking-payment.model";
+import type { IBookingPaymentRepository } from '@/core/interfaces/repositories/i-booking-payment-repository';
+import type { IBookingPayment } from '@/models/booking-payment.model';
 
-import { BaseRepository } from "@/core/abstracts/base.repository";
-import { BookingPaymentModel } from "@/models/booking-payment.model";
+import { BaseRepository } from '@/core/abstracts/base.repository';
+import { BookingPaymentModel } from '@/models/booking-payment.model';
 
 @injectable()
 export class BookingPaymentRepository
   extends BaseRepository<IBookingPayment>
-  implements IBookingPaymentRepository {
+  implements IBookingPaymentRepository
+{
   constructor() {
     super(BookingPaymentModel);
   }

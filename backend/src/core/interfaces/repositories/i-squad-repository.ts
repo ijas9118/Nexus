@@ -1,8 +1,8 @@
-import type { SearchCriteria, SearchResultItem } from "@/core/types/search";
-import type { ISquadAggregated, SquadWithIsJoined } from "@/core/types/squad";
+import type { SearchCriteria, SearchResultItem } from '@/core/types/search';
+import type { ISquadAggregated, SquadWithIsJoined } from '@/core/types/squad';
 
-import type { ISquad } from "../../../models/squads.model";
-import type { BaseRepository } from "../../abstracts/base.repository";
+import type { ISquad } from '../../../models/squads.model';
+import type { BaseRepository } from '../../abstracts/base.repository';
 
 export interface ISquadRepository extends BaseRepository<ISquad> {
   addMemberToSquad: (userId: string, squadId: string) => unknown;

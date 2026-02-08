@@ -1,16 +1,16 @@
-import { inject, injectable } from "inversify";
-import mongoose from "mongoose";
+import { inject, injectable } from 'inversify';
+import mongoose from 'mongoose';
 
-import type { SearchCriteria, SearchResultItem } from "@/core/types/search";
-import type { ISquadAggregated, SquadWithIsJoined } from "@/core/types/squad";
+import type { SearchCriteria, SearchResultItem } from '@/core/types/search';
+import type { ISquadAggregated, SquadWithIsJoined } from '@/core/types/squad';
 
-import type { ISquadRepository } from "../core/interfaces/repositories/i-squad-repository";
-import type { IUserRepository } from "../core/interfaces/repositories/i-user-repository";
-import type { ISquad } from "../models/squads.model";
+import type { ISquadRepository } from '../core/interfaces/repositories/i-squad-repository';
+import type { IUserRepository } from '../core/interfaces/repositories/i-user-repository';
+import type { ISquad } from '../models/squads.model';
 
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { TYPES } from "../di/types";
-import { SquadModel } from "../models/squads.model";
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { TYPES } from '../di/types';
+import { SquadModel } from '../models/squads.model';
 
 @injectable()
 export class SquadRepository extends BaseRepository<ISquad> implements ISquadRepository {
@@ -38,7 +38,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
     const searchFilter = search
       ? {
           $match: {
-            name: { $regex: search, $options: "i" }, // Case-insensitive search on squad name
+            name: { $regex: search, $options: 'i' }, // Case-insensitive search on squad name
           },
         }
       : { $match: {} }; // No search filter if search is empty
@@ -47,41 +47,41 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
       searchFilter, // Apply search filter first
       {
         $lookup: {
-          from: "users",
-          localField: "admin",
-          foreignField: "_id",
-          as: "adminData",
+          from: 'users',
+          localField: 'admin',
+          foreignField: '_id',
+          as: 'adminData',
         },
       },
       {
         $unwind: {
-          path: "$adminData",
+          path: '$adminData',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $lookup: {
-          from: "categories",
-          localField: "category",
-          foreignField: "_id",
-          as: "categoryData",
+          from: 'categories',
+          localField: 'category',
+          foreignField: '_id',
+          as: 'categoryData',
         },
       },
       {
         $unwind: {
-          path: "$categoryData",
+          path: '$categoryData',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $project: {
           logo: 1,
-          adminId: "$adminData._id",
-          adminProfilePic: "$adminData.profilePic",
-          adminName: "$adminData.name",
+          adminId: '$adminData._id',
+          adminProfilePic: '$adminData.profilePic',
+          adminName: '$adminData.name',
           name: 1,
           handle: 1,
-          category: "$categoryData.name",
+          category: '$categoryData.name',
           membersCount: 1,
           isPremium: 1,
           isActive: 1,
@@ -104,7 +104,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
       {
         $addFields: {
           isAdmin: {
-            $eq: ["$admin", userObjectId],
+            $eq: ['$admin', userObjectId],
           },
         },
       },
@@ -120,36 +120,36 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
       },
       {
         $lookup: {
-          from: "categories", // Category collection
-          localField: "category",
-          foreignField: "_id",
-          as: "categoryData",
+          from: 'categories', // Category collection
+          localField: 'category',
+          foreignField: '_id',
+          as: 'categoryData',
         },
       },
       {
         $unwind: {
-          path: "$categoryData",
+          path: '$categoryData',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $lookup: {
-          from: "users", // Admin user
-          localField: "admin",
-          foreignField: "_id",
-          as: "adminData",
+          from: 'users', // Admin user
+          localField: 'admin',
+          foreignField: '_id',
+          as: 'adminData',
         },
       },
       {
         $unwind: {
-          path: "$adminData",
+          path: '$adminData',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $addFields: {
           isJoined: {
-            $in: [new mongoose.Types.ObjectId(userId), "$members"],
+            $in: [new mongoose.Types.ObjectId(userId), '$members'],
           },
         },
       },
@@ -168,11 +168,11 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
           isPremium: 1,
           createdAt: 1,
           isJoined: 1,
-          category: "$categoryData.name",
-          admin: "$adminData._id",
-          adminName: "$adminData.name",
-          adminUsername: "$adminData.username",
-          adminProfilePic: "$adminData.profilePic",
+          category: '$categoryData.name',
+          admin: '$adminData._id',
+          adminName: '$adminData.name',
+          adminUsername: '$adminData.username',
+          adminProfilePic: '$adminData.profilePic',
         },
       },
     ]);
@@ -182,7 +182,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
 
   getSquadsByCategory = async (
     categoryId: string,
-    userId: string,
+    userId: string
   ): Promise<SquadWithIsJoined[]> => {
     return await this.model.aggregate([
       {
@@ -193,10 +193,10 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
       },
       {
         $lookup: {
-          from: "users",
-          localField: "_id",
-          foreignField: "joinedSquads",
-          as: "joinedUsers",
+          from: 'users',
+          localField: '_id',
+          foreignField: 'joinedSquads',
+          as: 'joinedUsers',
         },
       },
       {
@@ -208,10 +208,10 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
                   {
                     $size: {
                       $filter: {
-                        input: "$joinedUsers",
-                        as: "user",
+                        input: '$joinedUsers',
+                        as: 'user',
                         cond: {
-                          $eq: ["$$user._id", new mongoose.Types.ObjectId(userId)], // Cast userId to ObjectId
+                          $eq: ['$$user._id', new mongoose.Types.ObjectId(userId)], // Cast userId to ObjectId
                         },
                       },
                     },
@@ -262,14 +262,14 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
 
     const squads = await this.model
       .find({
-        name: { $regex: query, $options: "i" },
+        name: { $regex: query, $options: 'i' },
       })
-      .select("name category logo")
+      .select('name category logo')
       .limit(limit || 10)
       .lean();
 
-    return squads.map(squad => ({
-      type: "squad",
+    return squads.map((squad) => ({
+      type: 'squad',
       id: squad._id.toString(),
       title: squad.name,
       subtitle: squad.category,

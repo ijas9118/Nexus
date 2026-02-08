@@ -1,6 +1,6 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-import type { ISquadAggregated } from "@/core/types/squad";
+import type { ISquadAggregated } from '@/core/types/squad';
 
 export class SquadListDto {
   @IsString()
@@ -54,6 +54,6 @@ export class SquadListDto {
   }
 
   static fromEntities(entities: ISquadAggregated[]): SquadListDto[] {
-    return entities.map(entity => this.fromEntity(entity));
+    return entities.map((entity) => this.fromEntity(entity));
   }
 }

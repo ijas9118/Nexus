@@ -19,4 +19,4 @@ export interface SearchConnections {
   email: string;
 }
 
-export type UserRole = "user" | "premium" | "mentor" | "admin";
+export type UserRole = 'user' | 'premium' | 'mentor' | 'admin';

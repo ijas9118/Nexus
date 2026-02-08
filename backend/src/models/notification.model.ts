@@ -1,10 +1,10 @@
-import type { Document } from "mongoose";
+import type { Document } from 'mongoose';
 
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
-interface INotification extends Document {
-  notificationTypeId: mongoose.Types.ObjectId | string;
-  recipientId: mongoose.Types.ObjectId | string;
+interface INotification extends Document<string> {
+  notificationTypeId: string;
+  recipientId: string;
   heading: string;
   message: string;
   read: boolean;
@@ -15,27 +15,27 @@ const NotificationSchema: Schema = new Schema(
   {
     notificationTypeId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "NotificationType",
+      ref: 'NotificationType',
       required: true,
     },
     recipientId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     heading: {
       type: String,
       required: true,
       trim: true,
-      minlength: [5, "Heading must be at least 5 characters"],
-      maxlength: [100, "Heading must not exceed 100 characters"],
+      minlength: [5, 'Heading must be at least 5 characters'],
+      maxlength: [100, 'Heading must not exceed 100 characters'],
     },
     message: {
       type: String,
       required: true,
       trim: true,
-      minlength: [5, "Message must be at least 5 characters"],
-      maxlength: [500, "Message must not exceed 500 characters"],
+      minlength: [5, 'Message must be at least 5 characters'],
+      maxlength: [500, 'Message must not exceed 500 characters'],
     },
     read: {
       type: Boolean,
@@ -43,12 +43,12 @@ const NotificationSchema: Schema = new Schema(
     },
   },
   {
-    timestamps: { createdAt: "createdAt", updatedAt: false },
-  },
+    timestamps: { createdAt: 'createdAt', updatedAt: false },
+  }
 );
 
 NotificationSchema.index({ recipientId: 1, createdAt: -1 });
 NotificationSchema.index({ notificationTypeId: 1 });
 
-const NotificationModel = mongoose.model<INotification>("Notification", NotificationSchema);
+const NotificationModel = mongoose.model<INotification>('Notification', NotificationSchema);
 export { INotification, NotificationModel };

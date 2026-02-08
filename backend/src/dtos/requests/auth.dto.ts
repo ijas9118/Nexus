@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 interface RegisterPayload {
   name: string;
@@ -8,15 +8,15 @@ interface RegisterPayload {
 
 export class RegisterRequestDTO {
   @IsString()
-  @IsNotEmpty({ message: "Name is required" })
+  @IsNotEmpty({ message: 'Name is required' })
   name!: string;
 
   @IsEmail()
-  @IsNotEmpty({ message: "Email is required" })
+  @IsNotEmpty({ message: 'Email is required' })
   email!: string;
 
   @IsString()
-  @IsNotEmpty({ message: "Password is required" })
+  @IsNotEmpty({ message: 'Password is required' })
   password!: string;
 
   static fromPayload(payload: RegisterPayload): RegisterRequestDTO {

@@ -1,5 +1,5 @@
-import type { BaseRepository } from "@/core/abstracts/base.repository";
-import type { INotificationType } from "@/models/notification-type.model";
+import type { BaseRepository } from '@/core/abstracts/base.repository';
+import type { INotificationType } from '@/models/notification-type.model';
 
 export interface INotificationTypeRepository extends BaseRepository<INotificationType> {
   createNotificationType: (data: Partial<INotificationType>) => Promise<INotificationType>;

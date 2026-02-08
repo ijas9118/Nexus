@@ -1,16 +1,19 @@
-import type { Express } from "express";
+import type { Express } from 'express';
 
-import path from "node:path";
+import path from 'node:path';
 
-import type { CloudinaryResult, ResourceType } from "@/core/types/service/cloudinary";
+import type { CloudinaryResult, ResourceType } from '@/core/types/service/cloudinary';
 
-import cloudinary from "@/config/cloudinary";
+import cloudinary from '@/config/cloudinary';
 
-export async function uploadToCloudinary(file: Express.Multer.File, options: {
-  baseFolder: "images" | "videos" | "chat";
-  subFolder: string;
-  resourceType: ResourceType;
-}): Promise<CloudinaryResult> {
+export async function uploadToCloudinary(
+  file: Express.Multer.File,
+  options: {
+    baseFolder: 'images' | 'videos' | 'chat';
+    subFolder: string;
+    resourceType: ResourceType;
+  }
+): Promise<CloudinaryResult> {
   const { baseFolder, subFolder, resourceType } = options;
   const folder = `nexus/${baseFolder}/${subFolder}`;
 
@@ -31,21 +34,18 @@ export async function uploadToCloudinary(file: Express.Multer.File, options: {
             unique_filename: false,
           },
           (error, result) => {
-            if (error)
-              return reject(error);
-            if (!result)
-              return reject(new Error("Upload failed: No result"));
+            if (error) return reject(error);
+            if (!result) return reject(new Error('Upload failed: No result'));
             resolve({
               url: result.secure_url,
               publicId: result.public_id,
             });
-          },
+          }
         )
         .end(file.buffer);
     });
     return result;
-  }
-  catch (error) {
+  } catch (error) {
     throw new Error(`Upload failed: ${(error as Error).message}`);
   }
 }
@@ -53,8 +53,7 @@ export async function uploadToCloudinary(file: Express.Multer.File, options: {
 export async function deleteFromCloudinary(publicId: string): Promise<void> {
   try {
     await cloudinary.uploader.destroy(publicId);
-  }
-  catch (error) {
+  } catch (error) {
     throw new Error(`Delete failed: ${(error as Error).message}`);
   }
 }

@@ -1,4 +1,7 @@
-import type { PendingWithdrawalsResponse, SessionStatsResponse } from "@/core/types/mentor-dashboard";
+import type {
+  PendingWithdrawalsResponse,
+  SessionStatsResponse,
+} from '@/core/types/mentor-dashboard';
 
 export interface IMentorDashboardRepository {
   getEarnings: (userId: string) => Promise<{ thisMonth: number; lastMonth: number }>;

@@ -1,11 +1,11 @@
-import { injectable } from "inversify";
-import { Types } from "mongoose";
+import { injectable } from 'inversify';
+import { Types } from 'mongoose';
 
-import type { IAdminRepository } from "../core/interfaces/repositories/i-admin-repository";
-import type { IAdmin } from "../models/admin.model";
+import type { IAdminRepository } from '../core/interfaces/repositories/i-admin-repository';
+import type { IAdmin } from '../models/admin.model';
 
-import { BaseRepository } from "../core/abstracts/base.repository";
-import Admin from "../models/admin.model";
+import { BaseRepository } from '../core/abstracts/base.repository';
+import Admin from '../models/admin.model';
 
 @injectable()
 export class AdminRepository extends BaseRepository<IAdmin> implements IAdminRepository {

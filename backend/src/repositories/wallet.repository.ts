@@ -1,14 +1,14 @@
-import { injectable } from "inversify";
-import mongoose from "mongoose";
+import { injectable } from 'inversify';
+import mongoose from 'mongoose';
 
-import type { IWalletRepository } from "@/core/interfaces/repositories/i-wallet-repository";
-import type { TransactionDetails } from "@/core/types/wallet.types";
-import type { ITransaction } from "@/models/transaction.model";
-import type { IWallet } from "@/models/wallet.model";
+import type { IWalletRepository } from '@/core/interfaces/repositories/i-wallet-repository';
+import type { TransactionDetails } from '@/core/types/wallet.types';
+import type { ITransaction } from '@/models/transaction.model';
+import type { IWallet } from '@/models/wallet.model';
 
-import { BaseRepository } from "@/core/abstracts/base.repository";
-import { TransactionModel } from "@/models/transaction.model";
-import { WalletModel } from "@/models/wallet.model";
+import { BaseRepository } from '@/core/abstracts/base.repository';
+import { TransactionModel } from '@/models/transaction.model';
+import { WalletModel } from '@/models/wallet.model';
 
 @injectable()
 export class WalletRepository extends BaseRepository<IWallet> implements IWalletRepository {
@@ -23,11 +23,10 @@ export class WalletRepository extends BaseRepository<IWallet> implements IWallet
   async updateWalletBalance(
     walletId: string,
     amount: number,
-    transactionId: string,
+    transactionId: string
   ): Promise<IWallet | null> {
     const wallet = await this.findById(walletId);
-    if (!wallet)
-      throw new Error("Wallet not found");
+    if (!wallet) throw new Error('Wallet not found');
 
     wallet.balance += amount;
     wallet.transactions.push(new mongoose.Types.ObjectId(transactionId));
@@ -41,17 +40,16 @@ export class WalletRepository extends BaseRepository<IWallet> implements IWallet
 
   async getTransactionsByUserId(
     userId: string,
-    status?: "pending" | "completed",
+    status?: 'pending' | 'completed'
   ): Promise<TransactionDetails[]> {
     const query: any = { userId };
-    if (status)
-      query.status = status;
+    if (status) query.status = status;
 
     const transactions = await TransactionModel.find(query)
-      .populate("menteeId", "name profilePic")
+      .populate('menteeId', 'name profilePic')
       .exec();
 
-    return transactions.map(t => ({
+    return transactions.map((t) => ({
       _id: t._id.toString(),
       transactionId: t.transactionId,
       type: t.type,

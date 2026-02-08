@@ -1,9 +1,8 @@
-import type { Document } from "mongoose";
+import type { Document } from 'mongoose';
 
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
-interface INotificationType extends Document {
-  _id: mongoose.Types.ObjectId | string;
+interface INotificationType extends Document<string> {
   name: string;
   description: string;
   icon: string;
@@ -38,10 +37,10 @@ const NotificationTypeSchema: Schema = new Schema(
     roles: {
       type: [String],
       required: true,
-      enum: ["mentor", "user", "premium", "admin"],
+      enum: ['mentor', 'user', 'premium', 'admin'],
       validate: {
         validator: (roles: string[]) => roles.length > 0,
-        message: "At least one role is required",
+        message: 'At least one role is required',
       },
     },
     isActive: {
@@ -51,13 +50,13 @@ const NotificationTypeSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 NotificationTypeSchema.index({ roles: 1 });
 
 const NotificationTypeModel = mongoose.model<INotificationType>(
-  "NotificationType",
-  NotificationTypeSchema,
+  'NotificationType',
+  NotificationTypeSchema
 );
 export { INotificationType, NotificationTypeModel };

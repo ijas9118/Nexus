@@ -1,6 +1,6 @@
-import type { Document } from "mongoose";
+import type { Document } from 'mongoose';
 
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
 export interface IMentorshipType extends Document<string> {
   name: string;
@@ -36,10 +36,10 @@ const MentorshipTypeSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 export const MentorshipTypeModel = mongoose.model<IMentorshipType>(
-  "MentorshipType",
-  MentorshipTypeSchema,
+  'MentorshipType',
+  MentorshipTypeSchema
 );

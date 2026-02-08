@@ -1,12 +1,12 @@
-import Redis from "ioredis";
+import Redis from 'ioredis';
 
-import { env } from "../utils/env-validation";
-import logger from "./logger";
+import { env } from '../utils/env-validation';
+import logger from './logger';
 
 const redisClient = new Redis({
   host: env.REDIS_HOST,
   port: env.REDIS_PORT,
-  username: env.REDIS_USER || "default",
+  username: env.REDIS_USER || 'default',
   password: env.REDIS_PASSWORD,
   tls: env.REDIS_TLS ? {} : undefined, // Enable TLS only if explicitly set
   retryStrategy: (times) => {
@@ -15,7 +15,7 @@ const redisClient = new Redis({
   },
 });
 
-redisClient.on("connect", () => logger.info("Connected to Redis"));
-redisClient.on("error", err => logger.error("Redis connection error:", err));
+redisClient.on('connect', () => logger.info('Connected to Redis'));
+redisClient.on('error', (err) => logger.error('Redis connection error:', err));
 
 export default redisClient;

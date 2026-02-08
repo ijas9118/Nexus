@@ -1,26 +1,26 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import type { IBookingPaymentController } from "@/core/interfaces/controllers/i-booking-payment-controller";
+import type { IBookingPaymentController } from '@/core/interfaces/controllers/i-booking-payment-controller';
 
-import { container } from "@/di/container";
-import { TYPES } from "@/di/types";
-import { authenticate } from "@/middlewares/auth.middleware";
+import { container } from '@/di/container';
+import { TYPES } from '@/di/types';
+import { authenticate } from '@/middlewares/auth.middleware';
 
 const router = Router();
 const bookingPaymentController = container.get<IBookingPaymentController>(
-  TYPES.BookingPaymentController,
+  TYPES.BookingPaymentController
 );
 
 router.post(
-  "/create-booking-checkout-session",
-  authenticate(["user", "premium"]),
-  bookingPaymentController.checkoutSession,
+  '/create-booking-checkout-session',
+  authenticate(['user', 'premium']),
+  bookingPaymentController.checkoutSession
 );
 
 router.get(
-  "/verify-booking-session/:sessionId",
-  authenticate(["user", "premium"]),
-  bookingPaymentController.verifySession,
+  '/verify-booking-session/:sessionId',
+  authenticate(['user', 'premium']),
+  bookingPaymentController.verifySession
 );
 
 export default router;

@@ -1,12 +1,11 @@
-import type { Document } from "mongoose";
+import type { Document } from 'mongoose';
 
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
-export interface INexusPoint extends Document {
-  _id: mongoose.Types.ObjectId;
-  userId: mongoose.Types.ObjectId | string;
+export interface INexusPoint extends Document<string> {
+  userId: string;
   points: number;
-  type: "earned" | "redeemed";
+  type: 'earned' | 'redeemed';
   description: string;
   createdAt: Date;
 }
@@ -15,7 +14,7 @@ const NexusPointSchema: Schema = new Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     points: {
@@ -24,7 +23,7 @@ const NexusPointSchema: Schema = new Schema(
     },
     type: {
       type: String,
-      enum: ["earned", "redeemed"],
+      enum: ['earned', 'redeemed'],
       required: true,
     },
     description: {
@@ -34,7 +33,7 @@ const NexusPointSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
-export const NexusPointModel = mongoose.model<INexusPoint>("NexusPoint", NexusPointSchema);
+export const NexusPointModel = mongoose.model<INexusPoint>('NexusPoint', NexusPointSchema);

@@ -1,15 +1,16 @@
-import { injectable } from "inversify";
+import { injectable } from 'inversify';
 
-import type { ITransactionRepository } from "@/core/interfaces/repositories/i-transaction-repository";
-import type { ITransaction } from "@/models/transaction.model";
+import type { ITransactionRepository } from '@/core/interfaces/repositories/i-transaction-repository';
+import type { ITransaction } from '@/models/transaction.model';
 
-import { BaseRepository } from "@/core/abstracts/base.repository";
-import { TransactionModel } from "@/models/transaction.model";
+import { BaseRepository } from '@/core/abstracts/base.repository';
+import { TransactionModel } from '@/models/transaction.model';
 
 @injectable()
 export class TransactionRepository
   extends BaseRepository<ITransaction>
-  implements ITransactionRepository {
+  implements ITransactionRepository
+{
   constructor() {
     super(TransactionModel);
   }
@@ -18,8 +19,8 @@ export class TransactionRepository
     return this.model
       .find({
         date: { $gte: startDate, $lte: endDate },
-        status: "completed",
-        type: "incoming",
+        status: 'completed',
+        type: 'incoming',
       })
       .sort({ date: 1 })
       .lean();
@@ -28,51 +29,51 @@ export class TransactionRepository
   async countTransactionsByDateRange(startDate: Date, endDate: Date): Promise<number> {
     return this.model.countDocuments({
       date: { $gte: startDate, $lte: endDate },
-      status: "completed",
-      type: "incoming",
+      status: 'completed',
+      type: 'incoming',
     });
   }
 
   async getTransactionRevenueByDateGroups(
     startDate: Date,
     endDate: Date,
-    groupByFormat: string,
+    groupByFormat: string
   ): Promise<Array<{ date: string; revenue: number }>> {
     // Determine the date format for grouping based on the time range
     let dateFormat;
     switch (groupByFormat) {
-      case "day":
-        dateFormat = "%Y-%m-%d"; // Group by day
+      case 'day':
+        dateFormat = '%Y-%m-%d'; // Group by day
         break;
-      case "week":
-        dateFormat = "%Y-%U"; // Group by week
+      case 'week':
+        dateFormat = '%Y-%U'; // Group by week
         break;
-      case "month":
-        dateFormat = "%Y-%m"; // Group by month
+      case 'month':
+        dateFormat = '%Y-%m'; // Group by month
         break;
       default:
-        dateFormat = "%Y-%m-%d"; // Default to day
+        dateFormat = '%Y-%m-%d'; // Default to day
     }
 
     const result = await this.model.aggregate([
       {
         $match: {
           date: { $gte: startDate, $lte: endDate },
-          status: "completed",
-          type: "incoming",
+          status: 'completed',
+          type: 'incoming',
         },
       },
       {
         $group: {
-          _id: { $dateToString: { format: dateFormat, date: "$date" } },
-          revenue: { $sum: { $multiply: ["$amount", 0.2] } }, // 20% platform fee
+          _id: { $dateToString: { format: dateFormat, date: '$date' } },
+          revenue: { $sum: { $multiply: ['$amount', 0.2] } }, // 20% platform fee
           count: { $sum: 1 },
         },
       },
       {
         $project: {
           _id: 0,
-          date: "$_id",
+          date: '$_id',
           revenue: 1,
           count: 1,
         },

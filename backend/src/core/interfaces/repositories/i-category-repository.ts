@@ -1,5 +1,5 @@
-import type { ICategory } from "../../../models/categories.model";
-import type { BaseRepository } from "../../abstracts/base.repository";
+import type { ICategory } from '../../../models/categories.model';
+import type { BaseRepository } from '../../abstracts/base.repository';
 
 export interface ICategoryRepository extends BaseRepository<ICategory> {
   addCategory: (name: string) => Promise<ICategory>;
@@ -9,6 +9,6 @@ export interface ICategoryRepository extends BaseRepository<ICategory> {
   findAllWithPagination: (
     page: number,
     limit: number,
-    search: string,
+    search: string
   ) => Promise<{ categories: ICategory[]; total: number }>;
 }

@@ -1,13 +1,13 @@
-import type { Request, Response } from "express";
+import type { Request, Response } from 'express';
 
-import asyncHandler from "express-async-handler";
-import { StatusCodes } from "http-status-codes";
-import { inject, injectable } from "inversify";
+import asyncHandler from 'express-async-handler';
+import { StatusCodes } from 'http-status-codes';
+import { inject, injectable } from 'inversify';
 
-import type { IPaymentController } from "../core/interfaces/controllers/i-payment-controller";
-import type { IPaymentService } from "../core/interfaces/services/i-payment-service";
+import type { IPaymentController } from '@/core/interfaces/controllers/i-payment-controller';
+import type { IPaymentService } from '@/core/interfaces/services/i-payment-service';
 
-import { TYPES } from "../di/types";
+import { TYPES } from '@/di/types';
 
 @injectable()
 export class PaymentController implements IPaymentController {
@@ -21,13 +21,13 @@ export class PaymentController implements IPaymentController {
       tier,
       price,
       customerId,
-      email,
+      email
     );
     res.status(StatusCodes.OK).json(sessionUrl);
   });
 
   handleWebhook = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const signature = req.headers["stripe-signature"] as string;
+    const signature = req.headers['stripe-signature'] as string;
     await this._paymentService.webhookHandler(req.body, signature);
     res.status(StatusCodes.OK).json({ received: true });
   });
@@ -35,8 +35,8 @@ export class PaymentController implements IPaymentController {
   verifySession = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { sessionId } = req.params;
 
-    if (!sessionId || typeof sessionId !== "string") {
-      res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: "Missing sessionId" });
+    if (!sessionId || typeof sessionId !== 'string') {
+      res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Missing sessionId' });
       return;
     }
 

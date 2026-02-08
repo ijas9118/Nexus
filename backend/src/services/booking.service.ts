@@ -1,21 +1,21 @@
-import dayjs from "dayjs";
-import { StatusCodes } from "http-status-codes";
-import { inject, injectable } from "inversify";
+import dayjs from 'dayjs';
+import { StatusCodes } from 'http-status-codes';
+import { inject, injectable } from 'inversify';
 
-import type { IBookingRepository } from "@/core/interfaces/repositories/i-booking-repository";
-import type { IBookingService } from "@/core/interfaces/services/i-booking-service";
-import type { ITimeSlotService } from "@/core/interfaces/services/i-time-slot-service";
-import type { IBooking } from "@/models/booking.model";
+import type { IBookingRepository } from '@/core/interfaces/repositories/i-booking-repository';
+import type { IBookingService } from '@/core/interfaces/services/i-booking-service';
+import type { ITimeSlotService } from '@/core/interfaces/services/i-time-slot-service';
+import type { IBooking } from '@/models/booking.model';
 
-import { TYPES } from "@/di/types";
-import { BookingModel } from "@/models/booking.model";
-import CustomError from "@/utils/custom-error";
+import { TYPES } from '@/di/types';
+import { BookingModel } from '@/models/booking.model';
+import CustomError from '@/utils/custom-error';
 
 @injectable()
 export class BookingService implements IBookingService {
   constructor(
     @inject(TYPES.BookingRepository) private bookingRepository: IBookingRepository,
-    @inject(TYPES.TimeSlotService) private timeSlotService: ITimeSlotService,
+    @inject(TYPES.TimeSlotService) private timeSlotService: ITimeSlotService
   ) {}
 
   async getUpcomingBookings(): Promise<IBooking[]> {
@@ -24,7 +24,7 @@ export class BookingService implements IBookingService {
 
   async getBookingByMeetUrl(meetUrl: string, userId: string): Promise<IBooking | null> {
     const booking = await BookingModel.findOne({ meetUrl })
-      .populate("mentorId userId mentorUserId mentorshipType timeSlot")
+      .populate('mentorId userId mentorUserId mentorshipType timeSlot')
       .exec();
 
     if (!booking) {
@@ -50,29 +50,29 @@ export class BookingService implements IBookingService {
   async rescheduleBooking(
     bookingId: string,
     newTimeSlotId: string,
-    newBookingDate: Date,
+    newBookingDate: Date
   ): Promise<IBooking> {
     const booking = await this.bookingRepository.findById(bookingId);
     if (!booking) {
-      throw new CustomError("Booking not found.", StatusCodes.NOT_FOUND);
+      throw new CustomError('Booking not found.', StatusCodes.NOT_FOUND);
     }
 
-    if (booking.status === "completed") {
-      throw new CustomError("Cannot reschedule a completed booking.", StatusCodes.BAD_REQUEST);
+    if (booking.status === 'completed') {
+      throw new CustomError('Cannot reschedule a completed booking.', StatusCodes.BAD_REQUEST);
     }
 
     const timeSlot = await this.timeSlotService.findById(newTimeSlotId);
     if (!timeSlot) {
-      throw new CustomError("Time slot not found.", StatusCodes.NOT_FOUND);
+      throw new CustomError('Time slot not found.', StatusCodes.NOT_FOUND);
     }
 
     if (timeSlot.isBooked) {
-      throw new CustomError("Time slot is already booked.", StatusCodes.CONFLICT);
+      throw new CustomError('Time slot is already booked.', StatusCodes.CONFLICT);
     }
 
     const bookingDate = dayjs(newBookingDate);
-    if (bookingDate.isBefore(dayjs().startOf("day"))) {
-      throw new CustomError("Cannot reschedule to a past date.", StatusCodes.BAD_REQUEST);
+    if (bookingDate.isBefore(dayjs().startOf('day'))) {
+      throw new CustomError('Cannot reschedule to a past date.', StatusCodes.BAD_REQUEST);
     }
 
     if (booking.timeSlot.toString() !== newTimeSlotId) {
@@ -84,11 +84,11 @@ export class BookingService implements IBookingService {
     const updatedBooking = await this.bookingRepository.update(bookingId, {
       timeSlot: newTimeSlotId,
       bookingDate: newBookingDate,
-      status: "pending",
+      status: 'pending',
     });
 
     if (!updatedBooking) {
-      throw new CustomError("Failed to update booking.", StatusCodes.INTERNAL_SERVER_ERROR);
+      throw new CustomError('Failed to update booking.', StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
     return updatedBooking;
@@ -97,19 +97,19 @@ export class BookingService implements IBookingService {
   async confirmBooking(bookingId: string): Promise<IBooking> {
     const booking = await this.bookingRepository.findById(bookingId);
     if (!booking) {
-      throw new CustomError("Booking not found.", StatusCodes.NOT_FOUND);
+      throw new CustomError('Booking not found.', StatusCodes.NOT_FOUND);
     }
 
-    if (booking.status !== "pending") {
-      throw new CustomError("Only pending bookings can be confirmed.", StatusCodes.BAD_REQUEST);
+    if (booking.status !== 'pending') {
+      throw new CustomError('Only pending bookings can be confirmed.', StatusCodes.BAD_REQUEST);
     }
 
     const updatedBooking = await this.bookingRepository.update(bookingId, {
-      status: "confirmed",
+      status: 'confirmed',
     });
 
     if (!updatedBooking) {
-      throw new CustomError("Failed to confirm booking.", StatusCodes.INTERNAL_SERVER_ERROR);
+      throw new CustomError('Failed to confirm booking.', StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
     return updatedBooking;

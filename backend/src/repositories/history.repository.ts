@@ -1,11 +1,11 @@
-import { injectable } from "inversify";
-import mongoose from "mongoose";
+import { injectable } from 'inversify';
+import mongoose from 'mongoose';
 
-import type { IHistoryRepository } from "../core/interfaces/repositories/i-history-repository";
-import type { IHistory } from "../models/history.model";
+import type { IHistoryRepository } from '../core/interfaces/repositories/i-history-repository';
+import type { IHistory } from '../models/history.model';
 
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { HistoryModel } from "../models/history.model";
+import { BaseRepository } from '../core/abstracts/base.repository';
+import { HistoryModel } from '../models/history.model';
 
 @injectable()
 export class HistoryRepository extends BaseRepository<IHistory> implements IHistoryRepository {
@@ -16,7 +16,7 @@ export class HistoryRepository extends BaseRepository<IHistory> implements IHist
   async addHistory(userId: string, contentId: string): Promise<IHistory> {
     return await this.findOneAndUpdate(
       { userId: new mongoose.Types.ObjectId(userId) },
-      { $addToSet: { readHistory: new mongoose.Types.ObjectId(contentId) } },
+      { $addToSet: { readHistory: new mongoose.Types.ObjectId(contentId) } }
     );
   }
 
@@ -28,7 +28,7 @@ export class HistoryRepository extends BaseRepository<IHistory> implements IHist
       { userId: userObjId },
       {
         $pull: { readHistory: contentObjId },
-      },
+      }
     );
   };
 
@@ -39,26 +39,26 @@ export class HistoryRepository extends BaseRepository<IHistory> implements IHist
       },
       {
         $lookup: {
-          from: "contents",
-          localField: "readHistory",
-          foreignField: "_id",
-          as: "contentDetails",
+          from: 'contents',
+          localField: 'readHistory',
+          foreignField: '_id',
+          as: 'contentDetails',
         },
       },
       {
-        $unwind: "$contentDetails",
+        $unwind: '$contentDetails',
       },
       {
         $project: {
           _id: 0,
-          contentId: "$contentDetails._id",
-          userName: "$contentDetails.userName",
-          contentType: "$contentDetails.contentType",
-          title: "$contentDetails.title",
-          date: "$contentDetails.date",
-          squad: "$contentDetails.squad",
-          isPremium: "$contentDetails.isPremium",
-          thumbnailUrl: "$contentDetails.thumbnailUrl",
+          contentId: '$contentDetails._id',
+          userName: '$contentDetails.userName',
+          contentType: '$contentDetails.contentType',
+          title: '$contentDetails.title',
+          date: '$contentDetails.date',
+          squad: '$contentDetails.squad',
+          isPremium: '$contentDetails.isPremium',
+          thumbnailUrl: '$contentDetails.thumbnailUrl',
         },
       },
     ]);

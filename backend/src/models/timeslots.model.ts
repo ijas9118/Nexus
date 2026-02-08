@@ -1,6 +1,6 @@
-import type { Document, ObjectId } from "mongoose";
+import type { Document, ObjectId } from 'mongoose';
 
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
 export interface ITimeSlot extends Document<string> {
   mentorId: ObjectId | string;
@@ -8,7 +8,7 @@ export interface ITimeSlot extends Document<string> {
   startTime: string; // e.g., "14:00"
   endTime: string; // e.g., "15:00"
   isBooked: boolean;
-  status: "available" | "reserved" | "booked";
+  status: 'available' | 'reserved' | 'booked';
   reservedUntil?: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -18,7 +18,7 @@ const TimeSlotSchema: Schema = new Schema(
   {
     mentorId: {
       type: Schema.Types.ObjectId,
-      ref: "Mentor",
+      ref: 'Mentor',
       required: true,
     },
     date: {
@@ -39,8 +39,8 @@ const TimeSlotSchema: Schema = new Schema(
     },
     status: {
       type: String,
-      enum: ["available", "reserved", "booked"],
-      default: "available",
+      enum: ['available', 'reserved', 'booked'],
+      default: 'available',
     },
     reservedUntil: {
       type: Date,
@@ -49,7 +49,7 @@ const TimeSlotSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 TimeSlotSchema.index({ mentorId: 1, date: 1, status: 1 });
@@ -58,7 +58,7 @@ TimeSlotSchema.index(
   { mentorId: 1, date: 1, startTime: 1 },
   {
     unique: true,
-  },
+  }
 );
 
-export const TimeSlotModel = mongoose.model<ITimeSlot>("TimeSlot", TimeSlotSchema);
+export const TimeSlotModel = mongoose.model<ITimeSlot>('TimeSlot', TimeSlotSchema);

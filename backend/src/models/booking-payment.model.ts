@@ -1,8 +1,8 @@
-import type { Document } from "mongoose";
+import type { Document } from 'mongoose';
 
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
-interface IBookingPayment extends Document {
+interface IBookingPayment extends Document<string> {
   userId: mongoose.Types.ObjectId | string;
   bookingId: mongoose.Types.ObjectId | string;
   mentorId: mongoose.Types.ObjectId | string;
@@ -20,22 +20,22 @@ const BookingPaymentSchema: Schema = new Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     bookingId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Booking",
+      ref: 'Booking',
       required: true,
     },
     mentorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Mentor",
+      ref: 'Mentor',
       required: true,
     },
     mentorshipType: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "MentorshipType",
+      ref: 'MentorshipType',
       required: true,
     },
     stripeSessionId: {
@@ -59,7 +59,7 @@ const BookingPaymentSchema: Schema = new Schema(
     paymentStatus: {
       type: String,
       required: true,
-      enum: ["paid", "unpaid", "failed"],
+      enum: ['paid', 'unpaid', 'failed'],
     },
     customerEmail: {
       type: String,
@@ -72,8 +72,8 @@ const BookingPaymentSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
-const BookingPaymentModel = mongoose.model<IBookingPayment>("BookingPayment", BookingPaymentSchema);
+const BookingPaymentModel = mongoose.model<IBookingPayment>('BookingPayment', BookingPaymentSchema);
 export { BookingPaymentModel, IBookingPayment };

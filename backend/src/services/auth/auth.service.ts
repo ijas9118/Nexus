@@ -1,26 +1,26 @@
-import { compare, hash } from "bcryptjs";
-import { StatusCodes } from "http-status-codes";
-import { inject, injectable } from "inversify";
+import { compare, hash } from 'bcryptjs';
+import { StatusCodes } from 'http-status-codes';
+import { inject, injectable } from 'inversify';
 
-import type { IMentorService } from "@/core/interfaces/services/i-mentor-service";
-import type { LoginRequestDTO, RegisterRequestDTO } from "@/dtos/requests/auth.dto";
+import type { IMentorService } from '@/core/interfaces/services/i-mentor-service';
+import type { LoginRequestDTO, RegisterRequestDTO } from '@/dtos/requests/auth.dto';
 
-import { LoginResponseDTO, RegisterResponseDTO } from "@/dtos/responses/auth.dto";
+import { LoginResponseDTO, RegisterResponseDTO } from '@/dtos/responses/auth.dto';
 
-import type { IUserRepository } from "../../core/interfaces/repositories/i-user-repository";
-import type { IAuthService } from "../../core/interfaces/services/i-auth-service";
-import type { IUser } from "../../models/user.model";
+import type { IUserRepository } from '../../core/interfaces/repositories/i-user-repository';
+import type { IAuthService } from '../../core/interfaces/services/i-auth-service';
+import type { IUser } from '../../models/user.model';
 
-import redisClient from "../../config/redis-client.config";
-import { TYPES } from "../../di/types";
-import CustomError from "../../utils/custom-error";
-import { UsernameGenerator } from "../../utils/username-generator.util";
+import redisClient from '../../config/redis-client.config';
+import { TYPES } from '../../di/types';
+import CustomError from '../../utils/custom-error';
+import { UsernameGenerator } from '../../utils/username-generator.util';
 
 @injectable()
 export class AuthService implements IAuthService {
   constructor(
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-    @inject(TYPES.MentorService) private mentorService: IMentorService,
+    @inject(TYPES.MentorService) private mentorService: IMentorService
   ) {}
 
   // Check if a user with the given email exists
@@ -35,7 +35,7 @@ export class AuthService implements IAuthService {
     const hashedPassword = await hash(password, 10);
     const username = await UsernameGenerator.generateUsername(
       name,
-      async u => !!(await this.userRepository.getUserByUsername(u)),
+      async (u) => !!(await this.userRepository.getUserByUsername(u))
     );
 
     const user = await this.userRepository.create({
@@ -58,17 +58,17 @@ export class AuthService implements IAuthService {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new CustomError("Invalid email or password", StatusCodes.BAD_REQUEST);
+      throw new CustomError('Invalid email or password', StatusCodes.BAD_REQUEST);
     }
 
     const isPasswordValid = await compare(password, user.password);
     if (!isPasswordValid) {
-      throw new CustomError("Invalid password", StatusCodes.BAD_REQUEST);
+      throw new CustomError('Invalid password', StatusCodes.BAD_REQUEST);
     }
 
     let userObj = user.toObject();
 
-    if (user.role === "mentor") {
+    if (user.role === 'mentor') {
       const mentor = await this.mentorService.getMentorByUserId(user._id.toString());
       if (mentor) {
         const mentorWithId = mentor as { _id: string };
@@ -85,7 +85,7 @@ export class AuthService implements IAuthService {
   async updatePassword(email: string, newPassword: string): Promise<void> {
     const user = await this.userRepository.findOne({ email });
     if (!user) {
-      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      throw new CustomError('User not found', StatusCodes.NOT_FOUND);
     }
 
     const hashedPassword = await hash(newPassword, 10);
@@ -104,7 +104,7 @@ export class AuthService implements IAuthService {
   async isUserBlocked(userId: string): Promise<boolean> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      throw new CustomError('User not found', StatusCodes.NOT_FOUND);
     }
     return user.isBlocked || false;
   }
@@ -126,7 +126,7 @@ export class AuthService implements IAuthService {
 
         const username = await UsernameGenerator.generateUsername(
           googleData.name,
-          async u => !!(await this.userRepository.getUserByUsername(u)),
+          async (u) => !!(await this.userRepository.getUserByUsername(u))
         );
 
         user = await this.userRepository.create({
@@ -136,10 +136,9 @@ export class AuthService implements IAuthService {
           password: hashedPassword,
           username,
           profilePic: googleData.profile,
-          role: "user",
+          role: 'user',
         });
-      }
-      else {
+      } else {
         user.googleId = googleData.googleId;
         await user.save();
       }
@@ -165,7 +164,7 @@ export class AuthService implements IAuthService {
 
         const username = await UsernameGenerator.generateUsername(
           githubData.name,
-          async u => !!(await this.userRepository.getUserByUsername(u)),
+          async (u) => !!(await this.userRepository.getUserByUsername(u))
         );
 
         user = await this.userRepository.create({
@@ -175,10 +174,9 @@ export class AuthService implements IAuthService {
           password: hashedPassword,
           username,
           profilePic: githubData.profile,
-          role: "user",
+          role: 'user',
         });
-      }
-      else {
+      } else {
         user.githubId = githubData.githubId;
         await user.save();
       }

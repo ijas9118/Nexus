@@ -1,13 +1,13 @@
-import type { Socket, Server as SocketIOServer } from "socket.io";
+import type { Socket, Server as SocketIOServer } from 'socket.io';
 
-import { inject, injectable } from "inversify";
+import { inject, injectable } from 'inversify';
 
-import type { IChatService } from "@/core/interfaces/services/i-chat-service";
-import type { IGroupService } from "@/core/interfaces/services/i-group-service";
-import type { IMessageService } from "@/core/interfaces/services/i-message-service";
+import type { IChatService } from '@/core/interfaces/services/i-chat-service';
+import type { IGroupService } from '@/core/interfaces/services/i-group-service';
+import type { IMessageService } from '@/core/interfaces/services/i-message-service';
 
-import logger from "@/config/logger";
-import { TYPES } from "@/di/types";
+import logger from '@/config/logger';
+import { TYPES } from '@/di/types';
 
 @injectable()
 export class SocketController {
@@ -17,11 +17,11 @@ export class SocketController {
   constructor(
     @inject(TYPES.ChatService) private chatService: IChatService,
     @inject(TYPES.GroupService) private groupService: IGroupService,
-    @inject(TYPES.MessageService) private messageService: IMessageService,
+    @inject(TYPES.MessageService) private messageService: IMessageService
   ) {}
 
   public initializeSocket(io: SocketIOServer): void {
-    io.on("connection", (socket: Socket) => {
+    io.on('connection', (socket: Socket) => {
       const userId = socket.handshake.query.userId as string;
       if (!userId) {
         socket.disconnect();
@@ -36,51 +36,55 @@ export class SocketController {
       this.joinUserRooms(userId, socket);
 
       // Emit user's socket ID to themselves
-      socket.emit("me", socket.id);
+      socket.emit('me', socket.id);
 
       // Video call events
-      socket.on("join-video-room", ({ roomId, peerId }) => {
+      socket.on('join-video-room', ({ roomId, peerId }) => {
         this.handleJoinVideoRoom(userId, roomId, peerId, socket);
       });
 
-      socket.on("leave-video-room", ({ roomId }) => {
+      socket.on('leave-video-room', ({ roomId }) => {
         this.handleLeaveVideoRoom(userId, roomId, socket, io);
       });
 
       // Existing chat events (unchanged)
-      socket.on("createChat", (otherUserId: string) =>
-        this.handleCreateChat(userId, otherUserId, socket, io));
-      socket.on("createGroup", ({ name, memberIds }: { name: string; memberIds: string[] }) =>
-        this.handleCreateGroup(userId, name, memberIds, socket, io));
+      socket.on('createChat', (otherUserId: string) =>
+        this.handleCreateChat(userId, otherUserId, socket, io)
+      );
+      socket.on('createGroup', ({ name, memberIds }: { name: string; memberIds: string[] }) =>
+        this.handleCreateGroup(userId, name, memberIds, socket, io)
+      );
       socket.on(
-        "sendMessage",
+        'sendMessage',
         (data: {
           chatId: string;
-          chatType: "Chat" | "Group";
+          chatType: 'Chat' | 'Group';
           content?: string;
           fileUrl?: string;
-          fileType?: "image" | "video" | "pdf";
+          fileType?: 'image' | 'video' | 'pdf';
           replyTo?: string;
-        }) => this.handleSendMessage(userId, data, socket, io),
+        }) => this.handleSendMessage(userId, data, socket, io)
       );
       socket.on(
-        "reactToMessage",
+        'reactToMessage',
         ({ messageId, reaction }: { messageId: string; reaction: string }) =>
-          this.handleReactToMessage(userId, messageId, reaction, io),
+          this.handleReactToMessage(userId, messageId, reaction, io)
       );
-      socket.on("removeReaction", (messageId: string) =>
-        this.handleRemoveReaction(userId, messageId, io));
-      socket.on("deleteMessage", (messageId: string) =>
-        this.handleDeleteMessage(userId, messageId, io));
+      socket.on('removeReaction', (messageId: string) =>
+        this.handleRemoveReaction(userId, messageId, io)
+      );
+      socket.on('deleteMessage', (messageId: string) =>
+        this.handleDeleteMessage(userId, messageId, io)
+      );
       socket.on(
-        "markMessagesAsRead",
-        ({ chatId, chatType }: { chatId: string; chatType: "Chat" | "Group" }) => {
+        'markMessagesAsRead',
+        ({ chatId, chatType }: { chatId: string; chatType: 'Chat' | 'Group' }) => {
           this.handleMarkMessagesAsRead(userId, chatId, chatType, io);
-        },
+        }
       );
 
       // Handle disconnection
-      socket.on("disconnect", () => this.handleDisconnect(userId, socket));
+      socket.on('disconnect', () => this.handleDisconnect(userId, socket));
     });
   }
 
@@ -88,7 +92,7 @@ export class SocketController {
     userId: string,
     roomId: string,
     peerId: string,
-    socket: Socket,
+    socket: Socket
   ): Promise<void> {
     try {
       // Join the socket room
@@ -105,13 +109,12 @@ export class SocketController {
       this.videoRoomUsers.set(roomId, roomUsers);
 
       // Notify other users in the room
-      socket.to(roomId).emit("user-joined", { peerId });
+      socket.to(roomId).emit('user-joined', { peerId });
 
       // Send current room users to the joining user
-      socket.emit("room-users", { users: roomUsers.filter(user => user.userId !== userId) });
-    }
-    catch (error) {
-      socket.emit("error", (error as Error).message);
+      socket.emit('room-users', { users: roomUsers.filter((user) => user.userId !== userId) });
+    } catch (error) {
+      socket.emit('error', (error as Error).message);
     }
   }
 
@@ -119,7 +122,7 @@ export class SocketController {
     userId: string,
     roomId: string,
     socket: Socket,
-    io: SocketIOServer,
+    io: SocketIOServer
   ): Promise<void> {
     try {
       socket.leave(roomId);
@@ -127,20 +130,18 @@ export class SocketController {
       // Remove user from room
       const roomUsers = this.videoRoomUsers.get(roomId);
       if (roomUsers) {
-        const updatedUsers = roomUsers.filter(user => user.userId !== userId);
+        const updatedUsers = roomUsers.filter((user) => user.userId !== userId);
         if (updatedUsers.length === 0) {
           this.videoRoomUsers.delete(roomId);
-        }
-        else {
+        } else {
           this.videoRoomUsers.set(roomId, updatedUsers);
         }
 
         // Notify remaining users
-        io.to(roomId).emit("user-disconnected", { userId });
+        io.to(roomId).emit('user-disconnected', { userId });
       }
-    }
-    catch (error) {
-      socket.emit("error", (error as Error).message);
+    } catch (error) {
+      socket.emit('error', (error as Error).message);
     }
   }
 
@@ -148,8 +149,8 @@ export class SocketController {
     const chats = await this.chatService.getUserChats(userId);
     const groups = await this.groupService.getUserGroups(userId);
     const rooms = [
-      ...chats.map(chat => chat._id.toString()),
-      ...groups.map(group => group._id.toString()),
+      ...chats.map((chat) => chat._id.toString()),
+      ...groups.map((group) => group._id.toString()),
     ];
     socket.join(rooms);
   }
@@ -158,7 +159,7 @@ export class SocketController {
     userId: string,
     otherUserId: string,
     socket: Socket,
-    io: SocketIOServer,
+    io: SocketIOServer
   ): Promise<void> {
     try {
       const chat = await this.chatService.createChat(userId, otherUserId);
@@ -166,14 +167,13 @@ export class SocketController {
 
       const otherSocketId = this.userSocketMap.get(otherUserId);
       if (otherSocketId) {
-        io.to(otherSocketId).emit("chatCreated", chat);
+        io.to(otherSocketId).emit('chatCreated', chat);
         io.sockets.sockets.get(otherSocketId)?.join(chat._id.toString());
       }
 
-      socket.emit("chatCreated", chat);
-    }
-    catch (error) {
-      socket.emit("error", (error as Error).message);
+      socket.emit('chatCreated', chat);
+    } catch (error) {
+      socket.emit('error', (error as Error).message);
     }
   }
 
@@ -182,7 +182,7 @@ export class SocketController {
     name: string,
     memberIds: string[],
     socket: Socket,
-    io: SocketIOServer,
+    io: SocketIOServer
   ): Promise<void> {
     try {
       const group = await this.groupService.createGroup(userId, name, memberIds);
@@ -192,15 +192,14 @@ export class SocketController {
       memberIds.forEach((memberId) => {
         const memberSocketId = this.userSocketMap.get(memberId);
         if (memberSocketId) {
-          io.to(memberSocketId).emit("groupCreated", group);
+          io.to(memberSocketId).emit('groupCreated', group);
           io.sockets.sockets.get(memberSocketId)?.join(groupId);
         }
       });
 
-      socket.emit("groupCreated", group);
-    }
-    catch (error) {
-      socket.emit("error", (error as Error).message);
+      socket.emit('groupCreated', group);
+    } catch (error) {
+      socket.emit('error', (error as Error).message);
     }
   }
 
@@ -208,18 +207,18 @@ export class SocketController {
     userId: string,
     data: {
       chatId: string;
-      chatType: "Chat" | "Group";
+      chatType: 'Chat' | 'Group';
       content?: string;
       fileUrl?: string;
-      fileType?: "image" | "video" | "pdf";
+      fileType?: 'image' | 'video' | 'pdf';
       replyTo?: string;
     },
     socket: Socket,
-    io: SocketIOServer,
+    io: SocketIOServer
   ): Promise<void> {
     try {
       let actualChatId = data.chatId;
-      if (data.chatType === "Chat") {
+      if (data.chatType === 'Chat') {
         const existingChat = await this.chatService.findById(data.chatId).catch(() => null);
         if (!existingChat) {
           const chat = await this.chatService.createChat(userId, data.chatId);
@@ -228,10 +227,10 @@ export class SocketController {
 
           const otherSocketId = this.userSocketMap.get(data.chatId);
           if (otherSocketId) {
-            io.to(otherSocketId).emit("chatCreated", chat);
+            io.to(otherSocketId).emit('chatCreated', chat);
             io.sockets.sockets.get(otherSocketId)?.join(actualChatId);
           }
-          socket.emit("chatCreated", chat);
+          socket.emit('chatCreated', chat);
         }
       }
 
@@ -243,14 +242,13 @@ export class SocketController {
         data.fileUrl,
         data.fileType,
         data.replyTo,
-        io,
+        io
       );
 
-      socket.emit("messageSent", message);
-    }
-    catch (error) {
-      console.error("Error in handleSendMessage:", error);
-      socket.emit("error", (error as Error).message);
+      socket.emit('messageSent', message);
+    } catch (error) {
+      console.error('Error in handleSendMessage:', error);
+      socket.emit('error', (error as Error).message);
     }
   }
 
@@ -258,53 +256,49 @@ export class SocketController {
     userId: string,
     messageId: string,
     reaction: string,
-    io: SocketIOServer,
+    io: SocketIOServer
   ): Promise<void> {
     try {
       await this.messageService.addReaction(userId, messageId, reaction, io);
-    }
-    catch (error) {
-      io.to(this.userSocketMap.get(userId) || "").emit("error", (error as Error).message);
+    } catch (error) {
+      io.to(this.userSocketMap.get(userId) || '').emit('error', (error as Error).message);
     }
   }
 
   private async handleRemoveReaction(
     userId: string,
     messageId: string,
-    io: SocketIOServer,
+    io: SocketIOServer
   ): Promise<void> {
     try {
       await this.messageService.removeReaction(userId, messageId, io);
-    }
-    catch (error) {
-      io.to(this.userSocketMap.get(userId) || "").emit("error", (error as Error).message);
+    } catch (error) {
+      io.to(this.userSocketMap.get(userId) || '').emit('error', (error as Error).message);
     }
   }
 
   private async handleDeleteMessage(
     userId: string,
     messageId: string,
-    io: SocketIOServer,
+    io: SocketIOServer
   ): Promise<void> {
     try {
       await this.messageService.deleteMessage(userId, messageId, io);
-    }
-    catch (error) {
-      io.to(this.userSocketMap.get(userId) || "").emit("error", (error as Error).message);
+    } catch (error) {
+      io.to(this.userSocketMap.get(userId) || '').emit('error', (error as Error).message);
     }
   }
 
   private async handleMarkMessagesAsRead(
     userId: string,
     chatId: string,
-    chatType: "Chat" | "Group",
-    io: SocketIOServer,
+    chatType: 'Chat' | 'Group',
+    io: SocketIOServer
   ): Promise<void> {
     try {
       await this.messageService.markMessagesAsRead(userId, chatId, chatType, io);
-    }
-    catch (error) {
-      io.to(this.userSocketMap.get(userId) || "").emit("error", (error as Error).message);
+    } catch (error) {
+      io.to(this.userSocketMap.get(userId) || '').emit('error', (error as Error).message);
     }
   }
 
@@ -312,13 +306,12 @@ export class SocketController {
     this.userSocketMap.delete(userId);
     // Clean up video rooms
     this.videoRoomUsers.forEach((users, roomId) => {
-      const updatedUsers = users.filter(user => user.userId !== userId);
+      const updatedUsers = users.filter((user) => user.userId !== userId);
       if (updatedUsers.length === 0) {
         this.videoRoomUsers.delete(roomId);
-      }
-      else {
+      } else {
         this.videoRoomUsers.set(roomId, updatedUsers);
-        socket.to(roomId).emit("user-disconnected", { userId });
+        socket.to(roomId).emit('user-disconnected', { userId });
       }
     });
     logger.info(`User disconnected: ${userId}`);

@@ -1,5 +1,5 @@
-import type { IComment } from "../../../models/comments.model";
-import type { AddCommentParams } from "../../types/service/add-comment";
+import type { IComment } from '../../../models/comments.model';
+import type { AddCommentParams } from '../../types/service/add-comment';
 
 export interface ICommentService {
   addComment: (commentData: AddCommentParams) => Promise<IComment>;

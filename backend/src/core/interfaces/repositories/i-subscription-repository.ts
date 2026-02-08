@@ -1,6 +1,6 @@
-import type { ISubscription } from "@/models/subscription.model";
+import type { ISubscription } from '@/models/subscription.model';
 
-import type { IBaseRepository } from "./i-base-repository";
+import type { IBaseRepository } from './i-base-repository';
 
 export interface ISubscriptionRepository extends IBaseRepository<ISubscription> {
   createSubscription: (data: Partial<ISubscription>) => Promise<ISubscription>;
@@ -19,6 +19,6 @@ export interface ISubscriptionRepository extends IBaseRepository<ISubscription> 
   getSubscriptionRevenueByDateGroups: (
     startDate: Date,
     endDate: Date,
-    groupByFormat: string,
+    groupByFormat: string
   ) => Promise<Array<{ date: string; revenue: number }>>;
 }

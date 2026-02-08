@@ -1,4 +1,4 @@
-import { IsArray, IsNumber, IsString } from "class-validator";
+import { IsArray, IsNumber, IsString } from 'class-validator';
 
 export class SubscriptionPlanStatsDTO {
   @IsString()
@@ -30,7 +30,7 @@ export class SubscriptionStatsDTO {
   static create(
     totalRevenue: number,
     totalSubscriptions: number,
-    plans: SubscriptionPlanStatsDTO[],
+    plans: SubscriptionPlanStatsDTO[]
   ): SubscriptionStatsDTO {
     const dto = new SubscriptionStatsDTO();
     dto.totalRevenue = totalRevenue;
