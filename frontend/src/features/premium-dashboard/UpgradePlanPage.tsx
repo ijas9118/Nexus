@@ -4,7 +4,7 @@ import PlanService from "@/services/planService";
 import { IPlan } from "@/types/plans";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "motion/react";
 import PriceCard from "@/components/organisms/PricingCard";
 import { getPlanLogo } from "@/utils/planLogo";
 import SubscriptionService from "@/services/subscriptionService";
@@ -59,7 +59,7 @@ export default function UpgradePlanPage() {
     console.log(`Selected plan: ${plan._id}`);
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -69,7 +69,7 @@ export default function UpgradePlanPage() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,

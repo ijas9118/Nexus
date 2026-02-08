@@ -1,12 +1,14 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from "express";
 
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../di/types';
-import asyncHandler from 'express-async-handler';
-import CustomError from '../utils/CustomError';
-import { StatusCodes } from 'http-status-codes';
-import { IConnectionService } from '../core/interfaces/services/IConnectionService';
-import { IConnectionsController } from '../core/interfaces/controllers/IConnectionsController';
+import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
+
+import type { IConnectionsController } from "@/core/interfaces/controllers/i-connections-controller";
+import type { IConnectionService } from "@/core/interfaces/services/i-connection-service";
+
+import { TYPES } from "@/di/types";
+import CustomError from "@/utils/custom-error";
 
 @injectable()
 export class ConnectionsController implements IConnectionsController {
@@ -17,16 +19,16 @@ export class ConnectionsController implements IConnectionsController {
     const search: string = req.query.search as string;
 
     if (search === undefined || search === null) {
-      res.status(StatusCodes.BAD_REQUEST).json({ message: 'Search term is required' });
+      res.status(StatusCodes.BAD_REQUEST).json({ message: "Search term is required" });
       return;
     }
 
-    const sanitizedSearchTerm = search.replace(/[^a-zA-Z0-9\s@._'-]/g, '').trim();
+    const sanitizedSearchTerm = search.replace(/[^\w\s@.'-]/g, "").trim();
 
     if (sanitizedSearchTerm.length === 0) {
       res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'Search term cannot be empty after sanitization' });
+        .json({ message: "Search term cannot be empty after sanitization" });
       return;
     }
 
@@ -40,21 +42,21 @@ export class ConnectionsController implements IConnectionsController {
     const { recipientId } = req.body;
 
     if (!recipientId) {
-      throw new CustomError('Recipient ID is required', StatusCodes.BAD_REQUEST);
+      throw new CustomError("Recipient ID is required", StatusCodes.BAD_REQUEST);
     }
 
     const result = await this._connectionsService.sendConnectionRequest(requesterId, recipientId);
 
-    if (result === 'ALREADY_SENT') {
+    if (result === "ALREADY_SENT") {
       res
         .status(StatusCodes.CONFLICT)
-        .json({ success: false, message: 'Connection request already sent' });
+        .json({ success: false, message: "Connection request already sent" });
       return;
     }
 
     res
       .status(StatusCodes.OK)
-      .json({ success: true, message: 'Connection request sent successfully' });
+      .json({ success: true, message: "Connection request sent successfully" });
   });
 
   acceptConnectionRequest = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -62,13 +64,13 @@ export class ConnectionsController implements IConnectionsController {
     const { requesterId } = req.body;
 
     if (!requesterId) {
-      throw new CustomError('Requester ID is required', StatusCodes.BAD_REQUEST);
+      throw new CustomError("Requester ID is required", StatusCodes.BAD_REQUEST);
     }
 
     const result = await this._connectionsService.acceptConnectionRequest(userId, requesterId);
 
     if (!result) {
-      throw new CustomError('Failed to accept connection request', StatusCodes.BAD_REQUEST);
+      throw new CustomError("Failed to accept connection request", StatusCodes.BAD_REQUEST);
     }
 
     res.status(StatusCodes.OK).json({ success: true });
@@ -79,12 +81,12 @@ export class ConnectionsController implements IConnectionsController {
     const { recipientId } = req.body;
 
     if (!recipientId) {
-      throw new CustomError('Recipient ID is required', StatusCodes.BAD_REQUEST);
+      throw new CustomError("Recipient ID is required", StatusCodes.BAD_REQUEST);
     }
 
     const result = await this._connectionsService.hasSentConnectionRequest(
       requesterId,
-      recipientId
+      recipientId,
     );
 
     res.status(StatusCodes.OK).json({ result });
@@ -95,16 +97,16 @@ export class ConnectionsController implements IConnectionsController {
     const { recipientId } = req.body;
 
     if (!recipientId) {
-      throw new CustomError('Recipient ID is required', StatusCodes.BAD_REQUEST);
+      throw new CustomError("Recipient ID is required", StatusCodes.BAD_REQUEST);
     }
 
     const result = await this._connectionsService.withdrawConnectionRequest(
       requesterId,
-      recipientId
+      recipientId,
     );
 
     if (!result) {
-      throw new CustomError('Failed to withdraw connection request', StatusCodes.BAD_REQUEST);
+      throw new CustomError("Failed to withdraw connection request", StatusCodes.BAD_REQUEST);
     }
 
     res.status(StatusCodes.OK).json({ result });
@@ -115,7 +117,7 @@ export class ConnectionsController implements IConnectionsController {
     const { userId2 } = req.body;
 
     if (!userId2) {
-      throw new CustomError('User ID is required', StatusCodes.BAD_REQUEST);
+      throw new CustomError("User ID is required", StatusCodes.BAD_REQUEST);
     }
 
     const result = await this._connectionsService.isConnected(userId1, userId2);

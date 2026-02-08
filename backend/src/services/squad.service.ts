@@ -1,18 +1,23 @@
-import { inject, injectable } from 'inversify';
-import { ISquadService } from '../core/interfaces/services/ISquadService';
-import { ISquad } from '../models/squads.model';
-import { TYPES } from '../di/types';
-import { ISquadRepository } from '../core/interfaces/repositories/ISquadRepository';
-import { ICategoryRepository } from '../core/interfaces/repositories/ICategoryRepository';
-import { uploadToCloudinary } from '@/utils/cloudinaryUtils';
-import { Express } from 'express';
-import CustomError from '@/utils/CustomError';
-import { StatusCodes } from 'http-status-codes';
-import { SquadByCategoryResponseDto } from '@/dtos/responses/sqauds.dto';
-import { IContentRepository } from '@/core/interfaces/repositories/IContentRepository';
-import { UserRole } from '@/core/types/UserTypes';
-import { SquadContentResponseDto } from '@/dtos/responses/squad-contents.dto';
-import { SquadListDto } from '@/dtos/responses/admin/SquadListDTO';
+import type { Express } from "express";
+
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
+
+import type { IContentRepository } from "@/core/interfaces/repositories/i-content-repository";
+import type { UserRole } from "@/core/types/user-types";
+
+import { SquadListDto } from "@/dtos/responses/admin/squad-list-dto";
+import { SquadByCategoryResponseDto } from "@/dtos/responses/sqauds.dto";
+import { SquadContentResponseDto } from "@/dtos/responses/squad-contents.dto";
+import { uploadToCloudinary } from "@/utils/cloudinary-utils";
+import CustomError from "@/utils/custom-error";
+
+import type { ICategoryRepository } from "../core/interfaces/repositories/i-category-repository";
+import type { ISquadRepository } from "../core/interfaces/repositories/i-squad-repository";
+import type { ISquadService } from "../core/interfaces/services/i-squad-service";
+import type { ISquad } from "../models/squads.model";
+
+import { TYPES } from "../di/types";
 
 @injectable()
 export class SquadService implements ISquadService {
@@ -20,30 +25,30 @@ export class SquadService implements ISquadService {
     @inject(TYPES.SquadRepository) private squadRepository: ISquadRepository,
     @inject(TYPES.CategoryRepository) private categoryRepository: ICategoryRepository,
     @inject(TYPES.ContentRepository) private contentRepository: IContentRepository,
-    @inject(TYPES.UserRepository) private userRepository: IContentRepository
+    @inject(TYPES.UserRepository) private userRepository: IContentRepository,
   ) {}
 
   createSquad = async (
     squadData: Partial<ISquad>,
-    logoFile?: Express.Multer.File
+    logoFile?: Express.Multer.File,
   ): Promise<ISquad> => {
     const { category } = squadData;
-    if (!category || typeof category !== 'string') {
-      throw new Error('Invalid category provided');
+    if (!category || typeof category !== "string") {
+      throw new Error("Invalid category provided");
     }
 
     const categoryObj = await this.categoryRepository.findOne({ name: category });
     if (!categoryObj) {
-      throw new Error('Category not found');
+      throw new Error("Category not found");
     }
 
     // Upload logo to Cloudinary if provided
     let logoUrl: string | undefined;
     if (logoFile) {
       const result = await uploadToCloudinary(logoFile, {
-        baseFolder: 'images',
-        subFolder: 'squad-logos',
-        resourceType: 'image',
+        baseFolder: "images",
+        subFolder: "squad-logos",
+        resourceType: "image",
       });
       logoUrl = result.url;
     }
@@ -98,7 +103,7 @@ export class SquadService implements ISquadService {
     const user = await this.userRepository.findOne({ _id: userId });
 
     if (!user) {
-      throw new CustomError('User not found', StatusCodes.NOT_FOUND);
+      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
     }
 
     return await this.squadRepository.getJoinedSquads(userId);
@@ -106,11 +111,11 @@ export class SquadService implements ISquadService {
 
   getSquadsByCategory = async (
     userId: string,
-    category: string
+    category: string,
   ): Promise<SquadByCategoryResponseDto[]> => {
     const categoryExists = await this.categoryRepository.findById(category);
     if (!categoryExists) {
-      throw new CustomError('Category not found', StatusCodes.NOT_FOUND);
+      throw new CustomError("Category not found", StatusCodes.NOT_FOUND);
     }
 
     const squads = await this.squadRepository.getSquadsByCategory(category, userId);
@@ -125,10 +130,10 @@ export class SquadService implements ISquadService {
   leaveSquad = async (userId: string, squadId: string): Promise<void> => {
     const squad = await this.getSquadById(squadId);
     if (!squad) {
-      throw new CustomError('Squad not found', StatusCodes.NOT_FOUND);
+      throw new CustomError("Squad not found", StatusCodes.NOT_FOUND);
     }
     if (!squad.members.includes(userId)) {
-      throw new CustomError('User is not a member of this squad', StatusCodes.BAD_REQUEST);
+      throw new CustomError("User is not a member of this squad", StatusCodes.BAD_REQUEST);
     }
     await this.squadRepository.removeMemberFromSquad(userId, squadId);
   };
@@ -136,12 +141,12 @@ export class SquadService implements ISquadService {
   async getSquadContents(
     squadId: string,
     role: string,
-    userId: string
+    userId: string,
   ): Promise<SquadContentResponseDto[]> {
     const contents = await this.contentRepository.getSquadContents(
       squadId,
       role as UserRole,
-      userId
+      userId,
     );
 
     return SquadContentResponseDto.fromEntities(contents);

@@ -1,5 +1,6 @@
-import { EnrichedContent } from '@/core/types/content';
-import { IsBoolean, IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
+
+import type { EnrichedContent } from "@/core/types/content";
 
 export class SquadContentResponseDto {
   @IsString()
@@ -110,6 +111,6 @@ export class SquadContentResponseDto {
   }
 
   static fromEntities(entities: EnrichedContent[]): SquadContentResponseDto[] {
-    return entities.map((entity) => this.fromEntity(entity));
+    return entities.map(entity => this.fromEntity(entity));
   }
 }

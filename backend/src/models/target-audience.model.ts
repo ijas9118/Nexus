@@ -1,6 +1,8 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import type { Document } from "mongoose";
 
-export interface ITargetAudience extends Document {
+import mongoose, { Schema } from "mongoose";
+
+export interface ITargetAudience extends Document<string> {
   name: string;
   isActive: boolean;
 }
@@ -20,10 +22,10 @@ const TargetAudienceSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const TargetAudienceModel = mongoose.model<ITargetAudience>(
-  'TargetAudience',
-  TargetAudienceSchema
+  "TargetAudience",
+  TargetAudienceSchema,
 );

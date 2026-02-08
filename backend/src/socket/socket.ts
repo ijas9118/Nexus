@@ -1,15 +1,19 @@
-import { SocketController } from '@/controllers/socket.controller';
-import { container } from '@/di/container';
-import { TYPES } from '@/di/types';
-import { CLIENT_URL } from '@/utils/constants/index';
-import { Server } from 'http';
-import { Server as SocketIOServer } from 'socket.io';
+import type { Server } from "node:http";
 
-const setUpSocket = (server: Server) => {
+import { Server as SocketIOServer } from "socket.io";
+
+import type { SocketController } from "@/controllers/socket.controller";
+
+import { container } from "@/di/container";
+import { TYPES } from "@/di/types";
+
+import { env } from "../utils/env-validation";
+
+function setUpSocket(server: Server) {
   const io = new SocketIOServer(server, {
     cors: {
-      origin: CLIENT_URL,
-      methods: ['GET', 'POST'],
+      origin: env.CLIENT_URL,
+      methods: ["GET", "POST"],
       credentials: true,
     },
   });
@@ -18,6 +22,6 @@ const setUpSocket = (server: Server) => {
   socketController.initializeSocket(io);
 
   return io;
-};
+}
 
 export default setUpSocket;

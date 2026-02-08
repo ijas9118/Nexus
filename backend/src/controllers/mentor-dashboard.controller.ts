@@ -1,9 +1,12 @@
-import { IMentorDashboardController } from '@/core/interfaces/controllers/IMentorDashboardController';
-import { TYPES } from '@/di/types';
-import { MentorDashboardService } from '@/services/mentor-dashboard.service';
-import { Request, Response } from 'express';
-import asyncHandler from 'express-async-handler';
-import { injectable, inject } from 'inversify';
+import type { Request, Response } from "express";
+
+import asyncHandler from "express-async-handler";
+import { inject, injectable } from "inversify";
+
+import type { IMentorDashboardController } from "@/core/interfaces/controllers/i-mentor-dashboard-controller";
+import type { MentorDashboardService } from "@/services/mentor-dashboard.service";
+
+import { TYPES } from "@/di/types";
 
 @injectable()
 export class MentorDashboardController implements IMentorDashboardController {

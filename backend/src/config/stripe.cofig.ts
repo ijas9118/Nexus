@@ -1,4 +1,5 @@
-import Stripe from 'stripe';
-import { STRIPE_SECRET_KEY } from '../utils/constants';
+import Stripe from "stripe";
 
-export const stripe = new Stripe(STRIPE_SECRET_KEY);
+import { env } from "../utils/env-validation";
+
+export const stripe = new Stripe(env.STRIPE_SECRET_KEY);

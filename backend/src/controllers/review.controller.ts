@@ -1,9 +1,12 @@
-import { IReviewController } from '@/core/interfaces/controllers/IReviewController';
-import { IReviewService } from '@/core/interfaces/services/IReviewService';
-import { TYPES } from '@/di/types';
-import { Request, Response } from 'express';
-import asyncHandler from 'express-async-handler';
-import { injectable, inject } from 'inversify';
+import type { Request, Response } from "express";
+
+import asyncHandler from "express-async-handler";
+import { inject, injectable } from "inversify";
+
+import type { IReviewController } from "@/core/interfaces/controllers/i-review-controller";
+import type { IReviewService } from "@/core/interfaces/services/i-review-service";
+
+import { TYPES } from "@/di/types";
 
 @injectable()
 export class ReviewController implements IReviewController {
@@ -14,12 +17,12 @@ export class ReviewController implements IReviewController {
     const userId = req.user?._id as string; // Assuming user is attached to request via auth middleware
 
     if (!userId) {
-      res.status(401).json({ error: 'Authentication required' });
+      res.status(401).json({ error: "Authentication required" });
       return;
     }
 
     if (!rating || !mentorId) {
-      res.status(400).json({ error: 'Rating and mentorId are required' });
+      res.status(400).json({ error: "Rating and mentorId are required" });
       return;
     }
 
@@ -32,17 +35,17 @@ export class ReviewController implements IReviewController {
 
     res.status(201).json({
       success: true,
-      message: 'Review created successfully',
+      message: "Review created successfully",
       data: review,
     });
   });
 
   getReviewById = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-    const review = await this._reviewService.getReviewById(id);
+    const review = await this._reviewService.getReviewById(id as string);
 
     if (!review) {
-      res.status(404).json({ error: 'Review not found' });
+      res.status(404).json({ error: "Review not found" });
       return;
     }
 
@@ -53,8 +56,8 @@ export class ReviewController implements IReviewController {
   });
 
   getAllReviews = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+    const page = Number.parseInt(req.query.page as string) || 1;
+    const limit = Number.parseInt(req.query.limit as string) || 10;
 
     const result = await this._reviewService.getAllReviews(page, limit);
 
@@ -66,10 +69,10 @@ export class ReviewController implements IReviewController {
 
   getReviewsByMentor = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { mentorId } = req.params;
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+    const page = Number.parseInt(req.query.page as string) || 1;
+    const limit = Number.parseInt(req.query.limit as string) || 10;
 
-    const result = await this._reviewService.getReviewsByMentor(mentorId, page, limit);
+    const result = await this._reviewService.getReviewsByMentor(mentorId as string, page, limit);
 
     res.json({
       success: true,
@@ -81,7 +84,7 @@ export class ReviewController implements IReviewController {
     const userId = req.user?._id as string;
 
     if (!userId) {
-      res.status(401).json({ error: 'Authentication required' });
+      res.status(401).json({ error: "Authentication required" });
       return;
     }
 
@@ -99,20 +102,24 @@ export class ReviewController implements IReviewController {
     const userId = req.user?._id as string;
 
     if (!userId) {
-      res.status(401).json({ error: 'Authentication required' });
+      res.status(401).json({ error: "Authentication required" });
       return;
     }
 
-    const review = await this._reviewService.updateReview(id, { rating, feedback }, userId);
+    const review = await this._reviewService.updateReview(
+      id as string,
+      { rating, feedback },
+      userId,
+    );
 
     if (!review) {
-      res.status(404).json({ error: 'Review not found' });
+      res.status(404).json({ error: "Review not found" });
       return;
     }
 
     res.json({
       success: true,
-      message: 'Review updated successfully',
+      message: "Review updated successfully",
       data: review,
     });
   });
@@ -122,26 +129,26 @@ export class ReviewController implements IReviewController {
     const userId = req.user?._id as string;
 
     if (!userId) {
-      res.status(401).json({ error: 'Authentication required' });
+      res.status(401).json({ error: "Authentication required" });
       return;
     }
 
-    const success = await this._reviewService.deleteReview(id, userId);
+    const success = await this._reviewService.deleteReview(id as string, userId);
 
     if (!success) {
-      res.status(404).json({ error: 'Review not found' });
+      res.status(404).json({ error: "Review not found" });
       return;
     }
 
     res.json({
       success: true,
-      message: 'Review deleted successfully',
+      message: "Review deleted successfully",
     });
   });
 
   getMentorStats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { mentorId } = req.params;
-    const stats = await this._reviewService.getMentorStats(mentorId);
+    const stats = await this._reviewService.getMentorStats(mentorId as string);
 
     res.json({
       success: true,
@@ -154,11 +161,14 @@ export class ReviewController implements IReviewController {
     const userId = req.user?._id as string;
 
     if (!userId) {
-      res.status(401).json({ error: 'Authentication required' });
+      res.status(401).json({ error: "Authentication required" });
       return;
     }
 
-    const existingReview = await this._reviewService.checkExistingReview(mentorId, userId);
+    const existingReview = await this._reviewService.checkExistingReview(
+      mentorId as string,
+      userId,
+    );
 
     res.json({
       success: true,

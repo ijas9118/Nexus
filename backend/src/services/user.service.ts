@@ -1,15 +1,21 @@
-import { injectable, inject } from 'inversify';
-import { TYPES } from '../di/types';
-import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
-import { IUserService } from '../core/interfaces/services/IUserService';
-import { IUser, UserModel } from '../models/user.model';
-import { UsersResponseDTO } from '../dtos/responses/admin/users.dto';
-import bcrypt from 'bcryptjs';
-import { ISquad } from '../models/squads.model';
-import { Express } from 'express';
-import { deleteFromCloudinary, uploadToCloudinary } from '@/utils/cloudinaryUtils';
-import { IContent } from '@/models/content.model';
-import { IContentRepository } from '@/core/interfaces/repositories/IContentRepository';
+import type { Express } from "express";
+
+import bcrypt from "bcryptjs";
+import { inject, injectable } from "inversify";
+
+import type { IContentRepository } from "@/core/interfaces/repositories/i-content-repository";
+import type { IContent } from "@/models/content.model";
+
+import { deleteFromCloudinary, uploadToCloudinary } from "@/utils/cloudinary-utils";
+
+import type { IUserRepository } from "../core/interfaces/repositories/i-user-repository";
+import type { IUserService } from "../core/interfaces/services/i-user-service";
+import type { ISquad } from "../models/squads.model";
+import type { IUser } from "../models/user.model";
+
+import { TYPES } from "../di/types";
+import { UsersResponseDTO } from "../dtos/responses/admin/users.dto";
+import { UserModel } from "../models/user.model";
 
 interface UserUpdateData {
   profilePic?: string;
@@ -20,7 +26,7 @@ interface UserUpdateData {
 export class UserService implements IUserService {
   constructor(
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-    @inject(TYPES.ContentRepository) private contentRepo: IContentRepository
+    @inject(TYPES.ContentRepository) private contentRepo: IContentRepository,
   ) {}
 
   async findByEmail(email: string): Promise<IUser | null> {
@@ -29,7 +35,7 @@ export class UserService implements IUserService {
 
   async getUsers(
     page: number = 1,
-    limit: number = 10
+    limit: number = 10,
   ): Promise<{ users: UsersResponseDTO[]; total: number }> {
     const skip = (page - 1) * limit;
     const [usersRaw, total] = await Promise.all([
@@ -56,22 +62,22 @@ export class UserService implements IUserService {
       currentPassword: string;
       newPassword: string;
       confirmPassword: string;
-    }
+    },
   ): Promise<boolean> {
     const { currentPassword, newPassword, confirmPassword } = passwordData;
 
     if (newPassword !== confirmPassword) {
-      throw new Error('New password and confirm password do not match');
+      throw new Error("New password and confirm password do not match");
     }
 
     const user = await this.userRepository.findOne({ _id: userId });
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
     if (!isPasswordValid) {
-      throw new Error('Current password is incorrect');
+      throw new Error("Current password is incorrect");
     }
 
     const saltRounds = 10;
@@ -85,13 +91,13 @@ export class UserService implements IUserService {
   async updateProfilePic(
     userId: string,
     data: UserUpdateData,
-    file?: Express.Multer.File
+    file?: Express.Multer.File,
   ): Promise<UserUpdateData> {
     if (file) {
       const { url, publicId } = await uploadToCloudinary(file, {
-        baseFolder: 'images',
-        subFolder: 'profile-pic',
-        resourceType: 'image',
+        baseFolder: "images",
+        subFolder: "profile-pic",
+        resourceType: "image",
       });
 
       const user = await this.userRepository.getUserById(userId);
@@ -105,7 +111,8 @@ export class UserService implements IUserService {
     }
 
     const updatedUser = await this.userRepository.updateUser(userId, data);
-    if (!updatedUser) throw new Error('User not found');
+    if (!updatedUser)
+      throw new Error("User not found");
     return data;
   }
 
@@ -124,7 +131,7 @@ export class UserService implements IUserService {
   getUserContents = async (username: string): Promise<IContent[] | null> => {
     const userId = await this.userRepository.getUserIdByUsername(username);
     if (!userId) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     const contents = await this.contentRepo.getUserContents(userId);

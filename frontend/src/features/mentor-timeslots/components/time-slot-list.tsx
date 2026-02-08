@@ -7,7 +7,7 @@ import { TimeSlot } from "@/types/mentor";
 import TimeSlotService from "@/services/TimeSlotService";
 import { Alert, AlertDescription } from "@/components/atoms/alert";
 import { ScrollArea } from "@/components/organisms/scroll-area";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "motion/react";
 import dayjs from "dayjs";
 
 export default function TimeSlotList() {
@@ -32,7 +32,7 @@ export default function TimeSlotList() {
     },
   });
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -40,7 +40,7 @@ export default function TimeSlotList() {
     },
   };
 
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
       opacity: 1,
@@ -59,7 +59,7 @@ export default function TimeSlotList() {
     },
   };
 
-  const slotVariants = {
+  const slotVariants: Variants = {
     hidden: { opacity: 0, x: -10 },
     visible: {
       opacity: 1,

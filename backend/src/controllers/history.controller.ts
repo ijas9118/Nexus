@@ -1,12 +1,14 @@
-import { Request, Response } from 'express';
-import { IHistoryController } from '../core/interfaces/controllers/IHistoryController';
+import type { Request, Response } from "express";
 
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../di/types';
-import { IHistoryService } from '../core/interfaces/services/IHistoryService';
-import asyncHandler from 'express-async-handler';
-import CustomError from '../utils/CustomError';
-import { StatusCodes } from 'http-status-codes';
+import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
+
+import type { IHistoryController } from "@/core/interfaces/controllers/i-history-controller";
+import type { IHistoryService } from "@/core/interfaces/services/i-history-service";
+
+import { TYPES } from "@/di/types";
+import CustomError from "@/utils/custom-error";
 
 @injectable()
 export class HistoryController implements IHistoryController {
@@ -17,16 +19,16 @@ export class HistoryController implements IHistoryController {
     const { contentId } = req.body;
 
     if (!contentId) {
-      throw new CustomError('Content ID is required', StatusCodes.BAD_REQUEST);
+      throw new CustomError("Content ID is required", StatusCodes.BAD_REQUEST);
     }
 
     const result = await this._historyService.removeFromHistory(userId, contentId);
 
     if (!result) {
-      throw new CustomError('Failed to remove from history', StatusCodes.INTERNAL_SERVER_ERROR);
+      throw new CustomError("Failed to remove from history", StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
-    res.status(StatusCodes.OK).json({ message: 'Removed from history' });
+    res.status(StatusCodes.OK).json({ message: "Removed from history" });
   });
 
   getAllHistory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -35,7 +37,7 @@ export class HistoryController implements IHistoryController {
     const history = await this._historyService.getAllHistory(userId);
 
     if (!history) {
-      throw new CustomError('Failed to fetch history', StatusCodes.INTERNAL_SERVER_ERROR);
+      throw new CustomError("Failed to fetch history", StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
     res.status(StatusCodes.OK).json(history);

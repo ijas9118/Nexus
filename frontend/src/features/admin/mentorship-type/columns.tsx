@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { MentorshipTypeData } from "@/types/mentor";
 
 interface ColumnActionsProps {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "motion/react";
 
 export default function NotFoundPage() {
   const [mounted, setMounted] = useState(false);
@@ -8,7 +8,7 @@ export default function NotFoundPage() {
     setMounted(true);
   }, []);
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -19,7 +19,7 @@ export default function NotFoundPage() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
@@ -28,7 +28,7 @@ export default function NotFoundPage() {
     },
   };
 
-  const pulseVariants = {
+  const pulseVariants: Variants = {
     pulse: {
       scale: [1, 1.05, 1],
       opacity: [0.7, 1, 0.7],
@@ -40,7 +40,7 @@ export default function NotFoundPage() {
     },
   };
 
-  const pathVariants = {
+  const pathVariants: Variants = {
     hidden: {
       pathLength: 0,
       opacity: 0,
@@ -55,7 +55,7 @@ export default function NotFoundPage() {
     },
   };
 
-  const floatingVariants = {
+  const floatingVariants: Variants = {
     float: {
       y: [0, -15, 0],
       transition: {

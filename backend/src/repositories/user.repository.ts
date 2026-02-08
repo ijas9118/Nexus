@@ -1,10 +1,14 @@
-import { injectable } from 'inversify';
-import { IUser, UserModel } from '../models/user.model';
-import { BaseRepository } from '../core/abstracts/base.repository';
-import { IUserRepository } from '../core/interfaces/repositories/IUserRepository';
-import { Types } from 'mongoose';
-import { ISquad } from '../models/squads.model';
-import { SearchResultItem } from '@/core/types/search';
+import { injectable } from "inversify";
+import { Types } from "mongoose";
+
+import type { SearchResultItem } from "@/core/types/search";
+
+import type { IUserRepository } from "../core/interfaces/repositories/i-user-repository";
+import type { ISquad } from "../models/squads.model";
+import type { IUser } from "../models/user.model";
+
+import { BaseRepository } from "../core/abstracts/base.repository";
+import { UserModel } from "../models/user.model";
 
 @injectable()
 export class UserRepository extends BaseRepository<IUser> implements IUserRepository {
@@ -26,7 +30,7 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   }
 
   async countMentors(): Promise<number> {
-    return this.model.countDocuments({ role: 'mentor' });
+    return this.model.countDocuments({ role: "mentor" });
   }
 
   async countUsersBefore(date: Date): Promise<number> {
@@ -37,7 +41,7 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
 
   async countMentorsBefore(date: Date): Promise<number> {
     return this.model.countDocuments({
-      role: 'mentor',
+      role: "mentor",
       createdAt: { $lt: date },
     });
   }
@@ -65,7 +69,7 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     const userObjectId = new Types.ObjectId(userId);
     const user = await this.findOne({ username: userData.username });
     if (user) {
-      throw new Error('Username already exists');
+      throw new Error("Username already exists");
     }
     return this.model.findByIdAndUpdate(userObjectId, userData, { new: true });
   }
@@ -91,9 +95,9 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   }
 
   async getUserJoinedSquads(userId: string): Promise<ISquad[]> {
-    const user = await UserModel.findById(userId).populate('joinedSquads');
+    const user = await UserModel.findById(userId).populate("joinedSquads");
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
     return user.joinedSquads as unknown as ISquad[];
   }
@@ -112,19 +116,19 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   };
 
   async updatePremiumStatus(userId: string, isPremium: boolean): Promise<IUser | null> {
-    return this.findByIdAndUpdate(userId, { isPremium, role: 'premium' });
+    return this.findByIdAndUpdate(userId, { isPremium, role: "premium" });
   }
 
   async search(criteria: { query: string; limit?: number }): Promise<SearchResultItem[]> {
     const users = await this.model
       .find({ $text: { $search: criteria.query } })
-      .select('name username profilePic')
+      .select("name username profilePic")
       .limit(criteria.limit ?? 20)
       .lean();
 
-    return users.map((user) => ({
+    return users.map(user => ({
       id: user._id.toString(),
-      type: 'user',
+      type: "user",
       title: user.name || user.username,
       snippet: user.username,
       image: user.profilePic,

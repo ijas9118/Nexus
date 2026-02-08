@@ -1,22 +1,24 @@
-import jwt from 'jsonwebtoken';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from './constants';
-import { JwtPayloadWithUser } from '../core/types/global/jwt';
+import jwt from "jsonwebtoken";
 
-const ACCESS_TOKEN_SECRET = ACCESS_TOKEN || 'access_secret';
-const REFRESH_TOKEN_SECRET = REFRESH_TOKEN || 'refresh_secret';
+import type { JwtPayloadWithUser } from "../core/types/global/jwt";
 
-export const generateAccessToken = (payload: JwtPayloadWithUser): string => {
-  return jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '5min' });
-};
+import { env } from "../utils/env-validation";
 
-export const generateRefreshToken = (user: object): string => {
-  return jwt.sign({ user }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
-};
+const ACCESS_TOKEN_SECRET = env.ACCESS_TOKEN_SECRET || "access_secret";
+const REFRESH_TOKEN_SECRET = env.REFRESH_TOKEN_SECRET || "refresh_secret";
 
-export const verifyAccessToken = (token: string): JwtPayloadWithUser => {
+export function generateAccessToken(payload: JwtPayloadWithUser): string {
+  return jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: "5min" });
+}
+
+export function generateRefreshToken(user: object): string {
+  return jwt.sign({ user }, REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+}
+
+export function verifyAccessToken(token: string): JwtPayloadWithUser {
   return jwt.verify(token, ACCESS_TOKEN_SECRET) as JwtPayloadWithUser;
-};
+}
 
-export const verifyRefreshToken = (token: string): JwtPayloadWithUser => {
+export function verifyRefreshToken(token: string): JwtPayloadWithUser {
   return jwt.verify(token, REFRESH_TOKEN_SECRET) as JwtPayloadWithUser;
-};
+}

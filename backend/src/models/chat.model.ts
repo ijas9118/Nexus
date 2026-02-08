@@ -1,4 +1,6 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import type { Document } from "mongoose";
+
+import mongoose, { Schema } from "mongoose";
 
 export interface IChat extends Document<string> {
   participants: string[]; // Array of User IDs (exactly 2 for one-on-one)
@@ -6,7 +8,7 @@ export interface IChat extends Document<string> {
   lastMessage?: {
     content?: string;
     fileUrl?: string;
-    fileType?: 'image' | 'video' | 'pdf';
+    fileType?: "image" | "video" | "pdf";
     sender: string;
     createdAt: Date;
   };
@@ -17,7 +19,7 @@ const chatSchema = new Schema<IChat>(
     participants: [
       {
         type: String,
-        ref: 'User',
+        ref: "User",
         required: true,
       },
     ],
@@ -25,7 +27,7 @@ const chatSchema = new Schema<IChat>(
       {
         userId: {
           type: String,
-          ref: 'User',
+          ref: "User",
           required: true,
         },
         count: {
@@ -40,28 +42,20 @@ const chatSchema = new Schema<IChat>(
       fileUrl: { type: String },
       fileType: {
         type: String,
-        enum: ['image', 'video', 'pdf'],
+        enum: ["image", "video", "pdf"],
       },
       sender: {
         type: String,
-        ref: 'User',
+        ref: "User",
       },
       createdAt: {
         type: Date,
       },
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
-
-chatSchema.pre('save', function (next) {
-  if (this.participants.length !== 2) {
-    next(new Error('One-on-one chats must have exactly 2 participants'));
-  } else {
-    next();
-  }
-});
 
 chatSchema.index({ participants: 1 });
 
-export const ChatModel = mongoose.model<IChat>('Chat', chatSchema);
+export const ChatModel = mongoose.model<IChat>("Chat", chatSchema);

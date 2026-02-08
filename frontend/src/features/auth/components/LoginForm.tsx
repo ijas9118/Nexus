@@ -4,7 +4,7 @@ import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { Input } from "@/components/atoms/input";
 import { Button } from "@/components/atoms/button";
 import { AuthFormData } from "../hooks/useAuth";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { TbHexagonLetterDFilled } from "react-icons/tb";
 
 interface LoginFormProps {

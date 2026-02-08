@@ -1,7 +1,10 @@
-import { BaseRepository } from '../core/abstracts/base.repository';
-import { IVoteRepository } from '../core/interfaces/repositories/IVoteRepository';
-import { IVote, VoteModel } from '../models/vote.model';
-import { injectable } from 'inversify';
+import { injectable } from "inversify";
+
+import type { IVoteRepository } from "../core/interfaces/repositories/i-vote-repository";
+import type { IVote } from "../models/vote.model";
+
+import { BaseRepository } from "../core/abstracts/base.repository";
+import { VoteModel } from "../models/vote.model";
 
 @injectable()
 export class VoteRepository extends BaseRepository<IVote> implements IVoteRepository {
@@ -15,8 +18,8 @@ export class VoteRepository extends BaseRepository<IVote> implements IVoteReposi
 
   async countVotes(contentId: string): Promise<{ upvotes: number; downvotes: number }> {
     const [upvotes, downvotes] = await Promise.all([
-      this.model.countDocuments({ contentId, voteType: 'upvote' }),
-      this.model.countDocuments({ contentId, voteType: 'downvote' }),
+      this.model.countDocuments({ contentId, voteType: "upvote" }),
+      this.model.countDocuments({ contentId, voteType: "downvote" }),
     ]);
     return { upvotes, downvotes };
   }

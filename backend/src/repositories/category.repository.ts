@@ -1,8 +1,11 @@
-import { Types } from 'mongoose';
-import { BaseRepository } from '../core/abstracts/base.repository';
-import { ICategoryRepository } from '../core/interfaces/repositories/ICategoryRepository';
-import { CategoryModel, ICategory } from '../models/categories.model';
-import { injectable } from 'inversify';
+import { injectable } from "inversify";
+import { Types } from "mongoose";
+
+import type { ICategoryRepository } from "../core/interfaces/repositories/i-category-repository";
+import type { ICategory } from "../models/categories.model";
+
+import { BaseRepository } from "../core/abstracts/base.repository";
+import { CategoryModel } from "../models/categories.model";
 
 @injectable()
 export class CategoryRepository extends BaseRepository<ICategory> implements ICategoryRepository {
@@ -37,11 +40,11 @@ export class CategoryRepository extends BaseRepository<ICategory> implements ICa
   async findAllWithPagination(
     page: number,
     limit: number,
-    search: string
+    search: string,
   ): Promise<{ categories: ICategory[]; total: number }> {
     const skip = (page - 1) * limit;
     const query = search
-      ? { name: { $regex: search, $options: 'i' } } // Case-insensitive search
+      ? { name: { $regex: search, $options: "i" } } // Case-insensitive search
       : {};
 
     const [categories, total] = await Promise.all([

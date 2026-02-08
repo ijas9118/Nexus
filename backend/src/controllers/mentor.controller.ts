@@ -1,21 +1,24 @@
-import { Request, Response } from 'express';
-import { IMentorController } from '../core/interfaces/controllers/IMentorController';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../di/types';
-import { IMentorService } from '../core/interfaces/services/IMentorService';
-import asyncHandler from 'express-async-handler';
-import { StatusCodes } from 'http-status-codes';
+import type { Request, Response } from "express";
+
+import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
+
+import type { IMentorController } from "@/core/interfaces/controllers/i-mentor-controller";
+import type { IMentorService } from "@/core/interfaces/services/i-mentor-service";
+import type { PersonalInfo } from "@/core/types";
+import type { IMentor } from "@/models/mentor.model";
+
+import logger from "@/config/logger";
 import {
   ExperienceLevel,
   ExpertiseArea,
   MentorshipType,
   TargetAudience,
   Technology,
-} from '@/core/types/entities/mentor';
-import { PersonalInfo } from '@/core/types';
-import { IMentor } from '@/models/mentor.model';
-import CustomError from '@/utils/CustomError';
-import logger from '@/config/logger';
+} from "@/core/types/entities/mentor";
+import { TYPES } from "@/di/types";
+import CustomError from "@/utils/custom-error";
 
 @injectable()
 export class MentorController implements IMentorController {
@@ -25,30 +28,30 @@ export class MentorController implements IMentorController {
     const userId = req.user?._id as string;
     const mentorData = {
       personalInfo: req.body.personalInfo as PersonalInfo,
-      experience: req.body.experience as IMentor['experience'],
-      mentorshipDetails: req.body.mentorshipDetails as IMentor['mentorshipDetails'],
+      experience: req.body.experience as IMentor["experience"],
+      mentorshipDetails: req.body.mentorshipDetails as IMentor["mentorshipDetails"],
     };
 
     // Basic validation
     if (!mentorData.personalInfo || !mentorData.experience || !mentorData.mentorshipDetails) {
       throw new CustomError(
-        'Missing required fields: personalInfo, experience, or mentorshipDetails.',
-        StatusCodes.BAD_REQUEST
+        "Missing required fields: personalInfo, experience, or mentorshipDetails.",
+        StatusCodes.BAD_REQUEST,
       );
     }
 
     if (
-      !mentorData.personalInfo.firstName ||
-      !mentorData.personalInfo.lastName ||
-      !mentorData.personalInfo.email
+      !mentorData.personalInfo.firstName
+      || !mentorData.personalInfo.lastName
+      || !mentorData.personalInfo.email
     ) {
       throw new CustomError(
-        'Missing required personalInfo fields: firstName, lastName, or email.',
-        StatusCodes.BAD_REQUEST
+        "Missing required personalInfo fields: firstName, lastName, or email.",
+        StatusCodes.BAD_REQUEST,
       );
     }
 
-    logger.debug('Received mentor application data', { userId, mentorData });
+    logger.debug("Received mentor application data", { userId, mentorData });
 
     const mentor = await this._mentorService.applyAsMentor(userId, mentorData);
     res.status(StatusCodes.CREATED).json({ success: true, data: mentor });
@@ -56,13 +59,13 @@ export class MentorController implements IMentorController {
 
   approveMentor = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { mentorId, userId } = req.params;
-    const mentor = await this._mentorService.approveMentor(mentorId, userId);
+    const mentor = await this._mentorService.approveMentor(mentorId as string, userId as string);
     res.status(StatusCodes.OK).json({ success: true, data: mentor });
   });
 
   rejectMentor = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { mentorId } = req.params;
-    const mentor = await this._mentorService.rejectMentor(mentorId);
+    const mentor = await this._mentorService.rejectMentor(mentorId as string);
     res.status(StatusCodes.OK).json({ success: true, data: mentor });
   });
 
@@ -84,7 +87,7 @@ export class MentorController implements IMentorController {
 
   getMentorDetails = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const mentorId = req.params.mentorId;
-    const mentor = await this._mentorService.getMentorDetails(mentorId);
+    const mentor = await this._mentorService.getMentorDetails(mentorId as string);
     res.status(StatusCodes.OK).json(mentor);
   });
 
@@ -100,7 +103,7 @@ export class MentorController implements IMentorController {
 
   getMentorshipTypes = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const mentorshipTypes = await this._mentorService.getMentorshipTypes(
-      req.params.mentorId as string
+      req.params.mentorId as string,
     );
     res.status(StatusCodes.OK).json(mentorshipTypes);
   });
@@ -130,7 +133,7 @@ export class MentorController implements IMentorController {
 
     const updatedMentor = await this._mentorService.updateMentorshipDetails(
       userId,
-      mentorshipDetailsData
+      mentorshipDetailsData,
     );
     res.status(StatusCodes.OK).json({ success: true, data: updatedMentor });
   });

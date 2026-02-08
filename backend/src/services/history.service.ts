@@ -1,8 +1,10 @@
-import { inject, injectable } from 'inversify';
-import { IHistoryService } from '../core/interfaces/services/IHistoryService';
-import { IHistory } from '../models/history.model';
-import { TYPES } from '../di/types';
-import { IHistoryRepository } from '../core/interfaces/repositories/IHistoryRepository';
+import { inject, injectable } from "inversify";
+
+import type { IHistoryRepository } from "../core/interfaces/repositories/i-history-repository";
+import type { IHistoryService } from "../core/interfaces/services/i-history-service";
+import type { IHistory } from "../models/history.model";
+
+import { TYPES } from "../di/types";
 
 @injectable()
 export class HistoryService implements IHistoryService {

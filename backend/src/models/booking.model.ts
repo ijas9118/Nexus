@@ -1,4 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import type { Document } from "mongoose";
+
+import mongoose, { Schema } from "mongoose";
 
 interface IBooking extends Document<string> {
   userId: mongoose.Types.ObjectId | string;
@@ -8,7 +10,7 @@ interface IBooking extends Document<string> {
   timeSlot: mongoose.Types.ObjectId | string;
   bookingDate: Date;
   reason: string;
-  status: 'unpaid' | 'pending' | 'confirmed' | 'completed';
+  status: "unpaid" | "pending" | "confirmed" | "completed";
   meetUrl?: string;
 }
 
@@ -16,27 +18,27 @@ const BookingSchema: Schema = new Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     mentorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Mentor',
+      ref: "Mentor",
       required: true,
     },
     mentorUserId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     mentorshipType: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'MentorshipType',
+      ref: "MentorshipType",
       required: true,
     },
     timeSlot: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'TimeSlot',
+      ref: "TimeSlot",
       required: true,
     },
     bookingDate: {
@@ -49,8 +51,8 @@ const BookingSchema: Schema = new Schema(
     },
     status: {
       type: String,
-      enum: ['unpaid', 'pending', 'confirmed', 'completed'],
-      default: 'unpaid',
+      enum: ["unpaid", "pending", "confirmed", "completed"],
+      default: "unpaid",
     },
     meetUrl: {
       type: String,
@@ -58,8 +60,8 @@ const BookingSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-const BookingModel = mongoose.model<IBooking>('Booking', BookingSchema);
-export { IBooking, BookingModel };
+const BookingModel = mongoose.model<IBooking>("Booking", BookingSchema);
+export { BookingModel, IBooking };

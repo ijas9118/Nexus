@@ -1,11 +1,14 @@
-import { Request, Response, Express } from 'express';
-import { inject, injectable } from 'inversify';
-import { TYPES } from '../di/types';
-import { IUserController } from '../core/interfaces/controllers/IUserController';
-import { IUserService } from '../core/interfaces/services/IUserService';
-import asyncHandler from 'express-async-handler';
-import CustomError from '../utils/CustomError';
-import { StatusCodes } from 'http-status-codes';
+import type { Express, Request, Response } from "express";
+
+import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
+
+import type { IUserController } from "@/core/interfaces/controllers/i-user-controller";
+import type { IUserService } from "@/core/interfaces/services/i-user-service";
+
+import { TYPES } from "@/di/types";
+import CustomError from "@/utils/custom-error";
 
 @injectable()
 export class UserController implements IUserController {
@@ -19,7 +22,7 @@ export class UserController implements IUserController {
 
   getUserData = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { username } = req.params;
-    const userData = await this.userService.getUserByUsername(username);
+    const userData = await this.userService.getUserByUsername(username as string);
     res.status(StatusCodes.OK).json(userData);
   });
 
@@ -32,11 +35,11 @@ export class UserController implements IUserController {
   updatePassword = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
     if (!userId) {
-      throw new CustomError('Unauthorized', StatusCodes.UNAUTHORIZED);
+      throw new CustomError("Unauthorized", StatusCodes.UNAUTHORIZED);
     }
 
     await this.userService.updatePassword(userId, req.body);
-    res.status(StatusCodes.OK).json({ success: true, message: 'Password updated successfully' });
+    res.status(StatusCodes.OK).json({ success: true, message: "Password updated successfully" });
   });
 
   updateProfilePic = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -44,7 +47,7 @@ export class UserController implements IUserController {
     const file = req.file as Express.Multer.File;
 
     if (!file) {
-      res.status(400).json({ message: 'No file uploaded' });
+      res.status(400).json({ message: "No file uploaded" });
       return;
     }
 
@@ -57,7 +60,7 @@ export class UserController implements IUserController {
     const username = req.body.username;
 
     if (!username) {
-      throw new CustomError('Username is required', StatusCodes.BAD_REQUEST);
+      throw new CustomError("Username is required", StatusCodes.BAD_REQUEST);
     }
 
     const contents = await this.userService.getUserContents(username);

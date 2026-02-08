@@ -1,14 +1,17 @@
-import { Request, Response } from 'express';
-import { inject, injectable } from 'inversify';
-import { IBookingController } from '@/core/interfaces/controllers/IBookingController';
-import { IBookingService } from '@/core/interfaces/services/IBookingService';
-import { TYPES } from '@/di/types';
-import { StatusCodes } from 'http-status-codes';
-import CustomError from '@/utils/CustomError';
-import dayjs from 'dayjs';
-import asyncHandler from 'express-async-handler';
-import { RescheduleBookingRequestDTO } from '@/dtos/requests/booking.dto';
-import { MESSAGES } from '@/utils/constants/message';
+import type { Request, Response } from "express";
+
+import dayjs from "dayjs";
+import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
+
+import type { IBookingController } from "@/core/interfaces/controllers/i-booking-controller";
+import type { IBookingService } from "@/core/interfaces/services/i-booking-service";
+import type { RescheduleBookingRequestDTO } from "@/dtos/requests/booking.dto";
+
+import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
 
 @injectable()
 export class BookingController implements IBookingController {
@@ -65,7 +68,7 @@ export class BookingController implements IBookingController {
     if (!timeSlotId || !bookingDate) {
       throw new CustomError(
         MESSAGES.BOOKING_MESSAGES.RESCHEDULE_FIELDS_REQUIRED,
-        StatusCodes.BAD_REQUEST
+        StatusCodes.BAD_REQUEST,
       );
     }
 
@@ -76,9 +79,9 @@ export class BookingController implements IBookingController {
     }
 
     const updatedBooking = await this._bookingService.rescheduleBooking(
-      bookingId,
+      bookingId as string,
       timeSlotId,
-      parsedDate.toDate()
+      parsedDate.toDate(),
     );
     res.status(StatusCodes.OK).json(updatedBooking);
   });
@@ -93,7 +96,7 @@ export class BookingController implements IBookingController {
       if (!tempDate.isValid()) {
         throw new CustomError(
           MESSAGES.BOOKING_MESSAGES.INVALID_DATE_FORMAT,
-          StatusCodes.BAD_REQUEST
+          StatusCodes.BAD_REQUEST,
         );
       }
       parsedDate = tempDate.toDate();
@@ -101,7 +104,7 @@ export class BookingController implements IBookingController {
 
     const bookings = await this._bookingService.getFilteredBookings(
       parsedDate,
-      mentorshipTypeId as string
+      mentorshipTypeId as string,
     );
     res.status(StatusCodes.OK).json(bookings);
   });
@@ -109,7 +112,7 @@ export class BookingController implements IBookingController {
   confirmBooking = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { bookingId } = req.params;
 
-    const updatedBooking = await this._bookingService.confirmBooking(bookingId);
+    const updatedBooking = await this._bookingService.confirmBooking(bookingId as string);
     res.status(StatusCodes.OK).json(updatedBooking);
   });
 }

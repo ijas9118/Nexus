@@ -1,15 +1,18 @@
-import { IMentorMetadataRepository } from '@/core/interfaces/repositories/IMentorMetadataRepository';
-import { IMentorMetadataService } from '@/core/interfaces/services/IMentorMetadataService';
-import { TYPES } from '@/di/types';
-import { IMentorMetadata } from '@/models/mentor-metadata.model';
-import { MentorMetadataRepository } from '@/repositories/mentor-metadata.repository';
-import { injectable, inject } from 'inversify';
-import { FilterQuery } from 'mongoose';
+import type { QueryFilter } from "mongoose";
+
+import { inject, injectable } from "inversify";
+
+import type { IMentorMetadataRepository } from "@/core/interfaces/repositories/i-mentor-metadata-repository";
+import type { IMentorMetadataService } from "@/core/interfaces/services/i-mentor-metadata-service";
+import type { IMentorMetadata } from "@/models/mentor-metadata.model";
+import type { MentorMetadataRepository } from "@/repositories/mentor-metadata.repository";
+
+import { TYPES } from "@/di/types";
 
 @injectable()
 export class MentorMetadataService implements IMentorMetadataService {
   constructor(
-    @inject(TYPES.MentorMetadataRepository) private repository: IMentorMetadataRepository
+    @inject(TYPES.MentorMetadataRepository) private repository: IMentorMetadataRepository,
   ) {}
 
   async findByType(type: string, isActive: boolean = true): Promise<IMentorMetadata[]> {
@@ -17,15 +20,15 @@ export class MentorMetadataService implements IMentorMetadataService {
   }
 
   async create(data: Partial<IMentorMetadata>): Promise<IMentorMetadata> {
-    if (!['experienceLevel', 'expertiseArea', 'technology'].includes(data.type!)) {
-      throw new Error('Invalid metadata type');
+    if (!["experienceLevel", "expertiseArea", "technology"].includes(data.type!)) {
+      throw new Error("Invalid metadata type");
     }
     return this.repository.create(data);
   }
 
   async update(id: string, data: Partial<IMentorMetadata>): Promise<IMentorMetadata | null> {
-    if (data.type && !['experienceLevel', 'expertiseArea', 'technology'].includes(data.type)) {
-      throw new Error('Invalid metadata type');
+    if (data.type && !["experienceLevel", "expertiseArea", "technology"].includes(data.type)) {
+      throw new Error("Invalid metadata type");
     }
     return this.repository.update(id, data);
   }
@@ -34,7 +37,7 @@ export class MentorMetadataService implements IMentorMetadataService {
     return this.repository.findById(id);
   }
 
-  async find(query: FilterQuery<IMentorMetadata> = {}): Promise<IMentorMetadata[]> {
+  async find(query: QueryFilter<IMentorMetadata> = {}): Promise<IMentorMetadata[]> {
     // Removed console.log - query is already logged by HTTP logger
     return this.repository.find(query);
   }

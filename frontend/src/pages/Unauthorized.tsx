@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
+import { motion, Variants } from "motion/react";
 
 export default function ForbiddenPage() {
   const [mounted, setMounted] = useState(false);
@@ -11,7 +11,7 @@ export default function ForbiddenPage() {
     setMounted(true);
   }, []);
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -22,7 +22,7 @@ export default function ForbiddenPage() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
@@ -31,7 +31,7 @@ export default function ForbiddenPage() {
     },
   };
 
-  const pulseVariants = {
+  const pulseVariants: Variants = {
     pulse: {
       scale: [1, 1.05, 1],
       opacity: [0.7, 1, 0.7],
@@ -43,7 +43,7 @@ export default function ForbiddenPage() {
     },
   };
 
-  const pathVariants = {
+  const pathVariants: Variants = {
     hidden: {
       pathLength: 0,
       opacity: 0,
