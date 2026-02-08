@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/components/organisms/table";
 import { Input } from "@/components/atoms/input";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

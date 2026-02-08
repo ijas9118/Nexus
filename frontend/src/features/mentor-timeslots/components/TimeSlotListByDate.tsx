@@ -1,5 +1,4 @@
-// TimeSlotListByDate.tsx
-import { motion } from "framer-motion";
+import { motion, Variants } from "motion/react";
 import { Trash2, Clock, Loader2 } from "lucide-react";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
@@ -25,7 +24,7 @@ const TimeSlotListByDate = ({
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { x: -20, opacity: 0 },
     visible: { x: 0, opacity: 1, transition: { type: "spring", damping: 12 } },
   };

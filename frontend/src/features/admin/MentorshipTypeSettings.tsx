@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Button } from "@/components/atoms/button";
 import { columns } from "./mentorship-type/columns";
 import { DataTable } from "./mentorship-type/data-table";

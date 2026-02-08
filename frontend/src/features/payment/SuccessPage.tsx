@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "motion/react";
 import { useDispatch } from "react-redux";
 import { clearUser } from "@/store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
@@ -60,7 +60,7 @@ const SuccessPage = ({ sessionId }: { sessionId: string }) => {
 
   if (!isSessionValid) return null;
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -71,7 +71,7 @@ const SuccessPage = ({ sessionId }: { sessionId: string }) => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
@@ -80,7 +80,7 @@ const SuccessPage = ({ sessionId }: { sessionId: string }) => {
     },
   };
 
-  const checkmarkVariants = {
+  const checkmarkVariants: Variants = {
     hidden: { pathLength: 0, opacity: 0 },
     visible: {
       pathLength: 1,
@@ -92,7 +92,7 @@ const SuccessPage = ({ sessionId }: { sessionId: string }) => {
     },
   };
 
-  const pulseVariants = {
+  const pulseVariants: Variants = {
     pulse: {
       scale: [1, 1.05, 1],
       opacity: [0.8, 1, 0.8],
@@ -104,7 +104,7 @@ const SuccessPage = ({ sessionId }: { sessionId: string }) => {
     },
   };
 
-  const circleVariants = {
+  const circleVariants: Variants = {
     hidden: { scale: 0 },
     visible: {
       scale: 1,

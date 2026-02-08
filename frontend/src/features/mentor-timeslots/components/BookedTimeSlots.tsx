@@ -6,7 +6,7 @@ import { TimeSlot } from "@/types/mentor";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "motion/react";
 import { AlertCircle, Clock, Loader2 } from "lucide-react";
 
 const BookedTimeSlots = () => {
@@ -19,7 +19,7 @@ const BookedTimeSlots = () => {
     queryFn: () => TimeSlotService.getBookedTimeSlots(),
   });
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -27,7 +27,7 @@ const BookedTimeSlots = () => {
     },
   };
 
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
       opacity: 1,
@@ -46,7 +46,7 @@ const BookedTimeSlots = () => {
     },
   };
 
-  const slotVariants = {
+  const slotVariants: Variants = {
     hidden: { opacity: 0, x: -10 },
     visible: {
       opacity: 1,

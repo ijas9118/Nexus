@@ -1,4 +1,3 @@
-// AddPlanForm.tsx
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
@@ -13,7 +12,7 @@ import {
 import { ScrollArea } from "@/components/organisms/scroll-area";
 import { Switch } from "@/components/atoms/switch";
 import { Plus, X } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "motion/react";
 import { FireIcon, FlameIcon, SparkIcon } from "@/components/icons/PlanIcons";
 import {
   DialogContent,
@@ -27,7 +26,7 @@ import PlanService from "@/services/planService";
 import { toast } from "sonner";
 import { IPlan } from "@/types/plans";
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -38,7 +37,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { y: 20, opacity: 0 },
   visible: {
     y: 0,

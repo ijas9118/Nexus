@@ -1,5 +1,5 @@
 import { useState, useEffect, FC } from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "motion/react";
 import { Clock } from "lucide-react";
 import {
   Select,
@@ -49,7 +49,7 @@ const TimeInput: FC<TimeInputProps> = ({
     }
   }, [hour, minute, period, onChange]);
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -60,7 +60,7 @@ const TimeInput: FC<TimeInputProps> = ({
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 10, opacity: 0 },
     visible: {
       y: 0,
