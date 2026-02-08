@@ -145,20 +145,21 @@ const Home = () => {
             <div>Something went wrong. Probably the server had a bad day.</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.isArray(plans) && plans.map((plan) => (
-                <PriceCard
-                  key={plan._id}
-                  tier={plan.tier}
-                  description={plan.description}
-                  price={`₹${plan.price}`}
-                  interval={plan.interval}
-                  ctaText={plan.ctaText}
-                  highlights={plan.highlights || []}
-                  featured={plan.featured || false}
-                  logo={getPlanLogo(plan.logo)}
-                  isAdminView={false}
-                />
-              ))}
+              {Array.isArray(plans) &&
+                plans.map((plan) => (
+                  <PriceCard
+                    key={plan._id}
+                    tier={plan.tier}
+                    description={plan.description}
+                    price={`₹${plan.price}`}
+                    interval={plan.interval}
+                    ctaText={plan.ctaText}
+                    highlights={plan.highlights || []}
+                    featured={plan.featured || false}
+                    logo={getPlanLogo(plan.logo)}
+                    isAdminView={false}
+                  />
+                ))}
             </div>
           )}
         </div>

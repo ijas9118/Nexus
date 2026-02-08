@@ -10,7 +10,9 @@ const PlanService = {
     // The API returns {data: IPlan[]} but handleApi already unwraps response.data
     // So we need to check if the response itself contains a data property
     const typedResponse = response as IPlan[] | { data: IPlan[] };
-    return Array.isArray(typedResponse) ? typedResponse : (typedResponse?.data || []);
+    return Array.isArray(typedResponse)
+      ? typedResponse
+      : typedResponse?.data || [];
   },
 
   getPlanById: async (id: string) => handleApi(() => api.get(`/plans/${id}`)),
