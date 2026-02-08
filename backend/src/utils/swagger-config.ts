@@ -1,6 +1,7 @@
 import type { Express } from "express";
 
 import logger from "@/config/logger";
+
 import { env } from "./env-validation";
 
 export function setupSwagger(app: Express) {
@@ -44,7 +45,8 @@ export function setupSwagger(app: Express) {
     }).catch((error) => {
       logger.error("Failed to load Swagger dependencies:", error);
     });
-  } else {
+  }
+  else {
     logger.info("Swagger is disabled in production environment");
   }
 }
