@@ -1,11 +1,11 @@
-import type { Document } from 'mongoose';
+import type { Document } from "mongoose";
 
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema } from "mongoose";
 
 export interface IMentorMetadata extends Document<string> {
   label: string;
   name: string;
-  type: 'experienceLevel' | 'expertiseArea' | 'technology';
+  type: "experienceLevel" | "expertiseArea" | "technology";
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -26,7 +26,7 @@ const MentorMetadataSchema: Schema = new Schema(
     },
     type: {
       type: String,
-      enum: ['experienceLevel', 'expertiseArea', 'technology'],
+      enum: ["experienceLevel", "expertiseArea", "technology"],
       required: true,
     },
     isActive: {
@@ -36,7 +36,7 @@ const MentorMetadataSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Indexes for performance
@@ -44,6 +44,6 @@ MentorMetadataSchema.index({ type: 1, name: 1 }, { unique: true });
 MentorMetadataSchema.index({ type: 1, isActive: 1 });
 
 export const MentorMetadataModel = mongoose.model<IMentorMetadata>(
-  'MentorMetadata',
-  MentorMetadataSchema
+  "MentorMetadata",
+  MentorMetadataSchema,
 );

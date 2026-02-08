@@ -1,19 +1,19 @@
-import type { Request, Response } from 'express';
+import type { Request, Response } from "express";
 
-import asyncHandler from 'express-async-handler';
-import { StatusCodes } from 'http-status-codes';
-import { inject, injectable } from 'inversify';
+import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
 
-import type { INotificationTypeController } from '@/core/interfaces/controllers/i-notification-type-controller';
-import type { INotificationTypeService } from '@/core/interfaces/services/i-notification-type-service';
+import type { INotificationTypeController } from "@/core/interfaces/controllers/i-notification-type-controller";
+import type { INotificationTypeService } from "@/core/interfaces/services/i-notification-type-service";
 
-import { TYPES } from '@/di/types';
+import { TYPES } from "@/di/types";
 
 @injectable()
 export class NotificationTypeController implements INotificationTypeController {
   constructor(
     @inject(TYPES.NotificationTypeService)
-    private _notificationTypeService: INotificationTypeService
+    private _notificationTypeService: INotificationTypeService,
   ) {}
 
   createNotificationType = asyncHandler(async (req: Request, res: Response): Promise<void> => {

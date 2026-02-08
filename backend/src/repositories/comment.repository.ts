@@ -1,16 +1,16 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable } from "inversify";
 
-import type { IContentRepository } from '@/core/interfaces/repositories/i-content-repository';
+import type { IContentRepository } from "@/core/interfaces/repositories/i-content-repository";
 
-import { TYPES } from '@/di/types';
+import { TYPES } from "@/di/types";
 
-import type { ICommentRepository } from '../core/interfaces/repositories/i-comment-repository';
-import type { AddCommentParams } from '../core/types/service/add-comment';
-import type { IComment } from '../models/comments.model';
+import type { ICommentRepository } from "../core/interfaces/repositories/i-comment-repository";
+import type { AddCommentParams } from "../core/types/service/add-comment";
+import type { IComment } from "../models/comments.model";
 
-import { BaseRepository } from '../core/abstracts/base.repository';
-import CommentModel from '../models/comments.model';
-import { FormatTime } from '../utils/format-time';
+import { BaseRepository } from "../core/abstracts/base.repository";
+import CommentModel from "../models/comments.model";
+import { FormatTime } from "../utils/format-time";
 
 @injectable()
 export class CommentRepository extends BaseRepository<IComment> implements ICommentRepository {
@@ -36,12 +36,13 @@ export class CommentRepository extends BaseRepository<IComment> implements IComm
       });
       await this.contentRepository.updateOne(
         { _id: commentData.contentId },
-        { $inc: { commentCount: 1 } }
+        { $inc: { commentCount: 1 } },
       );
-    } else {
+    }
+    else {
       await this.contentRepository.updateOne(
         { _id: commentData.contentId },
-        { $inc: { commentCount: 1 } }
+        { $inc: { commentCount: 1 } },
       );
     }
 
@@ -50,12 +51,12 @@ export class CommentRepository extends BaseRepository<IComment> implements IComm
 
   findCommentsByContentId = async (contentId: string): Promise<IComment[]> => {
     return await CommentModel.find({ contentId, parentCommentId: null })
-      .populate('userId', 'name profilePic username')
+      .populate("userId", "name profilePic username")
       .populate({
-        path: 'replies',
+        path: "replies",
         populate: {
-          path: 'userId',
-          select: 'name profilePic username',
+          path: "userId",
+          select: "name profilePic username",
         },
       })
       .lean()
@@ -64,8 +65,8 @@ export class CommentRepository extends BaseRepository<IComment> implements IComm
 
   getAllComments = async (): Promise<IComment[]> => {
     const comments = await CommentModel.find({})
-      .populate('userId', 'name profilePic')
-      .populate('contentId', 'title')
+      .populate("userId", "name profilePic")
+      .populate("contentId", "title")
       .sort({ createdAt: -1 });
 
     const formattedComment = comments.map((comment: IComment) => {

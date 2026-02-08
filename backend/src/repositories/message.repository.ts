@@ -1,10 +1,10 @@
-import { injectable } from 'inversify';
+import { injectable } from "inversify";
 
-import type { IMessageRepository } from '@/core/interfaces/repositories/i-message-repository';
-import type { IMessage } from '@/models/message.model';
+import type { IMessageRepository } from "@/core/interfaces/repositories/i-message-repository";
+import type { IMessage } from "@/models/message.model";
 
-import { BaseRepository } from '@/core/abstracts/base.repository';
-import { MessageModel } from '@/models/message.model';
+import { BaseRepository } from "@/core/abstracts/base.repository";
+import { MessageModel } from "@/models/message.model";
 
 @injectable()
 export class MessageRepository extends BaseRepository<IMessage> implements IMessageRepository {
@@ -12,14 +12,14 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
     super(MessageModel);
   }
 
-  async getMessagesByChat(chatId: string, chatType: 'Chat' | 'Group'): Promise<IMessage[]> {
+  async getMessagesByChat(chatId: string, chatType: "Chat" | "Group"): Promise<IMessage[]> {
     return this.model.find({ chatId, chatType, isDeleted: false }).sort({ createdAt: 1 });
   }
 
   async getUnreadCount(
     userId: string,
     chatId: string,
-    chatType: 'Chat' | 'Group'
+    chatType: "Chat" | "Group",
   ): Promise<number> {
     return this.model.countDocuments({
       chatId,
@@ -31,12 +31,12 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
 
   async markMessagesAsRead(
     chatId: string,
-    chatType: 'Chat' | 'Group',
-    userId: string
+    chatType: "Chat" | "Group",
+    userId: string,
   ): Promise<void> {
     await this.model.updateMany(
       { chatId, chatType, isDeleted: false, readBy: { $ne: userId } },
-      { $addToSet: { readBy: userId } }
+      { $addToSet: { readBy: userId } },
     );
   }
 
@@ -44,7 +44,7 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
     return this.model.findByIdAndUpdate(
       messageId,
       { $push: { reactions: { userId, reaction } } },
-      { new: true }
+      { new: true },
     );
   }
 
@@ -52,7 +52,7 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
     return this.model.findByIdAndUpdate(
       messageId,
       { $pull: { reactions: { userId } } },
-      { new: true }
+      { new: true },
     );
   }
 

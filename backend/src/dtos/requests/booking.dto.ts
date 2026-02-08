@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from "class-validator";
 
 interface RescheduleBookingPayload {
   timeSlotId: string;
@@ -7,11 +7,11 @@ interface RescheduleBookingPayload {
 
 export class RescheduleBookingRequestDTO {
   @IsString()
-  @IsNotEmpty({ message: 'Timeslot is required' })
+  @IsNotEmpty({ message: "Timeslot is required" })
   timeSlotId!: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Booking is required' })
+  @IsNotEmpty({ message: "Booking is required" })
   bookingDate!: string;
 
   static fromPayload(payload: RescheduleBookingPayload): RescheduleBookingRequestDTO {

@@ -1,4 +1,4 @@
-import type { INotification } from '@/models/notification.model';
+import type { INotification } from "@/models/notification.model";
 
 export interface INotificationService {
   getNotificationTypeIdByName: (name: string) => Promise<string>;
@@ -6,7 +6,7 @@ export interface INotificationService {
     notificationTypeId: string,
     recipientId: string,
     heading: string,
-    message: string
+    message: string,
   ) => Promise<INotification>;
   getUserNotifications: (userId: string, read?: boolean) => Promise<INotification[]>;
   markAsRead: (id: string) => Promise<INotification | null>;

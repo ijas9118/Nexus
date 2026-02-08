@@ -1,22 +1,22 @@
-import type { Express, Request, Response } from 'express';
+import type { Express, Request, Response } from "express";
 
-import asyncHandler from 'express-async-handler';
-import { StatusCodes } from 'http-status-codes';
-import { inject, injectable } from 'inversify';
+import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
 
-import type { IContentController } from '@/core/interfaces/controllers/i-content-controller';
-import type { IContentService } from '@/core/interfaces/services/i-content-service';
-import type { IHistoryService } from '@/core/interfaces/services/i-history-service';
-import type { UserRole } from '@/core/types/user-types';
+import type { IContentController } from "@/core/interfaces/controllers/i-content-controller";
+import type { IContentService } from "@/core/interfaces/services/i-content-service";
+import type { IHistoryService } from "@/core/interfaces/services/i-history-service";
+import type { UserRole } from "@/core/types/user-types";
 
-import { TYPES } from '@/di/types';
-import CustomError from '@/utils/custom-error';
+import { TYPES } from "@/di/types";
+import CustomError from "@/utils/custom-error";
 
 @injectable()
 export class ContentController implements IContentController {
   constructor(
     @inject(TYPES.ContentService) private _contentService: IContentService,
-    @inject(TYPES.HistoryService) private _historyService: IHistoryService
+    @inject(TYPES.HistoryService) private _historyService: IHistoryService,
   ) {}
 
   createContent = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -28,10 +28,10 @@ export class ContentController implements IContentController {
       ...req.body,
       author: req.user?._id,
       userName: req.user?.name,
-      date: new Date().toLocaleDateString('en-US', {
-        month: 'short',
-        day: '2-digit',
-        year: 'numeric',
+      date: new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
       }),
     };
 
@@ -39,7 +39,7 @@ export class ContentController implements IContentController {
 
     res.status(StatusCodes.CREATED).json({
       success: true,
-      message: 'Content created successfully',
+      message: "Content created successfully",
       contentId: content._id,
     });
   });
@@ -51,14 +51,14 @@ export class ContentController implements IContentController {
     const content = await this._contentService.getContentById(
       req.params.id as string,
       role as UserRole,
-      userId
+      userId,
     );
 
     if (!content) {
-      throw new CustomError('Content not found', StatusCodes.NOT_FOUND);
+      throw new CustomError("Content not found", StatusCodes.NOT_FOUND);
     }
 
-    if (role === 'user') {
+    if (role === "user") {
       await this._historyService.addHistory(req.user?._id as string, content._id as string);
     }
 
@@ -67,7 +67,7 @@ export class ContentController implements IContentController {
 
   getAllContent = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     if (!req.user) {
-      throw new CustomError('User is not authenticated', StatusCodes.UNAUTHORIZED);
+      throw new CustomError("User is not authenticated", StatusCodes.UNAUTHORIZED);
     }
 
     const { page = 1, limit = 10 } = req.query;
@@ -96,13 +96,13 @@ export class ContentController implements IContentController {
 
     const updatedContent = await this._contentService.verifyContent(contentId as string);
     if (!updatedContent) {
-      res.status(StatusCodes.NOT_FOUND).json({ message: 'Content not found' });
+      res.status(StatusCodes.NOT_FOUND).json({ message: "Content not found" });
       return;
     }
 
     res
       .status(StatusCodes.OK)
-      .json({ message: 'Content verified successfully', content: updatedContent });
+      .json({ message: "Content verified successfully", content: updatedContent });
   });
 
   getFollowingUsersContents = asyncHandler(async (req: Request, res: Response) => {

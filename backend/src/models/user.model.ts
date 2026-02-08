@@ -1,8 +1,8 @@
-import type { Document } from 'mongoose';
+import type { Document } from "mongoose";
 
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema } from "mongoose";
 
-import type { UserRole } from '@/core/types/user-types';
+import type { UserRole } from "@/core/types/user-types";
 
 interface IUser extends Document<string> {
   name: string;
@@ -48,7 +48,7 @@ const UserSchema: Schema = new Schema(
     profilePic: {
       type: String,
       default:
-        'https://res.cloudinary.com/dhvlhpg55/image/upload/v1740028408/nexus/images/oamn3bzchpmixago65yf.jpg',
+        "https://res.cloudinary.com/dhvlhpg55/image/upload/v1740028408/nexus/images/oamn3bzchpmixago65yf.jpg",
     },
     profilePicPublicId: {
       type: String,
@@ -74,7 +74,7 @@ const UserSchema: Schema = new Schema(
     joinedSquads: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Squad',
+        ref: "Squad",
       },
     ],
     skills: {
@@ -89,7 +89,7 @@ const UserSchema: Schema = new Schema(
     role: {
       type: String,
       required: true,
-      default: 'user',
+      default: "user",
     },
     username: {
       type: String,
@@ -113,14 +113,14 @@ const UserSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 UserSchema.index({
-  name: 'text',
-  username: 'text',
-  email: 'text',
+  name: "text",
+  username: "text",
+  email: "text",
 });
 
-const UserModel = mongoose.model<IUser>('User', UserSchema);
+const UserModel = mongoose.model<IUser>("User", UserSchema);
 export { IUser, UserModel };

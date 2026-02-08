@@ -1,22 +1,22 @@
-import { Router } from 'express';
+import { Router } from "express";
 
-import type { IAdminDashboardController } from '@/core/interfaces/controllers/i-admin-dashboard-controller';
+import type { IAdminDashboardController } from "@/core/interfaces/controllers/i-admin-dashboard-controller";
 
-import { container } from '@/di/container';
-import { TYPES } from '@/di/types';
+import { container } from "@/di/container";
+import { TYPES } from "@/di/types";
 
 const adminDashboardController = container.get<IAdminDashboardController>(
-  TYPES.AdminDashboardController
+  TYPES.AdminDashboardController,
 );
 
 const router = Router();
 
-router.get('/stats', adminDashboardController.getDashboardStats);
+router.get("/stats", adminDashboardController.getDashboardStats);
 
-router.get('/subscription-stats', adminDashboardController.getSubscriptionStats);
+router.get("/subscription-stats", adminDashboardController.getSubscriptionStats);
 
-router.get('/revenue-stats', adminDashboardController.getRevenueStats);
+router.get("/revenue-stats", adminDashboardController.getRevenueStats);
 
-router.get('/mentor-application-stats', adminDashboardController.getMentorApplicationStats);
+router.get("/mentor-application-stats", adminDashboardController.getMentorApplicationStats);
 
 export default router;

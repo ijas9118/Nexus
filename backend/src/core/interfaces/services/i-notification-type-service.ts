@@ -1,4 +1,4 @@
-import type { INotificationType } from '@/models/notification-type.model';
+import type { INotificationType } from "@/models/notification-type.model";
 
 export interface INotificationTypeService {
   createNotificationType: (data: {
@@ -17,7 +17,7 @@ export interface INotificationTypeService {
       icon: string;
       iconColor: string;
       roles: string[];
-    }>
+    }>,
   ) => Promise<INotificationType>;
   deleteNotificationType: (id: string) => Promise<void>;
   restoreNotificationType: (id: string) => Promise<void>;

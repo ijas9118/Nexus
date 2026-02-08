@@ -1,20 +1,20 @@
-import type { Request, Response } from 'express';
+import type { Request, Response } from "express";
 
-import asyncHandler from 'express-async-handler';
-import { StatusCodes } from 'http-status-codes';
-import { inject, injectable } from 'inversify';
+import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
 
-import type { IBookingPaymentController } from '@/core/interfaces/controllers/i-booking-payment-controller';
-import type { IBookingPaymentService } from '@/core/interfaces/services/i-booking-payment-service';
-import type { IMentorService } from '@/core/interfaces/services/i-mentor-service';
+import type { IBookingPaymentController } from "@/core/interfaces/controllers/i-booking-payment-controller";
+import type { IBookingPaymentService } from "@/core/interfaces/services/i-booking-payment-service";
+import type { IMentorService } from "@/core/interfaces/services/i-mentor-service";
 
-import { TYPES } from '@/di/types';
+import { TYPES } from "@/di/types";
 
 @injectable()
 export class BookingPaymentController implements IBookingPaymentController {
   constructor(
     @inject(TYPES.BookingPaymentService) private _bookingPaymentService: IBookingPaymentService,
-    @inject(TYPES.MentorService) private _mentorService: IMentorService
+    @inject(TYPES.MentorService) private _mentorService: IMentorService,
   ) {}
 
   checkoutSession = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -29,7 +29,7 @@ export class BookingPaymentController implements IBookingPaymentController {
       timeSlot,
       reason,
       customerId,
-      email
+      email,
     );
     res.status(StatusCodes.OK).json(sessionUrl);
   });
@@ -37,8 +37,8 @@ export class BookingPaymentController implements IBookingPaymentController {
   verifySession = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { sessionId } = req.params;
 
-    if (!sessionId || typeof sessionId !== 'string') {
-      res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Missing sessionId' });
+    if (!sessionId || typeof sessionId !== "string") {
+      res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: "Missing sessionId" });
       return;
     }
 

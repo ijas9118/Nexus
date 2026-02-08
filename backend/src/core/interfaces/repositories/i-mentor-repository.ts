@@ -1,5 +1,5 @@
-import type { BaseRepository } from '@/core/abstracts/base.repository';
-import type { IMentor } from '@/models/mentor.model';
+import type { BaseRepository } from "@/core/abstracts/base.repository";
+import type { IMentor } from "@/models/mentor.model";
 
 export interface IMentorRepository extends BaseRepository<IMentor> {
   createMentorApplication: (userId: string, mentorData: Partial<IMentor>) => Promise<IMentor>;
@@ -8,7 +8,7 @@ export interface IMentorRepository extends BaseRepository<IMentor> {
 
   updateMentorStatus: (
     mentorId: string,
-    status: 'pending' | 'approved' | 'rejected'
+    status: "pending" | "approved" | "rejected",
   ) => Promise<IMentor | null>;
 
   getAllMentors: () => Promise<IMentor[] | null>;
@@ -27,7 +27,7 @@ export interface IMentorRepository extends BaseRepository<IMentor> {
       technologies: string[];
       bio: string;
       resume?: string | null;
-    }
+    },
   ) => Promise<IMentor | null>;
 
   updateMentorshipDetails: (
@@ -35,7 +35,7 @@ export interface IMentorRepository extends BaseRepository<IMentor> {
     mentorshipDetailsData: {
       mentorshipTypes: string[];
       targetAudiences: string[];
-    }
+    },
   ) => Promise<IMentor | null>;
 
   countMentorsByStatus: () => Promise<{

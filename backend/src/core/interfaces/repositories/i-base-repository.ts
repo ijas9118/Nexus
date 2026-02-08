@@ -1,4 +1,4 @@
-import type { DeleteResult, QueryFilter, Types, UpdateQuery, UpdateWriteOpResult } from 'mongoose';
+import type { DeleteResult, QueryFilter, Types, UpdateQuery, UpdateWriteOpResult } from "mongoose";
 
 export interface IBaseRepository<T> {
   findAll: () => Promise<T[]>;

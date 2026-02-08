@@ -1,6 +1,6 @@
-import type { ITransaction } from '@/models/transaction.model';
+import type { ITransaction } from "@/models/transaction.model";
 
-import type { IBaseRepository } from './i-base-repository';
+import type { IBaseRepository } from "./i-base-repository";
 
 export interface ITransactionRepository extends IBaseRepository<ITransaction> {
   getTransactionsByDateRange: (startDate: Date, endDate: Date) => Promise<ITransaction[]>;
@@ -8,6 +8,6 @@ export interface ITransactionRepository extends IBaseRepository<ITransaction> {
   getTransactionRevenueByDateGroups: (
     startDate: Date,
     endDate: Date,
-    groupByFormat: string
+    groupByFormat: string,
   ) => Promise<Array<{ date: string; revenue: number }>>;
 }

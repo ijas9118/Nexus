@@ -1,6 +1,6 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from "class-validator";
 
-import type { SquadWithIsJoined } from '@/core/types/squad';
+import type { SquadWithIsJoined } from "@/core/types/squad";
 
 export class SquadByCategoryResponseDto {
   @IsString()
@@ -50,6 +50,6 @@ export class SquadByCategoryResponseDto {
   }
 
   static fromEntities(entities: SquadWithIsJoined[]): SquadByCategoryResponseDto[] {
-    return entities.map((entity) => this.fromEntity(entity));
+    return entities.map(entity => this.fromEntity(entity));
   }
 }

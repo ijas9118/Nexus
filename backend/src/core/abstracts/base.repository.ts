@@ -6,9 +6,9 @@ import type {
   Types,
   UpdateQuery,
   UpdateWriteOpResult,
-} from 'mongoose';
+} from "mongoose";
 
-import type { IBaseRepository } from '../interfaces/repositories/i-base-repository';
+import type { IBaseRepository } from "../interfaces/repositories/i-base-repository";
 
 export abstract class BaseRepository<T extends Document<string>> implements IBaseRepository<T> {
   constructor(protected model: Model<T>) {}

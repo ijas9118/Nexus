@@ -1,6 +1,6 @@
-import type { INotification } from '@/models/notification.model';
+import type { INotification } from "@/models/notification.model";
 
-import type { IBaseRepository } from './i-base-repository';
+import type { IBaseRepository } from "./i-base-repository";
 
 export interface INotificationRepository extends IBaseRepository<INotification> {
   findByUserId: (userId: string, read?: boolean) => Promise<INotification[]>;

@@ -1,4 +1,4 @@
-import { IsArray, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from "class-validator";
 
 export class MentorApplicationStatusDTO {
   @IsString()
@@ -23,7 +23,7 @@ export class MentorApplicationStatsDTO {
 
   static create(
     totalApplications: number,
-    statusBreakdown: MentorApplicationStatusDTO[]
+    statusBreakdown: MentorApplicationStatusDTO[],
   ): MentorApplicationStatsDTO {
     const dto = new MentorApplicationStatsDTO();
     dto.totalApplications = totalApplications;

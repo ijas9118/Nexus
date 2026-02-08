@@ -1,10 +1,10 @@
-import type { Express } from 'express';
+import type { Express } from "express";
 
-import type { IContent } from '@/models/content.model';
+import type { IContent } from "@/models/content.model";
 
-import type { UsersResponseDTO } from '../../../dtos/responses/admin/users.dto';
-import type { ISquad } from '../../../models/squads.model';
-import type { IUser } from '../../../models/user.model';
+import type { UsersResponseDTO } from "../../../dtos/responses/admin/users.dto";
+import type { ISquad } from "../../../models/squads.model";
+import type { IUser } from "../../../models/user.model";
 
 export interface IUserService {
   findByEmail: (email: string) => Promise<IUser | null>;
@@ -20,7 +20,7 @@ export interface IUserService {
       currentPassword: string;
       newPassword: string;
       confirmPassword: string;
-    }
+    },
   ) => Promise<boolean>;
 
   updateProfilePic: (userId: string, data: any, file?: Express.Multer.File) => Promise<any>;

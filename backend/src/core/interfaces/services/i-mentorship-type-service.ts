@@ -1,4 +1,4 @@
-import type { IMentorshipType } from '@/models/mentorship-type.model';
+import type { IMentorshipType } from "@/models/mentorship-type.model";
 
 export interface IMentorshipTypeService {
   createMentorshipType: (data: {
@@ -14,7 +14,7 @@ export interface IMentorshipTypeService {
       name: string;
       description: string;
       defaultPrice: number;
-    }>
+    }>,
   ) => Promise<IMentorshipType>;
   deleteMentorshipType: (id: string) => Promise<void>;
   restoreMentorshipType: (id: string) => Promise<void>;

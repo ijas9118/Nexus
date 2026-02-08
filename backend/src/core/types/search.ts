@@ -1,6 +1,6 @@
 export interface SearchResultItem {
   id: string;
-  type: 'blog' | 'squad' | 'user';
+  type: "blog" | "squad" | "user";
   title: string;
   snippet?: string;
   image?: string;

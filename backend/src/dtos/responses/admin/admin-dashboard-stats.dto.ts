@@ -1,7 +1,7 @@
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsString } from "class-validator";
 
 // Define trend type for better type safety
-type TrendType = 'up' | 'down' | 'flat';
+type TrendType = "up" | "down" | "flat";
 
 export class AdminDashboardStatsDTO {
   @IsNumber()
@@ -22,31 +22,31 @@ export class AdminDashboardStatsDTO {
   @IsString()
   userChange!: string;
 
-  @IsEnum(['up', 'down', 'flat'])
+  @IsEnum(["up", "down", "flat"])
   userTrend!: TrendType;
 
   @IsString()
   mentorChange!: string;
 
-  @IsEnum(['up', 'down', 'flat'])
+  @IsEnum(["up", "down", "flat"])
   mentorTrend!: TrendType;
 
   @IsString()
   contentChange!: string;
 
-  @IsEnum(['up', 'down', 'flat'])
+  @IsEnum(["up", "down", "flat"])
   contentTrend!: TrendType;
 
   @IsString()
   squadChange!: string;
 
-  @IsEnum(['up', 'down', 'flat'])
+  @IsEnum(["up", "down", "flat"])
   squadTrend!: TrendType;
 
   @IsString()
   subscriptionChange!: string;
 
-  @IsEnum(['up', 'down', 'flat'])
+  @IsEnum(["up", "down", "flat"])
   subscriptionTrend!: TrendType;
 
   static fromCounts(
@@ -59,7 +59,7 @@ export class AdminDashboardStatsDTO {
     totalSquads: number,
     prevMonthSquads = 0,
     totalSubscription: number,
-    prevMonthSubscription = 0
+    prevMonthSubscription = 0,
   ): AdminDashboardStatsDTO {
     const dto = new AdminDashboardStatsDTO();
 
@@ -93,7 +93,7 @@ export class AdminDashboardStatsDTO {
     // Calculate change and trend for subscriptions
     const subscriptionChangeValue = calculatePercentageChangeValue(
       totalSubscription,
-      prevMonthSubscription
+      prevMonthSubscription,
     );
     dto.subscriptionChange = formatPercentageChange(subscriptionChangeValue);
     dto.subscriptionTrend = determineTrend(subscriptionChangeValue);
@@ -104,18 +104,21 @@ export class AdminDashboardStatsDTO {
 
 // Helper function to calculate percentage change value
 function calculatePercentageChangeValue(current: number, previous: number): number {
-  if (previous === 0) return 0;
+  if (previous === 0)
+    return 0;
   return ((current - previous) / previous) * 100;
 }
 
 // Helper function to format percentage change
 function formatPercentageChange(changeValue: number): string {
-  return `${changeValue > 0 ? '+' : ''}${changeValue.toFixed(0)}%`;
+  return `${changeValue > 0 ? "+" : ""}${changeValue.toFixed(0)}%`;
 }
 
 // Helper function to determine trend based on percentage change
 function determineTrend(changeValue: number): TrendType {
-  if (changeValue > 0) return 'up';
-  if (changeValue < 0) return 'down';
-  return 'flat';
+  if (changeValue > 0)
+    return "up";
+  if (changeValue < 0)
+    return "down";
+  return "flat";
 }

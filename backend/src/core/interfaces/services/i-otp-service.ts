@@ -1,4 +1,4 @@
-import type { RegisterRequestDTO } from '@/dtos/requests/auth.dto';
+import type { RegisterRequestDTO } from "@/dtos/requests/auth.dto";
 
 export interface IOTPService {
   generateOTP: () => string;

@@ -1,17 +1,17 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable } from "inversify";
 
-import type { IGroupRepository } from '@/core/interfaces/repositories/i-group-repository';
-import type { IConnectionService } from '@/core/interfaces/services/i-connection-service';
-import type { IGroupService } from '@/core/interfaces/services/i-group-service';
-import type { IGroup } from '@/models/group.model';
+import type { IGroupRepository } from "@/core/interfaces/repositories/i-group-repository";
+import type { IConnectionService } from "@/core/interfaces/services/i-connection-service";
+import type { IGroupService } from "@/core/interfaces/services/i-group-service";
+import type { IGroup } from "@/models/group.model";
 
-import { TYPES } from '@/di/types';
+import { TYPES } from "@/di/types";
 
 @injectable()
 export class GroupService implements IGroupService {
   constructor(
     @inject(TYPES.GroupRepository) protected repository: IGroupRepository,
-    @inject(TYPES.ConnectionService) private connectionService: IConnectionService
+    @inject(TYPES.ConnectionService) private connectionService: IConnectionService,
   ) {}
 
   async createGroup(userId: string, name: string, memberIds: string[]): Promise<IGroup> {
@@ -28,7 +28,7 @@ export class GroupService implements IGroupService {
       }
     }
     if (invalidMembers.length > 0) {
-      throw new Error(`User is not connected to: ${invalidMembers.join(', ')}`);
+      throw new Error(`User is not connected to: ${invalidMembers.join(", ")}`);
     }
 
     return this.repository.create({

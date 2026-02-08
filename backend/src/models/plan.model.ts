@@ -1,6 +1,6 @@
-import type { Document } from 'mongoose';
+import type { Document } from "mongoose";
 
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema } from "mongoose";
 
 interface IPlan extends Document<string> {
   tier: string;
@@ -61,8 +61,8 @@ const PlanSchema = new Schema<IPlan>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-const PlanModel = mongoose.model<IPlan>('Plan', PlanSchema);
+const PlanModel = mongoose.model<IPlan>("Plan", PlanSchema);
 export { IPlan, PlanModel };

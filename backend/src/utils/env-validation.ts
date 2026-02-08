@@ -1,24 +1,24 @@
 /* eslint-disable node/no-process-env */
-import dotenv from 'dotenv';
-import { z } from 'zod';
+import dotenv from "dotenv";
+import { z } from "zod";
 
 dotenv.config();
 
 const envSchema = z.object({
   PORT: z
     .string()
-    .default('3000')
-    .transform((val) => Number(val)),
+    .default("3000")
+    .transform(val => Number(val)),
   CLIENT_URL: z.url(),
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   MONGO_URI: z.string().min(1),
   REDIS_HOST: z.string().min(1),
-  REDIS_PORT: z.string().transform((val) => Number(val)),
+  REDIS_PORT: z.string().transform(val => Number(val)),
   REDIS_PASSWORD: z.string().min(1),
   REDIS_USER: z.string().optional(),
   REDIS_TLS: z
     .string()
-    .transform((val) => val === 'true')
+    .transform(val => val === "true")
     .optional(),
   ACCESS_TOKEN_SECRET: z.string().min(1),
   REFRESH_TOKEN_SECRET: z.string().min(1),
@@ -43,8 +43,8 @@ function validateEnv() {
 
   if (!parsed.success) {
     console.error(
-      '❌ Invalid environment variables:',
-      JSON.stringify(parsed.error.format(), null, 4)
+      "❌ Invalid environment variables:",
+      JSON.stringify(parsed.error.format(), null, 4),
     );
     process.exit(1);
   }

@@ -1,4 +1,4 @@
-import type { IHistory } from '../../../models/history.model';
+import type { IHistory } from "../../../models/history.model";
 
 export interface IHistoryService {
   getAllHistory: (userId: string) => unknown;

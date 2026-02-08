@@ -1,9 +1,9 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from "express";
 
-import { validate } from 'class-validator';
-import { StatusCodes } from 'http-status-codes';
+import { validate } from "class-validator";
+import { StatusCodes } from "http-status-codes";
 
-import CustomError from '@/utils/custom-error';
+import CustomError from "@/utils/custom-error";
 
 export function validateDto(dtoClass: { fromPayload: (payload: any) => any }) {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -12,8 +12,8 @@ export function validateDto(dtoClass: { fromPayload: (payload: any) => any }) {
 
     if (errors.length > 0) {
       const errorMessages = errors
-        .map((error) => Object.values(error.constraints || {}).join(', '))
-        .join(', ');
+        .map(error => Object.values(error.constraints || {}).join(", "))
+        .join(", ");
       next(new CustomError(`Invalid input: ${errorMessages}`, StatusCodes.BAD_REQUEST));
     }
 

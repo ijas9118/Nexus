@@ -1,6 +1,6 @@
-import type { Document } from 'mongoose';
+import type { Document } from "mongoose";
 
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema } from "mongoose";
 
 export interface IGroup extends Document<string> {
   name: string;
@@ -10,7 +10,7 @@ export interface IGroup extends Document<string> {
   lastMessage?: {
     content?: string;
     fileUrl?: string;
-    fileType?: 'image' | 'video' | 'pdf';
+    fileType?: "image" | "video" | "pdf";
     sender: string; // userId
     createdAt: Date;
   };
@@ -25,20 +25,20 @@ const groupSchema = new Schema<IGroup>(
     members: [
       {
         type: String,
-        ref: 'User',
+        ref: "User",
         required: true,
       },
     ],
     createdBy: {
       type: String,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     unreadCounts: [
       {
         userId: {
           type: String,
-          ref: 'User',
+          ref: "User",
           required: true,
         },
         count: {
@@ -53,20 +53,20 @@ const groupSchema = new Schema<IGroup>(
       fileUrl: { type: String },
       fileType: {
         type: String,
-        enum: ['image', 'video', 'pdf'],
+        enum: ["image", "video", "pdf"],
       },
       sender: {
         type: String,
-        ref: 'User',
+        ref: "User",
       },
       createdAt: {
         type: Date,
       },
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 groupSchema.index({ members: 1 });
 
-export const GroupModel = mongoose.model<IGroup>('Group', groupSchema);
+export const GroupModel = mongoose.model<IGroup>("Group", groupSchema);

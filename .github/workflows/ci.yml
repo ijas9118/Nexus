@@ -42,9 +42,6 @@ jobs:
       - name: Run linting
         run: pnpm run lint
 
-      - name: Check formatting
-        run: pnpm run format:check
-
   lint-and-format-frontend:
     name: Frontend - Lint & Format
     runs-on: ubuntu-latest

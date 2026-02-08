@@ -1,4 +1,4 @@
-import type { Buffer } from 'node:buffer';
+import type { Buffer } from "node:buffer";
 
 export interface IBookingPaymentService {
   checkoutSession: (
@@ -9,7 +9,7 @@ export interface IBookingPaymentService {
     timeSlot: string,
     reason: string,
     customerId: string,
-    email: string
+    email: string,
   ) => Promise<string>;
   webhookHandler: (bodyData: Buffer, signature: string) => Promise<void>;
   verifyCheckoutSession: (sessionId: string) => Promise<boolean>;

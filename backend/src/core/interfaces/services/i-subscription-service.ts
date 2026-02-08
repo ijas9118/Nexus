@@ -1,4 +1,4 @@
-import type { ISubscription } from '@/models/subscription.model';
+import type { ISubscription } from "@/models/subscription.model";
 
 export interface ISubscriptionService {
   getUserSubscription: (userId: string) => Promise<ISubscription | null>;

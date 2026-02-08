@@ -1,16 +1,15 @@
-import { injectable } from 'inversify';
+import { injectable } from "inversify";
 
-import type { INexusPointRepository } from '@/core/interfaces/repositories/i-nexus-point-repository';
-import type { INexusPoint } from '@/models/nexus-point.model';
+import type { INexusPointRepository } from "@/core/interfaces/repositories/i-nexus-point-repository";
+import type { INexusPoint } from "@/models/nexus-point.model";
 
-import { BaseRepository } from '@/core/abstracts/base.repository';
-import { NexusPointModel } from '@/models/nexus-point.model';
+import { BaseRepository } from "@/core/abstracts/base.repository";
+import { NexusPointModel } from "@/models/nexus-point.model";
 
 @injectable()
 export class NexusPointRepository
   extends BaseRepository<INexusPoint>
-  implements INexusPointRepository
-{
+  implements INexusPointRepository {
   constructor() {
     super(NexusPointModel);
   }

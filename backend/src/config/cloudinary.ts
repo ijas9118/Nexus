@@ -1,7 +1,7 @@
-import { v2 as cloudinary } from 'cloudinary';
-import dotenv from 'dotenv';
+import { v2 as cloudinary } from "cloudinary";
+import dotenv from "dotenv";
 
-import { env } from '../utils/env-validation';
+import { env } from "../utils/env-validation";
 
 dotenv.config();
 

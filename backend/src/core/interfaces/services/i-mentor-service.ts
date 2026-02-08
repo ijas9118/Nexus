@@ -1,16 +1,16 @@
-import type { PersonalInfo } from '@/core/types';
-import type { MentorStatus } from '@/core/types/entities/mentor';
-import type { IMentor } from '@/models/mentor.model';
-import type { IMentorshipType } from '@/models/mentorship-type.model';
+import type { PersonalInfo } from "@/core/types";
+import type { MentorStatus } from "@/core/types/entities/mentor";
+import type { IMentor } from "@/models/mentor.model";
+import type { IMentorshipType } from "@/models/mentorship-type.model";
 
 export interface IMentorService {
   applyAsMentor: (
     userId: string,
     data: {
       personalInfo: PersonalInfo;
-      experience: IMentor['experience'];
-      mentorshipDetails: IMentor['mentorshipDetails'];
-    }
+      experience: IMentor["experience"];
+      mentorshipDetails: IMentor["mentorshipDetails"];
+    },
   ) => Promise<IMentor>;
 
   approveMentor: (mentorId: string, userId: string) => Promise<IMentor>;
@@ -41,7 +41,7 @@ export interface IMentorService {
       technologies: string[];
       bio: string;
       resume?: string | null;
-    }
+    },
   ) => Promise<IMentor>;
 
   updateMentorshipDetails: (
@@ -49,6 +49,6 @@ export interface IMentorService {
     mentorshipDetailsData: {
       mentorshipTypes: string[];
       targetAudiences: string[];
-    }
+    },
   ) => Promise<IMentor>;
 }

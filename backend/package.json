@@ -12,9 +12,7 @@
     "build": "tsc && tsc-alias",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -62,7 +60,6 @@
     "@types/swagger-ui-express": "^4.1.8",
     "eslint": "^9.39.2",
     "eslint-plugin-format": "^1.4.0",
-    "prettier": "^3.8.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "tsc-alias": "^1.8.16",

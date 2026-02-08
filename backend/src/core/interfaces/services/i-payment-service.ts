@@ -4,7 +4,7 @@ export interface IPaymentService {
     tier: string,
     price: number,
     customerId: string,
-    email: string
+    email: string,
   ) => Promise<string>;
   webhookHandler: (bodyData: any, signature: string) => Promise<void>;
 

@@ -1,6 +1,6 @@
-import type { QueryFilter } from 'mongoose';
+import type { QueryFilter } from "mongoose";
 
-import type { ITargetAudience } from '@/models/target-audience.model';
+import type { ITargetAudience } from "@/models/target-audience.model";
 
 export interface ITargetAudienceService {
   create: (data: Partial<ITargetAudience>) => Promise<ITargetAudience>;

@@ -1,6 +1,6 @@
-import type { JwtPayload } from 'jsonwebtoken';
+import type { JwtPayload } from "jsonwebtoken";
 
-import type { UserRole } from '../user-types';
+import type { UserRole } from "../user-types";
 
 export interface JwtPayloadWithUser extends JwtPayload {
   _id: string;

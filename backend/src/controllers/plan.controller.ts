@@ -1,13 +1,13 @@
-import type { Request, Response } from 'express';
+import type { Request, Response } from "express";
 
-import asyncHandler from 'express-async-handler';
-import { StatusCodes } from 'http-status-codes';
-import { inject, injectable } from 'inversify';
+import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
 
-import type { IPlanController } from '@/core/interfaces/controllers/i-plan-controller';
-import type { IPlanService } from '@/core/interfaces/services/i-plan-service';
+import type { IPlanController } from "@/core/interfaces/controllers/i-plan-controller";
+import type { IPlanService } from "@/core/interfaces/services/i-plan-service";
 
-import { TYPES } from '@/di/types';
+import { TYPES } from "@/di/types";
 
 @injectable()
 export class PlanController implements IPlanController {
@@ -26,7 +26,7 @@ export class PlanController implements IPlanController {
   getPlanById = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const plan = await this._planService.getPlanById(req.params.id as string);
     if (!plan) {
-      res.status(StatusCodes.NOT_FOUND).json({ message: 'Plan not found' });
+      res.status(StatusCodes.NOT_FOUND).json({ message: "Plan not found" });
       return;
     }
     res.status(StatusCodes.OK).json(plan);
@@ -35,7 +35,7 @@ export class PlanController implements IPlanController {
   updatePlan = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const plan = await this._planService.updatePlan(req.params.id as string, req.body);
     if (!plan) {
-      res.status(StatusCodes.NOT_FOUND).json({ message: 'Plan not found' });
+      res.status(StatusCodes.NOT_FOUND).json({ message: "Plan not found" });
       return;
     }
     res.status(StatusCodes.OK).json(plan);
@@ -44,9 +44,9 @@ export class PlanController implements IPlanController {
   deletePlan = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const plan = await this._planService.softDeletePlan(req.params.id as string);
     if (!plan) {
-      res.status(StatusCodes.NOT_FOUND).json({ message: 'Plan not found' });
+      res.status(StatusCodes.NOT_FOUND).json({ message: "Plan not found" });
       return;
     }
-    res.status(StatusCodes.OK).json({ message: 'Plan deleted successfully' });
+    res.status(StatusCodes.OK).json({ message: "Plan deleted successfully" });
   });
 }

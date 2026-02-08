@@ -1,16 +1,16 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable } from "inversify";
 
-import type { INotificationTypeRepository } from '@/core/interfaces/repositories/i-notification-type-repository';
-import type { INotificationTypeService } from '@/core/interfaces/services/i-notification-type-service';
-import type { INotificationType } from '@/models/notification-type.model';
+import type { INotificationTypeRepository } from "@/core/interfaces/repositories/i-notification-type-repository";
+import type { INotificationTypeService } from "@/core/interfaces/services/i-notification-type-service";
+import type { INotificationType } from "@/models/notification-type.model";
 
-import { TYPES } from '@/di/types';
+import { TYPES } from "@/di/types";
 
 @injectable()
 export class NotificationTypeService implements INotificationTypeService {
   constructor(
     @inject(TYPES.NotificationTypeRepository)
-    private notificationTypeRepository: INotificationTypeRepository
+    private notificationTypeRepository: INotificationTypeRepository,
   ) {}
 
   async createNotificationType(data: {
@@ -22,7 +22,7 @@ export class NotificationTypeService implements INotificationTypeService {
   }): Promise<INotificationType> {
     const existingType = await this.notificationTypeRepository.findByName(data.name);
     if (existingType) {
-      throw new Error('Notification type with this name already exists');
+      throw new Error("Notification type with this name already exists");
     }
 
     const notificationType = await this.notificationTypeRepository.createNotificationType(data);
@@ -42,18 +42,18 @@ export class NotificationTypeService implements INotificationTypeService {
       icon: string;
       iconColor: string;
       roles: string[];
-    }>
+    }>,
   ): Promise<INotificationType> {
     if (data.name) {
       const existingType = await this.notificationTypeRepository.findByName(data.name);
       if (existingType && existingType._id.toString() !== id) {
-        throw new Error('Notification type with this name already exists');
+        throw new Error("Notification type with this name already exists");
       }
     }
 
     const updatedType = await this.notificationTypeRepository.update(id, data);
     if (!updatedType) {
-      throw new Error('Notification type not found');
+      throw new Error("Notification type not found");
     }
 
     return updatedType;

@@ -1,7 +1,7 @@
-import { IsArray, IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsEmail, IsOptional, IsString } from "class-validator";
 
-import type { UserRole } from '@/core/types/user-types';
-import type { IUser } from '@/models/user.model';
+import type { UserRole } from "@/core/types/user-types";
+import type { IUser } from "@/models/user.model";
 
 export class RegisterResponseDTO {
   @IsString()

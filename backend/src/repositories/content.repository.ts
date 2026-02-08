@@ -1,27 +1,27 @@
-import { StatusCodes } from 'http-status-codes';
-import { inject, injectable } from 'inversify';
-import mongoose, { Types } from 'mongoose';
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
+import mongoose, { Types } from "mongoose";
 
-import type { IVoteRepository } from '@/core/interfaces/repositories/i-vote-repository';
-import type { SearchCriteria, SearchResultItem } from '@/core/types/search';
-import type { UserRole } from '@/core/types/user-types';
+import type { IVoteRepository } from "@/core/interfaces/repositories/i-vote-repository";
+import type { SearchCriteria, SearchResultItem } from "@/core/types/search";
+import type { UserRole } from "@/core/types/user-types";
 
-import CustomError from '@/utils/custom-error';
+import CustomError from "@/utils/custom-error";
 
-import type { IContentRepository } from '../core/interfaces/repositories/i-content-repository';
-import type { IFollowersRepository } from '../core/interfaces/repositories/i-followers-repository';
-import type { IContent } from '../models/content.model';
+import type { IContentRepository } from "../core/interfaces/repositories/i-content-repository";
+import type { IFollowersRepository } from "../core/interfaces/repositories/i-followers-repository";
+import type { IContent } from "../models/content.model";
 
-import { BaseRepository } from '../core/abstracts/base.repository';
-import { TYPES } from '../di/types';
-import ContentModel from '../models/content.model';
-import UserFollowModel from '../models/followers.model';
+import { BaseRepository } from "../core/abstracts/base.repository";
+import { TYPES } from "../di/types";
+import ContentModel from "../models/content.model";
+import UserFollowModel from "../models/followers.model";
 
 @injectable()
 export class ContentRepository extends BaseRepository<IContent> implements IContentRepository {
   constructor(
     @inject(TYPES.FollowersRepository) private followersRepository: IFollowersRepository,
-    @inject(TYPES.VoteRepository) private voteRepo: IVoteRepository
+    @inject(TYPES.VoteRepository) private voteRepo: IVoteRepository,
   ) {
     super(ContentModel);
   }
@@ -45,25 +45,25 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
 
       {
         $lookup: {
-          from: 'users',
-          localField: 'author',
-          foreignField: '_id',
-          as: 'authorInfo',
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorInfo",
         },
       },
-      { $unwind: '$authorInfo' },
+      { $unwind: "$authorInfo" },
 
       {
         $lookup: {
-          from: 'squads',
-          localField: 'squad',
-          foreignField: '_id',
-          as: 'squadInfo',
+          from: "squads",
+          localField: "squad",
+          foreignField: "_id",
+          as: "squadInfo",
         },
       },
       {
         $unwind: {
-          path: '$squadInfo',
+          path: "$squadInfo",
           preserveNullAndEmptyArrays: true,
         },
       },
@@ -72,78 +72,78 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
         ? [
             {
               $lookup: {
-                from: 'votes',
-                let: { contentId: '$_id' },
+                from: "votes",
+                let: { contentId: "$_id" },
                 pipeline: [
                   {
                     $match: {
                       $expr: {
                         $and: [
-                          { $eq: ['$contentId', '$$contentId'] },
-                          { $eq: ['$userId', userObjectId] },
+                          { $eq: ["$contentId", "$$contentId"] },
+                          { $eq: ["$userId", userObjectId] },
                         ],
                       },
                     },
                   },
                 ],
-                as: 'userVote',
+                as: "userVote",
               },
             },
             {
               $lookup: {
-                from: 'bookmarks',
-                let: { contentId: '$_id' },
+                from: "bookmarks",
+                let: { contentId: "$_id" },
                 pipeline: [
                   {
                     $match: {
                       $expr: {
                         $and: [
-                          { $in: ['$$contentId', '$contentIds'] },
-                          { $eq: ['$userId', userObjectId] },
+                          { $in: ["$$contentId", "$contentIds"] },
+                          { $eq: ["$userId", userObjectId] },
                         ],
                       },
                     },
                   },
                 ],
-                as: 'userBookmark',
+                as: "userBookmark",
               },
             },
             {
               $lookup: {
-                from: 'userfollows',
-                let: { authorId: '$author' },
+                from: "userfollows",
+                let: { authorId: "$author" },
                 pipeline: [
                   {
                     $match: {
                       $expr: {
                         $and: [
-                          { $eq: ['$userId', userObjectId] },
-                          { $in: ['$$authorId', '$following'] },
+                          { $eq: ["$userId", userObjectId] },
+                          { $in: ["$$authorId", "$following"] },
                         ],
                       },
                     },
                   },
                 ],
-                as: 'isFollowingAuthor',
+                as: "isFollowingAuthor",
               },
             },
             {
               $lookup: {
-                from: 'userfollows',
-                let: { authorId: '$author' },
+                from: "userfollows",
+                let: { authorId: "$author" },
                 pipeline: [
                   {
                     $match: {
                       $expr: {
                         $and: [
-                          { $eq: ['$userId', userObjectId] },
-                          { $in: ['$$authorId', '$connections'] },
+                          { $eq: ["$userId", userObjectId] },
+                          { $in: ["$$authorId", "$connections"] },
                         ],
                       },
                     },
                   },
                 ],
-                as: 'isConnectedToAuthor',
+                as: "isConnectedToAuthor",
               },
             },
           ]
@@ -158,9 +158,9 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
                   {
                     $size: {
                       $filter: {
-                        input: '$userVote',
-                        as: 'vote',
-                        cond: { $eq: ['$$vote.voteType', 'upvote'] },
+                        input: "$userVote",
+                        as: "vote",
+                        cond: { $eq: ["$$vote.voteType", "upvote"] },
                       },
                     },
                   },
@@ -178,9 +178,9 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
                   {
                     $size: {
                       $filter: {
-                        input: '$userVote',
-                        as: 'vote',
-                        cond: { $eq: ['$$vote.voteType', 'downvote'] },
+                        input: "$userVote",
+                        as: "vote",
+                        cond: { $eq: ["$$vote.voteType", "downvote"] },
                       },
                     },
                   },
@@ -191,19 +191,19 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
               else: false,
             },
           },
-          isBookmarked: { $gt: [{ $size: '$userBookmark' }, 0] },
-          isFollowing: { $gt: [{ $size: '$isFollowingAuthor' }, 0] },
-          isConnected: { $gt: [{ $size: '$isConnectedToAuthor' }, 0] },
+          isBookmarked: { $gt: [{ $size: "$userBookmark" }, 0] },
+          isFollowing: { $gt: [{ $size: "$isFollowingAuthor" }, 0] },
+          isConnected: { $gt: [{ $size: "$isConnectedToAuthor" }, 0] },
           author: {
-            _id: '$authorInfo._id',
-            name: '$authorInfo.name',
-            username: '$authorInfo.username',
-            profilePic: '$authorInfo.profilePic',
-            role: '$authorInfo.role',
+            _id: "$authorInfo._id",
+            name: "$authorInfo.name",
+            username: "$authorInfo.username",
+            profilePic: "$authorInfo.profilePic",
+            role: "$authorInfo.role",
           },
           squad: {
-            _id: '$squadInfo._id',
-            name: '$squadInfo.name',
+            _id: "$squadInfo._id",
+            name: "$squadInfo.name",
           },
         },
       },
@@ -226,10 +226,10 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       return null;
     }
 
-    if (content.isPremium && role === 'user') {
+    if (content.isPremium && role === "user") {
       throw new CustomError(
-        'This content is available for premium members only',
-        StatusCodes.PAYMENT_REQUIRED
+        "This content is available for premium members only",
+        StatusCodes.PAYMENT_REQUIRED,
       );
     }
 
@@ -249,64 +249,64 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       { $limit: limit },
       {
         $lookup: {
-          from: 'users', // Users collection
-          localField: 'author', // Content author field
-          foreignField: '_id', // User _id field
-          as: 'authorInfo',
+          from: "users", // Users collection
+          localField: "author", // Content author field
+          foreignField: "_id", // User _id field
+          as: "authorInfo",
         },
       },
       {
-        $unwind: '$authorInfo', // Convert array to object
+        $unwind: "$authorInfo", // Convert array to object
       },
       {
         $lookup: {
-          from: 'votes',
-          let: { contentId: '$_id' },
+          from: "votes",
+          let: { contentId: "$_id" },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ['$contentId', '$$contentId'] },
-                    { $eq: ['$userId', userObjectId] },
+                    { $eq: ["$contentId", "$$contentId"] },
+                    { $eq: ["$userId", userObjectId] },
                   ],
                 },
               },
             },
           ],
-          as: 'userVote',
+          as: "userVote",
         },
       },
       {
         $lookup: {
-          from: 'bookmarks',
-          let: { contentId: '$_id' },
+          from: "bookmarks",
+          let: { contentId: "$_id" },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $in: ['$$contentId', '$contentIds'] },
-                    { $eq: ['$userId', userObjectId] },
+                    { $in: ["$$contentId", "$contentIds"] },
+                    { $eq: ["$userId", userObjectId] },
                   ],
                 },
               },
             },
           ],
-          as: 'userBookmark',
+          as: "userBookmark",
         },
       },
       {
         $lookup: {
-          from: 'squads', // Squads collection
-          localField: 'squad', // Content's squad field
-          foreignField: '_id', // Squad _id field
-          as: 'squadInfo',
+          from: "squads", // Squads collection
+          localField: "squad", // Content's squad field
+          foreignField: "_id", // Squad _id field
+          as: "squadInfo",
         },
       },
       {
         $unwind: {
-          path: '$squadInfo',
+          path: "$squadInfo",
           preserveNullAndEmptyArrays: true, // If content has no squad, keep it null
         },
       },
@@ -319,9 +319,9 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
                   {
                     $size: {
                       $filter: {
-                        input: '$userVote',
-                        as: 'vote',
-                        cond: { $eq: ['$$vote.voteType', 'upvote'] },
+                        input: "$userVote",
+                        as: "vote",
+                        cond: { $eq: ["$$vote.voteType", "upvote"] },
                       },
                     },
                   },
@@ -339,9 +339,9 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
                   {
                     $size: {
                       $filter: {
-                        input: '$userVote',
-                        as: 'vote',
-                        cond: { $eq: ['$$vote.voteType', 'downvote'] },
+                        input: "$userVote",
+                        as: "vote",
+                        cond: { $eq: ["$$vote.voteType", "downvote"] },
                       },
                     },
                   },
@@ -352,12 +352,12 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
               else: false,
             },
           },
-          isBookmarked: { $gt: [{ $size: '$userBookmark' }, 0] },
-          username: '$authorInfo.username',
-          profilePic: '$authorInfo.profilePic',
+          isBookmarked: { $gt: [{ $size: "$userBookmark" }, 0] },
+          username: "$authorInfo.username",
+          profilePic: "$authorInfo.profilePic",
           squad: {
-            _id: '$squadInfo._id',
-            name: '$squadInfo.name',
+            _id: "$squadInfo._id",
+            name: "$squadInfo.name",
           },
         },
       },
@@ -388,7 +388,7 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
         $match: {
           $or: [
             { isPremium: false },
-            { isPremium: true, $expr: { $in: [role, ['premium', 'mentor', 'admin']] } },
+            { isPremium: true, $expr: { $in: [role, ["premium", "mentor", "admin"]] } },
           ],
         },
       },
@@ -396,26 +396,26 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       // Lookup author information
       {
         $lookup: {
-          from: 'users',
-          localField: 'author',
-          foreignField: '_id',
-          as: 'authorInfo',
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorInfo",
         },
       },
-      { $unwind: '$authorInfo' },
+      { $unwind: "$authorInfo" },
 
       // Lookup squad information
       {
         $lookup: {
-          from: 'squads',
-          localField: 'squad',
-          foreignField: '_id',
-          as: 'squadInfo',
+          from: "squads",
+          localField: "squad",
+          foreignField: "_id",
+          as: "squadInfo",
         },
       },
       {
         $unwind: {
-          path: '$squadInfo',
+          path: "$squadInfo",
           preserveNullAndEmptyArrays: true,
         },
       },
@@ -423,75 +423,75 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       // Lookup user-specific data (votes, bookmarks, following, connections)
       {
         $lookup: {
-          from: 'votes',
-          let: { contentId: '$_id' },
+          from: "votes",
+          let: { contentId: "$_id" },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ['$contentId', '$$contentId'] },
-                    { $eq: ['$userId', userObjectId] },
+                    { $eq: ["$contentId", "$$contentId"] },
+                    { $eq: ["$userId", userObjectId] },
                   ],
                 },
               },
             },
           ],
-          as: 'userVote',
+          as: "userVote",
         },
       },
       {
         $lookup: {
-          from: 'bookmarks',
-          let: { contentId: '$_id' },
+          from: "bookmarks",
+          let: { contentId: "$_id" },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $in: ['$$contentId', '$contentIds'] },
-                    { $eq: ['$userId', userObjectId] },
+                    { $in: ["$$contentId", "$contentIds"] },
+                    { $eq: ["$userId", userObjectId] },
                   ],
                 },
               },
             },
           ],
-          as: 'userBookmark',
+          as: "userBookmark",
         },
       },
       {
         $lookup: {
-          from: 'userfollows',
-          let: { authorId: '$author' },
+          from: "userfollows",
+          let: { authorId: "$author" },
           pipeline: [
             {
               $match: {
                 $expr: {
-                  $and: [{ $eq: ['$userId', userObjectId] }, { $in: ['$$authorId', '$following'] }],
+                  $and: [{ $eq: ["$userId", userObjectId] }, { $in: ["$$authorId", "$following"] }],
                 },
               },
             },
           ],
-          as: 'isFollowingAuthor',
+          as: "isFollowingAuthor",
         },
       },
       {
         $lookup: {
-          from: 'userfollows',
-          let: { authorId: '$author' },
+          from: "userfollows",
+          let: { authorId: "$author" },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ['$userId', userObjectId] },
-                    { $in: ['$$authorId', '$connections'] },
+                    { $eq: ["$userId", userObjectId] },
+                    { $in: ["$$authorId", "$connections"] },
                   ],
                 },
               },
             },
           ],
-          as: 'isConnectedToAuthor',
+          as: "isConnectedToAuthor",
         },
       },
 
@@ -505,9 +505,9 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
                   {
                     $size: {
                       $filter: {
-                        input: '$userVote',
-                        as: 'vote',
-                        cond: { $eq: ['$$vote.voteType', 'upvote'] },
+                        input: "$userVote",
+                        as: "vote",
+                        cond: { $eq: ["$$vote.voteType", "upvote"] },
                       },
                     },
                   },
@@ -525,9 +525,9 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
                   {
                     $size: {
                       $filter: {
-                        input: '$userVote',
-                        as: 'vote',
-                        cond: { $eq: ['$$vote.voteType', 'downvote'] },
+                        input: "$userVote",
+                        as: "vote",
+                        cond: { $eq: ["$$vote.voteType", "downvote"] },
                       },
                     },
                   },
@@ -538,14 +538,14 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
               else: false,
             },
           },
-          isBookmarked: { $gt: [{ $size: '$userBookmark' }, 0] },
-          isFollowing: { $gt: [{ $size: '$isFollowingAuthor' }, 0] },
-          isConnected: { $gt: [{ $size: '$isConnectedToAuthor' }, 0] },
-          authorName: '$authorInfo.name',
-          authorUsername: '$authorInfo.username',
-          authorProfilePic: '$authorInfo.profilePic',
-          authorRole: '$authorInfo.role',
-          squad: '$squadInfo.name',
+          isBookmarked: { $gt: [{ $size: "$userBookmark" }, 0] },
+          isFollowing: { $gt: [{ $size: "$isFollowingAuthor" }, 0] },
+          isConnected: { $gt: [{ $size: "$isConnectedToAuthor" }, 0] },
+          authorName: "$authorInfo.name",
+          authorUsername: "$authorInfo.username",
+          authorProfilePic: "$authorInfo.profilePic",
+          authorRole: "$authorInfo.role",
+          squad: "$squadInfo.name",
         },
       },
 
@@ -572,7 +572,7 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
   }
 
   async getPosts(): Promise<IContent[]> {
-    return await ContentModel.find({}).populate('author', 'name profilePic');
+    return await ContentModel.find({}).populate("author", "name profilePic");
   }
 
   async verifyContent(contentId: string): Promise<IContent | null> {
@@ -587,10 +587,10 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
     const userFollow = await UserFollowModel.findOne({ userId: userObjectId }).exec();
 
     if (!userFollow) {
-      throw new CustomError('User follow document not found', StatusCodes.NOT_FOUND);
+      throw new CustomError("User follow document not found", StatusCodes.NOT_FOUND);
     }
 
-    const followingUserIds = userFollow.following.map((id) => new mongoose.Types.ObjectId(id));
+    const followingUserIds = userFollow.following.map(id => new mongoose.Types.ObjectId(id));
 
     const contents = await this.model.aggregate([
       // Match content from followed users
@@ -606,68 +606,68 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       // Lookup author information
       {
         $lookup: {
-          from: 'users',
-          localField: 'author',
-          foreignField: '_id',
-          as: 'authorInfo',
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorInfo",
         },
       },
       {
-        $unwind: '$authorInfo',
+        $unwind: "$authorInfo",
       },
       // Lookup squad information
       {
         $lookup: {
-          from: 'squads',
-          localField: 'squad',
-          foreignField: '_id',
-          as: 'squadInfo',
+          from: "squads",
+          localField: "squad",
+          foreignField: "_id",
+          as: "squadInfo",
         },
       },
       {
         $unwind: {
-          path: '$squadInfo',
+          path: "$squadInfo",
           preserveNullAndEmptyArrays: true, // Keep content without squad
         },
       },
       // Lookup user votes
       {
         $lookup: {
-          from: 'votes',
-          let: { contentId: '$_id' },
+          from: "votes",
+          let: { contentId: "$_id" },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ['$contentId', '$$contentId'] },
-                    { $eq: ['$userId', userObjectId] },
+                    { $eq: ["$contentId", "$$contentId"] },
+                    { $eq: ["$userId", userObjectId] },
                   ],
                 },
               },
             },
           ],
-          as: 'userVote',
+          as: "userVote",
         },
       },
       // Lookup user bookmarks
       {
         $lookup: {
-          from: 'bookmarks',
-          let: { contentId: '$_id' },
+          from: "bookmarks",
+          let: { contentId: "$_id" },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $in: ['$$contentId', '$contentIds'] },
-                    { $eq: ['$userId', userObjectId] },
+                    { $in: ["$$contentId", "$contentIds"] },
+                    { $eq: ["$userId", userObjectId] },
                   ],
                 },
               },
             },
           ],
-          as: 'userBookmark',
+          as: "userBookmark",
         },
       },
       // Add computed fields
@@ -680,9 +680,9 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
                   {
                     $size: {
                       $filter: {
-                        input: '$userVote',
-                        as: 'vote',
-                        cond: { $eq: ['$$vote.voteType', 'upvote'] },
+                        input: "$userVote",
+                        as: "vote",
+                        cond: { $eq: ["$$vote.voteType", "upvote"] },
                       },
                     },
                   },
@@ -700,9 +700,9 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
                   {
                     $size: {
                       $filter: {
-                        input: '$userVote',
-                        as: 'vote',
-                        cond: { $eq: ['$$vote.voteType', 'downvote'] },
+                        input: "$userVote",
+                        as: "vote",
+                        cond: { $eq: ["$$vote.voteType", "downvote"] },
                       },
                     },
                   },
@@ -713,14 +713,14 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
               else: false,
             },
           },
-          isBookmarked: { $gt: [{ $size: '$userBookmark' }, 0] },
-          name: '$authorInfo.name',
-          username: '$authorInfo.username',
-          profilePic: '$authorInfo.profilePic',
-          userName: '$authorInfo.name',
+          isBookmarked: { $gt: [{ $size: "$userBookmark" }, 0] },
+          name: "$authorInfo.name",
+          username: "$authorInfo.username",
+          profilePic: "$authorInfo.profilePic",
+          userName: "$authorInfo.name",
           squad: {
-            _id: '$squadInfo._id',
-            name: '$squadInfo.name',
+            _id: "$squadInfo._id",
+            name: "$squadInfo.name",
           },
         },
       },
@@ -742,8 +742,8 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
   getUserContents = async (userId: string): Promise<IContent[] | null> => {
     return this.model
       .find({ author: userId })
-      .populate('author', 'name profilePic username')
-      .populate('squad', 'name')
+      .populate("author", "name profilePic username")
+      .populate("squad", "name")
       .exec();
   };
 
@@ -754,22 +754,23 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
   async search(criteria: SearchCriteria): Promise<SearchResultItem[]> {
     const { query, limit = 10 } = criteria;
 
-    if (!query) return [];
+    if (!query)
+      return [];
 
     const docs = await ContentModel.find(
       {
-        contentType: 'blog',
+        contentType: "blog",
         $text: { $search: query },
       },
-      { score: { $meta: 'textScore' } }
+      { score: { $meta: "textScore" } },
     )
-      .sort({ score: { $meta: 'textScore' }, createdAt: -1 })
+      .sort({ score: { $meta: "textScore" }, createdAt: -1 })
       .limit(limit)
       .lean();
 
-    return docs.map((doc) => ({
+    return docs.map(doc => ({
       id: doc._id.toString(),
-      type: 'blog',
+      type: "blog",
       title: doc.title,
       snippet: doc.content.substring(0, 150), // example snippet
     }));

@@ -1,4 +1,4 @@
-import type { IPlan } from '@/models/plan.model';
+import type { IPlan } from "@/models/plan.model";
 
 export interface IPlanService {
   createPlan: (data: Partial<IPlan>) => Promise<IPlan>;

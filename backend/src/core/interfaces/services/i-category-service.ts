@@ -1,4 +1,4 @@
-import type { ICategory } from '../../../models/categories.model';
+import type { ICategory } from "../../../models/categories.model";
 
 export interface ICategoryService {
   addCategory: (name: string) => Promise<ICategory>;
@@ -8,6 +8,6 @@ export interface ICategoryService {
   getAllCategoriesWithPagination: (
     page: number,
     limit: number,
-    search: string
+    search: string,
   ) => Promise<{ categories: ICategory[]; total: number }>;
 }

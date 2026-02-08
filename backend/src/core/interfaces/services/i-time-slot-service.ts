@@ -1,4 +1,4 @@
-import type { ITimeSlot } from '@/models/timeslots.model';
+import type { ITimeSlot } from "@/models/timeslots.model";
 
 export interface ITimeSlotService {
   addTimeSlot: (mentorId: string, date: Date, startTime12Hr: string) => Promise<ITimeSlot>;

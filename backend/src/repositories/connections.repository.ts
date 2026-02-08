@@ -1,38 +1,37 @@
-import { StatusCodes } from 'http-status-codes';
-import { injectable } from 'inversify';
-import { Types } from 'mongoose';
+import { StatusCodes } from "http-status-codes";
+import { injectable } from "inversify";
+import { Types } from "mongoose";
 
-import { UserModel } from '@/models/user.model';
-import CustomError from '@/utils/custom-error';
+import { UserModel } from "@/models/user.model";
+import CustomError from "@/utils/custom-error";
 
-import type { IConnectionsRepository } from '../core/interfaces/repositories/i-connections-repository';
+import type { IConnectionsRepository } from "../core/interfaces/repositories/i-connections-repository";
 import type {
   IPendingRequestUser,
   IUserWhoFollow,
   SearchConnections,
-} from '../core/types/user-types';
-import type { IUserFollow } from '../models/followers.model';
+} from "../core/types/user-types";
+import type { IUserFollow } from "../models/followers.model";
 
-import { BaseRepository } from '../core/abstracts/base.repository';
-import UserFollowModel from '../models/followers.model';
+import { BaseRepository } from "../core/abstracts/base.repository";
+import UserFollowModel from "../models/followers.model";
 
 @injectable()
 export class ConnectionsRepository
   extends BaseRepository<IUserFollow>
-  implements IConnectionsRepository
-{
+  implements IConnectionsRepository {
   constructor() {
     super(UserFollowModel);
   }
 
   searchConnections = async (userId: string, search?: string): Promise<SearchConnections[]> => {
-    const userFollow: IUserFollow = await this.model.findOne({ userId }).select('connections');
+    const userFollow: IUserFollow = await this.model.findOne({ userId }).select("connections");
 
     if (!userFollow || !userFollow.connections.length) {
-      throw new CustomError('No connections found', StatusCodes.NOT_FOUND);
+      throw new CustomError("No connections found", StatusCodes.NOT_FOUND);
     }
 
-    const connectedUserIds = userFollow.connections.map((id) => id.toString());
+    const connectedUserIds = userFollow.connections.map(id => id.toString());
 
     // Base query
     const query: any = {
@@ -42,15 +41,15 @@ export class ConnectionsRepository
     // Only add search if provided and not empty
     if (search?.trim()) {
       query.$or = [
-        { username: { $regex: search, $options: 'i' } },
-        { name: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
+        { username: { $regex: search, $options: "i" } },
+        { name: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
       ];
     }
 
-    const results = await UserModel.find(query).select('username name email profilePic');
+    const results = await UserModel.find(query).select("username name email profilePic");
 
-    return results.map((user) => ({
+    return results.map(user => ({
       _id: user._id.toString(),
       name: user.name,
       username: user.username,
@@ -66,10 +65,10 @@ export class ConnectionsRepository
       { $match: { userId: userObjId } },
       {
         $lookup: {
-          from: 'users', // Collection name in MongoDB
-          localField: 'pendingConnectionRequests', // Field in UserFollowModel
-          foreignField: '_id', // _id in User collection
-          as: 'pendingUsers', // Resulting array
+          from: "users", // Collection name in MongoDB
+          localField: "pendingConnectionRequests", // Field in UserFollowModel
+          foreignField: "_id", // _id in User collection
+          as: "pendingUsers", // Resulting array
         },
       },
       {
@@ -90,8 +89,8 @@ export class ConnectionsRepository
 
   sendConnectionRequest = async (
     requesterId: string,
-    recipientId: string
-  ): Promise<'ALREADY_SENT' | 'SUCCESS'> => {
+    recipientId: string,
+  ): Promise<"ALREADY_SENT" | "SUCCESS"> => {
     const requesterObjectId = new Types.ObjectId(requesterId);
     const recipientObjectId = new Types.ObjectId(recipientId);
 
@@ -102,22 +101,22 @@ export class ConnectionsRepository
     });
 
     if (existingRequest) {
-      return 'ALREADY_SENT';
+      return "ALREADY_SENT";
     }
 
     // Add to recipient's pendingConnectionRequests
     await this.findOneAndUpdate(
       { userId: recipientObjectId },
-      { $addToSet: { pendingConnectionRequests: requesterObjectId } }
+      { $addToSet: { pendingConnectionRequests: requesterObjectId } },
     );
 
     // Add to requester's sentConnectionRequests
     await this.findOneAndUpdate(
       { userId: requesterObjectId },
-      { $addToSet: { sentConnectionRequests: recipientObjectId } }
+      { $addToSet: { sentConnectionRequests: recipientObjectId } },
     );
 
-    return 'SUCCESS';
+    return "SUCCESS";
   };
 
   acceptConnectionRequest = async (userId: string, requesterId: string): Promise<boolean> => {
@@ -130,7 +129,7 @@ export class ConnectionsRepository
       {
         $pull: { pendingConnectionRequests: requesterObjectId },
         $addToSet: { connections: requesterObjectId },
-      }
+      },
     );
 
     // Remove from requester's sentConnectionRequests and add to connections
@@ -139,7 +138,7 @@ export class ConnectionsRepository
       {
         $pull: { sentConnectionRequests: userObjectId },
         $addToSet: { connections: userObjectId },
-      }
+      },
     );
 
     return true;
@@ -159,7 +158,7 @@ export class ConnectionsRepository
 
   withdrawConnectionRequest = async (
     requesterId: string,
-    recipientId: string
+    recipientId: string,
   ): Promise<boolean> => {
     const requesterObjectId = new Types.ObjectId(requesterId);
     const recipientObjectId = new Types.ObjectId(recipientId);
@@ -167,13 +166,13 @@ export class ConnectionsRepository
     // Remove from recipient's pendingConnectionRequests
     await this.findOneAndUpdate(
       { userId: recipientObjectId },
-      { $pull: { pendingConnectionRequests: requesterObjectId } }
+      { $pull: { pendingConnectionRequests: requesterObjectId } },
     );
 
     // Remove from requester's sentConnectionRequests
     await this.findOneAndUpdate(
       { userId: requesterObjectId },
-      { $pull: { sentConnectionRequests: recipientObjectId } }
+      { $pull: { sentConnectionRequests: recipientObjectId } },
     );
 
     return true;
@@ -186,10 +185,10 @@ export class ConnectionsRepository
       { $match: { userId: userObjId } },
       {
         $lookup: {
-          from: 'users',
-          localField: 'sentConnectionRequests',
-          foreignField: '_id',
-          as: 'sentUsers',
+          from: "users",
+          localField: "sentConnectionRequests",
+          foreignField: "_id",
+          as: "sentUsers",
         },
       },
       {
@@ -222,11 +221,11 @@ export class ConnectionsRepository
 
   getAllConnections = async (userId: string): Promise<any[]> => {
     const connections = await UserFollowModel.findOne({ userId })
-      .populate<{ connections: IUserWhoFollow[] }>('connections', 'name profilePic')
+      .populate<{ connections: IUserWhoFollow[] }>("connections", "name profilePic")
       .lean();
 
     return (
-      connections?.connections.map((connection) => ({
+      connections?.connections.map(connection => ({
         label: connection.name,
         value: connection._id,
       })) || []

@@ -1,174 +1,174 @@
 export const TYPES = {
   // User
-  UserRepository: Symbol.for('UserRepository'),
-  UserService: Symbol.for('UserService'),
-  UserController: Symbol.for('UserController'),
+  UserRepository: Symbol.for("UserRepository"),
+  UserService: Symbol.for("UserService"),
+  UserController: Symbol.for("UserController"),
 
   // Admin
-  AdminRepository: Symbol.for('AdminRepository'),
-  AdminAuthService: Symbol.for('AdminAuthService'),
-  AdminController: Symbol.for('AdminController'),
-  AdminAuthController: Symbol.for('AdminAuthController'),
+  AdminRepository: Symbol.for("AdminRepository"),
+  AdminAuthService: Symbol.for("AdminAuthService"),
+  AdminController: Symbol.for("AdminController"),
+  AdminAuthController: Symbol.for("AdminAuthController"),
 
   // Auth
-  AuthService: Symbol.for('AuthService'),
-  AuthController: Symbol.for('AuthController'),
+  AuthService: Symbol.for("AuthService"),
+  AuthController: Symbol.for("AuthController"),
 
   // Content
-  ContentRepository: Symbol.for('ContentRepository'),
-  ContentService: Symbol.for('ContentService'),
-  ContentController: Symbol.for('ContentController'),
-  ContentViewRepository: Symbol.for('ContentViewRepository'),
-  ContentViewService: Symbol.for('ContentViewService'),
+  ContentRepository: Symbol.for("ContentRepository"),
+  ContentService: Symbol.for("ContentService"),
+  ContentController: Symbol.for("ContentController"),
+  ContentViewRepository: Symbol.for("ContentViewRepository"),
+  ContentViewService: Symbol.for("ContentViewService"),
 
   // Vote (a.k.a. Likes)
-  VoteRepository: Symbol.for('VoteRepository'),
-  VoteService: Symbol.for('VoteService'),
-  VoteController: Symbol.for('LikesController'),
+  VoteRepository: Symbol.for("VoteRepository"),
+  VoteService: Symbol.for("VoteService"),
+  VoteController: Symbol.for("LikesController"),
 
   // Bookmark
-  BookmarkRepository: Symbol.for('BookmarkRepository'),
-  BookmarkService: Symbol.for('BookmarkService'),
-  BookmarkController: Symbol.for('BookmarkController'),
+  BookmarkRepository: Symbol.for("BookmarkRepository"),
+  BookmarkService: Symbol.for("BookmarkService"),
+  BookmarkController: Symbol.for("BookmarkController"),
 
   // Category
-  CategoryRepository: Symbol.for('CategoryRepository'),
-  CategoryService: Symbol.for('CategoryService'),
-  CategoryController: Symbol.for('CategoryController'),
+  CategoryRepository: Symbol.for("CategoryRepository"),
+  CategoryService: Symbol.for("CategoryService"),
+  CategoryController: Symbol.for("CategoryController"),
 
   // Squad
-  SquadRepository: Symbol.for('SquadRepository'),
-  SquadService: Symbol.for('SquadService'),
-  SquadController: Symbol.for('SquadController'),
+  SquadRepository: Symbol.for("SquadRepository"),
+  SquadService: Symbol.for("SquadService"),
+  SquadController: Symbol.for("SquadController"),
 
   // Mentor
-  MentorRepository: Symbol.for('MentorRepository'),
-  MentorService: Symbol.for('MentorService'),
-  MentorController: Symbol.for('MentorController'),
+  MentorRepository: Symbol.for("MentorRepository"),
+  MentorService: Symbol.for("MentorService"),
+  MentorController: Symbol.for("MentorController"),
 
   // History
-  HistoryRepository: Symbol.for('HistoryRepository'),
-  HistoryService: Symbol.for('HistoryService'),
-  HistoryController: Symbol.for('HistoryController'),
+  HistoryRepository: Symbol.for("HistoryRepository"),
+  HistoryService: Symbol.for("HistoryService"),
+  HistoryController: Symbol.for("HistoryController"),
 
   // Followers
-  FollowersRepository: Symbol.for('FollowersRepository'),
-  FollowersService: Symbol.for('FollowersService'),
-  FollowersController: Symbol.for('FollowersController'),
+  FollowersRepository: Symbol.for("FollowersRepository"),
+  FollowersService: Symbol.for("FollowersService"),
+  FollowersController: Symbol.for("FollowersController"),
 
   // Connections
-  ConnectionsRepository: Symbol.for('ConnectionsRepository'),
-  ConnectionService: Symbol.for('IConnectionService'),
-  ConnectionsController: Symbol.for('ConnectionsController'),
+  ConnectionsRepository: Symbol.for("ConnectionsRepository"),
+  ConnectionService: Symbol.for("IConnectionService"),
+  ConnectionsController: Symbol.for("ConnectionsController"),
 
   // Comment
-  CommentRepository: Symbol.for('CommentRepository'),
-  CommentService: Symbol.for('CommentService'),
-  CommentController: Symbol.for('CommentController'),
+  CommentRepository: Symbol.for("CommentRepository"),
+  CommentService: Symbol.for("CommentService"),
+  CommentController: Symbol.for("CommentController"),
 
   // Plan
-  PlanRepository: Symbol.for('PlanRepository'),
-  PlanService: Symbol.for('PlanService'),
-  PlanController: Symbol.for('PlanController'),
+  PlanRepository: Symbol.for("PlanRepository"),
+  PlanService: Symbol.for("PlanService"),
+  PlanController: Symbol.for("PlanController"),
 
   // Payment
-  PaymentRepository: Symbol.for('PaymentRepository'),
-  PaymentService: Symbol.for('PaymentService'),
-  PaymentController: Symbol.for('PaymentController'),
+  PaymentRepository: Symbol.for("PaymentRepository"),
+  PaymentService: Symbol.for("PaymentService"),
+  PaymentController: Symbol.for("PaymentController"),
 
   // Chat
-  ChatRepository: Symbol.for('ChatRepository'),
-  ChatService: Symbol.for('ChatService'),
-  SocketController: Symbol.for('SocketController'),
+  ChatRepository: Symbol.for("ChatRepository"),
+  ChatService: Symbol.for("ChatService"),
+  SocketController: Symbol.for("SocketController"),
 
   // Group
-  GroupRepository: Symbol.for('GroupRepository'),
-  GroupService: Symbol.for('GroupService'),
-  GroupController: Symbol.for('GroupController'),
+  GroupRepository: Symbol.for("GroupRepository"),
+  GroupService: Symbol.for("GroupService"),
+  GroupController: Symbol.for("GroupController"),
 
   // Message
-  MessageRepository: Symbol.for('MessageRepository'),
-  MessageService: Symbol.for('MessageService'),
-  MessageController: Symbol.for('MessageController'),
+  MessageRepository: Symbol.for("MessageRepository"),
+  MessageService: Symbol.for("MessageService"),
+  MessageController: Symbol.for("MessageController"),
 
   // Subscription
-  SubscriptionRepository: Symbol.for('SubscriptionRepository'),
-  SubscriptionService: Symbol.for('SubscriptionService'),
-  SubscriptionController: Symbol.for('SubscriptionController'),
+  SubscriptionRepository: Symbol.for("SubscriptionRepository"),
+  SubscriptionService: Symbol.for("SubscriptionService"),
+  SubscriptionController: Symbol.for("SubscriptionController"),
 
   // Mentorship Type
-  MentorshipTypeRepository: Symbol.for('MentorshipTypeRepository'),
-  MentorshipTypeService: Symbol.for('MentorshipTypeService'),
-  MentorshipTypeController: Symbol.for('MentorshipTypeController'),
+  MentorshipTypeRepository: Symbol.for("MentorshipTypeRepository"),
+  MentorshipTypeService: Symbol.for("MentorshipTypeService"),
+  MentorshipTypeController: Symbol.for("MentorshipTypeController"),
 
   // Mentor Metadata
-  MentorMetadataRepository: Symbol.for('MentorMetadataRepository'),
-  MentorMetadataService: Symbol.for('MentorMetadataService'),
-  MentorMetadataController: Symbol.for('MentorMetadataController'),
+  MentorMetadataRepository: Symbol.for("MentorMetadataRepository"),
+  MentorMetadataService: Symbol.for("MentorMetadataService"),
+  MentorMetadataController: Symbol.for("MentorMetadataController"),
 
   // Target Audience
-  TargetAudienceRepository: Symbol.for('TargetAudienceRepository'),
-  TargetAudienceService: Symbol.for('TargetAudienceService'),
-  TargetAudienceController: Symbol.for('TargetAudienceController'),
+  TargetAudienceRepository: Symbol.for("TargetAudienceRepository"),
+  TargetAudienceService: Symbol.for("TargetAudienceService"),
+  TargetAudienceController: Symbol.for("TargetAudienceController"),
 
   // TimeSlot
-  TimeSlotRepository: Symbol.for('TimeSlotRepository'),
-  TimeSlotService: Symbol.for('TimeSlotService'),
-  TimeSlotController: Symbol.for('TimeSlotController'),
+  TimeSlotRepository: Symbol.for("TimeSlotRepository"),
+  TimeSlotService: Symbol.for("TimeSlotService"),
+  TimeSlotController: Symbol.for("TimeSlotController"),
 
   // Booking
-  BookingRepository: Symbol.for('BookingRepository'),
-  BookingService: Symbol.for('BookingService'),
-  BookingController: Symbol.for('BookingController'),
+  BookingRepository: Symbol.for("BookingRepository"),
+  BookingService: Symbol.for("BookingService"),
+  BookingController: Symbol.for("BookingController"),
 
   // Booking Payment
-  BookingPaymentRepository: Symbol.for('BookingPaymentRepository'),
-  BookingPaymentService: Symbol.for('BookingPaymentService'),
-  BookingPaymentController: Symbol.for('BookingPaymentController'),
+  BookingPaymentRepository: Symbol.for("BookingPaymentRepository"),
+  BookingPaymentService: Symbol.for("BookingPaymentService"),
+  BookingPaymentController: Symbol.for("BookingPaymentController"),
 
   // Notification Type
-  NotificationTypeRepository: Symbol.for('NotificationTypeRepository'),
-  NotificationTypeService: Symbol.for('NotificationTypeService'),
-  NotificationTypeController: Symbol.for('NotificationTypeController'),
+  NotificationTypeRepository: Symbol.for("NotificationTypeRepository"),
+  NotificationTypeService: Symbol.for("NotificationTypeService"),
+  NotificationTypeController: Symbol.for("NotificationTypeController"),
 
   // Notification
-  NotificationRepository: Symbol.for('NotificationRepository'),
-  NotificationService: Symbol.for('NotificationService'),
-  NotificationController: Symbol.for('NotificationController'),
+  NotificationRepository: Symbol.for("NotificationRepository"),
+  NotificationService: Symbol.for("NotificationService"),
+  NotificationController: Symbol.for("NotificationController"),
 
   // Wallet
-  WalletRepository: Symbol.for('WalletRepository'),
-  WalletService: Symbol.for('WalletService'),
-  WalletController: Symbol.for('WalletController'),
+  WalletRepository: Symbol.for("WalletRepository"),
+  WalletService: Symbol.for("WalletService"),
+  WalletController: Symbol.for("WalletController"),
 
   // Withdrawel Request
-  WithdrawalRequestRepository: Symbol.for('WithdrawalRequestRepository'),
-  WithdrawalRequestController: Symbol.for('WithdrawalRequestController'),
+  WithdrawalRequestRepository: Symbol.for("WithdrawalRequestRepository"),
+  WithdrawalRequestController: Symbol.for("WithdrawalRequestController"),
 
   // Nexus points
-  NexusPointRepository: Symbol.for('NexusPointRepository'),
+  NexusPointRepository: Symbol.for("NexusPointRepository"),
 
   // Mentor Dashboard
-  MentorDashboardService: Symbol.for('MentorDashboardService'),
-  MentorDashboardRepository: Symbol.for('MentorDashboardRepository'),
-  MentorDashboardController: Symbol.for('MentorDashboardController'),
+  MentorDashboardService: Symbol.for("MentorDashboardService"),
+  MentorDashboardRepository: Symbol.for("MentorDashboardRepository"),
+  MentorDashboardController: Symbol.for("MentorDashboardController"),
 
   // Global Search
-  GlobalSearchService: Symbol.for('GlobalSearchService'),
-  GlobalSearchController: Symbol.for('GlobalSearchController'),
+  GlobalSearchService: Symbol.for("GlobalSearchService"),
+  GlobalSearchController: Symbol.for("GlobalSearchController"),
 
   // Admin Dashboard
-  AdminDashboardController: Symbol.for('AdminDashboardController'),
-  AdminDashboardService: Symbol.for('AdminDashboardService'),
+  AdminDashboardController: Symbol.for("AdminDashboardController"),
+  AdminDashboardService: Symbol.for("AdminDashboardService"),
 
   // Mentor Reviews
-  ReviewRepository: Symbol.for('ReviewRepository'),
-  ReviewService: Symbol.for('ReviewService'),
-  ReviewController: Symbol.for('ReviewController'),
+  ReviewRepository: Symbol.for("ReviewRepository"),
+  ReviewService: Symbol.for("ReviewService"),
+  ReviewController: Symbol.for("ReviewController"),
 
   // Miscellaneous / Utilities
-  OTPService: Symbol.for('IOTPService'),
-  EmailService: Symbol.for('IEmailService'),
-  TokenService: Symbol.for('i-token-service'),
-  TransactionRepository: Symbol.for('TransactionRepository'),
+  OTPService: Symbol.for("IOTPService"),
+  EmailService: Symbol.for("IEmailService"),
+  TokenService: Symbol.for("i-token-service"),
+  TransactionRepository: Symbol.for("TransactionRepository"),
 };

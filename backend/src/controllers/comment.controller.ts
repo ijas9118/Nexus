@@ -1,14 +1,14 @@
-import type { Request, Response } from 'express';
+import type { Request, Response } from "express";
 
-import asyncHandler from 'express-async-handler';
-import { StatusCodes } from 'http-status-codes';
-import { inject, injectable } from 'inversify';
+import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import { inject, injectable } from "inversify";
 
-import type { ICommentController } from '@/core/interfaces/controllers/i-comment-controller';
-import type { ICommentService } from '@/core/interfaces/services/i-comment-service';
+import type { ICommentController } from "@/core/interfaces/controllers/i-comment-controller";
+import type { ICommentService } from "@/core/interfaces/services/i-comment-service";
 
-import { TYPES } from '@/di/types';
-import CustomError from '@/utils/custom-error';
+import { TYPES } from "@/di/types";
+import CustomError from "@/utils/custom-error";
 
 @injectable()
 export class CommentController implements ICommentController {
@@ -19,7 +19,7 @@ export class CommentController implements ICommentController {
     const userId = req.user?._id as string;
 
     if (!contentId || !text) {
-      throw new CustomError('Content ID and text are required', StatusCodes.BAD_REQUEST);
+      throw new CustomError("Content ID and text are required", StatusCodes.BAD_REQUEST);
     }
 
     const comment = await this._commentService.addComment({
@@ -36,7 +36,7 @@ export class CommentController implements ICommentController {
     const { contentId } = req.query;
 
     if (!contentId) {
-      throw new CustomError('Content ID is required', StatusCodes.BAD_REQUEST);
+      throw new CustomError("Content ID is required", StatusCodes.BAD_REQUEST);
     }
 
     const comments = await this._commentService.getCommentsByContentId(contentId as string);

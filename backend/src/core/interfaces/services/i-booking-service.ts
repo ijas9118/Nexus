@@ -1,4 +1,4 @@
-import type { IBooking } from '@/models/booking.model';
+import type { IBooking } from "@/models/booking.model";
 
 export interface IBookingService {
   getUpcomingBookings: () => Promise<IBooking[]>;
@@ -6,7 +6,7 @@ export interface IBookingService {
   rescheduleBooking: (
     bookingId: string,
     newTimeSlotId: string,
-    newBookingDate: Date
+    newBookingDate: Date,
   ) => Promise<IBooking>;
   getFilteredBookings: (date?: Date, mentorshipTypeId?: string) => Promise<IBooking[]>;
   confirmBooking: (bookingId: string) => Promise<IBooking>;

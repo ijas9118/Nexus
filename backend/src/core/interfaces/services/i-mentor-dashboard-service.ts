@@ -3,7 +3,7 @@ import type {
   PendingWithdrawalsResponse,
   RecentBooking,
   SessionStatsResponse,
-} from '@/core/types/mentor-dashboard';
+} from "@/core/types/mentor-dashboard";
 
 export interface IMentorDashboardService {
   getEarnings: (userId: string) => Promise<EarningsResponse>;

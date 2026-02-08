@@ -1,8 +1,8 @@
-import type { SearchCriteria, SearchResultItem } from '@/core/types/search';
-import type { UserRole } from '@/core/types/user-types';
+import type { SearchCriteria, SearchResultItem } from "@/core/types/search";
+import type { UserRole } from "@/core/types/user-types";
 
-import type { IContent } from '../../../models/content.model';
-import type { BaseRepository } from '../../abstracts/base.repository';
+import type { IContent } from "../../../models/content.model";
+import type { BaseRepository } from "../../abstracts/base.repository";
 
 export interface IContentRepository extends BaseRepository<IContent> {
   findContent: (contentId: string, role: UserRole, userId: string) => Promise<IContent | null>;

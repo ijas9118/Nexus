@@ -1,37 +1,38 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable } from "inversify";
 
-import type { IBookingRepository } from '@/core/interfaces/repositories/i-booking-repository';
-import type { IMentorDashboardRepository } from '@/core/interfaces/repositories/i-mentor-dashboard-repository';
-import type { IMentorDashboardService } from '@/core/interfaces/services/i-mentor-dashboard-service';
+import type { IBookingRepository } from "@/core/interfaces/repositories/i-booking-repository";
+import type { IMentorDashboardRepository } from "@/core/interfaces/repositories/i-mentor-dashboard-repository";
+import type { IMentorDashboardService } from "@/core/interfaces/services/i-mentor-dashboard-service";
 import type {
   EarningsResponse,
   PendingWithdrawalsResponse,
   RecentBooking,
   SessionStatsResponse,
-} from '@/core/types/mentor-dashboard';
+} from "@/core/types/mentor-dashboard";
 
-import { TYPES } from '@/di/types';
+import { TYPES } from "@/di/types";
 
 @injectable()
 export class MentorDashboardService implements IMentorDashboardService {
   constructor(
     @inject(TYPES.MentorDashboardRepository) private repository: IMentorDashboardRepository,
-    @inject(TYPES.BookingRepository) private bookingRepo: IBookingRepository
+    @inject(TYPES.BookingRepository) private bookingRepo: IBookingRepository,
   ) {}
 
   async getEarnings(userId: string): Promise<EarningsResponse> {
     const { thisMonth, lastMonth } = await this.repository.getEarnings(userId);
 
     let percentageChange = 0;
-    let changeDirection: 'increase' | 'decrease' | 'noChange' = 'noChange';
+    let changeDirection: "increase" | "decrease" | "noChange" = "noChange";
 
     if (lastMonth > 0) {
       percentageChange = ((thisMonth - lastMonth) / lastMonth) * 100;
-      changeDirection =
-        thisMonth > lastMonth ? 'increase' : thisMonth < lastMonth ? 'decrease' : 'noChange';
-    } else if (thisMonth > 0) {
+      changeDirection
+        = thisMonth > lastMonth ? "increase" : thisMonth < lastMonth ? "decrease" : "noChange";
+    }
+    else if (thisMonth > 0) {
       percentageChange = 100;
-      changeDirection = 'increase';
+      changeDirection = "increase";
     }
 
     return {
