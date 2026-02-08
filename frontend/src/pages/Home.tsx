@@ -145,7 +145,7 @@ const Home = () => {
             <div>Something went wrong. Probably the server had a bad day.</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {plans?.map((plan) => (
+              {Array.isArray(plans) && plans.map((plan) => (
                 <PriceCard
                   key={plan._id}
                   tier={plan.tier}

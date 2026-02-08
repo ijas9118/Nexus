@@ -5,7 +5,13 @@ import { handleApi } from "@/utils/handleApi";
 const PlanService = {
   createPlan: (planData: any) => handleApi(() => api.post("/plans", planData)),
 
-  getAllPlans: async () => handleApi(() => api.get<IPlan[]>("/plans")),
+  getAllPlans: async (): Promise<IPlan[]> => {
+    const response = await handleApi(() => api.get("/plans"));
+    // The API returns {data: IPlan[]} but handleApi already unwraps response.data
+    // So we need to check if the response itself contains a data property
+    const typedResponse = response as IPlan[] | { data: IPlan[] };
+    return Array.isArray(typedResponse) ? typedResponse : (typedResponse?.data || []);
+  },
 
   getPlanById: async (id: string) => handleApi(() => api.get(`/plans/${id}`)),
 

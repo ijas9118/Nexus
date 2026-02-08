@@ -1,4 +1,4 @@
-export const HOST = import.meta.env.VITE_SERVER_URL;
+export const HOST = import.meta.env.VITE_API_BASE_URL;
 
 const AUTH_ROUTE = "/auth";
 const CONTENT_ROUTE = "/content";

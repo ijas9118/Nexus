@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { motion, Variants } from "motion/react"
+import { motion, Variants } from "motion/react";
 
 export default function ForbiddenPage() {
   const [mounted, setMounted] = useState(false);
