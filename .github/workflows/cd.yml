@@ -52,5 +52,11 @@ jobs:
         with:
           context: ./backend
           file: ./backend/Dockerfile
+          platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/nexus-backend-image:latest
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/nexus-backend:latest
+            ${{ secrets.DOCKER_USERNAME }}/nexus-backend:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/nexus-backend:${{ github.ref_name }}
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/nexus-backend:latest
+          cache-to: type=inline

@@ -12,14 +12,14 @@ import { env } from "./utils/env-validation";
 import { setupSwagger } from "./utils/swagger-config";
 
 const app = express();
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 
 setupSwagger(app);
 
 const corsOptions = {
   origin: [
     env.CLIENT_URL,
-    'http://localhost:5173',
+    "http://localhost:5173",
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
