@@ -10,12 +10,10 @@ interface AuthState {
   status: "idle" | "loading" | "succeeded" | "failed";
 }
 
-const storedAccessToken = localStorage.getItem("accessToken");
-
 const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
-  accessToken: storedAccessToken,
+  accessToken: null,
   status: "idle",
 };
 
@@ -47,17 +45,14 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
       state.isAuthenticated = true;
-      localStorage.setItem("sessionActive", "true");
     },
     updateToken: (state, action: PayloadAction<string>) => {
       state.accessToken = action.payload;
-      localStorage.setItem("accessToken", action.payload);
     },
     clearUser: (state) => {
       state.isAuthenticated = false;
       state.user = null;
       state.accessToken = null;
-      localStorage.setItem("sessionActive", "false");
     },
     updateUserProfile: (
       state,

@@ -60,3 +60,22 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/nexus-backend:${{ github.ref_name }}
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/nexus-backend:latest
           cache-to: type=inline
+
+  deploy:
+    name: Deploy to Azure VM
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Azure VM
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USERNAME }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            cd ~/projects/nexus
+            docker compose pull
+            docker compose up -d
+            docker image prune -f
+            echo "Deployment completed at $(date)"
+            docker compose ps
