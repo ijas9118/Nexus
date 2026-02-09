@@ -12,8 +12,8 @@ export const AUTH_ROUTES = {
   FORGOT_PASSWORD: `${AUTH_ROUTE}/forgot-password`,
   RESET_PASSWORD: `${AUTH_ROUTE}/reset-password`,
   LOGOUT: `${AUTH_ROUTE}/logout`,
-  GOOGLE: `/api/auth/google`,
-  GITHUB: `/api/auth/github`,
+  GOOGLE: `${AUTH_ROUTE}/google`,
+  GITHUB: `${AUTH_ROUTE}/github`,
 } as const;
 
 export const CONTENT_ROUTES = {

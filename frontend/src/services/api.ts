@@ -3,8 +3,7 @@ import store from "@/store/store";
 import { HOST } from "@/utils/constants";
 import axios from "axios";
 
-const baseURL = import.meta.env.MODE === "development" ? `${HOST}/api` : "/api";
-console.log(baseURL);
+const baseURL = `${HOST}/api`;
 
 const api = axios.create({
   baseURL,
