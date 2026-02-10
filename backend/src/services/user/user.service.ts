@@ -4,18 +4,16 @@ import bcrypt from "bcryptjs";
 import { inject, injectable } from "inversify";
 
 import type { IContentRepository } from "@/core/interfaces/repositories/i-content-repository";
+import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repository";
+import type { IUserService } from "@/core/interfaces/services/i-user-service";
 import type { IContent } from "@/models/content.model";
+import type { ISquad } from "@/models/squads.model";
+import type { IUser } from "@/models/user.model";
 
+import { TYPES } from "@/di/types";
+import { UsersResponseDTO } from "@/dtos/responses/admin/users.dto";
+import { UserModel } from "@/models/user.model";
 import { deleteFromCloudinary, uploadToCloudinary } from "@/utils/cloudinary-utils";
-
-import type { IUserRepository } from "../core/interfaces/repositories/i-user-repository";
-import type { IUserService } from "../core/interfaces/services/i-user-service";
-import type { ISquad } from "../models/squads.model";
-import type { IUser } from "../models/user.model";
-
-import { TYPES } from "../di/types";
-import { UsersResponseDTO } from "../dtos/responses/admin/users.dto";
-import { UserModel } from "../models/user.model";
 
 interface UserUpdateData {
   profilePic?: string;

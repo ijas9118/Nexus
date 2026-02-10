@@ -3,21 +3,19 @@ import type { Express } from "express";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
+import type { ICategoryRepository } from "@/core/interfaces/repositories/i-category-repository";
 import type { IContentRepository } from "@/core/interfaces/repositories/i-content-repository";
+import type { ISquadRepository } from "@/core/interfaces/repositories/i-squad-repository";
+import type { ISquadService } from "@/core/interfaces/services/i-squad-service";
 import type { UserRole } from "@/core/types/user-types";
+import type { ISquad } from "@/models/squads.model";
 
+import { TYPES } from "@/di/types";
 import { SquadListDto } from "@/dtos/responses/admin/squad-list-dto";
 import { SquadByCategoryResponseDto } from "@/dtos/responses/sqauds.dto";
 import { SquadContentResponseDto } from "@/dtos/responses/squad-contents.dto";
 import { uploadToCloudinary } from "@/utils/cloudinary-utils";
 import CustomError from "@/utils/custom-error";
-
-import type { ICategoryRepository } from "../core/interfaces/repositories/i-category-repository";
-import type { ISquadRepository } from "../core/interfaces/repositories/i-squad-repository";
-import type { ISquadService } from "../core/interfaces/services/i-squad-service";
-import type { ISquad } from "../models/squads.model";
-
-import { TYPES } from "../di/types";
 
 @injectable()
 export class SquadService implements ISquadService {

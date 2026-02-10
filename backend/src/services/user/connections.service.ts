@@ -1,11 +1,11 @@
 // connection.service.ts
 import { inject, injectable } from "inversify";
 
-import type { IConnectionsRepository } from "../core/interfaces/repositories/i-connections-repository";
-import type { IConnectionService } from "../core/interfaces/services/i-connection-service";
-import type { IPendingRequestUser, SearchConnections } from "../core/types/user-types";
+import type { IConnectionsRepository } from "@/core/interfaces/repositories/i-connections-repository";
+import type { IConnectionService } from "@/core/interfaces/services/i-connection-service";
+import type { IPendingRequestUser, SearchConnections } from "@/core/types/user-types";
 
-import { TYPES } from "../di/types";
+import { TYPES } from "@/di/types";
 
 @injectable()
 export class ConnectionService implements IConnectionService {

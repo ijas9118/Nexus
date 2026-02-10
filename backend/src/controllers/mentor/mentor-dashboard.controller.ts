@@ -4,7 +4,7 @@ import asyncHandler from "express-async-handler";
 import { inject, injectable } from "inversify";
 
 import type { IMentorDashboardController } from "@/core/interfaces/controllers/i-mentor-dashboard-controller";
-import type { MentorDashboardService } from "@/services/mentor-dashboard.service";
+import type { MentorDashboardService } from "@/services/mentor/mentor-dashboard.service";
 
 import { TYPES } from "@/di/types";
 

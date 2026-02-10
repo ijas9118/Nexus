@@ -1,10 +1,10 @@
 import { inject, injectable } from "inversify";
 
-import type { IFollowersRepository } from "../core/interfaces/repositories/i-followers-repository";
-import type { IFollowersService } from "../core/interfaces/services/i-followers-service";
-import type { IUserWhoFollow } from "../core/types/user-types";
+import type { IFollowersRepository } from "@/core/interfaces/repositories/i-followers-repository";
+import type { IFollowersService } from "@/core/interfaces/services/i-followers-service";
+import type { IUserWhoFollow } from "@/core/types/user-types";
 
-import { TYPES } from "../di/types";
+import { TYPES } from "@/di/types";
 
 @injectable()
 export class FollowersService implements IFollowersService {

@@ -7,14 +7,12 @@ import type { IPaymentRepository } from "@/core/interfaces/repositories/i-paymen
 import type { ISubscriptionRepository } from "@/core/interfaces/repositories/i-subscription-repository";
 import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repository";
 import type { IBookingPaymentService } from "@/core/interfaces/services/i-booking-payment-service";
+import type { IPaymentService } from "@/core/interfaces/services/i-payment-service";
 
 import logger from "@/config/logger";
+import { stripe } from "@/config/stripe.cofig";
 import { TYPES } from "@/di/types";
-
-import type { IPaymentService } from "../core/interfaces/services/i-payment-service";
-
-import { stripe } from "../config/stripe.cofig";
-import { env } from "../utils/env-validation";
+import { env } from "@/utils/env-validation";
 
 @injectable()
 export class PaymentServce implements IPaymentService {
