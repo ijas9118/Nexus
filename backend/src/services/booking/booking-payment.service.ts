@@ -11,7 +11,7 @@ import type { IBookingPaymentService } from "@/core/interfaces/services/i-bookin
 import type { INotificationService } from "@/core/interfaces/services/i-notification-service";
 import type { ITimeSlotService } from "@/core/interfaces/services/i-time-slot-service";
 import type { IWalletService } from "@/core/interfaces/services/i-wallet-service";
-import type { MentorshipTypeRepository } from "@/repositories/mentorship-type.repository";
+import type { MentorshipTypeRepository } from "@/repositories/mentor/mentorship-type.repository";
 
 import logger from "@/config/logger";
 import { stripe } from "@/config/stripe.cofig";

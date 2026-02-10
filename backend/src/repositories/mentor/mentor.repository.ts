@@ -2,13 +2,11 @@ import { StatusCodes } from "http-status-codes";
 import { injectable } from "inversify";
 
 import type { IMentorRepository } from "@/core/interfaces/repositories/i-mentor-repository";
+import type { IMentor } from "@/models/mentor.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
+import { MentorModel } from "@/models/mentor.model";
 import CustomError from "@/utils/custom-error";
-
-import type { IMentor } from "../models/mentor.model";
-
-import { MentorModel } from "../models/mentor.model";
 
 @injectable()
 export class MentorRepository extends BaseRepository<IMentor> implements IMentorRepository {

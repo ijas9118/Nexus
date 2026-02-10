@@ -1,12 +1,10 @@
 import { injectable } from "inversify";
 
 import type { INotificationRepository } from "@/core/interfaces/repositories/i-notification-repository";
+import type { INotification } from "@/models/notification.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-
-import type { INotification } from "../models/notification.model";
-
-import { NotificationModel } from "../models/notification.model";
+import { NotificationModel } from "@/models/notification.model";
 
 @injectable()
 export class NotificationRepository

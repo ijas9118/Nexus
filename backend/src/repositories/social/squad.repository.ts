@@ -1,16 +1,15 @@
 import { inject, injectable } from "inversify";
 import mongoose from "mongoose";
 
+import type { ISquadRepository } from "@/core/interfaces/repositories/i-squad-repository";
+import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repository";
 import type { SearchCriteria, SearchResultItem } from "@/core/types/search";
 import type { ISquadAggregated, SquadWithIsJoined } from "@/core/types/squad";
+import type { ISquad } from "@/models/squads.model";
 
-import type { ISquadRepository } from "../core/interfaces/repositories/i-squad-repository";
-import type { IUserRepository } from "../core/interfaces/repositories/i-user-repository";
-import type { ISquad } from "../models/squads.model";
-
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { TYPES } from "../di/types";
-import { SquadModel } from "../models/squads.model";
+import { BaseRepository } from "@/core/abstracts/base.repository";
+import { TYPES } from "@/di/types";
+import { SquadModel } from "@/models/squads.model";
 
 @injectable()
 export class SquadRepository extends BaseRepository<ISquad> implements ISquadRepository {

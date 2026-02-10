@@ -1,14 +1,13 @@
 import { injectable } from "inversify";
 import { Types } from "mongoose";
 
+import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repository";
 import type { SearchResultItem } from "@/core/types/search";
+import type { ISquad } from "@/models/squads.model";
+import type { IUser } from "@/models/user.model";
 
-import type { IUserRepository } from "../core/interfaces/repositories/i-user-repository";
-import type { ISquad } from "../models/squads.model";
-import type { IUser } from "../models/user.model";
-
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { UserModel } from "../models/user.model";
+import { BaseRepository } from "@/core/abstracts/base.repository";
+import { UserModel } from "@/models/user.model";
 
 @injectable()
 export class UserRepository extends BaseRepository<IUser> implements IUserRepository {

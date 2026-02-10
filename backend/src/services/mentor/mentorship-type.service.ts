@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 
 import type { IMentorshipTypeService } from "@/core/interfaces/services/i-mentorship-type-service";
 import type { IMentorshipType } from "@/models/mentorship-type.model";
-import type { MentorshipTypeRepository } from "@/repositories/mentorship-type.repository";
+import type { MentorshipTypeRepository } from "@/repositories/mentor/mentorship-type.repository";
 
 import { TYPES } from "@/di/types";
 import CustomError from "@/utils/custom-error";

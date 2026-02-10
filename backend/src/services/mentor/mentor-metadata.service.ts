@@ -5,7 +5,7 @@ import { inject, injectable } from "inversify";
 import type { IMentorMetadataRepository } from "@/core/interfaces/repositories/i-mentor-metadata-repository";
 import type { IMentorMetadataService } from "@/core/interfaces/services/i-mentor-metadata-service";
 import type { IMentorMetadata } from "@/models/mentor-metadata.model";
-import type { MentorMetadataRepository } from "@/repositories/mentor-metadata.repository";
+import type { MentorMetadataRepository } from "@/repositories/mentor/mentor-metadata.repository";
 
 import { TYPES } from "@/di/types";
 

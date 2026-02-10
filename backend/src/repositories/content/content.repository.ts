@@ -2,20 +2,18 @@ import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 import mongoose, { Types } from "mongoose";
 
+import type { IContentRepository } from "@/core/interfaces/repositories/i-content-repository";
+import type { IFollowersRepository } from "@/core/interfaces/repositories/i-followers-repository";
 import type { IVoteRepository } from "@/core/interfaces/repositories/i-vote-repository";
 import type { SearchCriteria, SearchResultItem } from "@/core/types/search";
 import type { UserRole } from "@/core/types/user-types";
+import type { IContent } from "@/models/content.model";
 
+import { BaseRepository } from "@/core/abstracts/base.repository";
+import { TYPES } from "@/di/types";
+import ContentModel from "@/models/content.model";
+import UserFollowModel from "@/models/followers.model";
 import CustomError from "@/utils/custom-error";
-
-import type { IContentRepository } from "../core/interfaces/repositories/i-content-repository";
-import type { IFollowersRepository } from "../core/interfaces/repositories/i-followers-repository";
-import type { IContent } from "../models/content.model";
-
-import { BaseRepository } from "../core/abstracts/base.repository";
-import { TYPES } from "../di/types";
-import ContentModel from "../models/content.model";
-import UserFollowModel from "../models/followers.model";
 
 @injectable()
 export class ContentRepository extends BaseRepository<IContent> implements IContentRepository {

@@ -2,19 +2,18 @@ import { StatusCodes } from "http-status-codes";
 import { injectable } from "inversify";
 import { Types } from "mongoose";
 
-import { UserModel } from "@/models/user.model";
-import CustomError from "@/utils/custom-error";
-
-import type { IConnectionsRepository } from "../core/interfaces/repositories/i-connections-repository";
+import type { IConnectionsRepository } from "@/core/interfaces/repositories/i-connections-repository";
 import type {
   IPendingRequestUser,
   IUserWhoFollow,
   SearchConnections,
-} from "../core/types/user-types";
-import type { IUserFollow } from "../models/followers.model";
+} from "@/core/types/user-types";
+import type { IUserFollow } from "@/models/followers.model";
 
-import { BaseRepository } from "../core/abstracts/base.repository";
-import UserFollowModel from "../models/followers.model";
+import { BaseRepository } from "@/core/abstracts/base.repository";
+import UserFollowModel from "@/models/followers.model";
+import { UserModel } from "@/models/user.model";
+import CustomError from "@/utils/custom-error";
 
 @injectable()
 export class ConnectionsRepository
