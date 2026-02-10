@@ -1,6 +1,6 @@
 import express from "express";
 
-import type { WithdrawalRequestController } from "@/controllers/withdrawal-request.controller";
+import type { WithdrawalRequestController } from "@/controllers/mentor/withdrawal-request.controller";
 import type { IWalletController } from "@/core/interfaces/controllers/i-wallet-controller";
 
 import { container } from "@/di/container";

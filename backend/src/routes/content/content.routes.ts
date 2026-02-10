@@ -1,8 +1,8 @@
 import { Router } from "express";
 
-import commentRoutes from "./content/comment.routes";
-import historyRoutes from "./content/history.routes";
-import postsRoutes from "./content/posts.routes";
+import commentRoutes from "./comment.routes";
+import historyRoutes from "./history.routes";
+import postsRoutes from "./posts.routes";
 
 const router = Router();
 

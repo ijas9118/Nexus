@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import type { UserController } from "@/controllers/user.controller";
+import type { UserController } from "@/controllers/user/user.controller";
 
 import { container } from "@/di/container";
 import { TYPES } from "@/di/types";

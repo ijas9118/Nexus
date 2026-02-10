@@ -1,10 +1,10 @@
 import { Router } from "express";
 
-import type { PlanController } from "../controllers/plan.controller";
+import type { PlanController } from "@/controllers/payment/plan.controller";
 
-import { container } from "../di/container";
-import { TYPES } from "../di/types";
-import { authenticate } from "../middlewares/auth.middleware";
+import { container } from "@/di/container";
+import { TYPES } from "@/di/types";
+import { authenticate } from "@/middlewares/auth.middleware";
 
 const planController = container.get<PlanController>(TYPES.PlanController);
 

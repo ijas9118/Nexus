@@ -2,10 +2,9 @@ import { Router } from "express";
 
 import type { ISubscriptionController } from "@/core/interfaces/controllers/i-subscription-controller";
 
+import { container } from "@/di/container";
+import { TYPES } from "@/di/types";
 import { authenticate } from "@/middlewares/auth.middleware";
-
-import { container } from "../di/container";
-import { TYPES } from "../di/types";
 
 const subscriptionController = container.get<ISubscriptionController>(TYPES.SubscriptionController);
 
