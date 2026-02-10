@@ -1,8 +1,7 @@
 import type { Express } from "express";
 
 import type { UserRole } from "@/core/types/user-types";
-
-import type { IContent } from "../../../models/content.model";
+import type { IContent } from "@/models/content/content.model";
 
 export interface IContentService {
   createContent: (

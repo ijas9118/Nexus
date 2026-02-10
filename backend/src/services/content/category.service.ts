@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 
 import type { ICategoryRepository } from "@/core/interfaces/repositories/i-category-repository";
 import type { ICategoryService } from "@/core/interfaces/services/i-category-service";
-import type { ICategory } from "@/models/categories.model";
+import type { ICategory } from "@/models/content/categories.model";
 
 import { TYPES } from "@/di/types";
 import CustomError from "@/utils/custom-error";

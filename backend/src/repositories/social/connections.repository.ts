@@ -8,11 +8,11 @@ import type {
   IUserWhoFollow,
   SearchConnections,
 } from "@/core/types/user-types";
-import type { IUserFollow } from "@/models/followers.model";
+import type { IUserFollow } from "@/models/social/followers.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import UserFollowModel from "@/models/followers.model";
-import { UserModel } from "@/models/user.model";
+import UserFollowModel from "@/models/social/followers.model";
+import { UserModel } from "@/models/user/user.model";
 import CustomError from "@/utils/custom-error";
 
 @injectable()

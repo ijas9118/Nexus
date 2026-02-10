@@ -6,9 +6,9 @@ import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repo
 import type { IMentorService } from "@/core/interfaces/services/i-mentor-service";
 import type { PersonalInfo } from "@/core/types";
 import type { MentorStatus } from "@/core/types/entities/mentor";
-import type { IMentor } from "@/models/mentor.model";
-import type { IMentorshipType } from "@/models/mentorship-type.model";
-import type { IUser } from "@/models/user.model";
+import type { IMentor } from "@/models/mentor/mentor.model";
+import type { IMentorshipType } from "@/models/mentor/mentorship-type.model";
+import type { IUser } from "@/models/user/user.model";
 
 import { TYPES } from "@/di/types";
 import CustomError from "@/utils/custom-error";

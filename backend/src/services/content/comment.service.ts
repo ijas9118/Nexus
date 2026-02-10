@@ -4,7 +4,7 @@ import { inject, injectable } from "inversify";
 import type { ICommentRepository } from "@/core/interfaces/repositories/i-comment-repository";
 import type { ICommentService } from "@/core/interfaces/services/i-comment-service";
 import type { AddCommentParams } from "@/core/types/service/add-comment";
-import type { IComment } from "@/models/comments.model";
+import type { IComment } from "@/models/social/comments.model";
 
 import { TYPES } from "@/di/types";
 import CustomError from "@/utils/custom-error";

@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import type { IGroupRepository } from "@/core/interfaces/repositories/i-group-repository";
 import type { IConnectionService } from "@/core/interfaces/services/i-connection-service";
 import type { IGroupService } from "@/core/interfaces/services/i-group-service";
-import type { IGroup } from "@/models/group.model";
+import type { IGroup } from "@/models/social/group.model";
 
 import { TYPES } from "@/di/types";
 

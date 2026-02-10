@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
 import crypto from "node:crypto";
 
-import type { ITokenService } from "../../core/interfaces/services/i-token-service";
+import type { ITokenService } from "@/core/interfaces/services/i-token-service";
 
-import redisClient from "../../config/redis-client.config";
+import redisClient from "@/config/redis-client.config";
 
 @injectable()
 export class TokenService implements ITokenService {

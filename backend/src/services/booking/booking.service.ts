@@ -5,10 +5,10 @@ import { inject, injectable } from "inversify";
 import type { IBookingRepository } from "@/core/interfaces/repositories/i-booking-repository";
 import type { IBookingService } from "@/core/interfaces/services/i-booking-service";
 import type { ITimeSlotService } from "@/core/interfaces/services/i-time-slot-service";
-import type { IBooking } from "@/models/booking.model";
+import type { IBooking } from "@/models/booking/booking.model";
 
 import { TYPES } from "@/di/types";
-import { BookingModel } from "@/models/booking.model";
+import { BookingModel } from "@/models/booking/booking.model";
 import CustomError from "@/utils/custom-error";
 
 @injectable()

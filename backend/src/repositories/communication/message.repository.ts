@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
 
 import type { IMessageRepository } from "@/core/interfaces/repositories/i-message-repository";
-import type { IMessage } from "@/models/message.model";
+import type { IMessage } from "@/models/communication/message.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { MessageModel } from "@/models/message.model";
+import { MessageModel } from "@/models/communication/message.model";
 
 @injectable()
 export class MessageRepository extends BaseRepository<IMessage> implements IMessageRepository {

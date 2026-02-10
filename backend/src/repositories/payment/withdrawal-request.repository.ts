@@ -2,10 +2,10 @@ import { injectable } from "inversify";
 import mongoose from "mongoose";
 
 import type { IWithdrawalRequestRepository } from "@/core/interfaces/repositories/i-withdrawal-request-repository";
-import type { IWithdrawalRequest } from "@/models/withdrawal-request.model";
+import type { IWithdrawalRequest } from "@/models/payment/withdrawal-request.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { WithdrawalRequestModel } from "@/models/withdrawal-request.model";
+import { WithdrawalRequestModel } from "@/models/payment/withdrawal-request.model";
 
 @injectable()
 export class WithdrawalRequestRepository

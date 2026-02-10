@@ -5,7 +5,7 @@ import { inject, injectable } from "inversify";
 
 import type { IMentorService } from "@/core/interfaces/services/i-mentor-service";
 import type { ITimeSlotService } from "@/core/interfaces/services/i-time-slot-service";
-import type { ITimeSlot } from "@/models/timeslots.model";
+import type { ITimeSlot } from "@/models/booking/timeslots.model";
 import type { TimeSlotRepository } from "@/repositories/booking/time-slot.repository";
 
 import { TYPES } from "@/di/types";

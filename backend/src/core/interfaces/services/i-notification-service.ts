@@ -1,4 +1,4 @@
-import type { INotification } from "@/models/notification.model";
+import type { INotification } from "@/models/communication/notification.model";
 
 export interface INotificationService {
   getNotificationTypeIdByName: (name: string) => Promise<string>;

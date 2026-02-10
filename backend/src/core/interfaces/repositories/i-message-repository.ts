@@ -1,4 +1,4 @@
-import type { IMessage } from "@/models/message.model";
+import type { IMessage } from "@/models/communication/message.model";
 
 import type { IBaseRepository } from "./i-base-repository";
 

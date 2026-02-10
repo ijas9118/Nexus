@@ -3,8 +3,7 @@ import type { Document } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
 import type { MentorStatus } from "@/core/types/entities/mentor";
-
-import type { IUser } from "./user.model";
+import type { IUser } from "@/models/user/user.model";
 
 export interface IMentor extends Document<string> {
   userId: string | IUser;

@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import type { IContentRepository } from "@/core/interfaces/repositories/i-content-repository";
 import type { IVoteRepository } from "@/core/interfaces/repositories/i-vote-repository";
 import type { IVoteService } from "@/core/interfaces/services/i-vote-service";
-import type { IVote } from "@/models/vote.model";
+import type { IVote } from "@/models/social/vote.model";
 
 import { TYPES } from "@/di/types";
 

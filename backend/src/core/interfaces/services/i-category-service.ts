@@ -1,4 +1,4 @@
-import type { ICategory } from "../../../models/categories.model";
+import type { ICategory } from "@/models/content/categories.model";
 
 export interface ICategoryService {
   addCategory: (name: string) => Promise<ICategory>;

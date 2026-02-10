@@ -1,5 +1,5 @@
 import type { BaseRepository } from "@/core/abstracts/base.repository";
-import type { IContentView } from "@/models/content-view.model";
+import type { IContentView } from "@/models/content/content-view.model";
 
 export interface IContentViewRepository extends BaseRepository<IContentView> {
   hasUserViewedContent: (userId: string, contentId: string) => Promise<boolean>;

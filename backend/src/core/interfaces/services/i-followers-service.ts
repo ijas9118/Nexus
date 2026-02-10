@@ -1,4 +1,4 @@
-import type { IUserWhoFollow } from "../../types/user-types";
+import type { IUserWhoFollow } from "@/core/types/user-types";
 
 export interface IFollowersService {
   followUser: (followerId: string, followedId: string) => Promise<boolean>;

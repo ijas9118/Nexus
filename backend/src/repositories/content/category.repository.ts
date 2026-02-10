@@ -2,10 +2,10 @@ import { injectable } from "inversify";
 import { Types } from "mongoose";
 
 import type { ICategoryRepository } from "@/core/interfaces/repositories/i-category-repository";
-import type { ICategory } from "@/models/categories.model";
+import type { ICategory } from "@/models/content/categories.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { CategoryModel } from "@/models/categories.model";
+import { CategoryModel } from "@/models/content/categories.model";
 
 @injectable()
 export class CategoryRepository extends BaseRepository<ICategory> implements ICategoryRepository {

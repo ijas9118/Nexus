@@ -1,4 +1,4 @@
-import type { IVote } from "@/models/vote.model";
+import type { IVote } from "@/models/social/vote.model";
 
 export interface IVoteService {
   vote: (contentId: string, userId: string, voteType: "upvote" | "downvote") => Promise<void>;

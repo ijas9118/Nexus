@@ -1,4 +1,4 @@
-import type { IGroup } from "@/models/group.model";
+import type { IGroup } from "@/models/social/group.model";
 
 import type { IBaseRepository } from "./i-base-repository";
 

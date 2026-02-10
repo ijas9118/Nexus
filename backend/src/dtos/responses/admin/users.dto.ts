@@ -1,6 +1,6 @@
 import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
-import type { IUser } from "@/models/user.model";
+import type { IUser } from "@/models/user/user.model";
 
 export class UsersResponseDTO {
   @IsNotEmpty()

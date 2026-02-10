@@ -1,12 +1,12 @@
 import { injectable } from "inversify";
 import mongoose from "mongoose";
 
-import type { IBookmarkRepository } from "@/core/interfaces/repositories/i-bookmarn-repository";
-import type { IBookmark } from "@/models/bookmarks.model";
-import type { IContent } from "@/models/content.model";
+import type { IBookmarkRepository } from "@/core/interfaces/repositories/i-bookmark-repository";
+import type { IContent } from "@/models/content/content.model";
+import type { IBookmark } from "@/models/social/bookmarks.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { BookmarkModel } from "@/models/bookmarks.model";
+import { BookmarkModel } from "@/models/social/bookmarks.model";
 
 @injectable()
 export class BookmarkRepository extends BaseRepository<IBookmark> implements IBookmarkRepository {

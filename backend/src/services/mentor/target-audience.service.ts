@@ -4,7 +4,7 @@ import { inject, injectable } from "inversify";
 
 import type { ITargetAudienceRepository } from "@/core/interfaces/repositories/i-target-audience-repository";
 import type { ITargetAudienceService } from "@/core/interfaces/services/i-target-audience-service";
-import type { ITargetAudience } from "@/models/target-audience.model";
+import type { ITargetAudience } from "@/models/content/target-audience.model";
 
 import { TYPES } from "@/di/types";
 import CustomError from "@/utils/custom-error";

@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
 
 import type { IChatRepository } from "@/core/interfaces/repositories/i-chat-repository";
-import type { IChat } from "@/models/chat.model";
+import type { IChat } from "@/models/communication/chat.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { ChatModel } from "@/models/chat.model";
+import { ChatModel } from "@/models/communication/chat.model";
 
 @injectable()
 export class ChatRepository extends BaseRepository<IChat> implements IChatRepository {

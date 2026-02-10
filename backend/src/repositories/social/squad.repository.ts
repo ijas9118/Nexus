@@ -5,11 +5,11 @@ import type { ISquadRepository } from "@/core/interfaces/repositories/i-squad-re
 import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repository";
 import type { SearchCriteria, SearchResultItem } from "@/core/types/search";
 import type { ISquadAggregated, SquadWithIsJoined } from "@/core/types/squad";
-import type { ISquad } from "@/models/squads.model";
+import type { ISquad } from "@/models/social/squads.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
 import { TYPES } from "@/di/types";
-import { SquadModel } from "@/models/squads.model";
+import { SquadModel } from "@/models/social/squads.model";
 
 @injectable()
 export class SquadRepository extends BaseRepository<ISquad> implements ISquadRepository {

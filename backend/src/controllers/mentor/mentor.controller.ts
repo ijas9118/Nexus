@@ -7,7 +7,7 @@ import { inject, injectable } from "inversify";
 import type { IMentorController } from "@/core/interfaces/controllers/i-mentor-controller";
 import type { IMentorService } from "@/core/interfaces/services/i-mentor-service";
 import type { PersonalInfo } from "@/core/types";
-import type { IMentor } from "@/models/mentor.model";
+import type { IMentor } from "@/models/mentor/mentor.model";
 
 import logger from "@/config/logger";
 import {

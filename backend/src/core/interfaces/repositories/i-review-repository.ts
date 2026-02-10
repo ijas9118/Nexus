@@ -1,6 +1,6 @@
 import type { Types } from "mongoose";
 
-import type { IReview } from "@/models/review.model";
+import type { IReview } from "@/models/social/review.model";
 
 import type { IBaseRepository } from "./i-base-repository";
 

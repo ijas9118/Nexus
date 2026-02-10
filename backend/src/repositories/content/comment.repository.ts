@@ -3,11 +3,11 @@ import { inject, injectable } from "inversify";
 import type { ICommentRepository } from "@/core/interfaces/repositories/i-comment-repository";
 import type { IContentRepository } from "@/core/interfaces/repositories/i-content-repository";
 import type { AddCommentParams } from "@/core/types/service/add-comment";
-import type { IComment } from "@/models/comments.model";
+import type { IComment } from "@/models/social/comments.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
 import { TYPES } from "@/di/types";
-import CommentModel from "@/models/comments.model";
+import CommentModel from "@/models/social/comments.model";
 import { FormatTime } from "@/utils/format-time";
 
 @injectable()

@@ -1,4 +1,4 @@
-import type { INotificationType } from "@/models/notification-type.model";
+import type { INotificationType } from "@/models/communication/notification-type.model";
 
 export interface INotificationTypeService {
   createNotificationType: (data: {

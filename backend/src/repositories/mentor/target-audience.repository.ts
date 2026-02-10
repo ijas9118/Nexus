@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
 
 import type { ITargetAudienceRepository } from "@/core/interfaces/repositories/i-target-audience-repository";
-import type { ITargetAudience } from "@/models/target-audience.model";
+import type { ITargetAudience } from "@/models/content/target-audience.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { TargetAudienceModel } from "@/models/target-audience.model";
+import { TargetAudienceModel } from "@/models/content/target-audience.model";
 
 @injectable()
 export class TargetAudienceRepository

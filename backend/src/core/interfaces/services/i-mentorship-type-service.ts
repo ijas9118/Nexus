@@ -1,4 +1,4 @@
-import type { IMentorshipType } from "@/models/mentorship-type.model";
+import type { IMentorshipType } from "@/models/mentor/mentorship-type.model";
 
 export interface IMentorshipTypeService {
   createMentorshipType: (data: {

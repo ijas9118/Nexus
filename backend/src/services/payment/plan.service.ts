@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 
 import type { IPlanRepository } from "@/core/interfaces/repositories/i-plan-repository";
 import type { IPlanService } from "@/core/interfaces/services/i-plan-service";
-import type { IPlan } from "@/models/plan.model";
+import type { IPlan } from "@/models/subscription/plan.model";
 
 import { TYPES } from "@/di/types";
 

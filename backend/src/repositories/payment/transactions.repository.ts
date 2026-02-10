@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
 
 import type { ITransactionRepository } from "@/core/interfaces/repositories/i-transaction-repository";
-import type { ITransaction } from "@/models/transaction.model";
+import type { ITransaction } from "@/models/payment/transaction.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { TransactionModel } from "@/models/transaction.model";
+import { TransactionModel } from "@/models/payment/transaction.model";
 
 @injectable()
 export class TransactionRepository

@@ -2,10 +2,10 @@ import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 import mongoose from "mongoose";
 
-import type { IBookmarkRepository } from "@/core/interfaces/repositories/i-bookmarn-repository";
+import type { IBookmarkRepository } from "@/core/interfaces/repositories/i-bookmark-repository";
 import type { IContentRepository } from "@/core/interfaces/repositories/i-content-repository";
 import type { IBookmarkService } from "@/core/interfaces/services/i-bookmark-service";
-import type { IContent } from "@/models/content.model";
+import type { IContent } from "@/models/content/content.model";
 
 import { TYPES } from "@/di/types";
 import CustomError from "@/utils/custom-error";

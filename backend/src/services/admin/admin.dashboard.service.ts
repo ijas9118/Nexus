@@ -9,6 +9,7 @@ import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repo
 import type { IAdminDashboardService } from "@/core/interfaces/services/i-admin-dashboard-service";
 import type { RevenueDataPointDTO } from "@/dtos/responses/admin/revenue-stats-dto";
 
+import { TYPES } from "@/di/types";
 import { AdminDashboardStatsDTO } from "@/dtos/responses/admin/admin-dashboard-stats.dto";
 import {
   MentorApplicationStatsDTO,
@@ -19,8 +20,6 @@ import {
   SubscriptionPlanStatsDTO,
   SubscriptionStatsDTO,
 } from "@/dtos/responses/admin/subscription-stats-dto";
-
-import { TYPES } from "../../di/types";
 
 @injectable()
 export class AdminDashboardService implements IAdminDashboardService {

@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 
 import type { IWalletRepository } from "@/core/interfaces/repositories/i-wallet-repository";
 import type { TransactionDetails } from "@/core/types/wallet.types";
-import type { ITransaction } from "@/models/transaction.model";
-import type { IWallet } from "@/models/wallet.model";
+import type { ITransaction } from "@/models/payment/transaction.model";
+import type { IWallet } from "@/models/payment/wallet.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { TransactionModel } from "@/models/transaction.model";
-import { WalletModel } from "@/models/wallet.model";
+import { TransactionModel } from "@/models/payment/transaction.model";
+import { WalletModel } from "@/models/payment/wallet.model";
 
 @injectable()
 export class WalletRepository extends BaseRepository<IWallet> implements IWalletRepository {

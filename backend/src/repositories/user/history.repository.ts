@@ -2,10 +2,10 @@ import { injectable } from "inversify";
 import mongoose from "mongoose";
 
 import type { IHistoryRepository } from "@/core/interfaces/repositories/i-history-repository";
-import type { IHistory } from "@/models/history.model";
+import type { IHistory } from "@/models/user/history.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { HistoryModel } from "@/models/history.model";
+import { HistoryModel } from "@/models/user/history.model";
 
 @injectable()
 export class HistoryRepository extends BaseRepository<IHistory> implements IHistoryRepository {

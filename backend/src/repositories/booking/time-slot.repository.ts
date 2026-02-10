@@ -1,10 +1,10 @@
 import dayjs from "dayjs";
 
 import type { ITimeSlotRepository } from "@/core/interfaces/repositories/i-time-slot-repository";
-import type { ITimeSlot } from "@/models/timeslots.model";
+import type { ITimeSlot } from "@/models/booking/timeslots.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { TimeSlotModel } from "@/models/timeslots.model";
+import { TimeSlotModel } from "@/models/booking/timeslots.model";
 
 export class TimeSlotRepository extends BaseRepository<ITimeSlot> implements ITimeSlotRepository {
   constructor() {

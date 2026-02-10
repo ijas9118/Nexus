@@ -1,4 +1,4 @@
-import type { IPendingRequestUser, SearchConnections } from "../../types/user-types";
+import type { IPendingRequestUser, SearchConnections } from "@/core/types/user-types";
 
 export interface IConnectionService {
   searchConnections: (userId: string, search?: string) => Promise<SearchConnections[]>;

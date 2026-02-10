@@ -1,6 +1,6 @@
 import type { Types } from "mongoose";
 
-import type { ITargetAudience } from "@/models/target-audience.model";
+import type { ITargetAudience } from "@/models/content/target-audience.model";
 
 import type { IBaseRepository } from "./i-base-repository";
 

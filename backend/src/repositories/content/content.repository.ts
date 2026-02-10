@@ -7,12 +7,12 @@ import type { IFollowersRepository } from "@/core/interfaces/repositories/i-foll
 import type { IVoteRepository } from "@/core/interfaces/repositories/i-vote-repository";
 import type { SearchCriteria, SearchResultItem } from "@/core/types/search";
 import type { UserRole } from "@/core/types/user-types";
-import type { IContent } from "@/models/content.model";
+import type { IContent } from "@/models/content/content.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
 import { TYPES } from "@/di/types";
-import ContentModel from "@/models/content.model";
-import UserFollowModel from "@/models/followers.model";
+import ContentModel from "@/models/content/content.model";
+import UserFollowModel from "@/models/social/followers.model";
 import CustomError from "@/utils/custom-error";
 
 @injectable()

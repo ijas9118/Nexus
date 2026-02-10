@@ -1,4 +1,4 @@
-import type { IGroup } from "@/models/group.model";
+import type { IGroup } from "@/models/social/group.model";
 
 export interface IGroupService {
   createGroup: (userId: string, name: string, memberIds: string[]) => Promise<IGroup>;

@@ -3,10 +3,10 @@ import { inject, injectable } from "inversify";
 import type { IChatRepository } from "@/core/interfaces/repositories/i-chat-repository";
 import type { IChatService } from "@/core/interfaces/services/i-chat-service";
 import type { IConnectionService } from "@/core/interfaces/services/i-connection-service";
-import type { IChat } from "@/models/chat.model";
+import type { IChat } from "@/models/communication/chat.model";
 
 import { TYPES } from "@/di/types";
-import { ChatModel } from "@/models/chat.model";
+import { ChatModel } from "@/models/communication/chat.model";
 
 @injectable()
 export class ChatService implements IChatService {

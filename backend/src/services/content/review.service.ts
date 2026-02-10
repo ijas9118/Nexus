@@ -4,7 +4,7 @@ import { Types } from "mongoose";
 import type { IReviewRepository } from "@/core/interfaces/repositories/i-review-repository";
 import type { IReviewService } from "@/core/interfaces/services/i-review-service";
 import type { CreateReviewDTO, UpdateReviewDTO } from "@/dtos/responses/review.dto";
-import type { IReview } from "@/models/review.model";
+import type { IReview } from "@/models/social/review.model";
 
 import { TYPES } from "@/di/types";
 

@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import type { INotificationRepository } from "@/core/interfaces/repositories/i-notification-repository";
 import type { INotificationTypeRepository } from "@/core/interfaces/repositories/i-notification-type-repository";
 import type { INotificationService } from "@/core/interfaces/services/i-notification-service";
-import type { INotification } from "@/models/notification.model";
+import type { INotification } from "@/models/communication/notification.model";
 
 import { TYPES } from "@/di/types";
 import CustomError from "@/utils/custom-error";

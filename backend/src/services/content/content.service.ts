@@ -7,7 +7,7 @@ import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repo
 import type { IContentService } from "@/core/interfaces/services/i-content-service";
 import type { IContentViewService } from "@/core/interfaces/services/i-content-view-service";
 import type { UserRole } from "@/core/types/user-types";
-import type { IContent } from "@/models/content.model";
+import type { IContent } from "@/models/content/content.model";
 
 import { TYPES } from "@/di/types";
 import { uploadToCloudinary } from "@/utils/cloudinary-utils";

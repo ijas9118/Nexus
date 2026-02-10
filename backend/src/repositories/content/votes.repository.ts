@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
 
 import type { IVoteRepository } from "@/core/interfaces/repositories/i-vote-repository";
-import type { IVote } from "@/models/vote.model";
+import type { IVote } from "@/models/social/vote.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { VoteModel } from "@/models/vote.model";
+import { VoteModel } from "@/models/social/vote.model";
 
 @injectable()
 export class VoteRepository extends BaseRepository<IVote> implements IVoteRepository {

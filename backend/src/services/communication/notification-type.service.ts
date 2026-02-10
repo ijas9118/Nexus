@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 
 import type { INotificationTypeRepository } from "@/core/interfaces/repositories/i-notification-type-repository";
 import type { INotificationTypeService } from "@/core/interfaces/services/i-notification-type-service";
-import type { INotificationType } from "@/models/notification-type.model";
+import type { INotificationType } from "@/models/communication/notification-type.model";
 
 import { TYPES } from "@/di/types";
 

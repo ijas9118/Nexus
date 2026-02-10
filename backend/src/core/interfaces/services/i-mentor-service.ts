@@ -1,7 +1,7 @@
 import type { PersonalInfo } from "@/core/types";
 import type { MentorStatus } from "@/core/types/entities/mentor";
-import type { IMentor } from "@/models/mentor.model";
-import type { IMentorshipType } from "@/models/mentorship-type.model";
+import type { IMentor } from "@/models/mentor/mentor.model";
+import type { IMentorshipType } from "@/models/mentor/mentorship-type.model";
 
 export interface IMentorService {
   applyAsMentor: (

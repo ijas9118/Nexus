@@ -3,10 +3,10 @@ import { injectable } from "inversify";
 
 import type { IBookingRepository } from "@/core/interfaces/repositories/i-booking-repository";
 import type { RecentBooking } from "@/core/types/mentor-dashboard";
-import type { IBooking } from "@/models/booking.model";
+import type { IBooking } from "@/models/booking/booking.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { BookingModel } from "@/models/booking.model";
+import { BookingModel } from "@/models/booking/booking.model";
 
 @injectable()
 export class BookingRepository extends BaseRepository<IBooking> implements IBookingRepository {

@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
 
 import type { ISubscriptionRepository } from "@/core/interfaces/repositories/i-subscription-repository";
-import type { ISubscription } from "@/models/subscription.model";
+import type { ISubscription } from "@/models/subscription/subscription.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { PlanModel } from "@/models/plan.model";
-import { SubscriptionModel } from "@/models/subscription.model";
+import { PlanModel } from "@/models/subscription/plan.model";
+import { SubscriptionModel } from "@/models/subscription/subscription.model";
 
 @injectable()
 export class SubscriptionRepository

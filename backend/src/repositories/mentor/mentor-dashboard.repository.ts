@@ -7,10 +7,10 @@ import type {
   SessionStatsResponse,
 } from "@/core/types/mentor-dashboard";
 
-import { BookingModel } from "@/models/booking.model";
-import { TransactionModel } from "@/models/transaction.model";
-import { WalletModel } from "@/models/wallet.model";
-import { WithdrawalRequestModel } from "@/models/withdrawal-request.model";
+import { BookingModel } from "@/models/booking/booking.model";
+import { TransactionModel } from "@/models/payment/transaction.model";
+import { WalletModel } from "@/models/payment/wallet.model";
+import { WithdrawalRequestModel } from "@/models/payment/withdrawal-request.model";
 
 @injectable()
 export class MentorDashboardRepository implements IMentorDashboardRepository {

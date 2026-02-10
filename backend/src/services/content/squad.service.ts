@@ -8,7 +8,7 @@ import type { IContentRepository } from "@/core/interfaces/repositories/i-conten
 import type { ISquadRepository } from "@/core/interfaces/repositories/i-squad-repository";
 import type { ISquadService } from "@/core/interfaces/services/i-squad-service";
 import type { UserRole } from "@/core/types/user-types";
-import type { ISquad } from "@/models/squads.model";
+import type { ISquad } from "@/models/social/squads.model";
 
 import { TYPES } from "@/di/types";
 import { SquadListDto } from "@/dtos/responses/admin/squad-list-dto";

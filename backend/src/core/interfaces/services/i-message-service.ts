@@ -1,6 +1,6 @@
 import type { Server as SocketIOServer } from "socket.io";
 
-import type { IMessage } from "@/models/message.model";
+import type { IMessage } from "@/models/communication/message.model";
 
 export interface IMessageService {
   sendMessage: (

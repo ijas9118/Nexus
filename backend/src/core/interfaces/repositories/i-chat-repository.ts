@@ -1,4 +1,4 @@
-import type { IChat } from "@/models/chat.model";
+import type { IChat } from "@/models/communication/chat.model";
 
 import type { IBaseRepository } from "./i-base-repository";
 

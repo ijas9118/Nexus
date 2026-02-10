@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
 
 import type { IPlanRepository } from "@/core/interfaces/repositories/i-plan-repository";
-import type { IPlan } from "@/models/plan.model";
+import type { IPlan } from "@/models/subscription/plan.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { PlanModel } from "@/models/plan.model";
+import { PlanModel } from "@/models/subscription/plan.model";
 
 @injectable()
 export class PlanRepository extends BaseRepository<IPlan> implements IPlanRepository {

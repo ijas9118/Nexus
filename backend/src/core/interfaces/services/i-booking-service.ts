@@ -1,4 +1,4 @@
-import type { IBooking } from "@/models/booking.model";
+import type { IBooking } from "@/models/booking/booking.model";
 
 export interface IBookingService {
   getUpcomingBookings: () => Promise<IBooking[]>;

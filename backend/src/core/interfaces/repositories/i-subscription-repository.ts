@@ -1,4 +1,4 @@
-import type { ISubscription } from "@/models/subscription.model";
+import type { ISubscription } from "@/models/subscription/subscription.model";
 
 import type { IBaseRepository } from "./i-base-repository";
 

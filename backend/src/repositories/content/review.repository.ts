@@ -2,10 +2,10 @@ import { injectable } from "inversify";
 import { Types } from "mongoose";
 
 import type { IReviewRepository } from "@/core/interfaces/repositories/i-review-repository";
-import type { IReview } from "@/models/review.model";
+import type { IReview } from "@/models/social/review.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import { Review } from "@/models/review.model";
+import { Review } from "@/models/social/review.model";
 
 @injectable()
 export class ReviewRepository extends BaseRepository<IReview> implements IReviewRepository {

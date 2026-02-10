@@ -156,7 +156,7 @@ import type { IPlanController } from "../core/interfaces/controllers/i-plan-cont
 import type { ISquadController } from "../core/interfaces/controllers/i-squad-controller";
 import type { IUserController } from "../core/interfaces/controllers/i-user-controller";
 import type { IAdminRepository } from "../core/interfaces/repositories/i-admin-repository";
-import type { IBookmarkRepository } from "../core/interfaces/repositories/i-bookmarn-repository";
+import type { IBookmarkRepository } from "../core/interfaces/repositories/i-bookmark-repository";
 import type { ICategoryRepository } from "../core/interfaces/repositories/i-category-repository";
 import type { ICommentRepository } from "../core/interfaces/repositories/i-comment-repository";
 import type { IConnectionsRepository } from "../core/interfaces/repositories/i-connections-repository";

@@ -3,10 +3,10 @@ import { Types } from "mongoose";
 
 import type { IFollowersRepository } from "@/core/interfaces/repositories/i-followers-repository";
 import type { IUserWhoFollow } from "@/core/types/user-types";
-import type { IUserFollow } from "@/models/followers.model";
+import type { IUserFollow } from "@/models/social/followers.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import UserFollowModel from "@/models/followers.model";
+import UserFollowModel from "@/models/social/followers.model";
 
 @injectable()
 export class FollowersRepository

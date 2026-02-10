@@ -7,7 +7,7 @@ import type { IChatRepository } from "@/core/interfaces/repositories/i-chat-repo
 import type { IGroupRepository } from "@/core/interfaces/repositories/i-group-repository";
 import type { IMessageRepository } from "@/core/interfaces/repositories/i-message-repository";
 import type { IMessageService } from "@/core/interfaces/services/i-message-service";
-import type { IMessage } from "@/models/message.model";
+import type { IMessage } from "@/models/communication/message.model";
 
 import { TYPES } from "@/di/types";
 

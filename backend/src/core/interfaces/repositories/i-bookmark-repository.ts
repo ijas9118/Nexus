@@ -1,9 +1,8 @@
 import type mongoose from "mongoose";
 
-import type { IContent } from "@/models/content.model";
-
-import type { IBookmark } from "../../../models/bookmarks.model";
-import type { BaseRepository } from "../../abstracts/base.repository";
+import type { BaseRepository } from "@/core/abstracts/base.repository";
+import type { IContent } from "@/models/content/content.model";
+import type { IBookmark } from "@/models/social/bookmarks.model";
 
 export interface IBookmarkRepository extends BaseRepository<IBookmark> {
   getBookmarks: (userId: string) => Promise<IContent[]>;

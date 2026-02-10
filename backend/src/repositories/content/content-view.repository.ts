@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
 
 import type { IContentViewRepository } from "@/core/interfaces/repositories/i-content-view-repository";
-import type { IContentView } from "@/models/content-view.model";
+import type { IContentView } from "@/models/content/content-view.model";
 
 import { BaseRepository } from "@/core/abstracts/base.repository";
-import ContentViewModel from "@/models/content-view.model";
+import ContentViewModel from "@/models/content/content-view.model";
 
 @injectable()
 export class ContentViewRepository
