@@ -89,9 +89,20 @@ export class ConnectionsRepository
   sendConnectionRequest = async (
     requesterId: string,
     recipientId: string,
-  ): Promise<"ALREADY_SENT" | "SUCCESS"> => {
+  ): Promise<"ALREADY_SENT" | "ALREADY_CONNECTED" | "SELF_REQUEST" | "SUCCESS"> => {
     const requesterObjectId = new Types.ObjectId(requesterId);
     const recipientObjectId = new Types.ObjectId(recipientId);
+
+    // Prevent self-connection
+    if (requesterId === recipientId) {
+      return "SELF_REQUEST";
+    }
+
+    // Check if already connected
+    const alreadyConnected = await this.isConnected(requesterId, recipientId);
+    if (alreadyConnected) {
+      return "ALREADY_CONNECTED";
+    }
 
     // Check if request already exists
     const existingRequest = await this.findOne({

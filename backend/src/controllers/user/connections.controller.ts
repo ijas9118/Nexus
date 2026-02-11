@@ -47,16 +47,27 @@ export class ConnectionsController implements IConnectionsController {
 
     const result = await this._connectionsService.sendConnectionRequest(requesterId, recipientId);
 
-    if (result === "ALREADY_SENT") {
-      res
-        .status(StatusCodes.CONFLICT)
-        .json({ success: false, message: "Connection request already sent" });
-      return;
+    switch (result) {
+      case "ALREADY_SENT":
+        res
+          .status(StatusCodes.CONFLICT)
+          .json({ success: false, message: "Connection request already sent" });
+        return;
+      case "ALREADY_CONNECTED":
+        res
+          .status(StatusCodes.CONFLICT)
+          .json({ success: false, message: "You are already connected with this user" });
+        return;
+      case "SELF_REQUEST":
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ success: false, message: "Cannot send connection request to yourself" });
+        return;
+      case "SUCCESS":
+        res
+          .status(StatusCodes.OK)
+          .json({ success: true, message: "Connection request sent successfully" });
     }
-
-    res
-      .status(StatusCodes.OK)
-      .json({ success: true, message: "Connection request sent successfully" });
   });
 
   acceptConnectionRequest = asyncHandler(async (req: Request, res: Response): Promise<void> => {

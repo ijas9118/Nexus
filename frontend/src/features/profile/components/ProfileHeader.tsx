@@ -28,6 +28,7 @@ interface ProfileHeaderProps {
   };
   isFollowing: boolean;
   isConnected: boolean;
+  hasSentRequest: boolean;
   onFollowToggle: () => void;
   onConnectionToggle: () => void;
   followStats: {
@@ -41,6 +42,7 @@ export default function ProfileHeader({
   profileUser,
   isFollowing,
   isConnected,
+  hasSentRequest,
   onFollowToggle,
   onConnectionToggle,
   followStats,
@@ -250,8 +252,13 @@ export default function ProfileHeader({
               className="w-1/2"
               variant="outline"
               onClick={onConnectionToggle}
+              disabled={isConnected}
             >
-              {isConnected ? "Withdraw" : "Connect"}
+              {isConnected
+                ? "Connected"
+                : hasSentRequest
+                  ? "Withdraw"
+                  : "Connect"}
             </Button>
           </div>
         )}

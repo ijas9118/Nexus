@@ -29,7 +29,7 @@ export class ConnectionService implements IConnectionService {
   sendConnectionRequest = async (
     requesterId: string,
     recipientId: string,
-  ): Promise<"ALREADY_SENT" | "SUCCESS"> => {
+  ): Promise<"ALREADY_SENT" | "ALREADY_CONNECTED" | "SELF_REQUEST" | "SUCCESS"> => {
     return this.connectionsRepository.sendConnectionRequest(requesterId, recipientId);
   };
 
