@@ -188,6 +188,28 @@ export class ConnectionsRepository
     return true;
   };
 
+  rejectConnectionRequest = async (
+    userId: string,
+    requesterId: string,
+  ): Promise<boolean> => {
+    const userObjectId = new Types.ObjectId(userId);
+    const requesterObjectId = new Types.ObjectId(requesterId);
+
+    // Remove from recipient's pendingConnectionRequests
+    await this.findOneAndUpdate(
+      { userId: userObjectId },
+      { $pull: { pendingConnectionRequests: requesterObjectId } },
+    );
+
+    // Remove from requester's sentConnectionRequests
+    await this.findOneAndUpdate(
+      { userId: requesterObjectId },
+      { $pull: { sentConnectionRequests: userObjectId } },
+    );
+
+    return true;
+  };
+
   getSentConnectionRequests = async (userId: string): Promise<IPendingRequestUser[]> => {
     const userObjId = new Types.ObjectId(userId);
 

@@ -31,12 +31,20 @@ export default function ConnectionsList() {
     queryFn: () => FollowService.getConnections(currentUserId),
   });
 
-  const { data: pendingOutgoing, isLoading: isLoadingOutgoing } = useQuery({
+  const {
+    data: pendingOutgoing,
+    isLoading: isLoadingOutgoing,
+    refetch: refetchPendingOutgoing,
+  } = useQuery({
     queryKey: ["pending-outgoing", currentUserId],
     queryFn: () => FollowService.getSentConnectionRequests(),
   });
 
-  const { data: pendingIncoming, isLoading: isLoadingIncoming } = useQuery({
+  const {
+    data: pendingIncoming,
+    isLoading: isLoadingIncoming,
+    refetch: refetchPendingIncoming,
+  } = useQuery({
     queryKey: ["pending-incoming", currentUserId],
     queryFn: () => FollowService.getPendingRequests(),
   });
@@ -44,7 +52,9 @@ export default function ConnectionsList() {
   const handleAccept = async (userId: string) => {
     try {
       await FollowService.acceptConnectionRequest(userId);
+      // Refetch both connections and pending incoming since request is now a connection
       refetchConnections();
+      refetchPendingIncoming();
     } catch (error) {
       console.error("Failed to accept connection:", error);
     }
@@ -52,10 +62,21 @@ export default function ConnectionsList() {
 
   const handleReject = async (userId: string) => {
     try {
-      await FollowService.withdrawConnectionRequest(userId);
-      refetchConnections();
+      await FollowService.rejectConnectionRequest(userId);
+      // Only refetch pending incoming since request is rejected, not withdrawn
+      refetchPendingIncoming();
     } catch (error) {
       console.error("Failed to reject connection:", error);
+    }
+  };
+
+  const handleWithdraw = async (userId: string) => {
+    try {
+      await FollowService.withdrawConnectionRequest(userId);
+      // Refetch pending outgoing since request is withdrawn
+      refetchPendingOutgoing();
+    } catch (error) {
+      console.error("Failed to withdraw connection request:", error);
     }
   };
 
@@ -149,7 +170,12 @@ export default function ConnectionsList() {
           ) : filteredPendingOutgoing.length > 0 ? (
             <div className="space-y-4">
               {filteredPendingOutgoing.map((user) => (
-                <UserCard key={user._id} user={user} type="pending-outgoing" />
+                <UserCard
+                  key={user._id}
+                  user={user}
+                  type="pending-outgoing"
+                  onWithdraw={handleWithdraw}
+                />
               ))}
             </div>
           ) : (

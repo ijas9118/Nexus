@@ -24,6 +24,7 @@ interface UserCardProps {
   onConnect?: (userId: string) => void;
   onAccept?: (userId: string) => void;
   onReject?: (userId: string) => void;
+  onWithdraw?: (userId: string) => void;
 }
 
 export default function UserCard({
@@ -34,6 +35,7 @@ export default function UserCard({
   onConnect,
   onAccept,
   onReject,
+  onWithdraw,
 }: UserCardProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -126,8 +128,14 @@ export default function UserCard({
         )}
 
         {type === "pending-outgoing" && (
-          <Button variant="outline" size="sm" disabled>
-            Request Sent
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleAction(() => onWithdraw?.(user._id))}
+            disabled={isLoading}
+          >
+            <UserX className="mr-2 h-4 w-4" />
+            Withdraw
           </Button>
         )}
 

@@ -53,6 +53,12 @@ router.post(
 );
 
 router.post(
+  "/reject",
+  authenticate(["user", "premium", "mentor"]),
+  connectionsController.rejectConnectionRequest,
+);
+
+router.post(
   "/has-requested",
   authenticate(["user", "premium", "mentor"]),
   connectionsController.hasSentConnectionRequest,
