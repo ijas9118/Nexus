@@ -54,10 +54,7 @@ jobs:
           file: ./backend/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/nexus-backend:latest
-            ${{ secrets.DOCKER_USERNAME }}/nexus-backend:${{ github.sha }}
-            ${{ secrets.DOCKER_USERNAME }}/nexus-backend:${{ github.ref_name }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/nexus-backend:latest
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/nexus-backend:latest
           cache-to: type=inline
 
@@ -73,9 +70,6 @@ jobs:
           username: ${{ secrets.VM_USERNAME }}
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
-            cd ~/projects/nexus
-            docker compose pull
-            docker compose up -d
-            docker image prune -f
-            echo "Deployment completed at $(date)"
-            docker compose ps
+            cd ~
+            chmod +x update-nexus.sh
+            ./update-nexus.sh
