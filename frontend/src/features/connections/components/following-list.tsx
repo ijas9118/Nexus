@@ -20,10 +20,12 @@ export default function FollowingList() {
   });
 
   const handleUnfollow = async (userId: string) => {
-    // Implement unfollow functionality
-    // After successful unfollow, refetch the data
-    console.log(userId);
-    refetch();
+    try {
+      await FollowService.unfollowUser(userId);
+      refetch();
+    } catch (error) {
+      console.error("Failed to unfollow user:", error);
+    }
   };
 
   const filteredFollowing =

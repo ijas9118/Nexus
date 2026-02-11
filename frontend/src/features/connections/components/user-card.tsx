@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Button } from "@/components/atoms/button";
-import { UserPlus, UserCheck, UserX } from "lucide-react";
+import { UserPlus } from "lucide-react";
+import ConfirmDialog from "@/components/molecules/ConfirmDialog";
 
 export interface UserData {
   _id: string;
@@ -79,15 +80,14 @@ export default function UserCard({
         {type === "follower" && (
           <>
             {user.isFollowing ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleAction(() => onUnfollow?.(user._id))}
-                disabled={isLoading}
-              >
-                <UserCheck className="mr-2 h-4 w-4" />
-                Following
-              </Button>
+              <ConfirmDialog
+                triggerLabel="Unfollow"
+                triggerVariant="outline"
+                title="Unfollow User?"
+                description={`Are you sure you want to unfollow ${user.name}?`}
+                confirmLabel="Unfollow"
+                onConfirm={() => handleAction(() => onUnfollow?.(user._id))}
+              />
             ) : (
               <Button
                 variant="outline"
@@ -111,39 +111,36 @@ export default function UserCard({
         )}
 
         {type === "following" && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleAction(() => onUnfollow?.(user._id))}
-            disabled={isLoading}
-          >
-            <UserCheck className="mr-2 h-4 w-4" />
-            Following
-          </Button>
+          <ConfirmDialog
+            triggerLabel="Unfollow"
+            triggerVariant="outline"
+            title="Unfollow User?"
+            description={`Are you sure you want to unfollow ${user.name}?`}
+            confirmLabel="Unfollow"
+            onConfirm={() => handleAction(() => onUnfollow?.(user._id))}
+          />
         )}
 
         {type === "connection" && (
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => handleAction(() => onRemove?.(user._id))}
-            disabled={isLoading}
-          >
-            <UserX className="mr-2 h-4 w-4" />
-            Remove
-          </Button>
+          <ConfirmDialog
+            triggerLabel="Remove"
+            triggerVariant="destructive"
+            title="Remove Connection?"
+            description={`Are you sure you want to remove ${user.name} from your connections? You can reconnect anytime.`}
+            confirmLabel="Remove"
+            onConfirm={() => handleAction(() => onRemove?.(user._id))}
+          />
         )}
 
         {type === "pending-outgoing" && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleAction(() => onWithdraw?.(user._id))}
-            disabled={isLoading}
-          >
-            <UserX className="mr-2 h-4 w-4" />
-            Withdraw
-          </Button>
+          <ConfirmDialog
+            triggerLabel="Withdraw"
+            triggerVariant="outline"
+            title="Withdraw Request?"
+            description={`Are you sure you want to withdraw your connection request to ${user.name}?`}
+            confirmLabel="Withdraw"
+            onConfirm={() => handleAction(() => onWithdraw?.(user._id))}
+          />
         )}
 
         {type === "pending-incoming" && (
@@ -156,15 +153,14 @@ export default function UserCard({
             >
               Accept
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleAction(() => onReject?.(user._id))}
-              disabled={isLoading}
-            >
-              <UserX className="mr-2 h-4 w-4" />
-              Reject
-            </Button>
+            <ConfirmDialog
+              triggerLabel="Reject"
+              triggerVariant="outline"
+              title="Reject Request?"
+              description={`Are you sure you want to reject the connection request from ${user.name}?`}
+              confirmLabel="Reject"
+              onConfirm={() => handleAction(() => onReject?.(user._id))}
+            />
           </>
         )}
       </div>
