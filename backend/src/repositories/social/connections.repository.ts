@@ -251,6 +251,25 @@ export class ConnectionsRepository
     return !!user;
   };
 
+  removeConnection = async (userId1: string, userId2: string): Promise<boolean> => {
+    const userObjectId1 = new Types.ObjectId(userId1);
+    const userObjectId2 = new Types.ObjectId(userId2);
+
+    // Remove userId2 from userId1's connections
+    await this.findOneAndUpdate(
+      { userId: userObjectId1 },
+      { $pull: { connections: userObjectId2 } },
+    );
+
+    // Remove userId1 from userId2's connections
+    await this.findOneAndUpdate(
+      { userId: userObjectId2 },
+      { $pull: { connections: userObjectId1 } },
+    );
+
+    return true;
+  };
+
   getAllConnections = async (userId: string): Promise<any[]> => {
     const connections = await UserFollowModel.findOne({ userId })
       .populate<{ connections: IUserWhoFollow[] }>("connections", "name profilePic")

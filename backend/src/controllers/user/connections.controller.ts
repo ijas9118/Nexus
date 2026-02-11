@@ -156,6 +156,26 @@ export class ConnectionsController implements IConnectionsController {
     res.status(StatusCodes.OK).json({ result });
   });
 
+  removeConnection = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
+    const { connectionId } = req.body;
+
+    if (!connectionId) {
+      throw new CustomError("Connection ID is required", StatusCodes.BAD_REQUEST);
+    }
+
+    const result = await this._connectionsService.removeConnection(userId, connectionId);
+
+    if (!result) {
+      throw new CustomError("Failed to remove connection", StatusCodes.BAD_REQUEST);
+    }
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Connection removed successfully",
+    });
+  });
+
   getAllConnections = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
 

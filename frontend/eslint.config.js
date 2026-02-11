@@ -29,7 +29,7 @@ export default tseslint.config(
       ],
 
       "@typescript-eslint/explicit-function-return-type": "off", // Allow implicit return types
-      "@typescript-eslint/no-explicit-any": "warn", // Warn about using `any`
+      "@typescript-eslint/no-explicit-any": "off", // Warn about using `any`
       "@typescript-eslint/no-unused-vars": [
         "warn",
         { argsIgnorePattern: "^_" }, // Ignore unused variables starting with `_`

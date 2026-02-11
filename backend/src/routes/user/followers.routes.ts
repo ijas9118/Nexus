@@ -76,6 +76,12 @@ router.post(
   connectionsController.withdrawConnectionRequest,
 );
 
+router.post(
+  "/remove",
+  authenticate(["user", "premium", "mentor"]),
+  connectionsController.removeConnection,
+);
+
 router.get(
   "/connections",
   authenticate(["user", "premium", "mentor"]),

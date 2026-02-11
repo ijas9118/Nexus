@@ -80,6 +80,16 @@ export default function ConnectionsList() {
     }
   };
 
+  const handleRemove = async (userId: string) => {
+    try {
+      await FollowService.removeConnection(userId);
+      // Refetch connections since connection is removed
+      refetchConnections();
+    } catch (error) {
+      console.error("Failed to remove connection:", error);
+    }
+  };
+
   const filterUsers = (users: any[] = []) => {
     return users.filter(
       (user) =>
@@ -140,6 +150,7 @@ export default function ConnectionsList() {
                   key={connection._id}
                   user={connection}
                   type="connection"
+                  onRemove={handleRemove}
                 />
               ))}
             </div>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Button } from "@/components/atoms/button";
-import { UserPlus, UserCheck, UserX, User } from "lucide-react";
+import { UserPlus, UserCheck, UserX } from "lucide-react";
 
 export interface UserData {
   _id: string;
@@ -25,6 +25,7 @@ interface UserCardProps {
   onAccept?: (userId: string) => void;
   onReject?: (userId: string) => void;
   onWithdraw?: (userId: string) => void;
+  onRemove?: (userId: string) => void;
 }
 
 export default function UserCard({
@@ -36,6 +37,7 @@ export default function UserCard({
   onAccept,
   onReject,
   onWithdraw,
+  onRemove,
 }: UserCardProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -121,9 +123,14 @@ export default function UserCard({
         )}
 
         {type === "connection" && (
-          <Button variant="default" size="sm" disabled>
-            <User className="mr-2 h-4 w-4" />
-            Connected
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => handleAction(() => onRemove?.(user._id))}
+            disabled={isLoading}
+          >
+            <UserX className="mr-2 h-4 w-4" />
+            Remove
           </Button>
         )}
 

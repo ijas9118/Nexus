@@ -250,15 +250,10 @@ export default function ProfileHeader({
             </Button>
             <Button
               className="w-1/2"
-              variant="outline"
+              variant={isConnected ? "destructive" : "outline"}
               onClick={onConnectionToggle}
-              disabled={isConnected}
             >
-              {isConnected
-                ? "Connected"
-                : hasSentRequest
-                  ? "Withdraw"
-                  : "Connect"}
+              {isConnected ? "Remove" : hasSentRequest ? "Withdraw" : "Connect"}
             </Button>
           </div>
         )}

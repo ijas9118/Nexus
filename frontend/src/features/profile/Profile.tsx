@@ -112,7 +112,18 @@ export default function ProfilePage() {
     if (!profileUser) return;
 
     try {
-      if (hasSentRequest) {
+      if (isConnected) {
+        // Remove the existing connection
+        await FollowService.removeConnection(profileUser._id);
+        setIsConnected(false);
+        setStats((prev) => ({
+          ...prev,
+          connectionsCount: prev.connectionsCount - 1,
+        }));
+        toast.success("Connection Removed", {
+          description: `You have removed your connection with ${profileUser.name}.`,
+        });
+      } else if (hasSentRequest) {
         // Withdraw the pending request
         await FollowService.withdrawConnectionRequest(profileUser._id);
         setHasSentRequest(false);
@@ -134,9 +145,17 @@ export default function ProfilePage() {
       );
       setProfileUser(updatedUser);
 
-      // Recheck connection status
-      const connected = await FollowService.checkConnected(profileUser._id);
-      setIsConnected(connected.result);
+      // Recheck connection status if not already removed
+      if (!isConnected) {
+        const connected = await FollowService.checkConnected(profileUser._id);
+        setIsConnected(connected.result);
+        if (connected.result) {
+          setStats((prev) => ({
+            ...prev,
+            connectionsCount: prev.connectionsCount + 1,
+          }));
+        }
+      }
     } catch (err: any) {
       console.error("Error updating connection status:", err);
       toast.error("Error", {
