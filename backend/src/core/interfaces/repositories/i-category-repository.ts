@@ -1,5 +1,5 @@
-import type { ICategory } from "../../../models/categories.model";
-import type { BaseRepository } from "../../abstracts/base.repository";
+import type { BaseRepository } from "@/core/abstracts/base.repository";
+import type { ICategory } from "@/models/content/categories.model";
 
 export interface ICategoryRepository extends BaseRepository<ICategory> {
   addCategory: (name: string) => Promise<ICategory>;

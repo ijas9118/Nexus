@@ -1,6 +1,6 @@
 import type { QueryFilter } from "mongoose";
 
-import type { IMentorMetadata } from "@/models/mentor-metadata.model";
+import type { IMentorMetadata } from "@/models/mentor/mentor-metadata.model";
 
 export interface IMentorMetadataService {
   create: (data: Partial<IMentorMetadata>) => Promise<IMentorMetadata>;

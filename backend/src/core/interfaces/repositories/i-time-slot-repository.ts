@@ -1,4 +1,4 @@
-import type { ITimeSlot } from "@/models/timeslots.model";
+import type { ITimeSlot } from "@/models/booking/timeslots.model";
 
 import type { IBaseRepository } from "./i-base-repository";
 

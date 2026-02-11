@@ -1,5 +1,5 @@
 import type { BaseRepository } from "@/core/abstracts/base.repository";
-import type { IVote } from "@/models/vote.model";
+import type { IVote } from "@/models/social/vote.model";
 
 export interface IVoteRepository extends BaseRepository<IVote> {
   findUserVotes: (userId: string) => Promise<IVote[]>;

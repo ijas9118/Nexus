@@ -1,4 +1,4 @@
-import type { IWithdrawalRequest } from "@/models/withdrawal-request.model";
+import type { IWithdrawalRequest } from "@/models/payment/withdrawal-request.model";
 
 export interface IWithdrawalRequestService {
   createWithdrawalRequest: (

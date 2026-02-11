@@ -1,5 +1,5 @@
 import type { BaseRepository } from "@/core/abstracts/base.repository";
-import type { IMentor } from "@/models/mentor.model";
+import type { IMentor } from "@/models/mentor/mentor.model";
 
 export interface IMentorRepository extends BaseRepository<IMentor> {
   createMentorApplication: (userId: string, mentorData: Partial<IMentor>) => Promise<IMentor>;

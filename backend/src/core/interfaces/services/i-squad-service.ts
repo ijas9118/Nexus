@@ -3,7 +3,7 @@ import type { Express } from "express";
 import type { SquadListDto } from "@/dtos/responses/admin/squad-list-dto";
 import type { SquadByCategoryResponseDto } from "@/dtos/responses/sqauds.dto";
 import type { SquadContentResponseDto } from "@/dtos/responses/squad-contents.dto";
-import type { ISquad } from "@/models/squads.model";
+import type { ISquad } from "@/models/social/squads.model";
 
 export interface ISquadService {
   joinSquad: (userId: string, squadId: string) => unknown;

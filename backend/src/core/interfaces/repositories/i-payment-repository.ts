@@ -1,4 +1,4 @@
-import type { IPayment } from "@/models/payment.model";
+import type { IPayment } from "@/models/payment/payment.model";
 
 import type { IBaseRepository } from "./i-base-repository";
 

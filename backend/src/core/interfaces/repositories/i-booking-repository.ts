@@ -1,6 +1,6 @@
 import type { BaseRepository } from "@/core/abstracts/base.repository";
 import type { RecentBooking } from "@/core/types/mentor-dashboard";
-import type { IBooking } from "@/models/booking.model";
+import type { IBooking } from "@/models/booking/booking.model";
 
 export interface IBookingRepository extends BaseRepository<IBooking> {
   createBooking: (data: Partial<IBooking>) => Promise<IBooking>;

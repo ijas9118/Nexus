@@ -2,19 +2,17 @@ import { compare, hash } from "bcryptjs";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
+import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repository";
+import type { IAuthService } from "@/core/interfaces/services/i-auth-service";
 import type { IMentorService } from "@/core/interfaces/services/i-mentor-service";
 import type { LoginRequestDTO, RegisterRequestDTO } from "@/dtos/requests/auth.dto";
+import type { IUser } from "@/models/user/user.model";
 
+import redisClient from "@/config/redis-client.config";
+import { TYPES } from "@/di/types";
 import { LoginResponseDTO, RegisterResponseDTO } from "@/dtos/responses/auth.dto";
-
-import type { IUserRepository } from "../../core/interfaces/repositories/i-user-repository";
-import type { IAuthService } from "../../core/interfaces/services/i-auth-service";
-import type { IUser } from "../../models/user.model";
-
-import redisClient from "../../config/redis-client.config";
-import { TYPES } from "../../di/types";
-import CustomError from "../../utils/custom-error";
-import { UsernameGenerator } from "../../utils/username-generator.util";
+import CustomError from "@/utils/custom-error";
+import { UsernameGenerator } from "@/utils/username-generator.util";
 
 @injectable()
 export class AuthService implements IAuthService {

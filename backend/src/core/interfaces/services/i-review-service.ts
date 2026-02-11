@@ -1,5 +1,5 @@
 import type { CreateReviewDTO, UpdateReviewDTO } from "@/dtos/responses/review.dto";
-import type { IReview } from "@/models/review.model";
+import type { IReview } from "@/models/social/review.model";
 
 export interface IReviewService {
   createReview: (data: CreateReviewDTO) => Promise<IReview>;

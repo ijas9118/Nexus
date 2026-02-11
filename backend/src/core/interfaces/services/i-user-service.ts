@@ -1,10 +1,9 @@
 import type { Express } from "express";
 
-import type { IContent } from "@/models/content.model";
-
-import type { UsersResponseDTO } from "../../../dtos/responses/admin/users.dto";
-import type { ISquad } from "../../../models/squads.model";
-import type { IUser } from "../../../models/user.model";
+import type { UsersResponseDTO } from "@/dtos/responses/admin/users.dto";
+import type { IContent } from "@/models/content/content.model";
+import type { ISquad } from "@/models/social/squads.model";
+import type { IUser } from "@/models/user/user.model";
 
 export interface IUserService {
   findByEmail: (email: string) => Promise<IUser | null>;

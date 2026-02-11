@@ -2,7 +2,7 @@ import type { Server } from "node:http";
 
 import { Server as SocketIOServer } from "socket.io";
 
-import type { SocketController } from "@/controllers/socket.controller";
+import type { SocketController } from "@/controllers/communication/socket.controller";
 
 import { container } from "@/di/container";
 import { TYPES } from "@/di/types";

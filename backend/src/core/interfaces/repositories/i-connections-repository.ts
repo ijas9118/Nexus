@@ -1,4 +1,4 @@
-import type { IPendingRequestUser, SearchConnections } from "../../types/user-types";
+import type { IPendingRequestUser, SearchConnections } from "@/core/types/user-types";
 
 export interface IConnectionsRepository {
   searchConnections: (userId: string, search?: string) => Promise<SearchConnections[]>;
@@ -7,7 +7,7 @@ export interface IConnectionsRepository {
   sendConnectionRequest: (
     requesterId: string,
     recipientId: string,
-  ) => Promise<"ALREADY_SENT" | "SUCCESS">;
+  ) => Promise<"ALREADY_SENT" | "ALREADY_CONNECTED" | "SELF_REQUEST" | "SUCCESS">;
   acceptConnectionRequest: (userId: string, requesterId: string) => Promise<boolean>;
   hasSentConnectionRequest: (requesterId: string, recipientId: string) => Promise<boolean>;
   withdrawConnectionRequest: (requesterId: string, recipientId: string) => Promise<boolean>;

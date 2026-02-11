@@ -1,4 +1,4 @@
-import type { INotification } from "@/models/notification.model";
+import type { INotification } from "@/models/communication/notification.model";
 
 import type { IBaseRepository } from "./i-base-repository";
 

@@ -16,6 +16,7 @@ export default function ProfilePage() {
   const [profileUser, setProfileUser] = useState<any>(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [hasSentRequest, setHasSentRequest] = useState(false);
   const [stats, setStats] = useState<{
     connectionsCount: number;
     followersCount: number;
@@ -34,18 +35,24 @@ export default function ProfilePage() {
         setStats(stats);
 
         if (currentUser !== data?._id) {
+          // Check if following
           const followingStatus = await FollowService.checkIsFollowing(
             currentUser,
             data._id,
           );
           setIsFollowing(followingStatus);
-          const connectionStatus = await FollowService.hasSentConnectionRequest(
-            data._id,
-          );
-          setIsConnected(connectionStatus.result);
 
+          // Check if actually connected (mutual connection)
           const connected = await FollowService.checkConnected(data._id);
           setIsConnected(connected.result);
+
+          // Check if we have sent a pending connection request
+          if (!connected.result) {
+            const sentRequest = await FollowService.hasSentConnectionRequest(
+              data._id,
+            );
+            setHasSentRequest(sentRequest.result);
+          }
         }
       } catch (err: unknown) {
         console.error("Error fetching profile:", err);
@@ -105,28 +112,35 @@ export default function ProfilePage() {
     if (!profileUser) return;
 
     try {
-      if (isConnected) {
+      if (hasSentRequest) {
+        // Withdraw the pending request
         await FollowService.withdrawConnectionRequest(profileUser._id);
-        toast.success("Action Successful", {
-          description: `You have unfollowed ${profileUser.name}. Hope to see you reconnect soon!`,
+        setHasSentRequest(false);
+        toast.success("Request Withdrawn", {
+          description: `You have withdrawn your connection request to ${profileUser.name}.`,
         });
       } else {
+        // Send new connection request
         await FollowService.sendConnectionRequest(profileUser._id);
+        setHasSentRequest(true);
         toast.success("Request Sent!", {
-          description: `You're now following ${profileUser.name}. Stay engaged and explore their content!`,
+          description: `Connection request sent to ${profileUser.name}. Wait for them to accept.`,
         });
       }
 
-      // Toggle the state and refetch user details
-      setIsConnected(!isConnected);
+      // Refresh user data
       const updatedUser = await ProfileService.getUserProfile(
         username as string,
       );
       setProfileUser(updatedUser);
+
+      // Recheck connection status
+      const connected = await FollowService.checkConnected(profileUser._id);
+      setIsConnected(connected.result);
     } catch (err: any) {
-      console.error("Error updating follow status:", err);
+      console.error("Error updating connection status:", err);
       toast.error("Error", {
-        description: err.message,
+        description: err.message || "Failed to update connection request",
       });
     }
   };
@@ -142,6 +156,7 @@ export default function ProfilePage() {
             profileUser={profileUser}
             isFollowing={isFollowing}
             isConnected={isConnected}
+            hasSentRequest={hasSentRequest}
             onFollowToggle={handleFollowToggle}
             onConnectionToggle={handleConnectionRequest}
             followStats={stats}

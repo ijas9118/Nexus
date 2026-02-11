@@ -1,6 +1,6 @@
 import type { TransactionDetails } from "@/core/types/wallet.types";
-import type { ITransaction } from "@/models/transaction.model";
-import type { IWallet } from "@/models/wallet.model";
+import type { ITransaction } from "@/models/payment/transaction.model";
+import type { IWallet } from "@/models/payment/wallet.model";
 
 import type { IBaseRepository } from "./i-base-repository";
 

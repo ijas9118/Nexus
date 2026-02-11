@@ -1,17 +1,15 @@
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
+import type { IEmailService } from "@/core/interfaces/services/i-email-service";
+import type { ITokenService } from "@/core/interfaces/services/i-token-service";
 import type { RegisterRequestDTO } from "@/dtos/requests/auth.dto";
 
+import redisClient from "@/config/redis-client.config";
+import { TYPES } from "@/di/types";
+import CustomError from "@/utils/custom-error";
 import { env } from "@/utils/env-validation";
-
-import type { IEmailService } from "../../core/interfaces/services/i-email-service";
-import type { ITokenService } from "../../core/interfaces/services/i-token-service";
-
-import redisClient from "../../config/redis-client.config";
-import { TYPES } from "../../di/types";
-import CustomError from "../../utils/custom-error";
-import { transporter } from "../../utils/nodemailer-transporter";
+import { transporter } from "@/utils/nodemailer-transporter";
 
 @injectable()
 export class EmailService implements IEmailService {
