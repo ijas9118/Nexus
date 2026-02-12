@@ -62,7 +62,7 @@ export class FollowersRepository
   getFollowers = async (
     userId: string, // the user whose followers you want
     currentUserId: string, // the currently logged-in user
-  ): Promise<(IUserWhoFollow & { isFollowing: boolean })[]> => {
+  ): Promise<(IUserWhoFollow & { isFollowing: boolean; isConnected: boolean })[]> => {
     const userFollow = await UserFollowModel.findOne({ userId })
       .populate<{ followers: IUserWhoFollow[] }>("followers", "name profilePic username")
       .lean();
@@ -76,9 +76,14 @@ export class FollowersRepository
       currentUserFollow?.following.map((id: Types.ObjectId) => id.toString()) || [],
     );
 
+    const currentUserConnectionIds = new Set(
+      currentUserFollow?.connections.map((id: Types.ObjectId) => id.toString()) || [],
+    );
+
     return followers.map(follower => ({
       ...follower,
       isFollowing: currentUserFollowingIds.has(follower._id.toString()),
+      isConnected: currentUserConnectionIds.has(follower._id.toString()),
     }));
   };
 

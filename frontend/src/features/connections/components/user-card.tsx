@@ -10,6 +10,7 @@ export interface UserData {
   profilePic: string;
   username: string;
   isFollowing?: boolean;
+  isConnected?: boolean;
 }
 
 interface UserCardProps {
@@ -99,14 +100,20 @@ export default function UserCard({
                 Follow Back
               </Button>
             )}
-            <Button
-              variant="default"
-              size="sm"
-              onClick={() => handleAction(() => onConnect?.(user._id))}
-              disabled={isLoading}
-            >
-              Connect
-            </Button>
+            {user.isConnected ? (
+              <Button variant="secondary" size="sm" disabled>
+                Connected
+              </Button>
+            ) : (
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => handleAction(() => onConnect?.(user._id))}
+                disabled={isLoading}
+              >
+                Connect
+              </Button>
+            )}
           </>
         )}
 

@@ -23,7 +23,7 @@ export class FollowersService implements IFollowersService {
   getFollowers = async (
     userId: string,
     currentUserId: string,
-  ): Promise<(IUserWhoFollow & { isFollowing: boolean })[]> => {
+  ): Promise<(IUserWhoFollow & { isFollowing: boolean; isConnected: boolean })[]> => {
     return this.followersRepository.getFollowers(userId, currentUserId);
   };
 
