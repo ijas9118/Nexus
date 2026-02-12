@@ -6,6 +6,7 @@ import type { IFollowersController } from "@/core/interfaces/controllers/i-follo
 import { container } from "@/di/container";
 import { TYPES } from "@/di/types";
 import { authenticate } from "@/middlewares/auth.middleware";
+import { connectionRequestLimiter } from "@/middlewares/rate-limit.middleware";
 
 const followersController = container.get<IFollowersController>(TYPES.FollowersController);
 const connectionsController = container.get<IConnectionsController>(TYPES.ConnectionsController);
@@ -43,6 +44,7 @@ router.post("/is-following", followersController.isFollowing);
 router.post(
   "/connect",
   authenticate(["user", "premium", "mentor"]),
+  connectionRequestLimiter,
   connectionsController.sendConnectionRequest,
 );
 
