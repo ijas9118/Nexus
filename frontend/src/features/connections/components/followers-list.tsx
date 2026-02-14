@@ -20,24 +20,30 @@ export default function FollowersList() {
   });
 
   const handleFollow = async (userId: string) => {
-    // Implement follow functionality
-    // After successful follow, refetch the data
-    console.log(userId);
-    refetch();
+    try {
+      await FollowService.followUser(userId);
+      refetch();
+    } catch (error) {
+      console.error("Failed to follow user:", error);
+    }
   };
 
   const handleUnfollow = async (userId: string) => {
-    // Implement unfollow functionality
-    // After successful unfollow, refetch the data
-    console.log(userId);
-    refetch();
+    try {
+      await FollowService.unfollowUser(userId);
+      refetch();
+    } catch (error) {
+      console.error("Failed to unfollow user:", error);
+    }
   };
 
   const handleConnect = async (userId: string) => {
-    // Implement connect functionality
-    // After successful connect, refetch the data
-    console.log(userId);
-    refetch();
+    try {
+      await FollowService.sendConnectionRequest(userId);
+      refetch();
+    } catch (error) {
+      console.error("Failed to send connection request:", error);
+    }
   };
 
   const filteredFollowers =

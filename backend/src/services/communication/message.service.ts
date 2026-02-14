@@ -1,15 +1,18 @@
 import type { Server as SocketIOServer } from "socket.io";
 
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 import mongoose, { Types } from "mongoose";
 
 import type { IChatRepository } from "@/core/interfaces/repositories/i-chat-repository";
+import type { IConnectionsRepository } from "@/core/interfaces/repositories/i-connections-repository";
 import type { IGroupRepository } from "@/core/interfaces/repositories/i-group-repository";
 import type { IMessageRepository } from "@/core/interfaces/repositories/i-message-repository";
 import type { IMessageService } from "@/core/interfaces/services/i-message-service";
 import type { IMessage } from "@/models/communication/message.model";
 
 import { TYPES } from "@/di/types";
+import CustomError from "@/utils/custom-error";
 
 @injectable()
 export class MessageService implements IMessageService {
@@ -17,6 +20,7 @@ export class MessageService implements IMessageService {
     @inject(TYPES.MessageRepository) protected repository: IMessageRepository,
     @inject(TYPES.ChatRepository) private chatRepository: IChatRepository,
     @inject(TYPES.GroupRepository) private groupRepository: IGroupRepository,
+    @inject(TYPES.ConnectionsRepository) private connectionsRepository: IConnectionsRepository,
   ) {}
 
   async sendMessage(
@@ -172,7 +176,7 @@ export class MessageService implements IMessageService {
     chatId: string,
     chatType: "Chat" | "Group",
   ): Promise<IMessage[]> {
-    await this.validateChatAccess(userId, chatId, chatType);
+    await this.validateChatAccess(userId, chatId, chatType, false); // Read-only, no connection check
 
     return this.repository.getMessagesByChat(chatId, chatType);
   }
@@ -182,7 +186,7 @@ export class MessageService implements IMessageService {
     chatId: string,
     chatType: "Chat" | "Group",
   ): Promise<number> {
-    await this.validateChatAccess(userId, chatId, chatType);
+    await this.validateChatAccess(userId, chatId, chatType, false); // Read-only, no connection check
 
     return this.repository.getUnreadCount(userId, chatId, chatType);
   }
@@ -193,7 +197,7 @@ export class MessageService implements IMessageService {
     chatType: "Chat" | "Group",
     io?: SocketIOServer,
   ): Promise<void> {
-    await this.validateChatAccess(userId, chatId, chatType);
+    await this.validateChatAccess(userId, chatId, chatType, false); // Read-only operation
 
     await this.repository.markMessagesAsRead(chatId, chatType, userId);
 
@@ -251,17 +255,32 @@ export class MessageService implements IMessageService {
     userId: string,
     chatId: string,
     chatType: "Chat" | "Group",
+    requireConnection = true, // true for write operations like sending messages
   ): Promise<void> {
     if (chatType === "Chat") {
       const chat = await this.chatRepository.findById(new Types.ObjectId(chatId));
       if (!chat || !chat.participants.includes(userId)) {
-        throw new Error("User does not have access to this chat");
+        throw new CustomError("User does not have access to this chat", StatusCodes.FORBIDDEN);
+      }
+
+      // For direct chats, check if users are still connected (only for write operations)
+      if (requireConnection) {
+        const otherParticipant = chat.participants.find(p => p !== userId);
+        if (otherParticipant) {
+          const isConnected = await this.connectionsRepository.isConnected(userId, otherParticipant);
+          if (!isConnected) {
+            throw new CustomError(
+              "Cannot send message. You are no longer connected with this user.",
+              StatusCodes.FORBIDDEN,
+            );
+          }
+        }
       }
     }
     else {
       const group = await this.groupRepository.findById(new Types.ObjectId(chatId));
       if (!group || !group.members.includes(userId)) {
-        throw new Error("User does not have access to this group");
+        throw new CustomError("User does not have access to this group", StatusCodes.FORBIDDEN);
       }
     }
   }

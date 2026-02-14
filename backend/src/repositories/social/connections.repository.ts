@@ -188,6 +188,28 @@ export class ConnectionsRepository
     return true;
   };
 
+  rejectConnectionRequest = async (
+    userId: string,
+    requesterId: string,
+  ): Promise<boolean> => {
+    const userObjectId = new Types.ObjectId(userId);
+    const requesterObjectId = new Types.ObjectId(requesterId);
+
+    // Remove from recipient's pendingConnectionRequests
+    await this.findOneAndUpdate(
+      { userId: userObjectId },
+      { $pull: { pendingConnectionRequests: requesterObjectId } },
+    );
+
+    // Remove from requester's sentConnectionRequests
+    await this.findOneAndUpdate(
+      { userId: requesterObjectId },
+      { $pull: { sentConnectionRequests: userObjectId } },
+    );
+
+    return true;
+  };
+
   getSentConnectionRequests = async (userId: string): Promise<IPendingRequestUser[]> => {
     const userObjId = new Types.ObjectId(userId);
 
@@ -227,6 +249,25 @@ export class ConnectionsRepository
     });
 
     return !!user;
+  };
+
+  removeConnection = async (userId1: string, userId2: string): Promise<boolean> => {
+    const userObjectId1 = new Types.ObjectId(userId1);
+    const userObjectId2 = new Types.ObjectId(userId2);
+
+    // Remove userId2 from userId1's connections
+    await this.findOneAndUpdate(
+      { userId: userObjectId1 },
+      { $pull: { connections: userObjectId2 } },
+    );
+
+    // Remove userId1 from userId2's connections
+    await this.findOneAndUpdate(
+      { userId: userObjectId2 },
+      { $pull: { connections: userObjectId1 } },
+    );
+
+    return true;
   };
 
   getAllConnections = async (userId: string): Promise<any[]> => {

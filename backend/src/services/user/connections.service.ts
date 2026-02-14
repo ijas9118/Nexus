@@ -48,6 +48,14 @@ export class ConnectionService implements IConnectionService {
     return this.connectionsRepository.withdrawConnectionRequest(requesterId, recipientId);
   };
 
+  rejectConnectionRequest = async (userId: string, requesterId: string): Promise<boolean> => {
+    return this.connectionsRepository.rejectConnectionRequest(userId, requesterId);
+  };
+
+  removeConnection = async (userId1: string, userId2: string): Promise<boolean> => {
+    return this.connectionsRepository.removeConnection(userId1, userId2);
+  };
+
   isConnected = async (userId1: string, userId2: string): Promise<boolean> => {
     return this.connectionsRepository.isConnected(userId1, userId2);
   };

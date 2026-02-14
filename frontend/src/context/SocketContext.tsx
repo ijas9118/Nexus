@@ -13,6 +13,7 @@ import { HOST } from "@/utils/constants";
 import { ReactNode, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
+import { toast } from "sonner";
 
 interface SocketProviderProps {
   children: ReactNode;
@@ -92,6 +93,9 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
     socket.on("error", (error) => {
       console.error("Socket error:", error);
+      toast.error("Message Error", {
+        description: error || "Failed to send message. Please try again.",
+      });
     });
 
     return () => {

@@ -6,7 +6,7 @@ export interface IFollowersService {
   getFollowers: (
     userId: string,
     currentUserId: string,
-  ) => Promise<(IUserWhoFollow & { isFollowing: boolean })[]>;
+  ) => Promise<(IUserWhoFollow & { isFollowing: boolean; isConnected: boolean })[]>;
   getFollowing: (userId: string) => Promise<IUserWhoFollow[]>;
   getConnections: (userId: string) => Promise<IUserWhoFollow[]>;
   isFollowing: (followerId: string, followedId: string) => Promise<boolean>;

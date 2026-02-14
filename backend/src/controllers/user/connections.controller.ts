@@ -87,6 +87,26 @@ export class ConnectionsController implements IConnectionsController {
     res.status(StatusCodes.OK).json({ success: true });
   });
 
+  rejectConnectionRequest = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
+    const { requesterId } = req.body;
+
+    if (!requesterId) {
+      throw new CustomError("Requester ID is required", StatusCodes.BAD_REQUEST);
+    }
+
+    const result = await this._connectionsService.rejectConnectionRequest(userId, requesterId);
+
+    if (!result) {
+      throw new CustomError("Failed to reject connection request", StatusCodes.BAD_REQUEST);
+    }
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Connection request rejected",
+    });
+  });
+
   hasSentConnectionRequest = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const requesterId = req.user?._id as string;
     const { recipientId } = req.body;
@@ -134,6 +154,26 @@ export class ConnectionsController implements IConnectionsController {
     const result = await this._connectionsService.isConnected(userId1, userId2);
 
     res.status(StatusCodes.OK).json({ result });
+  });
+
+  removeConnection = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user?._id as string;
+    const { connectionId } = req.body;
+
+    if (!connectionId) {
+      throw new CustomError("Connection ID is required", StatusCodes.BAD_REQUEST);
+    }
+
+    const result = await this._connectionsService.removeConnection(userId, connectionId);
+
+    if (!result) {
+      throw new CustomError("Failed to remove connection", StatusCodes.BAD_REQUEST);
+    }
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Connection removed successfully",
+    });
   });
 
   getAllConnections = asyncHandler(async (req: Request, res: Response): Promise<void> => {

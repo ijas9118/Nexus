@@ -2,6 +2,7 @@ import { Button } from "@/components/atoms/button";
 import Mentor from "@/components/icons/Mentor";
 import Premium from "@/components/icons/Premium";
 import { Card } from "@/components/molecules/card";
+import ConfirmDialog from "@/components/molecules/ConfirmDialog";
 import getSocialIcon from "@/utils/getSocialIcons";
 import dayjs from "dayjs";
 import { MapPin } from "lucide-react";
@@ -241,25 +242,58 @@ export default function ProfileHeader({
 
         {!isCurrentUser && (
           <div className="mt-4 flex gap-2">
-            <Button
-              className="w-1/2"
-              variant="outline"
-              onClick={onFollowToggle}
-            >
-              {isFollowing ? "Unfollow" : "Follow"}
-            </Button>
-            <Button
-              className="w-1/2"
-              variant="outline"
-              onClick={onConnectionToggle}
-              disabled={isConnected}
-            >
-              {isConnected
-                ? "Connected"
-                : hasSentRequest
-                  ? "Withdraw"
-                  : "Connect"}
-            </Button>
+            {isFollowing ? (
+              <ConfirmDialog
+                triggerLabel="Unfollow"
+                triggerVariant="outline"
+                triggerSize="default"
+                triggerClassName="w-1/2"
+                title="Unfollow User?"
+                description={`Are you sure you want to unfollow ${profileUser.name}?`}
+                confirmLabel="Unfollow"
+                onConfirm={onFollowToggle}
+              />
+            ) : (
+              <Button
+                className="w-1/2"
+                variant="outline"
+                onClick={onFollowToggle}
+              >
+                Follow
+              </Button>
+            )}
+
+            {isConnected ? (
+              <ConfirmDialog
+                triggerLabel="Remove"
+                triggerVariant="destructive"
+                triggerSize="default"
+                triggerClassName="w-1/2"
+                title="Remove Connection?"
+                description={`Are you sure you want to remove your connection with ${profileUser.name}? You can reconnect anytime.`}
+                confirmLabel="Remove"
+                onConfirm={onConnectionToggle}
+              />
+            ) : hasSentRequest ? (
+              <ConfirmDialog
+                triggerLabel="Withdraw"
+                triggerVariant="outline"
+                triggerSize="default"
+                triggerClassName="w-1/2"
+                title="Withdraw Request?"
+                description={`Are you sure you want to withdraw your connection request to ${profileUser.name}?`}
+                confirmLabel="Withdraw"
+                onConfirm={onConnectionToggle}
+              />
+            ) : (
+              <Button
+                className="w-1/2"
+                variant="outline"
+                onClick={onConnectionToggle}
+              >
+                Connect
+              </Button>
+            )}
           </div>
         )}
       </Card>

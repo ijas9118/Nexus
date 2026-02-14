@@ -10,6 +10,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/molecules/alert-dialog";
 import { Button } from "@/components/atoms/button";
+import { ReactNode } from "react";
 
 type ConfirmDialogProps = {
   triggerLabel: string;
@@ -22,6 +23,9 @@ type ConfirmDialogProps = {
     | "ghost"
     | null
     | undefined;
+  triggerSize?: "default" | "sm" | "lg" | "icon" | null | undefined;
+  triggerIcon?: ReactNode;
+  triggerClassName?: string;
   title?: string;
   description?: string;
   confirmLabel?: string;
@@ -32,6 +36,9 @@ type ConfirmDialogProps = {
 export default function ConfirmDialog({
   triggerLabel,
   triggerVariant = "outline",
+  triggerSize = "sm",
+  triggerIcon,
+  triggerClassName,
   title = "Are you absolutely sure?",
   description = "This action cannot be undone.",
   confirmLabel = "Continue",
@@ -41,7 +48,14 @@ export default function ConfirmDialog({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant={triggerVariant}>{triggerLabel}</Button>
+        <Button
+          variant={triggerVariant}
+          size={triggerSize}
+          className={triggerClassName}
+        >
+          {triggerIcon && <span className="mr-2">{triggerIcon}</span>}
+          {triggerLabel}
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

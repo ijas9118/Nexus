@@ -22,6 +22,12 @@ const FollowService = {
   acceptConnectionRequest: (requesterId: string) =>
     handleApi(() => api.post<any>("/followers/accept", { requesterId })),
 
+  rejectConnectionRequest: (requesterId: string) =>
+    handleApi(() => api.post<any>("/followers/reject", { requesterId })),
+
+  removeConnection: (connectionId: string) =>
+    handleApi(() => api.post<any>("/followers/remove", { connectionId })),
+
   hasSentConnectionRequest: (recipientId: string) =>
     handleApi(() => api.post<any>("/followers/has-requested", { recipientId })),
 
