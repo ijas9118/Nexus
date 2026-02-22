@@ -1,6 +1,5 @@
 import type { Request, Response } from "express";
 
-import dayjs from "dayjs";
 import asyncHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
@@ -64,7 +63,6 @@ export class BookingController implements IBookingController {
     const { bookingId } = req.params;
     const { timeSlotId, bookingDate } = req.body as RescheduleBookingRequestDTO;
 
-    // Validate input
     if (!timeSlotId || !bookingDate) {
       throw new CustomError(
         BOOKING_MESSAGES.RESCHEDULE_FIELDS_REQUIRED,
@@ -72,16 +70,10 @@ export class BookingController implements IBookingController {
       );
     }
 
-    // Validate date format
-    const parsedDate = dayjs(bookingDate);
-    if (!parsedDate.isValid()) {
-      throw new CustomError(BOOKING_MESSAGES.INVALID_DATE_FORMAT, StatusCodes.BAD_REQUEST);
-    }
-
     const updatedBooking = await this._bookingService.rescheduleBooking(
       bookingId as string,
       timeSlotId,
-      parsedDate.toDate(),
+      bookingDate,
     );
     res.status(StatusCodes.OK).json(updatedBooking);
   });
@@ -89,21 +81,8 @@ export class BookingController implements IBookingController {
   getFilteredBookings = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { date, mentorshipTypeId } = req.query;
 
-    // Validate date if provided
-    let parsedDate: Date | undefined;
-    if (date) {
-      const tempDate = dayjs(date as string);
-      if (!tempDate.isValid()) {
-        throw new CustomError(
-          BOOKING_MESSAGES.INVALID_DATE_FORMAT,
-          StatusCodes.BAD_REQUEST,
-        );
-      }
-      parsedDate = tempDate.toDate();
-    }
-
     const bookings = await this._bookingService.getFilteredBookings(
-      parsedDate,
+      date as string,
       mentorshipTypeId as string,
     );
     res.status(StatusCodes.OK).json(bookings);

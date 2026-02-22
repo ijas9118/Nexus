@@ -6,9 +6,9 @@ export interface IBookingService {
   rescheduleBooking: (
     bookingId: string,
     newTimeSlotId: string,
-    newBookingDate: Date,
+    newBookingDate: string | Date,
   ) => Promise<IBooking>;
-  getFilteredBookings: (date?: Date, mentorshipTypeId?: string) => Promise<IBooking[]>;
+  getFilteredBookings: (date?: string | Date, mentorshipTypeId?: string) => Promise<IBooking[]>;
   confirmBooking: (bookingId: string) => Promise<IBooking>;
   getBookingById: (bookingId: string) => Promise<IBooking | null>;
   getBookingByMeetUrl: (meetUrl: string, userId: string) => Promise<IBooking | null>;

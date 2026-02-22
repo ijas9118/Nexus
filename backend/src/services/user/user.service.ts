@@ -11,6 +11,7 @@ import type { IContent } from "@/models/content/content.model";
 import type { ISquad } from "@/models/social/squads.model";
 import type { IUser } from "@/models/user/user.model";
 
+import redisClient from "@/config/redis-client.config";
 import { TYPES } from "@/di/types";
 import { UsersResponseDTO } from "@/dtos/responses/admin/users.dto";
 import { UserModel } from "@/models/user/user.model";
@@ -18,7 +19,7 @@ import { deleteFromCloudinary, uploadToCloudinary } from "@/utils/cloudinary-uti
 import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
 
-const { USER_MESSAGES } = MESSAGES;
+const { USER_MESSAGES, ADMIN_MESSAGES } = MESSAGES;
 
 interface UserUpdateData {
   profilePic?: string;
@@ -39,7 +40,13 @@ export class UserService implements IUserService {
   async getUsers(
     page: number = 1,
     limit: number = 10,
-  ): Promise<{ users: UsersResponseDTO[]; total: number }> {
+  ): Promise<{
+    users: UsersResponseDTO[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
     const skip = (page - 1) * limit;
     const [usersRaw, total] = await Promise.all([
       this.userRepository.getAllUsers(skip, limit),
@@ -48,7 +55,13 @@ export class UserService implements IUserService {
 
     const users = UsersResponseDTO.fromEntities(usersRaw);
 
-    return { users, total };
+    return {
+      users,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async getUserById(userId: string): Promise<IUser | null> {
@@ -132,19 +145,37 @@ export class UserService implements IUserService {
     return this.userRepository.getUserByUsername(username);
   }
 
-  getUserContents = async (username: string): Promise<IContent[] | null> => {
+  getUserContents = async (username: string): Promise<IContent[]> => {
     const userId = await this.userRepository.getUserIdByUsername(username);
     if (!userId) {
       throw new CustomError(USER_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    const contents = await this.contentRepo.getUserContents(userId);
-
-    return contents;
+    return this.contentRepo.getUserContents(userId);
   };
 
   validateUsername = async (username: string): Promise<boolean> => {
     const user = await this.userRepository.findOne({ username });
     return !user;
   };
+
+  async blockUser(userId: string): Promise<boolean> {
+    const updatedUser = await this.userRepository.updateUser(userId, { isBlocked: true });
+    if (!updatedUser) {
+      throw new CustomError(ADMIN_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
+
+    await redisClient.set(`blocked_user:${userId}`, 1, "EX", 7 * 24 * 60 * 60);
+    return true;
+  }
+
+  async unblockUser(userId: string): Promise<boolean> {
+    const updatedUser = await this.userRepository.updateUser(userId, { isBlocked: false });
+    if (!updatedUser) {
+      throw new CustomError(ADMIN_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
+
+    await redisClient.del(`blocked_user:${userId}`);
+    return true;
+  }
 }

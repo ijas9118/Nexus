@@ -6,6 +6,7 @@ import type { IContentRepository } from "@/core/interfaces/repositories/i-conten
 import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repository";
 import type { IContentService } from "@/core/interfaces/services/i-content-service";
 import type { IContentViewService } from "@/core/interfaces/services/i-content-view-service";
+import type { IHistoryService } from "@/core/interfaces/services/i-history-service";
 import type { UserRole } from "@/core/types/user-types";
 import type { IContent } from "@/models/content/content.model";
 
@@ -18,17 +19,18 @@ export class ContentService implements IContentService {
     @inject(TYPES.ContentRepository) private contentRepository: IContentRepository,
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
     @inject(TYPES.ContentViewService) private viewService: IContentViewService,
+    @inject(TYPES.HistoryService) private historyService: IHistoryService,
   ) {}
 
   async createContent(
-    contentData: Partial<IContent>,
+    contentData: any,
     thumbnailFile?: Express.Multer.File,
     videoFile?: Express.Multer.File,
+    user?: { _id: string; name: string },
   ): Promise<IContent> {
     let thumbnailUrl: string | undefined;
     let videoUrl: string | undefined;
 
-    // Upload thumbnail to Cloudinary if provided
     if (thumbnailFile) {
       const result = await uploadToCloudinary(thumbnailFile, {
         baseFolder: "images",
@@ -38,7 +40,6 @@ export class ContentService implements IContentService {
       thumbnailUrl = result.url;
     }
 
-    // Upload video to Cloudinary if provided
     if (videoFile) {
       const result = await uploadToCloudinary(videoFile, {
         baseFolder: "videos",
@@ -48,17 +49,21 @@ export class ContentService implements IContentService {
       videoUrl = result.url;
     }
 
-    // Update contentData with Cloudinary URLs
-    const updatedContentData = {
+    const reshapedContentData = {
       ...contentData,
+      author: user?._id || contentData.author,
+      userName: user?.name || contentData.userName,
+      date: new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }),
       thumbnailUrl,
       videoUrl,
     };
 
-    // Save content to the database
-    const createdContent = await this.contentRepository.create(updatedContentData);
+    const createdContent = await this.contentRepository.create(reshapedContentData);
 
-    // Increment author's post count
     if (createdContent.author) {
       await this.userRepository.addPostCount(createdContent.author.toString());
     }
@@ -71,13 +76,21 @@ export class ContentService implements IContentService {
 
     if (content && userId) {
       await this.viewService.handleContentView(userId, id);
+
+      if (role === "user") {
+        await this.historyService.addHistory(userId, id);
+      }
     }
 
     return content;
   }
 
-  async getAllContent(userId: string, page: number, limit: number): Promise<IContent[]> {
-    return this.contentRepository.getFeedContents(userId, page, limit);
+  async getAllContent(userId: string, page: number, limit: number): Promise<{ contents: IContent[]; nextPage: number | null }> {
+    const contents = await this.contentRepository.getFeedContents(userId, page, limit);
+    const totalContents = await this.getContentCount();
+    const nextPage = page * limit < totalContents ? page + 1 : null;
+
+    return { contents, nextPage };
   }
 
   async getContentCount(): Promise<number> {
@@ -94,5 +107,9 @@ export class ContentService implements IContentService {
 
   async getFollowingUsersContents(userId: string): Promise<IContent[]> {
     return this.contentRepository.getFollowingUsersContents(userId);
+  }
+
+  async getUserContents(userId: string): Promise<IContent[]> {
+    return this.contentRepository.getUserContents(userId);
   }
 }

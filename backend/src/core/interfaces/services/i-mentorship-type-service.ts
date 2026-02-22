@@ -1,13 +1,15 @@
-import type { IMentorshipType } from "@/models/mentor/mentorship-type.model";
+import type { MentorshipTypeResponseDto } from "@/dtos/responses/mentorship-type.dto";
 
 export interface IMentorshipTypeService {
   createMentorshipType: (data: {
     name: string;
     description: string;
     defaultPrice?: number;
-  }) => Promise<IMentorshipType>;
-  getMentorshipType: (id: string) => Promise<IMentorshipType>;
-  getAllMentorshipTypes: (options?: { includeInactive?: boolean }) => Promise<IMentorshipType[]>;
+  }) => Promise<MentorshipTypeResponseDto>;
+  getMentorshipType: (id: string) => Promise<MentorshipTypeResponseDto>;
+  getAllMentorshipTypes: (options?: {
+    includeInactive?: boolean;
+  }) => Promise<MentorshipTypeResponseDto[]>;
   updateMentorshipType: (
     id: string,
     data: Partial<{
@@ -15,7 +17,7 @@ export interface IMentorshipTypeService {
       description: string;
       defaultPrice: number;
     }>,
-  ) => Promise<IMentorshipType>;
+  ) => Promise<MentorshipTypeResponseDto>;
   deleteMentorshipType: (id: string) => Promise<void>;
   restoreMentorshipType: (id: string) => Promise<void>;
 }

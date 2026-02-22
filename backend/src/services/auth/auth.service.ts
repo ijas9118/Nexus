@@ -5,6 +5,7 @@ import { inject, injectable } from "inversify";
 import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repository";
 import type { IAuthService } from "@/core/interfaces/services/i-auth-service";
 import type { IMentorService } from "@/core/interfaces/services/i-mentor-service";
+import type { UserRole } from "@/core/types/user-types";
 import type { LoginRequestDTO, RegisterRequestDTO } from "@/dtos/requests/auth.dto";
 import type { IUser } from "@/models/user/user.model";
 
@@ -13,6 +14,7 @@ import { TYPES } from "@/di/types";
 import { LoginResponseDTO, RegisterResponseDTO } from "@/dtos/responses/auth.dto";
 import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+import { generateAccessToken, verifyRefreshToken } from "@/utils/jwt.util";
 import { UsernameGenerator } from "@/utils/username-generator.util";
 
 const { AUTH_MESSAGES, ADMIN_MESSAGES } = MESSAGES;
@@ -31,7 +33,7 @@ export class AuthService implements IAuthService {
   }
 
   // Register a new user with the given details
-  async register(registerDto: RegisterRequestDTO): Promise<RegisterResponseDTO> {
+  async register(registerDto: RegisterRequestDTO): Promise<{ user: RegisterResponseDTO; accessToken: string }> {
     const { name, email, password } = registerDto;
     const hashedPassword = await hash(password, 10);
     const username = await UsernameGenerator.generateUsername(
@@ -47,14 +49,15 @@ export class AuthService implements IAuthService {
     });
 
     const userData = RegisterResponseDTO.fromEntity(user);
+    const accessToken = generateAccessToken({ ...user });
 
     await redisClient.del(`otp:${email}`);
 
-    return userData;
+    return { user: userData, accessToken };
   }
 
   // Login a user with the given email and password
-  async login(data: LoginRequestDTO): Promise<LoginResponseDTO> {
+  async login(data: LoginRequestDTO): Promise<{ user: LoginResponseDTO; accessToken: string }> {
     const { email, password } = data;
     const user = await this.userRepository.findByEmail(email);
 
@@ -67,6 +70,11 @@ export class AuthService implements IAuthService {
       throw new CustomError(AUTH_MESSAGES.INVALID_PASSWORD, StatusCodes.BAD_REQUEST);
     }
 
+    const isBlocked = await this.isUserBlocked(user._id.toString());
+    if (isBlocked) {
+      throw new CustomError(AUTH_MESSAGES.USER_BLOCKED, StatusCodes.FORBIDDEN);
+    }
+
     let userObj = user.toObject();
 
     if (user.role === "mentor") {
@@ -77,9 +85,17 @@ export class AuthService implements IAuthService {
       }
     }
 
+    const accessToken = generateAccessToken({
+      _id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      mentorId: userObj.mentorId,
+      role: user.role as UserRole,
+    });
+
     userObj = LoginResponseDTO.fromEntity(userObj);
 
-    return userObj;
+    return { user: userObj, accessToken };
   }
 
   // Update the password of the user with the given email
@@ -186,5 +202,54 @@ export class AuthService implements IAuthService {
     }
 
     return user;
+  }
+
+  async refreshToken(token: string): Promise<{ accessToken: string; user: any }> {
+    const decodedToken = verifyRefreshToken(token);
+    if (!decodedToken) {
+      throw new CustomError(AUTH_MESSAGES.REFRESH_TOKEN_INVALID, StatusCodes.FORBIDDEN);
+    }
+
+    const isBlocked = await redisClient.get(`blocked_user:${decodedToken.user._id}`);
+    if (isBlocked) {
+      throw new CustomError(AUTH_MESSAGES.USER_BLOCKED, StatusCodes.FORBIDDEN);
+    }
+
+    const { _id, name, email, role } = decodedToken.user;
+
+    if (role === "admin") {
+      const accessToken = generateAccessToken({ _id, name, email, role });
+      return { accessToken, user: decodedToken.user };
+    }
+
+    const user = await this.getUserByRoleAndId(role, _id);
+
+    if (!user) {
+      throw new CustomError(AUTH_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
+
+    const payload: any = {
+      _id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      role,
+    };
+
+    let fullUser = user.toObject ? user.toObject() : user;
+
+    if (role === "mentor") {
+      const mentor = await this.mentorService.getMentorByUserId(user._id.toString());
+      if (!mentor) {
+        throw new CustomError(AUTH_MESSAGES.MENTOR_NOT_FOUND, StatusCodes.NOT_FOUND);
+      }
+
+      const mentorWithId = mentor as { _id: string };
+      payload.mentorId = mentor._id;
+      fullUser = { ...fullUser, mentorId: mentorWithId._id.toString() };
+    }
+
+    const accessToken = generateAccessToken(payload);
+
+    return { accessToken, user: fullUser };
   }
 }

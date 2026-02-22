@@ -9,20 +9,16 @@ import { inject, injectable } from "inversify";
 import type { IAuthController } from "@/core/interfaces/controllers/i-auth-controller";
 import type { IAuthService } from "@/core/interfaces/services/i-auth-service";
 import type { IEmailService } from "@/core/interfaces/services/i-email-service";
-import type { IMentorService } from "@/core/interfaces/services/i-mentor-service";
 import type { IOTPService } from "@/core/interfaces/services/i-otp-service";
 import type { ITokenService } from "@/core/interfaces/services/i-token-service";
 import type { UserRole } from "@/core/types/user-types";
 import type { LoginRequestDTO, RegisterRequestDTO } from "@/dtos/requests/auth.dto";
 
-import logger from "@/config/logger";
-import redisClient from "@/config/redis-client.config";
 import { TYPES } from "@/di/types";
 import { MESSAGES } from "@/utils/constants/message";
 import { clearRefreshTokenCookie, setRefreshTokenCookie } from "@/utils/cookie-utils";
 import CustomError from "@/utils/custom-error";
 import { env } from "@/utils/env-validation";
-import { generateAccessToken, verifyRefreshToken } from "@/utils/jwt.util";
 
 const { AUTH_MESSAGES, ADMIN_MESSAGES } = MESSAGES;
 
@@ -33,7 +29,6 @@ export class AuthController implements IAuthController {
     @inject(TYPES.OTPService) private _otpService: IOTPService,
     @inject(TYPES.EmailService) private _emailService: IEmailService,
     @inject(TYPES.TokenService) private _tokenService: ITokenService,
-    @inject(TYPES.MentorService) private _mentorService: IMentorService,
   ) {}
 
   // Register a new user and send OTP to email
@@ -58,11 +53,9 @@ export class AuthController implements IAuthController {
 
     const userData = await this._otpService.verifyAndRetrieveUser(email, otp);
 
-    const user = await this._authService.register(userData);
+    const { user, accessToken } = await this._authService.register(userData);
 
     setRefreshTokenCookie(res, { _id: user._id, role: "user" });
-
-    const accessToken = generateAccessToken({ ...user });
 
     res.status(StatusCodes.CREATED).json({ user, accessToken });
   });
@@ -78,25 +71,9 @@ export class AuthController implements IAuthController {
 
   // Login user and set refresh token cookie
   login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const user = await this._authService.login(req.body as LoginRequestDTO);
-
-    logger.error("Errorr loggin in");
-
-    const isBlocked = await this._authService.isUserBlocked(user._id);
-
-    if (isBlocked) {
-      throw new CustomError(AUTH_MESSAGES.USER_BLOCKED, StatusCodes.FORBIDDEN);
-    }
+    const { user, accessToken } = await this._authService.login(req.body as LoginRequestDTO);
 
     setRefreshTokenCookie(res, { _id: user._id.toString(), role: user.role as UserRole });
-
-    const accessToken = generateAccessToken({
-      _id: user._id.toString(),
-      name: user.name,
-      email: user.email,
-      mentorId: user.mentorId,
-      role: user.role as UserRole,
-    });
 
     res.status(StatusCodes.OK).json({ message: ADMIN_MESSAGES.LOGIN_SUCCESS, accessToken, user });
   });
@@ -138,56 +115,16 @@ export class AuthController implements IAuthController {
       throw new CustomError(AUTH_MESSAGES.REFRESH_TOKEN_MISSING, StatusCodes.UNAUTHORIZED);
     }
 
-    const decodedToken = verifyRefreshToken(refreshToken);
-    if (!decodedToken) {
-      clearRefreshTokenCookie(res);
-      throw new CustomError(AUTH_MESSAGES.REFRESH_TOKEN_INVALID, StatusCodes.FORBIDDEN);
+    try {
+      const { accessToken, user } = await this._authService.refreshToken(refreshToken);
+      res.status(StatusCodes.OK).json({ accessToken, user });
     }
-    const isBlocked = await redisClient.get(`blocked_user:${decodedToken.user._id}`);
-    if (isBlocked) {
-      throw new CustomError(AUTH_MESSAGES.USER_BLOCKED, StatusCodes.FORBIDDEN);
-    }
-
-    const { _id, name, email, role } = decodedToken.user;
-
-    if (role === "admin") {
-      const accessToken = generateAccessToken({ _id, name, email, role });
-      res.status(StatusCodes.OK).json({ accessToken, user: decodedToken.user });
-      return;
-    }
-
-    const user = await this._authService.getUserByRoleAndId(role, _id);
-
-    if (!user) {
-      clearRefreshTokenCookie(res);
-      throw new CustomError(AUTH_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
-    }
-
-    const payload: any = {
-      _id: user._id.toString(),
-      name: user.name,
-      email: user.email,
-      role,
-    };
-
-    let fullUser = user.toObject ? user.toObject() : user;
-
-    // 🧙 If mentor, include mentorId
-    if (role === "mentor") {
-      const mentor = await this._mentorService.getMentorByUserId(user._id.toString());
-      if (!mentor) {
+    catch (error) {
+      if (error instanceof CustomError && error.message === AUTH_MESSAGES.REFRESH_TOKEN_INVALID) {
         clearRefreshTokenCookie(res);
-        throw new CustomError(AUTH_MESSAGES.MENTOR_NOT_FOUND, StatusCodes.NOT_FOUND);
       }
-
-      const mentorWithId = mentor as { _id: string };
-      payload.mentorId = mentor._id;
-      fullUser = { ...fullUser, mentorId: mentorWithId._id.toString() };
+      throw error;
     }
-
-    const accessToken = generateAccessToken(payload);
-
-    res.status(StatusCodes.OK).json({ accessToken, user: fullUser });
   });
 
   handleGoogleUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {

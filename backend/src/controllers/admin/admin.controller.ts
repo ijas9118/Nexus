@@ -7,7 +7,6 @@ import { inject, injectable } from "inversify";
 import type { IAdminController } from "@/core/interfaces/controllers/admin/i-admin-controller";
 import type { IUserService } from "@/core/interfaces/services/i-user-service";
 
-import redisClient from "@/config/redis-client.config";
 import { TYPES } from "@/di/types";
 import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
@@ -22,13 +21,13 @@ export class AdminController implements IAdminController {
     const page = Number.parseInt(req.query.page as string) || 1;
     const limit = Number.parseInt(req.query.limit as string) || 10;
 
-    const { users, total } = await this.userService.getUsers(page, limit);
+    const result = await this.userService.getUsers(page, limit);
     res.status(StatusCodes.OK).json({
-      data: users,
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
+      data: result.users,
+      total: result.total,
+      page: result.page,
+      limit: result.limit,
+      totalPages: result.totalPages,
     });
   });
 
@@ -51,23 +50,13 @@ export class AdminController implements IAdminController {
 
   blockUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.params.id as string;
-    const updatedUser = await this.userService.updateUser(userId, { isBlocked: true });
-    if (!updatedUser) {
-      throw new CustomError(ADMIN_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
-    }
-
-    await redisClient.set(`blocked_user:${userId}`, 1, "EX", 7 * 24 * 60 * 60);
-
+    await this.userService.blockUser(userId);
     res.status(StatusCodes.OK).json({ message: ADMIN_MESSAGES.USER_BLOCKED });
   });
 
   unblockUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.params.id as string;
-    const updatedUser = await this.userService.updateUser(userId, { isBlocked: false });
-    if (!updatedUser) {
-      throw new CustomError(ADMIN_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
-    }
-    await redisClient.del(`blocked_user:${userId}`);
+    await this.userService.unblockUser(userId);
     res.status(StatusCodes.OK).json({ message: ADMIN_MESSAGES.USER_UNBLOCKED });
   });
 }

@@ -737,7 +737,7 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
     return contents;
   }
 
-  getUserContents = async (userId: string): Promise<IContent[] | null> => {
+  getUserContents = async (userId: string): Promise<IContent[]> => {
     return this.model
       .find({ author: userId })
       .populate("author", "name profilePic username")

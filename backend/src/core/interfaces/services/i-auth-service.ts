@@ -4,8 +4,8 @@ import type { IUser } from "@/models/user/user.model";
 
 export interface IAuthService {
   findUserByEmail: (email: string) => Promise<boolean>;
-  register: (registerDto: RegisterRequestDTO) => Promise<RegisterResponseDTO>;
-  login: (loginDto: LoginRequestDTO) => Promise<LoginResponseDTO>;
+  register: (registerDto: RegisterRequestDTO) => Promise<{ user: RegisterResponseDTO; accessToken: string }>;
+  login: (loginDto: LoginRequestDTO) => Promise<{ user: LoginResponseDTO; accessToken: string }>;
   updatePassword: (email: string, newPassword: string) => Promise<void>;
   isUserBlocked: (userId: string) => Promise<boolean>;
   getUserByRoleAndId: (role: string, id: string) => Promise<IUser | null>;
@@ -21,4 +21,5 @@ export interface IAuthService {
     name: string;
     profile: string;
   }) => Promise<IUser>;
+  refreshToken: (token: string) => Promise<{ accessToken: string; user: any }>;
 }

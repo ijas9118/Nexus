@@ -24,6 +24,7 @@ export const connectionRequestLimiter = rateLimit({
     const userId = (req as any).user?.userId || (req as any).user?.id || req.ip;
     return userId?.toString() || req.ip || "anonymous";
   },
+  validate: false,
   // Skip rate limiting for admin users
   skip: (req: Request) => {
     const userRole = (req as any).user?.role;
@@ -64,6 +65,7 @@ export function createCustomRateLimiter(
       const userId = (req as any).user?.userId || (req as any).user?.id || req.ip;
       return userId?.toString() || req.ip || "anonymous";
     },
+    validate: false,
     skip: (req: Request) => {
       const userRole = (req as any).user?.role;
       return userRole === "admin";

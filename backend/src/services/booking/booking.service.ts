@@ -46,14 +46,22 @@ export class BookingService implements IBookingService {
     return this.bookingRepository.getCompletedBookings();
   }
 
-  async getFilteredBookings(date?: Date, mentorshipTypeId?: string): Promise<IBooking[]> {
-    return this.bookingRepository.getFilteredBookings(date, mentorshipTypeId);
+  async getFilteredBookings(date?: string | Date, mentorshipTypeId?: string): Promise<IBooking[]> {
+    let parsedDate: Date | undefined;
+    if (date) {
+      const tempDate = dayjs(date);
+      if (!tempDate.isValid()) {
+        throw new CustomError(BOOKING_MESSAGES.INVALID_DATE_FORMAT, StatusCodes.BAD_REQUEST);
+      }
+      parsedDate = tempDate.toDate();
+    }
+    return this.bookingRepository.getFilteredBookings(parsedDate, mentorshipTypeId);
   }
 
   async rescheduleBooking(
     bookingId: string,
     newTimeSlotId: string,
-    newBookingDate: Date,
+    newBookingDate: string | Date,
   ): Promise<IBooking> {
     const booking = await this.bookingRepository.findById(bookingId);
     if (!booking) {
@@ -74,6 +82,10 @@ export class BookingService implements IBookingService {
     }
 
     const bookingDate = dayjs(newBookingDate);
+    if (!bookingDate.isValid()) {
+      throw new CustomError(BOOKING_MESSAGES.INVALID_DATE_FORMAT, StatusCodes.BAD_REQUEST);
+    }
+
     if (bookingDate.isBefore(dayjs().startOf("day"))) {
       throw new CustomError(BOOKING_MESSAGES.PAST_DATE_RESCHEDULE, StatusCodes.BAD_REQUEST);
     }
@@ -86,7 +98,7 @@ export class BookingService implements IBookingService {
 
     const updatedBooking = await this.bookingRepository.update(bookingId, {
       timeSlot: newTimeSlotId,
-      bookingDate: newBookingDate,
+      bookingDate: bookingDate.toDate(),
       status: "pending",
     });
 

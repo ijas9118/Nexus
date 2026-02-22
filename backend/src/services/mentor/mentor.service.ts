@@ -10,6 +10,13 @@ import type { IMentor } from "@/models/mentor/mentor.model";
 import type { IMentorshipType } from "@/models/mentor/mentorship-type.model";
 import type { IUser } from "@/models/user/user.model";
 
+import {
+  ExperienceLevel,
+  ExpertiseArea,
+  MentorshipType,
+  TargetAudience,
+  Technology,
+} from "@/core/types/entities/mentor";
 import { TYPES } from "@/di/types";
 import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
@@ -31,12 +38,25 @@ export class MentorService implements IMentorService {
       mentorshipDetails: IMentor["mentorshipDetails"];
     },
   ): Promise<IMentor> => {
+    const { personalInfo, experience, mentorshipDetails } = data;
+
+    // Basic validation
+    if (!personalInfo || !experience || !mentorshipDetails) {
+      throw new CustomError(MENTOR_MESSAGES.MISSING_FIELDS, StatusCodes.BAD_REQUEST);
+    }
+
+    if (
+      !personalInfo.firstName
+      || !personalInfo.lastName
+      || !personalInfo.email
+    ) {
+      throw new CustomError(MENTOR_MESSAGES.MISSING_PERSONAL_INFO, StatusCodes.BAD_REQUEST);
+    }
+
     const existingMentor = await this.mentorRepository.findMentorByUserId(userId);
     if (existingMentor) {
       throw new CustomError(MENTOR_MESSAGES.ALREADY_APPLIED, StatusCodes.CONFLICT);
     }
-
-    const { personalInfo, experience, mentorshipDetails } = data;
 
     // Map personalInfo to IUser fields
     const userUpdate: Partial<IUser> = {
@@ -199,5 +219,15 @@ export class MentorService implements IMentorService {
     }
 
     return updatedMentor;
+  };
+
+  getMentorEnums = () => {
+    return {
+      experienceLevels: Object.values(ExperienceLevel),
+      expertiseAreas: Object.values(ExpertiseArea),
+      mentorshipTypes: Object.values(MentorshipType),
+      targetAudiences: Object.values(TargetAudience),
+      technologies: Object.values(Technology),
+    };
   };
 }

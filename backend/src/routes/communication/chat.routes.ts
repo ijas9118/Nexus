@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 
 import { Router } from "express";
+import { StatusCodes } from "http-status-codes";
 
 import type { IChatService } from "@/core/interfaces/services/i-chat-service";
 import type { IGroupService } from "@/core/interfaces/services/i-group-service";
@@ -9,7 +10,6 @@ import type { IMessageService } from "@/core/interfaces/services/i-message-servi
 import { container } from "@/di/container";
 import { TYPES } from "@/di/types";
 import { authenticate } from "@/middlewares/auth.middleware";
-import { StatusCodes } from "http-status-codes";
 
 const router = Router();
 
