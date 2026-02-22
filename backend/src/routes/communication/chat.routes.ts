@@ -9,6 +9,7 @@ import type { IMessageService } from "@/core/interfaces/services/i-message-servi
 import { container } from "@/di/container";
 import { TYPES } from "@/di/types";
 import { authenticate } from "@/middlewares/auth.middleware";
+import { StatusCodes } from "http-status-codes";
 
 const router = Router();
 
@@ -26,7 +27,7 @@ router.get(
       res.json(chats);
     }
     catch (error) {
-      res.status(500).json({ error: (error as Error).message });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: (error as Error).message });
     }
   },
 );
@@ -41,7 +42,7 @@ router.get(
       res.json(groups);
     }
     catch (error) {
-      res.status(500).json({ error: (error as Error).message });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: (error as Error).message });
     }
   },
 );
@@ -61,7 +62,7 @@ router.get(
       res.json(messages);
     }
     catch (error) {
-      res.status(500).json({ error: (error as Error).message });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: (error as Error).message });
     }
   },
 );
