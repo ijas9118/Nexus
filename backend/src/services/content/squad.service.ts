@@ -54,9 +54,10 @@ export class SquadService implements ISquadService {
       logoUrl = result.url;
     }
 
-    // Update squadData with the logo URL
+    // Update squadData with the logo URL and set category to ObjectId
     const updatedSquadData = {
       ...squadData,
+      category: categoryObj._id,
       logo: logoUrl,
     };
 
