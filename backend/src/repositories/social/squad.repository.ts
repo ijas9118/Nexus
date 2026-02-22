@@ -13,7 +13,7 @@ import { SquadModel } from "@/models/social/squads.model";
 
 @injectable()
 export class SquadRepository extends BaseRepository<ISquad> implements ISquadRepository {
-  constructor(@inject(TYPES.UserRepository) private userRepository: IUserRepository) {
+  constructor(@inject(TYPES.UserRepository) private _userRepository: IUserRepository) {
     super(SquadModel);
   }
 
@@ -42,7 +42,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
         }
       : { $match: {} }; // No search filter if search is empty
 
-    return await this.model.aggregate([
+    return await this._model.aggregate([
       searchFilter, // Apply search filter first
       {
         $lookup: {
@@ -94,7 +94,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
   getJoinedSquads = async (userId: string): Promise<(ISquad & { isAdmin: boolean })[]> => {
     const userObjectId = new mongoose.Types.ObjectId(userId);
 
-    const joinedSquads = await this.model.aggregate([
+    const joinedSquads = await this._model.aggregate([
       {
         $match: {
           members: userObjectId,
@@ -183,7 +183,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
     categoryId: string,
     userId: string,
   ): Promise<SquadWithIsJoined[]> => {
-    return await this.model.aggregate([
+    return await this._model.aggregate([
       {
         $match: {
           category: new mongoose.Types.ObjectId(categoryId),
@@ -247,11 +247,11 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
     const squadObjId = new mongoose.Types.ObjectId(squadId);
     const userObjectId = new mongoose.Types.ObjectId(userId);
 
-    await this.model.findByIdAndUpdate(squadObjId, {
+    await this._model.findByIdAndUpdate(squadObjId, {
       $addToSet: { members: userId },
       $inc: { membersCount: 1 },
     });
-    await this.userRepository.findByIdAndUpdate(userObjectId, {
+    await this._userRepository.findByIdAndUpdate(userObjectId, {
       $addToSet: { joinedSquads: squadId },
     });
   };
@@ -259,7 +259,7 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
   search = async (criteria: SearchCriteria): Promise<SearchResultItem[]> => {
     const { query, limit } = criteria;
 
-    const squads = await this.model
+    const squads = await this._model
       .find({
         name: { $regex: query, $options: "i" },
       })
@@ -280,21 +280,21 @@ export class SquadRepository extends BaseRepository<ISquad> implements ISquadRep
     const squadObjId = new mongoose.Types.ObjectId(squadId);
     const userObjectId = new mongoose.Types.ObjectId(userId);
 
-    await this.model.findByIdAndUpdate(squadObjId, {
+    await this._model.findByIdAndUpdate(squadObjId, {
       $pull: { members: userObjectId },
       $inc: { membersCount: -1 }, // Decrement membersCount
     });
-    await this.userRepository.findByIdAndUpdate(userObjectId, {
+    await this._userRepository.findByIdAndUpdate(userObjectId, {
       $pull: { joinedSquads: squadObjId },
     });
   };
 
   async countSquads(): Promise<number> {
-    return this.model.countDocuments({});
+    return this._model.countDocuments({});
   }
 
   async countSquadsBefore(date: Date): Promise<number> {
-    return this.model.countDocuments({
+    return this._model.countDocuments({
       createdAt: { $lt: date },
     });
   }

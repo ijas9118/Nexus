@@ -15,12 +15,12 @@ import { TYPES } from "@/di/types";
 @injectable()
 export class MentorDashboardService implements IMentorDashboardService {
   constructor(
-    @inject(TYPES.MentorDashboardRepository) private repository: IMentorDashboardRepository,
-    @inject(TYPES.BookingRepository) private bookingRepo: IBookingRepository,
+    @inject(TYPES.MentorDashboardRepository) private _repository: IMentorDashboardRepository,
+    @inject(TYPES.BookingRepository) private _bookingRepo: IBookingRepository,
   ) {}
 
   async getEarnings(userId: string): Promise<EarningsResponse> {
-    const { thisMonth, lastMonth } = await this.repository.getEarnings(userId);
+    const { thisMonth, lastMonth } = await this._repository.getEarnings(userId);
 
     let percentageChange = 0;
     let changeDirection: "increase" | "decrease" | "noChange" = "noChange";
@@ -43,7 +43,7 @@ export class MentorDashboardService implements IMentorDashboardService {
   }
 
   async getPendingWithdrawalWithBalance(userId: string): Promise<PendingWithdrawalsResponse> {
-    const withdrawals = await this.repository.getPendingWithdrawalWithBalance(userId);
+    const withdrawals = await this._repository.getPendingWithdrawalWithBalance(userId);
     return {
       pendingWithdrawal: withdrawals.pendingWithdrawal,
       balance: withdrawals.balance,
@@ -51,10 +51,10 @@ export class MentorDashboardService implements IMentorDashboardService {
   }
 
   async getSessionStats(userId: string): Promise<SessionStatsResponse> {
-    return this.repository.getSessionStats(userId);
+    return this._repository.getSessionStats(userId);
   }
 
   async getRecentBookings(userId: string): Promise<RecentBooking[]> {
-    return this.bookingRepo.getRecentBookings(userId);
+    return this._bookingRepo.getRecentBookings(userId);
   }
 }

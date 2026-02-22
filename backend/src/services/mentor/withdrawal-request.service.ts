@@ -12,8 +12,8 @@ import { TYPES } from "@/di/types";
 export class WithdrawalRequestService implements IWithdrawalRequestService {
   constructor(
     @inject(TYPES.WithdrawalRequestRepository)
-    private withdrawalRequestRepository: IWithdrawalRequestRepository,
-    @inject(TYPES.WalletService) private walletService: IWalletService,
+    private _withdrawalRequestRepository: IWithdrawalRequestRepository,
+    @inject(TYPES.WalletService) private _walletService: IWalletService,
   ) {}
 
   async requestWithdrawal(
@@ -22,25 +22,25 @@ export class WithdrawalRequestService implements IWithdrawalRequestService {
     withdrawalNote: string,
     nexusPoints?: number,
   ): Promise<void> {
-    return this.walletService.requestWithdrawal(userId, amount, withdrawalNote, nexusPoints);
+    return this._walletService.requestWithdrawal(userId, amount, withdrawalNote, nexusPoints);
   }
 
   async getPendingRequests(): Promise<IWithdrawalRequest[]> {
-    return this.withdrawalRequestRepository.getPendingRequests();
+    return this._withdrawalRequestRepository.getPendingRequests();
   }
 
   async getRequestsByUserId(
     userId: string,
     status?: "pending" | "approved" | "rejected",
   ): Promise<IWithdrawalRequest[]> {
-    return this.withdrawalRequestRepository.getRequestsByUserId(userId, status);
+    return this._withdrawalRequestRepository.getRequestsByUserId(userId, status);
   }
 
   async approveWithdrawal(requestId: string): Promise<WalletInfo> {
-    return this.walletService.approveWithdrawal(requestId);
+    return this._walletService.approveWithdrawal(requestId);
   }
 
   async rejectWithdrawal(requestId: string): Promise<void> {
-    return this.walletService.rejectWithdrawal(requestId);
+    return this._walletService.rejectWithdrawal(requestId);
   }
 }

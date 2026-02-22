@@ -16,10 +16,10 @@ const { SQUAD_MESSAGES } = MESSAGES;
 
 @injectable()
 export class SquadController implements ISquadController {
-  constructor(@inject(TYPES.SquadService) private squadService: ISquadService) {}
+  constructor(@inject(TYPES.SquadService) private _squadService: ISquadService) {}
 
   createSquad = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const existingSquad = await this.squadService.getSquadByName(req.body.name);
+    const existingSquad = await this._squadService.getSquadByName(req.body.name);
     if (existingSquad) {
       throw new CustomError(SQUAD_MESSAGES.EXISTS, StatusCodes.BAD_REQUEST);
     }
@@ -30,7 +30,7 @@ export class SquadController implements ISquadController {
       logo: undefined,
     };
 
-    const squad = await this.squadService.createSquad(squadData, logoFile);
+    const squad = await this._squadService.createSquad(squadData, logoFile);
     res.status(StatusCodes.CREATED).json(squad);
   });
 
@@ -46,7 +46,7 @@ export class SquadController implements ISquadController {
       throw new CustomError(SQUAD_MESSAGES.INVALID_PAGE, StatusCodes.BAD_REQUEST);
     }
 
-    const squads = await this.squadService.getAllSquads({
+    const squads = await this._squadService.getAllSquads({
       limit: limitNum,
       page: pageNum,
       search: search as string,
@@ -64,7 +64,7 @@ export class SquadController implements ISquadController {
 
   toggleSquad = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-    const toggleSquad = await this.squadService.toggleSquad(id as string);
+    const toggleSquad = await this._squadService.toggleSquad(id as string);
     if (toggleSquad) {
       res.status(StatusCodes.OK).json(toggleSquad);
     }
@@ -83,7 +83,7 @@ export class SquadController implements ISquadController {
       throw new CustomError(SQUAD_MESSAGES.CATEGORY_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    const squads = await this.squadService.getSquadsByCategory(userId, category);
+    const squads = await this._squadService.getSquadsByCategory(userId, category);
     res.status(StatusCodes.OK).json(squads);
   });
 
@@ -95,7 +95,7 @@ export class SquadController implements ISquadController {
       throw new CustomError(SQUAD_MESSAGES.USER_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    await this.squadService.joinSquad(userId, squadId as string);
+    await this._squadService.joinSquad(userId, squadId as string);
     res.status(StatusCodes.OK).json({ message: SQUAD_MESSAGES.JOIN_SUCCESS });
   });
 
@@ -107,7 +107,7 @@ export class SquadController implements ISquadController {
       throw new CustomError(SQUAD_MESSAGES.USER_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    await this.squadService.leaveSquad(userId, squadId as string);
+    await this._squadService.leaveSquad(userId, squadId as string);
     res.status(StatusCodes.OK).json({ message: SQUAD_MESSAGES.LEAVE_SUCCESS });
   });
 
@@ -118,7 +118,7 @@ export class SquadController implements ISquadController {
       throw new CustomError(SQUAD_MESSAGES.USER_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    const squads = await this.squadService.getJoinedSquads(userId);
+    const squads = await this._squadService.getJoinedSquads(userId);
     res.status(StatusCodes.OK).json(squads);
   });
 
@@ -130,7 +130,7 @@ export class SquadController implements ISquadController {
       throw new CustomError(SQUAD_MESSAGES.HANDLE_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    const squad = await this.squadService.getSquadDetailsByHandle(handle as string, userId);
+    const squad = await this._squadService.getSquadDetailsByHandle(handle as string, userId);
 
     if (!squad) {
       throw new CustomError(SQUAD_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
@@ -148,7 +148,7 @@ export class SquadController implements ISquadController {
       throw new CustomError(SQUAD_MESSAGES.ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    const contents = await this.squadService.getSquadContents(squadId as string, role, userId);
+    const contents = await this._squadService.getSquadContents(squadId as string, role, userId);
     res.status(StatusCodes.OK).json(contents);
   });
 }

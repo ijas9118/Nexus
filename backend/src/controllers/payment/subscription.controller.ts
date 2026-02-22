@@ -16,13 +16,13 @@ const { PAYMENT_MESSAGES } = MESSAGES;
 @injectable()
 export class SubscriptionController implements ISubscriptionController {
   constructor(
-    @inject(TYPES.SubscriptionService) private subscriptionService: ISubscriptionService,
+    @inject(TYPES.SubscriptionService) private _subscriptionService: ISubscriptionService,
   ) {}
 
   getCurrentSubscription = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
 
-    const subscription = await this.subscriptionService.getUserSubscription(userId);
+    const subscription = await this._subscriptionService.getUserSubscription(userId);
     if (!subscription) {
       throw new CustomError(PAYMENT_MESSAGES.NO_SUBSCRIPTION, StatusCodes.NOT_FOUND);
     }

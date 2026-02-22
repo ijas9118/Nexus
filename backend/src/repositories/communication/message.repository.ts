@@ -13,7 +13,7 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
   }
 
   async getMessagesByChat(chatId: string, chatType: "Chat" | "Group"): Promise<IMessage[]> {
-    return this.model.find({ chatId, chatType, isDeleted: false }).sort({ createdAt: 1 });
+    return this._model.find({ chatId, chatType, isDeleted: false }).sort({ createdAt: 1 });
   }
 
   async getUnreadCount(
@@ -21,7 +21,7 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
     chatId: string,
     chatType: "Chat" | "Group",
   ): Promise<number> {
-    return this.model.countDocuments({
+    return this._model.countDocuments({
       chatId,
       chatType,
       isDeleted: false,
@@ -34,14 +34,14 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
     chatType: "Chat" | "Group",
     userId: string,
   ): Promise<void> {
-    await this.model.updateMany(
+    await this._model.updateMany(
       { chatId, chatType, isDeleted: false, readBy: { $ne: userId } },
       { $addToSet: { readBy: userId } },
     );
   }
 
   async addReaction(messageId: string, userId: string, reaction: string): Promise<IMessage | null> {
-    return this.model.findByIdAndUpdate(
+    return this._model.findByIdAndUpdate(
       messageId,
       { $push: { reactions: { userId, reaction } } },
       { new: true },
@@ -49,7 +49,7 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
   }
 
   async removeReaction(messageId: string, userId: string): Promise<IMessage | null> {
-    return this.model.findByIdAndUpdate(
+    return this._model.findByIdAndUpdate(
       messageId,
       { $pull: { reactions: { userId } } },
       { new: true },
@@ -57,6 +57,6 @@ export class MessageRepository extends BaseRepository<IMessage> implements IMess
   }
 
   async softDeleteMessage(messageId: string): Promise<IMessage | null> {
-    return this.model.findByIdAndUpdate(messageId, { isDeleted: true }, { new: true });
+    return this._model.findByIdAndUpdate(messageId, { isDeleted: true }, { new: true });
   }
 }

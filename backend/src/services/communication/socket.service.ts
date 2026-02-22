@@ -12,30 +12,30 @@ import { TYPES } from "@/di/types";
 
 @injectable()
 export class SocketService implements ISocketService {
-  private userSocketMap: Map<string, string> = new Map();
-  private videoRoomUsers: Map<string, { userId: string; peerId: string }[]> = new Map();
+  private _userSocketMap: Map<string, string> = new Map();
+  private _videoRoomUsers: Map<string, { userId: string; peerId: string }[]> = new Map();
 
   constructor(
-    @inject(TYPES.ChatService) private chatService: IChatService,
-    @inject(TYPES.GroupService) private groupService: IGroupService,
-    @inject(TYPES.MessageService) private messageService: IMessageService,
+    @inject(TYPES.ChatService) private _chatService: IChatService,
+    @inject(TYPES.GroupService) private _groupService: IGroupService,
+    @inject(TYPES.MessageService) private _messageService: IMessageService,
   ) {}
 
   setUserSocket(userId: string, socketId: string): void {
-    this.userSocketMap.set(userId, socketId);
+    this._userSocketMap.set(userId, socketId);
   }
 
   getUserSocket(userId: string): string | undefined {
-    return this.userSocketMap.get(userId);
+    return this._userSocketMap.get(userId);
   }
 
   removeUserSocket(userId: string): void {
-    this.userSocketMap.delete(userId);
+    this._userSocketMap.delete(userId);
   }
 
   async joinUserRooms(userId: string, socket: Socket): Promise<void> {
-    const chats = await this.chatService.getUserChats(userId);
-    const groups = await this.groupService.getUserGroups(userId);
+    const chats = await this._chatService.getUserChats(userId);
+    const groups = await this._groupService.getUserGroups(userId);
     const rooms = [
       ...chats.map(chat => chat._id.toString()),
       ...groups.map(group => group._id.toString()),
@@ -47,13 +47,13 @@ export class SocketService implements ISocketService {
     try {
       socket.join(roomId);
 
-      if (!this.videoRoomUsers.has(roomId)) {
-        this.videoRoomUsers.set(roomId, []);
+      if (!this._videoRoomUsers.has(roomId)) {
+        this._videoRoomUsers.set(roomId, []);
       }
 
-      const roomUsers = this.videoRoomUsers.get(roomId)!;
+      const roomUsers = this._videoRoomUsers.get(roomId)!;
       roomUsers.push({ userId, peerId });
-      this.videoRoomUsers.set(roomId, roomUsers);
+      this._videoRoomUsers.set(roomId, roomUsers);
 
       socket.to(roomId).emit("user-joined", { peerId });
       socket.emit("room-users", { users: roomUsers.filter(user => user.userId !== userId) });
@@ -67,14 +67,14 @@ export class SocketService implements ISocketService {
     try {
       socket.leave(roomId);
 
-      const roomUsers = this.videoRoomUsers.get(roomId);
+      const roomUsers = this._videoRoomUsers.get(roomId);
       if (roomUsers) {
         const updatedUsers = roomUsers.filter(user => user.userId !== userId);
         if (updatedUsers.length === 0) {
-          this.videoRoomUsers.delete(roomId);
+          this._videoRoomUsers.delete(roomId);
         }
         else {
-          this.videoRoomUsers.set(roomId, updatedUsers);
+          this._videoRoomUsers.set(roomId, updatedUsers);
         }
 
         io.to(roomId).emit("user-disconnected", { userId });
@@ -92,7 +92,7 @@ export class SocketService implements ISocketService {
     io: SocketIOServer,
   ): Promise<void> {
     try {
-      const chat = await this.chatService.createChat(userId, otherUserId);
+      const chat = await this._chatService.createChat(userId, otherUserId);
       socket.join(chat._id.toString());
 
       const otherSocketId = this.getUserSocket(otherUserId);
@@ -116,7 +116,7 @@ export class SocketService implements ISocketService {
     io: SocketIOServer,
   ): Promise<void> {
     try {
-      const group = await this.groupService.createGroup(userId, name, memberIds);
+      const group = await this._groupService.createGroup(userId, name, memberIds);
       const groupId = group._id.toString();
       socket.join(groupId);
 
@@ -151,9 +151,9 @@ export class SocketService implements ISocketService {
     try {
       let actualChatId = data.chatId;
       if (data.chatType === "Chat") {
-        const existingChat = await this.chatService.findById(data.chatId).catch(() => null);
+        const existingChat = await this._chatService.findById(data.chatId).catch(() => null);
         if (!existingChat) {
-          const chat = await this.chatService.createChat(userId, data.chatId);
+          const chat = await this._chatService.createChat(userId, data.chatId);
           actualChatId = chat._id.toString();
           socket.join(actualChatId);
 
@@ -166,7 +166,7 @@ export class SocketService implements ISocketService {
         }
       }
 
-      const message = await this.messageService.sendMessage(
+      const message = await this._messageService.sendMessage(
         userId,
         actualChatId,
         data.chatType,
@@ -187,13 +187,13 @@ export class SocketService implements ISocketService {
 
   handleDisconnect(userId: string, socket: Socket): void {
     this.removeUserSocket(userId);
-    this.videoRoomUsers.forEach((users, roomId) => {
+    this._videoRoomUsers.forEach((users, roomId) => {
       const updatedUsers = users.filter(user => user.userId !== userId);
       if (updatedUsers.length === 0) {
-        this.videoRoomUsers.delete(roomId);
+        this._videoRoomUsers.delete(roomId);
       }
       else {
-        this.videoRoomUsers.set(roomId, updatedUsers);
+        this._videoRoomUsers.set(roomId, updatedUsers);
         socket.to(roomId).emit("user-disconnected", { userId });
       }
     });

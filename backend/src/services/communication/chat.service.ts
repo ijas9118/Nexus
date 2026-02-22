@@ -16,20 +16,20 @@ const { CHAT_MESSAGES } = MESSAGES;
 @injectable()
 export class ChatService implements IChatService {
   constructor(
-    @inject(TYPES.ChatRepository) protected repository: IChatRepository,
-    @inject(TYPES.ConnectionService) private connectionService: IConnectionService,
+    @inject(TYPES.ChatRepository) protected _repository: IChatRepository,
+    @inject(TYPES.ConnectionService) private _connectionService: IConnectionService,
   ) {}
 
   async createChat(userId: string, otherUserId: string): Promise<IChat> {
-    const isConnected = await this.connectionService.isConnected(userId, otherUserId);
+    const isConnected = await this._connectionService.isConnected(userId, otherUserId);
     if (!isConnected) {
       throw new CustomError(CHAT_MESSAGES.CONNECTION_REQUIRED, StatusCodes.FORBIDDEN);
     }
 
     // Check if chat already exists
-    let chat = await this.repository.findChatBetweenUsers(userId, otherUserId);
+    let chat = await this._repository.findChatBetweenUsers(userId, otherUserId);
     if (!chat) {
-      chat = await this.repository.create({ participants: [userId, otherUserId] });
+      chat = await this._repository.create({ participants: [userId, otherUserId] });
     }
     const populatedChat = await ChatModel.findById(chat._id).populate(
       "participants",
@@ -44,10 +44,10 @@ export class ChatService implements IChatService {
   }
 
   async getUserChats(userId: string): Promise<IChat[]> {
-    return this.repository.getUserChats(userId);
+    return this._repository.getUserChats(userId);
   }
 
   async findById(chatId: string): Promise<IChat | null> {
-    return this.repository.findById(chatId);
+    return this._repository.findById(chatId);
   }
 }

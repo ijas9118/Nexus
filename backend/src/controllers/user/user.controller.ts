@@ -15,23 +15,23 @@ const { USER_MESSAGES } = MESSAGES;
 
 @injectable()
 export class UserController implements IUserController {
-  constructor(@inject(TYPES.UserService) private userService: IUserService) {}
+  constructor(@inject(TYPES.UserService) private _userService: IUserService) {}
 
   getUserJoinedSquads = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
-    const squads = await this.userService.getUserJoinedSquads(userId);
+    const squads = await this._userService.getUserJoinedSquads(userId);
     res.status(StatusCodes.OK).json(squads);
   });
 
   getUserData = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { username } = req.params;
-    const userData = await this.userService.getUserByUsername(username as string);
+    const userData = await this._userService.getUserByUsername(username as string);
     res.status(StatusCodes.OK).json(userData);
   });
 
   updateUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
-    const result = await this.userService.updateUser(userId, req.body);
+    const result = await this._userService.updateUser(userId, req.body);
     res.status(StatusCodes.OK).json(result);
   });
 
@@ -41,7 +41,7 @@ export class UserController implements IUserController {
       throw new CustomError(USER_MESSAGES.UNAUTHORIZED, StatusCodes.UNAUTHORIZED);
     }
 
-    await this.userService.updatePassword(userId, req.body);
+    await this._userService.updatePassword(userId, req.body);
     res.status(StatusCodes.OK).json({ success: true, message: USER_MESSAGES.PASSWORD_UPDATED });
   });
 
@@ -53,7 +53,7 @@ export class UserController implements IUserController {
       throw new CustomError(USER_MESSAGES.NO_FILE, StatusCodes.BAD_REQUEST);
     }
 
-    const updatedUser = await this.userService.updateProfilePic(userId, {}, file);
+    const updatedUser = await this._userService.updateProfilePic(userId, {}, file);
 
     res.status(StatusCodes.OK).json({ id: updatedUser._id, profilePic: updatedUser.profilePic });
   });
@@ -65,14 +65,14 @@ export class UserController implements IUserController {
       throw new CustomError(USER_MESSAGES.USERNAME_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    const contents = await this.userService.getUserContents(username);
+    const contents = await this._userService.getUserContents(username);
     res.status(StatusCodes.OK).json(contents);
   });
 
   validateUsername = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const username = req.params.username as string;
 
-    const status = await this.userService.validateUsername(username);
+    const status = await this._userService.validateUsername(username);
     res.status(StatusCodes.OK).json({ status });
   });
 }

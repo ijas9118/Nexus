@@ -16,29 +16,29 @@ const { MENTOR_MESSAGES } = MESSAGES;
 export class WithdrawalRequestController implements IWithdrawalRequestController {
   constructor(
     @inject(TYPES.WithdrawalRequestService)
-    private withdrawalRequestService: IWithdrawalRequestService,
+    private _withdrawalRequestService: IWithdrawalRequestService,
   ) {}
 
   getPendingRequests = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const requests = await this.withdrawalRequestService.getPendingRequests();
+    const requests = await this._withdrawalRequestService.getPendingRequests();
     res.status(StatusCodes.OK).json(requests);
   });
 
   getUserPendingRequests = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
-    const requests = await this.withdrawalRequestService.getRequestsByUserId(userId, "pending");
+    const requests = await this._withdrawalRequestService.getRequestsByUserId(userId, "pending");
     res.status(StatusCodes.OK).json(requests);
   });
 
   approveWithdrawal = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { requestId } = req.body;
-    const walletInfo = await this.withdrawalRequestService.approveWithdrawal(requestId);
+    const walletInfo = await this._withdrawalRequestService.approveWithdrawal(requestId);
     res.status(StatusCodes.OK).json(walletInfo);
   });
 
   rejectWithdrawal = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { requestId } = req.body;
-    await this.withdrawalRequestService.rejectWithdrawal(requestId);
+    await this._withdrawalRequestService.rejectWithdrawal(requestId);
     res.status(StatusCodes.OK).json({ message: MENTOR_MESSAGES.WITHDRAWAL_REJECTED });
   });
 }

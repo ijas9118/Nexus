@@ -19,12 +19,12 @@ const { MENTOR_MESSAGES, BOOKING_MESSAGES, COMMON_MESSAGES } = MESSAGES;
 @injectable()
 export class TimeSlotService implements ITimeSlotService {
   constructor(
-    @inject(TYPES.TimeSlotRepository) private timeSlotRepository: TimeSlotRepository,
-    @inject(TYPES.MentorService) private mentorService: IMentorService,
+    @inject(TYPES.TimeSlotRepository) private _timeSlotRepository: TimeSlotRepository,
+    @inject(TYPES.MentorService) private _mentorService: IMentorService,
   ) {}
 
   async addTimeSlot(mentorId: string, date: Date, startTime12Hr: string): Promise<ITimeSlot> {
-    const mentor = await this.mentorService.getMentorDetails(mentorId);
+    const mentor = await this._mentorService.getMentorDetails(mentorId);
     if (!mentor) {
       throw new CustomError(
         MENTOR_MESSAGES.REGISTERED_MENTOR_REQUIRED,
@@ -55,7 +55,7 @@ export class TimeSlotService implements ITimeSlotService {
     const slotEndDateTime = slotDateTime.add(1, "hour");
 
     // Check for overlapping or closely timed slots
-    const existingSlots = await this.timeSlotRepository.find({
+    const existingSlots = await this._timeSlotRepository.find({
       mentorId,
       date: {
         $gte: slotDate.startOf("day").toDate(),
@@ -112,7 +112,7 @@ export class TimeSlotService implements ITimeSlotService {
     };
 
     try {
-      return await this.timeSlotRepository.create(timeSlotData);
+      return await this._timeSlotRepository.create(timeSlotData);
     }
     catch (error: any) {
       if (error.code === 11000) {
@@ -123,7 +123,7 @@ export class TimeSlotService implements ITimeSlotService {
   }
 
   async deleteTimeSlot(mentorId: string, slotId: string): Promise<ITimeSlot> {
-    const timeSlot = await this.timeSlotRepository.deleteByMentorAndSlotId(mentorId, slotId);
+    const timeSlot = await this._timeSlotRepository.deleteByMentorAndSlotId(mentorId, slotId);
     if (!timeSlot) {
       throw new CustomError(BOOKING_MESSAGES.SLOT_NOT_FOUND_OR_BOOKED, StatusCodes.NOT_FOUND);
     }
@@ -131,30 +131,30 @@ export class TimeSlotService implements ITimeSlotService {
   }
 
   async getTimeSlotsByMentorAndDate(mentorId: string, date: Date): Promise<ITimeSlot[]> {
-    return await this.timeSlotRepository.findByMentorAndDate(mentorId, date);
+    return await this._timeSlotRepository.findByMentorAndDate(mentorId, date);
   }
 
   async getAllTimeSlots(mentorId: string): Promise<Record<string, ITimeSlot[]>> {
-    return await this.timeSlotRepository.getAllTimeSlotsGroupedByDate(mentorId);
+    return await this._timeSlotRepository.getAllTimeSlotsGroupedByDate(mentorId);
   }
 
   async getBookedTimeSlots(mentorId: string): Promise<Record<string, ITimeSlot[]>> {
-    return await this.timeSlotRepository.getBookedTimeSlots(mentorId);
+    return await this._timeSlotRepository.getBookedTimeSlots(mentorId);
   }
 
   async getMentorTimeSlots(mentorId: string): Promise<Record<string, ITimeSlot[]>> {
     // Validate mentor existence
-    const mentor = await this.mentorService.getMentorDetails(mentorId);
+    const mentor = await this._mentorService.getMentorDetails(mentorId);
     if (!mentor) {
       throw new CustomError(BOOKING_MESSAGES.TIME_SLOT_NOT_FOUND, StatusCodes.BAD_REQUEST);
     }
 
     // Get unbooked time slots for the next 7 days
-    return await this.timeSlotRepository.getUnbookedTimeSlotsForNext7Days(mentorId);
+    return await this._timeSlotRepository.getUnbookedTimeSlotsForNext7Days(mentorId);
   }
 
   async bookTimeSlot(slotId: string, mentorId: string): Promise<ITimeSlot> {
-    const timeSlot = await this.timeSlotRepository.findById(slotId);
+    const timeSlot = await this._timeSlotRepository.findById(slotId);
     if (!timeSlot) {
       throw new CustomError(BOOKING_MESSAGES.TIME_SLOT_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -170,7 +170,7 @@ export class TimeSlotService implements ITimeSlotService {
       throw new CustomError(BOOKING_MESSAGES.TIME_SLOT_ALREADY_BOOKED, StatusCodes.CONFLICT);
     }
 
-    const updatedTimeSlot = await this.timeSlotRepository.update(slotId, { isBooked: true });
+    const updatedTimeSlot = await this._timeSlotRepository.update(slotId, { isBooked: true });
     if (!updatedTimeSlot) {
       throw new CustomError(BOOKING_MESSAGES.SLOT_UPDATE_FAILED, StatusCodes.NOT_FOUND);
     }
@@ -182,7 +182,7 @@ export class TimeSlotService implements ITimeSlotService {
     mentorId: string,
     expiresInMinutes: number,
   ): Promise<boolean> {
-    const timeSlot = await this.timeSlotRepository.findById(slotId);
+    const timeSlot = await this._timeSlotRepository.findById(slotId);
     if (!timeSlot || timeSlot.mentorId.toString() !== mentorId) {
       return false;
     }
@@ -192,7 +192,7 @@ export class TimeSlotService implements ITimeSlotService {
     }
 
     const reservedUntil = new Date(Date.now() + expiresInMinutes * 60 * 1000);
-    const updated = await this.timeSlotRepository.update(slotId, {
+    const updated = await this._timeSlotRepository.update(slotId, {
       status: "reserved",
       reservedUntil,
     });
@@ -201,7 +201,7 @@ export class TimeSlotService implements ITimeSlotService {
   }
 
   async isTimeSlotAvailable(slotId: string, mentorId: string): Promise<boolean> {
-    const timeSlot = await this.timeSlotRepository.findById(slotId);
+    const timeSlot = await this._timeSlotRepository.findById(slotId);
     if (!timeSlot || timeSlot.mentorId.toString() !== mentorId) {
       return false;
     }
@@ -216,7 +216,7 @@ export class TimeSlotService implements ITimeSlotService {
       && new Date() > timeSlot.reservedUntil
     ) {
       // Release expired reservation
-      await this.timeSlotRepository.update(slotId, {
+      await this._timeSlotRepository.update(slotId, {
         status: "available",
         reservedUntil: undefined,
       });
@@ -227,14 +227,14 @@ export class TimeSlotService implements ITimeSlotService {
   }
 
   async releaseExpiredReservations(): Promise<void> {
-    await this.timeSlotRepository.releaseExpiredReservations();
+    await this._timeSlotRepository.releaseExpiredReservations();
   }
 
   async update(timeslot: string, data: Partial<ITimeSlot>): Promise<ITimeSlot | null> {
-    return await this.timeSlotRepository.update(timeslot, data);
+    return await this._timeSlotRepository.update(timeslot, data);
   }
 
   async findById(timeslot: string): Promise<ITimeSlot | null> {
-    return await this.timeSlotRepository.findById(timeslot);
+    return await this._timeSlotRepository.findById(timeslot);
   }
 }

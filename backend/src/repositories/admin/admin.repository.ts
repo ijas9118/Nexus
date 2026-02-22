@@ -14,11 +14,11 @@ export class AdminRepository extends BaseRepository<IAdmin> implements IAdminRep
   }
 
   async findByEmail(email: string): Promise<IAdmin | null> {
-    return this.model.findOne({ email });
+    return this._model.findOne({ email });
   }
 
   async create(admin: IAdmin): Promise<IAdmin> {
-    return this.model.create(admin);
+    return this._model.create(admin);
   }
 
   async updateUser(id: string, admin: Partial<IAdmin>): Promise<IAdmin | null> {
@@ -27,6 +27,6 @@ export class AdminRepository extends BaseRepository<IAdmin> implements IAdminRep
   }
 
   // async delete(id: string): Promise<IAdmin | null> {
-  //   return this.model.findByIdAndDelete(id);
+  //   return this._model.findByIdAndDelete(id);
   // }
 }

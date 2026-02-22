@@ -13,6 +13,6 @@ export class GroupRepository extends BaseRepository<IGroup> implements IGroupRep
   }
 
   async getUserGroups(userId: string): Promise<IGroup[]> {
-    return this.model.find({ members: userId });
+    return this._model.find({ members: userId });
   }
 }

@@ -23,10 +23,10 @@ const { SQUAD_MESSAGES, CATEGORY_MESSAGES, USER_MESSAGES } = MESSAGES;
 @injectable()
 export class SquadService implements ISquadService {
   constructor(
-    @inject(TYPES.SquadRepository) private squadRepository: ISquadRepository,
-    @inject(TYPES.CategoryRepository) private categoryRepository: ICategoryRepository,
-    @inject(TYPES.ContentRepository) private contentRepository: IContentRepository,
-    @inject(TYPES.UserRepository) private userRepository: IContentRepository,
+    @inject(TYPES.SquadRepository) private _squadRepository: ISquadRepository,
+    @inject(TYPES.CategoryRepository) private _categoryRepository: ICategoryRepository,
+    @inject(TYPES.ContentRepository) private _contentRepository: IContentRepository,
+    @inject(TYPES.UserRepository) private _userRepository: IContentRepository,
   ) {}
 
   createSquad = async (
@@ -38,7 +38,7 @@ export class SquadService implements ISquadService {
       throw new CustomError(SQUAD_MESSAGES.INVALID_CATEGORY, StatusCodes.BAD_REQUEST);
     }
 
-    const categoryObj = await this.categoryRepository.findOne({ name: category });
+    const categoryObj = await this._categoryRepository.findOne({ name: category });
     if (!categoryObj) {
       throw new CustomError(CATEGORY_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -61,7 +61,7 @@ export class SquadService implements ISquadService {
     };
 
     // Create the squad
-    const squad = await this.squadRepository.create(updatedSquadData);
+    const squad = await this._squadRepository.create(updatedSquadData);
 
     // Update category
     categoryObj.squads.push(squad._id);
@@ -72,11 +72,11 @@ export class SquadService implements ISquadService {
   };
 
   getSquadByName = async (name: string): Promise<ISquad | null> => {
-    return await this.squadRepository.findOne({ name });
+    return await this._squadRepository.findOne({ name });
   };
 
   getSquadDetailsByHandle = async (handle: string, userId: string): Promise<ISquad | null> => {
-    return await this.squadRepository.getSquadDetailsByHandle(handle, userId);
+    return await this._squadRepository.getSquadDetailsByHandle(handle, userId);
   };
 
   getAllSquads = async ({
@@ -88,44 +88,44 @@ export class SquadService implements ISquadService {
     page: number;
     search: string;
   }): Promise<SquadListDto[]> => {
-    const squads = await this.squadRepository.getAllSquads({ limit, page, search });
+    const squads = await this._squadRepository.getAllSquads({ limit, page, search });
     return SquadListDto.fromEntities(squads);
   };
 
   getSquadById = async (id: string): Promise<ISquad | null> => {
-    return await this.squadRepository.getSquadById(id);
+    return await this._squadRepository.getSquadById(id);
   };
 
   toggleSquad = async (id: string): Promise<ISquad | null> => {
-    return await this.squadRepository.toggleSquad(id);
+    return await this._squadRepository.toggleSquad(id);
   };
 
   getJoinedSquads = async (userId: string): Promise<(ISquad & { isAdmin: boolean })[] | null> => {
-    const user = await this.userRepository.findOne({ _id: userId });
+    const user = await this._userRepository.findOne({ _id: userId });
 
     if (!user) {
       throw new CustomError(USER_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    return await this.squadRepository.getJoinedSquads(userId);
+    return await this._squadRepository.getJoinedSquads(userId);
   };
 
   getSquadsByCategory = async (
     userId: string,
     category: string,
   ): Promise<SquadByCategoryResponseDto[]> => {
-    const categoryExists = await this.categoryRepository.findById(category);
+    const categoryExists = await this._categoryRepository.findById(category);
     if (!categoryExists) {
       throw new CustomError(CATEGORY_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    const squads = await this.squadRepository.getSquadsByCategory(category, userId);
+    const squads = await this._squadRepository.getSquadsByCategory(category, userId);
 
     return SquadByCategoryResponseDto.fromEntities(squads);
   };
 
   joinSquad = async (userId: string, squadId: string) => {
-    await this.squadRepository.addMemberToSquad(userId, squadId);
+    await this._squadRepository.addMemberToSquad(userId, squadId);
   };
 
   leaveSquad = async (userId: string, squadId: string): Promise<void> => {
@@ -136,7 +136,7 @@ export class SquadService implements ISquadService {
     if (!squad.members.includes(userId)) {
       throw new CustomError(SQUAD_MESSAGES.NOT_A_MEMBER, StatusCodes.BAD_REQUEST);
     }
-    await this.squadRepository.removeMemberFromSquad(userId, squadId);
+    await this._squadRepository.removeMemberFromSquad(userId, squadId);
   };
 
   async getSquadContents(
@@ -144,7 +144,7 @@ export class SquadService implements ISquadService {
     role: string,
     userId: string,
   ): Promise<SquadContentResponseDto[]> {
-    const contents = await this.contentRepository.getSquadContents(
+    const contents = await this._contentRepository.getSquadContents(
       squadId,
       role as UserRole,
       userId,

@@ -14,10 +14,10 @@ const { COMMENT_MESSAGES } = MESSAGES;
 
 @injectable()
 export class CommentService implements ICommentService {
-  constructor(@inject(TYPES.CommentRepository) private commentRepository: ICommentRepository) {}
+  constructor(@inject(TYPES.CommentRepository) private _commentRepository: ICommentRepository) {}
 
   addComment = async (commentData: AddCommentParams): Promise<IComment> => {
-    const comment = await this.commentRepository.createComment(commentData);
+    const comment = await this._commentRepository.createComment(commentData);
     if (!comment) {
       throw new CustomError(COMMENT_MESSAGES.CREATE_FAILED, StatusCodes.INTERNAL_SERVER_ERROR);
     }
@@ -25,11 +25,11 @@ export class CommentService implements ICommentService {
   };
 
   getCommentsByContentId = async (contentId: string): Promise<IComment[]> => {
-    const comments = await this.commentRepository.findCommentsByContentId(contentId);
+    const comments = await this._commentRepository.findCommentsByContentId(contentId);
     return comments;
   };
 
   getAllComments = async (): Promise<IComment[]> => {
-    return await this.commentRepository.getAllComments();
+    return await this._commentRepository.getAllComments();
   };
 }

@@ -182,7 +182,7 @@ export class TimeSlotRepository extends BaseRepository<ITimeSlot> implements ITi
   }
 
   async releaseExpiredReservations(): Promise<void> {
-    await this.model.updateMany(
+    await this._model.updateMany(
       {
         status: "reserved",
         reservedUntil: { $lte: new Date() },

@@ -20,10 +20,10 @@ const { CHAT_MESSAGES } = MESSAGES;
 @injectable()
 export class MessageService implements IMessageService {
   constructor(
-    @inject(TYPES.MessageRepository) protected repository: IMessageRepository,
-    @inject(TYPES.ChatRepository) private chatRepository: IChatRepository,
-    @inject(TYPES.GroupRepository) private groupRepository: IGroupRepository,
-    @inject(TYPES.ConnectionsRepository) private connectionsRepository: IConnectionsRepository,
+    @inject(TYPES.MessageRepository) protected _repository: IMessageRepository,
+    @inject(TYPES.ChatRepository) private _chatRepository: IChatRepository,
+    @inject(TYPES.GroupRepository) private _groupRepository: IGroupRepository,
+    @inject(TYPES.ConnectionsRepository) private _connectionsRepository: IConnectionsRepository,
   ) {}
 
   async sendMessage(
@@ -36,9 +36,9 @@ export class MessageService implements IMessageService {
     replyTo?: string,
     io?: SocketIOServer,
   ): Promise<IMessage> {
-    await this.validateChatAccess(userId, chatId, chatType);
+    await this._validateChatAccess(userId, chatId, chatType);
 
-    const message = await this.repository.create({
+    const message = await this._repository.create({
       chatId,
       chatType,
       sender: userId,
@@ -58,18 +58,18 @@ export class MessageService implements IMessageService {
     };
 
     if (message.chatType === "Chat") {
-      await this.chatRepository.findByIdAndUpdate(new mongoose.Types.ObjectId(message.chatId), {
+      await this._chatRepository.findByIdAndUpdate(new mongoose.Types.ObjectId(message.chatId), {
         lastMessage: lastMessagePayload,
       });
     }
     else {
-      await this.groupRepository.findByIdAndUpdate(new mongoose.Types.ObjectId(message.chatId), {
+      await this._groupRepository.findByIdAndUpdate(new mongoose.Types.ObjectId(message.chatId), {
         lastMessage: lastMessagePayload,
       });
     }
 
     if (chatType === "Chat") {
-      const chat = await this.chatRepository.findById(new Types.ObjectId(chatId));
+      const chat = await this._chatRepository.findById(new Types.ObjectId(chatId));
       if (chat) {
         const updatedUnreadCounts = chat.participants.map((participantId) => {
           if (participantId === userId)
@@ -82,14 +82,14 @@ export class MessageService implements IMessageService {
           };
         });
 
-        await this.chatRepository.updateOne(
+        await this._chatRepository.updateOne(
           { _id: chatId },
           { $set: { unreadCounts: updatedUnreadCounts } },
         );
       }
     }
     else {
-      const group = await this.groupRepository.findById(new Types.ObjectId(chatId));
+      const group = await this._groupRepository.findById(new Types.ObjectId(chatId));
       if (group) {
         const updatedUnreadCounts = group.members.map((memberId) => {
           if (memberId === userId)
@@ -102,7 +102,7 @@ export class MessageService implements IMessageService {
           };
         });
 
-        await this.groupRepository.updateOne(
+        await this._groupRepository.updateOne(
           { _id: chatId },
           { $set: { unreadCounts: updatedUnreadCounts } },
         );
@@ -122,20 +122,20 @@ export class MessageService implements IMessageService {
     reaction: string,
     io?: SocketIOServer,
   ): Promise<IMessage> {
-    const message = await this.repository.findById(new Types.ObjectId(messageId));
+    const message = await this._repository.findById(new Types.ObjectId(messageId));
     if (!message || message.isDeleted) {
       throw new CustomError(CHAT_MESSAGES.MESSAGE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    await this.validateChatAccess(userId, message.chatId, message.chatType);
+    await this._validateChatAccess(userId, message.chatId, message.chatType);
 
     // Ensure one reaction per user
     const existingReaction = message.reactions.find(r => r.userId === userId);
     if (existingReaction) {
-      await this.repository.removeReaction(messageId, userId);
+      await this._repository.removeReaction(messageId, userId);
     }
 
-    const updatedMessage = await this.repository.addReaction(messageId, userId, reaction);
+    const updatedMessage = await this._repository.addReaction(messageId, userId, reaction);
 
     if (io && updatedMessage) {
       io.to(message.chatId).emit("messageReaction", updatedMessage);
@@ -144,14 +144,14 @@ export class MessageService implements IMessageService {
   }
 
   async removeReaction(userId: string, messageId: string, io?: SocketIOServer): Promise<IMessage> {
-    const message = await this.repository.findById(new Types.ObjectId(messageId));
+    const message = await this._repository.findById(new Types.ObjectId(messageId));
     if (!message || message.isDeleted) {
       throw new CustomError(CHAT_MESSAGES.MESSAGE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    await this.validateChatAccess(userId, message.chatId, message.chatType);
+    await this._validateChatAccess(userId, message.chatId, message.chatType);
 
-    const updatedMessage = await this.repository.removeReaction(messageId, userId);
+    const updatedMessage = await this._repository.removeReaction(messageId, userId);
 
     if (io && updatedMessage) {
       io.to(message.chatId).emit("reactionRemoved", updatedMessage);
@@ -160,7 +160,7 @@ export class MessageService implements IMessageService {
   }
 
   async deleteMessage(userId: string, messageId: string, io?: SocketIOServer): Promise<IMessage> {
-    const message = await this.repository.findById(new Types.ObjectId(messageId));
+    const message = await this._repository.findById(new Types.ObjectId(messageId));
     if (!message || message.isDeleted) {
       throw new CustomError(CHAT_MESSAGES.MESSAGE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -168,9 +168,9 @@ export class MessageService implements IMessageService {
       throw new CustomError(CHAT_MESSAGES.DELETE_ONLY_SENDER, StatusCodes.FORBIDDEN);
     }
 
-    await this.validateChatAccess(userId, message.chatId, message.chatType);
+    await this._validateChatAccess(userId, message.chatId, message.chatType);
 
-    const updatedMessage = await this.repository.softDeleteMessage(messageId);
+    const updatedMessage = await this._repository.softDeleteMessage(messageId);
 
     if (io && updatedMessage) {
       io.to(message.chatId).emit("messageDeleted", updatedMessage);
@@ -183,9 +183,9 @@ export class MessageService implements IMessageService {
     chatId: string,
     chatType: "Chat" | "Group",
   ): Promise<IMessage[]> {
-    await this.validateChatAccess(userId, chatId, chatType, false); // Read-only, no connection check
+    await this._validateChatAccess(userId, chatId, chatType, false); // Read-only, no connection check
 
-    return this.repository.getMessagesByChat(chatId, chatType);
+    return this._repository.getMessagesByChat(chatId, chatType);
   }
 
   async getUnreadCount(
@@ -193,9 +193,9 @@ export class MessageService implements IMessageService {
     chatId: string,
     chatType: "Chat" | "Group",
   ): Promise<number> {
-    await this.validateChatAccess(userId, chatId, chatType, false); // Read-only, no connection check
+    await this._validateChatAccess(userId, chatId, chatType, false); // Read-only, no connection check
 
-    return this.repository.getUnreadCount(userId, chatId, chatType);
+    return this._repository.getUnreadCount(userId, chatId, chatType);
   }
 
   async markMessagesAsRead(
@@ -204,12 +204,12 @@ export class MessageService implements IMessageService {
     chatType: "Chat" | "Group",
     io?: SocketIOServer,
   ): Promise<void> {
-    await this.validateChatAccess(userId, chatId, chatType, false); // Read-only operation
+    await this._validateChatAccess(userId, chatId, chatType, false); // Read-only operation
 
-    await this.repository.markMessagesAsRead(chatId, chatType, userId);
+    await this._repository.markMessagesAsRead(chatId, chatType, userId);
 
     if (chatType === "Chat") {
-      const chat = await this.chatRepository.findById(new Types.ObjectId(chatId));
+      const chat = await this._chatRepository.findById(new Types.ObjectId(chatId));
       if (chat) {
         const updatedUnreadCounts = chat.unreadCounts.map((uc) => {
           if (uc.userId === userId) {
@@ -224,14 +224,14 @@ export class MessageService implements IMessageService {
           };
         });
 
-        await this.chatRepository.updateOne(
+        await this._chatRepository.updateOne(
           { _id: chatId },
           { $set: { unreadCounts: updatedUnreadCounts } },
         );
       }
     }
     else {
-      const group = await this.groupRepository.findById(new Types.ObjectId(chatId));
+      const group = await this._groupRepository.findById(new Types.ObjectId(chatId));
       if (group) {
         const updatedUnreadCounts = group.unreadCounts.map((uc) => {
           if (uc.userId === userId) {
@@ -246,7 +246,7 @@ export class MessageService implements IMessageService {
           };
         });
 
-        await this.groupRepository.updateOne(
+        await this._groupRepository.updateOne(
           { _id: chatId },
           { $set: { unreadCounts: updatedUnreadCounts } },
         );
@@ -258,14 +258,14 @@ export class MessageService implements IMessageService {
     }
   }
 
-  private async validateChatAccess(
+  private async _validateChatAccess(
     userId: string,
     chatId: string,
     chatType: "Chat" | "Group",
     requireConnection = true, // true for write operations like sending messages
   ): Promise<void> {
     if (chatType === "Chat") {
-      const chat = await this.chatRepository.findById(new Types.ObjectId(chatId));
+      const chat = await this._chatRepository.findById(new Types.ObjectId(chatId));
       if (!chat || !chat.participants.includes(userId)) {
         throw new CustomError(CHAT_MESSAGES.CHAT_ACCESS_DENIED, StatusCodes.FORBIDDEN);
       }
@@ -274,7 +274,7 @@ export class MessageService implements IMessageService {
       if (requireConnection) {
         const otherParticipant = chat.participants.find(p => p !== userId);
         if (otherParticipant) {
-          const isConnected = await this.connectionsRepository.isConnected(userId, otherParticipant);
+          const isConnected = await this._connectionsRepository.isConnected(userId, otherParticipant);
           if (!isConnected) {
             throw new CustomError(
               CHAT_MESSAGES.NO_LONGER_CONNECTED,
@@ -285,7 +285,7 @@ export class MessageService implements IMessageService {
       }
     }
     else {
-      const group = await this.groupRepository.findById(new Types.ObjectId(chatId));
+      const group = await this._groupRepository.findById(new Types.ObjectId(chatId));
       if (!group || !group.members.includes(userId)) {
         throw new CustomError(CHAT_MESSAGES.GROUP_ACCESS_DENIED, StatusCodes.FORBIDDEN);
       }

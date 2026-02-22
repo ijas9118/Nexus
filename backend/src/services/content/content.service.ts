@@ -16,10 +16,10 @@ import { uploadToCloudinary } from "@/utils/cloudinary-utils";
 @injectable()
 export class ContentService implements IContentService {
   constructor(
-    @inject(TYPES.ContentRepository) private contentRepository: IContentRepository,
-    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-    @inject(TYPES.ContentViewService) private viewService: IContentViewService,
-    @inject(TYPES.HistoryService) private historyService: IHistoryService,
+    @inject(TYPES.ContentRepository) private _contentRepository: IContentRepository,
+    @inject(TYPES.UserRepository) private _userRepository: IUserRepository,
+    @inject(TYPES.ContentViewService) private _viewService: IContentViewService,
+    @inject(TYPES.HistoryService) private _historyService: IHistoryService,
   ) {}
 
   async createContent(
@@ -62,23 +62,23 @@ export class ContentService implements IContentService {
       videoUrl,
     };
 
-    const createdContent = await this.contentRepository.create(reshapedContentData);
+    const createdContent = await this._contentRepository.create(reshapedContentData);
 
     if (createdContent.author) {
-      await this.userRepository.addPostCount(createdContent.author.toString());
+      await this._userRepository.addPostCount(createdContent.author.toString());
     }
 
     return createdContent;
   }
 
   async getContentById(id: string, role: UserRole, userId: string): Promise<IContent | null> {
-    const content = await this.contentRepository.findContent(id, role, userId);
+    const content = await this._contentRepository.findContent(id, role, userId);
 
     if (content && userId) {
-      await this.viewService.handleContentView(userId, id);
+      await this._viewService.handleContentView(userId, id);
 
       if (role === "user") {
-        await this.historyService.addHistory(userId, id);
+        await this._historyService.addHistory(userId, id);
       }
     }
 
@@ -86,7 +86,7 @@ export class ContentService implements IContentService {
   }
 
   async getAllContent(userId: string, page: number, limit: number): Promise<{ contents: IContent[]; nextPage: number | null }> {
-    const contents = await this.contentRepository.getFeedContents(userId, page, limit);
+    const contents = await this._contentRepository.getFeedContents(userId, page, limit);
     const totalContents = await this.getContentCount();
     const nextPage = page * limit < totalContents ? page + 1 : null;
 
@@ -94,22 +94,22 @@ export class ContentService implements IContentService {
   }
 
   async getContentCount(): Promise<number> {
-    return this.contentRepository.getContentCount();
+    return this._contentRepository.getContentCount();
   }
 
   async getPosts(): Promise<IContent[]> {
-    return this.contentRepository.getPosts();
+    return this._contentRepository.getPosts();
   }
 
   async verifyContent(contentId: string): Promise<IContent | null> {
-    return this.contentRepository.verifyContent(contentId);
+    return this._contentRepository.verifyContent(contentId);
   }
 
   async getFollowingUsersContents(userId: string): Promise<IContent[]> {
-    return this.contentRepository.getFollowingUsersContents(userId);
+    return this._contentRepository.getFollowingUsersContents(userId);
   }
 
   async getUserContents(userId: string): Promise<IContent[]> {
-    return this.contentRepository.getUserContents(userId);
+    return this._contentRepository.getUserContents(userId);
   }
 }

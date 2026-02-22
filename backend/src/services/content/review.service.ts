@@ -15,11 +15,11 @@ const { REVIEW_MESSAGES } = MESSAGES;
 
 @injectable()
 export class ReviewService implements IReviewService {
-  constructor(@inject(TYPES.ReviewRepository) private reviewRepository: IReviewRepository) {}
+  constructor(@inject(TYPES.ReviewRepository) private _reviewRepository: IReviewRepository) {}
 
   async createReview(data: CreateReviewDTO): Promise<IReview> {
     // Check if user already reviewed this mentor
-    const existingReview = await this.reviewRepository.findByMentorAndUser(
+    const existingReview = await this._reviewRepository.findByMentorAndUser(
       data.mentorId,
       data.userId,
     );
@@ -44,7 +44,7 @@ export class ReviewService implements IReviewService {
       userId: new Types.ObjectId(data.userId),
     };
 
-    return this.reviewRepository.create(reviewData);
+    return this._reviewRepository.create(reviewData);
   }
 
   async getReviewById(id: string): Promise<IReview | null> {
@@ -52,7 +52,7 @@ export class ReviewService implements IReviewService {
       throw new CustomError(REVIEW_MESSAGES.INVALID_ID, StatusCodes.BAD_REQUEST);
     }
 
-    const review = await this.reviewRepository.findById(id);
+    const review = await this._reviewRepository.findById(id);
     if (!review || !review.isActive) {
       return null;
     }
@@ -73,7 +73,7 @@ export class ReviewService implements IReviewService {
       throw new CustomError(REVIEW_MESSAGES.INVALID_PAGINATION, StatusCodes.BAD_REQUEST);
     }
 
-    return this.reviewRepository.findReviewsWithPagination(page, limit);
+    return this._reviewRepository.findReviewsWithPagination(page, limit);
   }
 
   async getReviewsByMentor(
@@ -94,7 +94,7 @@ export class ReviewService implements IReviewService {
       throw new CustomError(REVIEW_MESSAGES.INVALID_PAGINATION, StatusCodes.BAD_REQUEST);
     }
 
-    return this.reviewRepository.findReviewsWithPagination(page, limit, mentorId);
+    return this._reviewRepository.findReviewsWithPagination(page, limit, mentorId);
   }
 
   async getReviewsByUser(userId: string): Promise<IReview[]> {
@@ -102,7 +102,7 @@ export class ReviewService implements IReviewService {
       throw new CustomError(MESSAGES.USER_MESSAGES.USER_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    return this.reviewRepository.findByUserId(userId);
+    return this._reviewRepository.findByUserId(userId);
   }
 
   async updateReview(id: string, data: UpdateReviewDTO, userId: string): Promise<IReview | null> {
@@ -110,7 +110,7 @@ export class ReviewService implements IReviewService {
       throw new CustomError(REVIEW_MESSAGES.INVALID_ID, StatusCodes.BAD_REQUEST);
     }
 
-    const existingReview = await this.reviewRepository.findById(id);
+    const existingReview = await this._reviewRepository.findById(id);
     if (!existingReview || !existingReview.isActive) {
       throw new CustomError(REVIEW_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -127,7 +127,7 @@ export class ReviewService implements IReviewService {
       }
     }
 
-    return this.reviewRepository.update(id, data);
+    return this._reviewRepository.update(id, data);
   }
 
   async deleteReview(id: string, userId: string): Promise<boolean> {
@@ -135,7 +135,7 @@ export class ReviewService implements IReviewService {
       throw new CustomError(REVIEW_MESSAGES.INVALID_ID, StatusCodes.BAD_REQUEST);
     }
 
-    const existingReview = await this.reviewRepository.findById(id);
+    const existingReview = await this._reviewRepository.findById(id);
     if (!existingReview || !existingReview.isActive) {
       throw new CustomError(REVIEW_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -145,7 +145,7 @@ export class ReviewService implements IReviewService {
       throw new CustomError(REVIEW_MESSAGES.DELETE_OWN_ONLY, StatusCodes.FORBIDDEN);
     }
 
-    const result = await this.reviewRepository.softDelete(id);
+    const result = await this._reviewRepository.softDelete(id);
     return result !== null;
   }
 
@@ -158,7 +158,7 @@ export class ReviewService implements IReviewService {
       throw new CustomError(REVIEW_MESSAGES.INVALID_MENTOR_ID, StatusCodes.BAD_REQUEST);
     }
 
-    return this.reviewRepository.getMentorReviewStats(mentorId);
+    return this._reviewRepository.getMentorReviewStats(mentorId);
   }
 
   async checkExistingReview(mentorId: string, userId: string): Promise<IReview | null> {
@@ -166,6 +166,6 @@ export class ReviewService implements IReviewService {
       throw new CustomError(REVIEW_MESSAGES.INVALID_MENTOR_USER_ID, StatusCodes.BAD_REQUEST);
     }
 
-    return this.reviewRepository.findByMentorAndUser(mentorId, userId);
+    return this._reviewRepository.findByMentorAndUser(mentorId, userId);
   }
 }

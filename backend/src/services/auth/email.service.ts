@@ -16,7 +16,7 @@ const { AUTH_MESSAGES } = MESSAGES;
 
 @injectable()
 export class EmailService implements IEmailService {
-  constructor(@inject(TYPES.TokenService) private tokenService: ITokenService) {}
+  constructor(@inject(TYPES.TokenService) private _tokenService: ITokenService) {}
 
   // Send OTP to the user's email for verification
   async sendOtpEmail(userData: RegisterRequestDTO, otp: string): Promise<void> {
@@ -68,7 +68,7 @@ export class EmailService implements IEmailService {
 
   // Create a reset password link with token
   async sendResetEmailWithToken(email: string): Promise<void> {
-    const token = this.tokenService.generateToken();
+    const token = this._tokenService.generateToken();
     const expirationTime = 15 * 60;
 
     await redisClient.setex(`forgotPassword:${email}`, expirationTime, token);

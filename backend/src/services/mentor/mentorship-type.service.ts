@@ -14,7 +14,7 @@ const { MENTOR_MESSAGES } = MESSAGES;
 @injectable()
 export class MentorshipTypeService implements IMentorshipTypeService {
   constructor(
-    @inject(TYPES.MentorshipTypeRepository) protected repository: MentorshipTypeRepository,
+    @inject(TYPES.MentorshipTypeRepository) protected _repository: MentorshipTypeRepository,
   ) {}
 
   async createMentorshipType(data: {
@@ -22,7 +22,7 @@ export class MentorshipTypeService implements IMentorshipTypeService {
     description: string;
     defaultPrice?: number;
   }): Promise<MentorshipTypeResponseDto> {
-    const existingType = await this.repository.findOne({ name: data.name });
+    const existingType = await this._repository.findOne({ name: data.name });
     if (existingType) {
       throw new CustomError(
         MENTOR_MESSAGES.TYPE_EXISTS,
@@ -30,7 +30,7 @@ export class MentorshipTypeService implements IMentorshipTypeService {
       );
     }
 
-    const created = await this.repository.create({
+    const created = await this._repository.create({
       name: data.name,
       description: data.description,
       defaultPrice: data.defaultPrice,
@@ -40,7 +40,7 @@ export class MentorshipTypeService implements IMentorshipTypeService {
   }
 
   async getMentorshipType(id: string): Promise<MentorshipTypeResponseDto> {
-    const type = await this.repository.findById(id);
+    const type = await this._repository.findById(id);
     if (!type || !type.isActive) {
       throw new CustomError(MENTOR_MESSAGES.TYPE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -49,21 +49,21 @@ export class MentorshipTypeService implements IMentorshipTypeService {
 
   async getAllMentorshipTypes(options?: { includeInactive?: boolean }): Promise<MentorshipTypeResponseDto[]> {
     const mentorshipTypes = options?.includeInactive
-      ? await this.repository.find({})
-      : await this.repository.find({ isActive: true });
+      ? await this._repository.find({})
+      : await this._repository.find({ isActive: true });
 
     return MentorshipTypeResponseDto.fromEntities(mentorshipTypes);
   }
 
   async deleteMentorshipType(id: string): Promise<void> {
-    const type = await this.repository.softDelete(id);
+    const type = await this._repository.softDelete(id);
     if (!type) {
       throw new CustomError(MENTOR_MESSAGES.TYPE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
   }
 
   async restoreMentorshipType(id: string): Promise<void> {
-    const type = await this.repository.restore(id);
+    const type = await this._repository.restore(id);
     if (!type) {
       throw new CustomError(MENTOR_MESSAGES.TYPE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -77,7 +77,7 @@ export class MentorshipTypeService implements IMentorshipTypeService {
       defaultPrice: number;
     }>,
   ): Promise<MentorshipTypeResponseDto> {
-    const typeToUpdate = await this.repository.findById(id);
+    const typeToUpdate = await this._repository.findById(id);
 
     if (!typeToUpdate || !typeToUpdate.isActive) {
       throw new CustomError(
@@ -87,7 +87,7 @@ export class MentorshipTypeService implements IMentorshipTypeService {
     }
 
     if (data.name) {
-      const existingType = await this.repository.findOne({
+      const existingType = await this._repository.findOne({
         name: data.name,
         _id: { $ne: id },
       });
@@ -103,7 +103,7 @@ export class MentorshipTypeService implements IMentorshipTypeService {
       throw new CustomError(MENTOR_MESSAGES.PRICE_NEGATIVE, StatusCodes.BAD_REQUEST);
     }
 
-    const updatedType = await this.repository.update(id, data);
+    const updatedType = await this._repository.update(id, data);
     if (!updatedType) {
       throw new CustomError(MENTOR_MESSAGES.TYPE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }

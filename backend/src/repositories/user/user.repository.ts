@@ -25,21 +25,21 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   }
 
   async countUsers(): Promise<number> {
-    return this.model.countDocuments({});
+    return this._model.countDocuments({});
   }
 
   async countMentors(): Promise<number> {
-    return this.model.countDocuments({ role: "mentor" });
+    return this._model.countDocuments({ role: "mentor" });
   }
 
   async countUsersBefore(date: Date): Promise<number> {
-    return this.model.countDocuments({
+    return this._model.countDocuments({
       createdAt: { $lt: date },
     });
   }
 
   async countMentorsBefore(date: Date): Promise<number> {
-    return this.model.countDocuments({
+    return this._model.countDocuments({
       role: "mentor",
       createdAt: { $lt: date },
     });
@@ -54,7 +54,7 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   }
 
   async getAllUsers(skip: number = 0, limit: number = 10): Promise<IUser[]> {
-    return this.model.find({}).skip(skip).limit(limit).exec();
+    return this._model.find({}).skip(skip).limit(limit).exec();
   }
 
   async addPostCount(userId: string): Promise<IUser | null> {
@@ -70,11 +70,11 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     if (user) {
       throw new Error("Username already exists");
     }
-    return this.model.findByIdAndUpdate(userObjectId, userData, { new: true });
+    return this._model.findByIdAndUpdate(userObjectId, userData, { new: true });
   }
 
   async deleteUser(userId: string): Promise<boolean> {
-    const result = await this.model.findByIdAndDelete(userId);
+    const result = await this._model.findByIdAndDelete(userId);
     return result !== null;
   }
 
@@ -119,7 +119,7 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
   }
 
   async search(criteria: { query: string; limit?: number }): Promise<SearchResultItem[]> {
-    const users = await this.model
+    const users = await this._model
       .find({ $text: { $search: criteria.query } })
       .select("name username profilePic")
       .limit(criteria.limit ?? 20)

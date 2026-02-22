@@ -17,12 +17,12 @@ const { BOOKING_MESSAGES } = MESSAGES;
 @injectable()
 export class BookingService implements IBookingService {
   constructor(
-    @inject(TYPES.BookingRepository) private bookingRepository: IBookingRepository,
-    @inject(TYPES.TimeSlotService) private timeSlotService: ITimeSlotService,
+    @inject(TYPES.BookingRepository) private _bookingRepository: IBookingRepository,
+    @inject(TYPES.TimeSlotService) private _timeSlotService: ITimeSlotService,
   ) {}
 
   async getUpcomingBookings(): Promise<IBooking[]> {
-    return this.bookingRepository.getUpcomingBookings();
+    return this._bookingRepository.getUpcomingBookings();
   }
 
   async getBookingByMeetUrl(meetUrl: string, userId: string): Promise<IBooking | null> {
@@ -43,7 +43,7 @@ export class BookingService implements IBookingService {
   }
 
   async getCompletedBookings(): Promise<IBooking[]> {
-    return this.bookingRepository.getCompletedBookings();
+    return this._bookingRepository.getCompletedBookings();
   }
 
   async getFilteredBookings(date?: string | Date, mentorshipTypeId?: string): Promise<IBooking[]> {
@@ -55,7 +55,7 @@ export class BookingService implements IBookingService {
       }
       parsedDate = tempDate.toDate();
     }
-    return this.bookingRepository.getFilteredBookings(parsedDate, mentorshipTypeId);
+    return this._bookingRepository.getFilteredBookings(parsedDate, mentorshipTypeId);
   }
 
   async rescheduleBooking(
@@ -63,7 +63,7 @@ export class BookingService implements IBookingService {
     newTimeSlotId: string,
     newBookingDate: string | Date,
   ): Promise<IBooking> {
-    const booking = await this.bookingRepository.findById(bookingId);
+    const booking = await this._bookingRepository.findById(bookingId);
     if (!booking) {
       throw new CustomError(BOOKING_MESSAGES.BOOKING_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -72,7 +72,7 @@ export class BookingService implements IBookingService {
       throw new CustomError(BOOKING_MESSAGES.CANNOT_RESCHEDULE_COMPLETED, StatusCodes.BAD_REQUEST);
     }
 
-    const timeSlot = await this.timeSlotService.findById(newTimeSlotId);
+    const timeSlot = await this._timeSlotService.findById(newTimeSlotId);
     if (!timeSlot) {
       throw new CustomError(BOOKING_MESSAGES.TIME_SLOT_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -91,12 +91,12 @@ export class BookingService implements IBookingService {
     }
 
     if (booking.timeSlot.toString() !== newTimeSlotId) {
-      await this.timeSlotService.update(booking.timeSlot.toString(), { isBooked: false });
+      await this._timeSlotService.update(booking.timeSlot.toString(), { isBooked: false });
     }
 
-    await this.timeSlotService.bookTimeSlot(newTimeSlotId, timeSlot.mentorId.toString());
+    await this._timeSlotService.bookTimeSlot(newTimeSlotId, timeSlot.mentorId.toString());
 
-    const updatedBooking = await this.bookingRepository.update(bookingId, {
+    const updatedBooking = await this._bookingRepository.update(bookingId, {
       timeSlot: newTimeSlotId,
       bookingDate: bookingDate.toDate(),
       status: "pending",
@@ -110,7 +110,7 @@ export class BookingService implements IBookingService {
   }
 
   async confirmBooking(bookingId: string): Promise<IBooking> {
-    const booking = await this.bookingRepository.findById(bookingId);
+    const booking = await this._bookingRepository.findById(bookingId);
     if (!booking) {
       throw new CustomError(BOOKING_MESSAGES.BOOKING_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -119,7 +119,7 @@ export class BookingService implements IBookingService {
       throw new CustomError(BOOKING_MESSAGES.ONLY_PENDING_CONFIRM, StatusCodes.BAD_REQUEST);
     }
 
-    const updatedBooking = await this.bookingRepository.update(bookingId, {
+    const updatedBooking = await this._bookingRepository.update(bookingId, {
       status: "confirmed",
     });
 
@@ -131,6 +131,6 @@ export class BookingService implements IBookingService {
   }
 
   async getBookingById(bookingId: string): Promise<IBooking | null> {
-    return this.bookingRepository.findById(bookingId);
+    return this._bookingRepository.findById(bookingId);
   }
 }

@@ -13,13 +13,13 @@ export class ChatRepository extends BaseRepository<IChat> implements IChatReposi
   }
 
   async findChatBetweenUsers(user1Id: string, user2Id: string): Promise<IChat | null> {
-    return this.model.findOne({
+    return this._model.findOne({
       participants: { $all: [user1Id, user2Id], $size: 2 },
     });
   }
 
   async getUserChats(userId: string): Promise<IChat[]> {
-    return this.model
+    return this._model
       .find({ participants: userId })
       .populate({
         path: "participants",

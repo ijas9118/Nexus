@@ -24,32 +24,32 @@ import {
 @injectable()
 export class AdminDashboardService implements IAdminDashboardService {
   constructor(
-    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-    @inject(TYPES.ContentRepository) private contentRepo: IContentRepository,
-    @inject(TYPES.SquadRepository) private squadRepo: ISquadRepository,
-    @inject(TYPES.SubscriptionRepository) private subscriptionRepo: ISubscriptionRepository,
-    @inject(TYPES.TransactionRepository) private transactionRepo: ITransactionRepository,
-    @inject(TYPES.MentorRepository) private mentorRepo: IMentorRepository,
+    @inject(TYPES.UserRepository) private _userRepository: IUserRepository,
+    @inject(TYPES.ContentRepository) private _contentRepo: IContentRepository,
+    @inject(TYPES.SquadRepository) private _squadRepo: ISquadRepository,
+    @inject(TYPES.SubscriptionRepository) private _subscriptionRepo: ISubscriptionRepository,
+    @inject(TYPES.TransactionRepository) private _transactionRepo: ITransactionRepository,
+    @inject(TYPES.MentorRepository) private _mentorRepo: IMentorRepository,
   ) {}
 
   getStats = async (): Promise<AdminDashboardStatsDTO> => {
     // Get current counts
-    const totalUsers = await this.userRepository.countUsers();
-    const totalMentors = await this.userRepository.countMentors();
-    const totalContents = await this.contentRepo.countContents();
-    const totalSquads = await this.squadRepo.countSquads();
-    const totalSubscription = await this.subscriptionRepo.countSubscription();
+    const totalUsers = await this._userRepository.countUsers();
+    const totalMentors = await this._userRepository.countMentors();
+    const totalContents = await this._contentRepo.countContents();
+    const totalSquads = await this._squadRepo.countSquads();
+    const totalSubscription = await this._subscriptionRepo.countSubscription();
 
     // Get previous month counts
     const prevMonthDate = new Date();
     prevMonthDate.setMonth(prevMonthDate.getMonth() - 1);
 
-    const prevMonthUsers = await this.userRepository.countUsersBefore(prevMonthDate);
-    const prevMonthMentors = await this.userRepository.countMentorsBefore(prevMonthDate);
-    const prevMonthContents = await this.contentRepo.countContentsBefore(prevMonthDate);
-    const prevMonthSquads = await this.squadRepo.countSquadsBefore(prevMonthDate);
+    const prevMonthUsers = await this._userRepository.countUsersBefore(prevMonthDate);
+    const prevMonthMentors = await this._userRepository.countMentorsBefore(prevMonthDate);
+    const prevMonthContents = await this._contentRepo.countContentsBefore(prevMonthDate);
+    const prevMonthSquads = await this._squadRepo.countSquadsBefore(prevMonthDate);
     const prevMonthSubscription
-      = await this.subscriptionRepo.countSubscriptionBefore(prevMonthDate);
+      = await this._subscriptionRepo.countSubscriptionBefore(prevMonthDate);
 
     return AdminDashboardStatsDTO.fromCounts(
       totalUsers,
@@ -66,7 +66,7 @@ export class AdminDashboardService implements IAdminDashboardService {
   };
 
   getSubscriptionStats = async (): Promise<SubscriptionStatsDTO> => {
-    const stats = await this.subscriptionRepo.getSubscriptionStats();
+    const stats = await this._subscriptionRepo.getSubscriptionStats();
 
     // Define colors for each tier
     const tierColors = {
@@ -132,14 +132,14 @@ export class AdminDashboardService implements IAdminDashboardService {
     }
 
     // Get platform fees from transactions (20% of transaction amount)
-    const platformFees = await this.transactionRepo.getTransactionRevenueByDateGroups(
+    const platformFees = await this._transactionRepo.getTransactionRevenueByDateGroups(
       startDate,
       endDate,
       groupByFormat,
     );
 
     // Get subscription revenue
-    const subscriptionRevenue = await this.subscriptionRepo.getSubscriptionRevenueByDateGroups(
+    const subscriptionRevenue = await this._subscriptionRepo.getSubscriptionRevenueByDateGroups(
       startDate,
       endDate,
       groupByFormat,
@@ -149,7 +149,7 @@ export class AdminDashboardService implements IAdminDashboardService {
     const dateMap = new Map<string, RevenueDataPointDTO>();
 
     // Initialize with all dates in the range
-    const allDates = this.generateDateRange(startDate, endDate, groupByFormat);
+    const allDates = this._generateDateRange(startDate, endDate, groupByFormat);
     allDates.forEach((date) => {
       dateMap.set(date, {
         date,
@@ -192,7 +192,7 @@ export class AdminDashboardService implements IAdminDashboardService {
   };
 
   getMentorApplicationStats = async (): Promise<MentorApplicationStatsDTO> => {
-    const stats = await this.mentorRepo.countMentorsByStatus();
+    const stats = await this._mentorRepo.countMentorsByStatus();
 
     // Define colors for each status
     const statusColors = {
@@ -226,7 +226,7 @@ export class AdminDashboardService implements IAdminDashboardService {
     return MentorApplicationStatsDTO.create(stats.totalApplications, statusDTOs);
   };
 
-  private generateDateRange(startDate: Date, endDate: Date, groupByFormat: string): string[] {
+  private _generateDateRange(startDate: Date, endDate: Date, groupByFormat: string): string[] {
     const dates: string[] = [];
     const currentDate = new Date(startDate);
     const endTime = endDate.getTime();
@@ -238,7 +238,7 @@ export class AdminDashboardService implements IAdminDashboardService {
       }
       else if (groupByFormat === "week") {
         const year = currentDate.getFullYear();
-        const weekNum = this.getWeekNumber(currentDate);
+        const weekNum = this._getWeekNumber(currentDate);
         dateStr = `${year}-${weekNum.toString().padStart(2, "0")}`;
       }
       else if (groupByFormat === "month") {
@@ -267,7 +267,7 @@ export class AdminDashboardService implements IAdminDashboardService {
     return dates;
   }
 
-  private getWeekNumber(date: Date): number {
+  private _getWeekNumber(date: Date): number {
     const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
     const dayNum = d.getUTCDay() || 7;
     d.setUTCDate(d.getUTCDate() + 4 - dayNum);

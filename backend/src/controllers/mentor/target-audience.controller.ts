@@ -15,10 +15,10 @@ const { MENTOR_MESSAGES } = MESSAGES;
 
 @injectable()
 export class TargetAudienceController implements ITargetAudienceController {
-  constructor(@inject(TYPES.TargetAudienceService) private service: ITargetAudienceService) {}
+  constructor(@inject(TYPES.TargetAudienceService) private _service: ITargetAudienceService) {}
 
   create = asyncHandler(async (req: Request, res: Response) => {
-    const targetAudience = await this.service.create(req.body);
+    const targetAudience = await this._service.create(req.body);
     res.status(StatusCodes.CREATED).json({
       success: true,
       data: targetAudience,
@@ -30,12 +30,12 @@ export class TargetAudienceController implements ITargetAudienceController {
     const includeAll = isAdmin && req.query.all === "true";
 
     const query = includeAll ? {} : { isActive: true };
-    const targetAudiences = await this.service.find(query);
+    const targetAudiences = await this._service.find(query);
     res.status(StatusCodes.OK).json(targetAudiences);
   });
 
   getById = asyncHandler(async (req: Request, res: Response) => {
-    const targetAudience = await this.service.findById(req.params.id as string);
+    const targetAudience = await this._service.findById(req.params.id as string);
     if (!targetAudience) {
       throw new CustomError(MENTOR_MESSAGES.TARGET_AUDIENCE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -46,7 +46,7 @@ export class TargetAudienceController implements ITargetAudienceController {
   });
 
   update = asyncHandler(async (req: Request, res: Response) => {
-    const targetAudience = await this.service.update(req.params.id as string, req.body);
+    const targetAudience = await this._service.update(req.params.id as string, req.body);
     if (!targetAudience) {
       throw new CustomError(MENTOR_MESSAGES.TARGET_AUDIENCE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -57,7 +57,7 @@ export class TargetAudienceController implements ITargetAudienceController {
   });
 
   softDelete = asyncHandler(async (req: Request, res: Response) => {
-    const targetAudience = await this.service.softDelete(req.params.id as string);
+    const targetAudience = await this._service.softDelete(req.params.id as string);
     if (!targetAudience) {
       throw new CustomError(MENTOR_MESSAGES.TARGET_AUDIENCE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -68,7 +68,7 @@ export class TargetAudienceController implements ITargetAudienceController {
   });
 
   restore = asyncHandler(async (req: Request, res: Response) => {
-    const targetAudience = await this.service.restore(req.params.id as string);
+    const targetAudience = await this._service.restore(req.params.id as string);
     if (!targetAudience) {
       throw new CustomError(MENTOR_MESSAGES.TARGET_AUDIENCE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }

@@ -15,7 +15,7 @@ const { NOTIFICATION_MESSAGES } = MESSAGES;
 export class NotificationTypeService implements INotificationTypeService {
   constructor(
     @inject(TYPES.NotificationTypeRepository)
-    private notificationTypeRepository: INotificationTypeRepository,
+    private _notificationTypeRepository: INotificationTypeRepository,
   ) {}
 
   async createNotificationType(data: {
@@ -25,18 +25,18 @@ export class NotificationTypeService implements INotificationTypeService {
     iconColor: string;
     roles: string[];
   }): Promise<INotificationType> {
-    const existingType = await this.notificationTypeRepository.findByName(data.name);
+    const existingType = await this._notificationTypeRepository.findByName(data.name);
     if (existingType) {
       throw new CustomError(NOTIFICATION_MESSAGES.TYPE_EXISTS, StatusCodes.CONFLICT);
     }
 
-    const notificationType = await this.notificationTypeRepository.createNotificationType(data);
+    const notificationType = await this._notificationTypeRepository.createNotificationType(data);
 
     return notificationType;
   }
 
   async getNotificationTypes(): Promise<INotificationType[]> {
-    return this.notificationTypeRepository.findAll();
+    return this._notificationTypeRepository.findAll();
   }
 
   async updateNotificationType(
@@ -50,13 +50,13 @@ export class NotificationTypeService implements INotificationTypeService {
     }>,
   ): Promise<INotificationType> {
     if (data.name) {
-      const existingType = await this.notificationTypeRepository.findByName(data.name);
+      const existingType = await this._notificationTypeRepository.findByName(data.name);
       if (existingType && existingType._id.toString() !== id) {
         throw new CustomError(NOTIFICATION_MESSAGES.TYPE_EXISTS, StatusCodes.CONFLICT);
       }
     }
 
-    const updatedType = await this.notificationTypeRepository.update(id, data);
+    const updatedType = await this._notificationTypeRepository.update(id, data);
     if (!updatedType) {
       throw new CustomError(NOTIFICATION_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -65,10 +65,10 @@ export class NotificationTypeService implements INotificationTypeService {
   }
 
   async deleteNotificationType(id: string): Promise<void> {
-    await this.notificationTypeRepository.softDelete(id);
+    await this._notificationTypeRepository.softDelete(id);
   }
 
   async restoreNotificationType(id: string): Promise<void> {
-    await this.notificationTypeRepository.restore(id);
+    await this._notificationTypeRepository.restore(id);
   }
 }

@@ -16,20 +16,20 @@ const { MENTOR_MESSAGES } = MESSAGES;
 @injectable()
 export class TargetAudienceService implements ITargetAudienceService {
   constructor(
-    @inject(TYPES.TargetAudienceRepository) private repository: ITargetAudienceRepository,
+    @inject(TYPES.TargetAudienceRepository) private _repository: ITargetAudienceRepository,
   ) {}
 
   async create(data: Partial<ITargetAudience>): Promise<ITargetAudience> {
-    const existingAudience = await this.repository.findOne({ name: data.name });
+    const existingAudience = await this._repository.findOne({ name: data.name });
     if (existingAudience) {
       throw new CustomError(MENTOR_MESSAGES.AUDIENCE_EXISTS, StatusCodes.CONFLICT);
     }
-    return this.repository.create(data);
+    return this._repository.create(data);
   }
 
   async update(id: string, data: Partial<ITargetAudience>): Promise<ITargetAudience | null> {
     if (data.name) {
-      const existingAudience = await this.repository.findOne({
+      const existingAudience = await this._repository.findOne({
         name: data.name,
         _id: { $ne: id },
       });
@@ -37,22 +37,22 @@ export class TargetAudienceService implements ITargetAudienceService {
         throw new CustomError(MENTOR_MESSAGES.AUDIENCE_EXISTS, StatusCodes.CONFLICT);
       }
     }
-    return this.repository.update(id, data);
+    return this._repository.update(id, data);
   }
 
   async find(query: QueryFilter<ITargetAudience> = {}): Promise<ITargetAudience[]> {
-    return this.repository.find(query);
+    return this._repository.find(query);
   }
 
   async findById(id: string): Promise<ITargetAudience | null> {
-    return this.repository.findById(id);
+    return this._repository.findById(id);
   }
 
   async softDelete(id: string): Promise<ITargetAudience | null> {
-    return this.repository.softDelete(id);
+    return this._repository.softDelete(id);
   }
 
   async restore(id: string): Promise<ITargetAudience | null> {
-    return this.repository.restore(id);
+    return this._repository.restore(id);
   }
 }

@@ -11,7 +11,7 @@ import { TYPES } from "@/di/types";
 
 @injectable()
 export class VoteController implements IVoteController {
-  constructor(@inject(TYPES.VoteService) private voteService: IVoteService) {}
+  constructor(@inject(TYPES.VoteService) private _voteService: IVoteService) {}
 
   // Vote on content
   voteContent = asyncHandler(async (req: Request, res: Response) => {
@@ -19,10 +19,10 @@ export class VoteController implements IVoteController {
     const userId = req.user?._id as string;
 
     // Process the vote
-    await this.voteService.vote(contentId, userId, voteType);
+    await this._voteService.vote(contentId, userId, voteType);
 
     // Get updated vote counts
-    const votes = await this.voteService.getVotes(contentId);
+    const votes = await this._voteService.getVotes(contentId);
 
     res.status(StatusCodes.OK).json({
       success: true,
@@ -35,7 +35,7 @@ export class VoteController implements IVoteController {
     const userId = req.user?._id as string;
 
     // Fetch user votes
-    const userVotes = await this.voteService.getUserVotes(userId);
+    const userVotes = await this._voteService.getUserVotes(userId);
 
     res.status(StatusCodes.OK).json({
       success: true,

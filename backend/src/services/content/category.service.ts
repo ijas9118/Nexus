@@ -13,33 +13,33 @@ const { CATEGORY_MESSAGES } = MESSAGES;
 
 @injectable()
 export class CategoryService implements ICategoryService {
-  constructor(@inject(TYPES.CategoryRepository) private categoryRepository: ICategoryRepository) {}
+  constructor(@inject(TYPES.CategoryRepository) private _categoryRepository: ICategoryRepository) {}
 
   async addCategory(name: string): Promise<ICategory> {
-    const existingCategory = await this.categoryRepository.findOne({ name });
+    const existingCategory = await this._categoryRepository.findOne({ name });
 
     if (existingCategory) {
       throw new CustomError(CATEGORY_MESSAGES.EXISTS, StatusCodes.CONFLICT);
     }
 
-    return await this.categoryRepository.addCategory(name);
+    return await this._categoryRepository.addCategory(name);
   }
 
   async updateCategory(id: string, newName: string): Promise<ICategory | null> {
-    const existingCategory = await this.categoryRepository.findOne({ name: newName });
+    const existingCategory = await this._categoryRepository.findOne({ name: newName });
 
     if (existingCategory) {
       throw new CustomError(CATEGORY_MESSAGES.EXISTS, StatusCodes.CONFLICT);
     }
-    return await this.categoryRepository.updateCategory(id, newName);
+    return await this._categoryRepository.updateCategory(id, newName);
   }
 
   async toggleCategory(id: string): Promise<ICategory | null> {
-    return await this.categoryRepository.toggleCategory(id);
+    return await this._categoryRepository.toggleCategory(id);
   }
 
   async getAllCategories(): Promise<ICategory[]> {
-    return await this.categoryRepository.getAllCategories();
+    return await this._categoryRepository.getAllCategories();
   }
 
   async getAllCategoriesWithPagination(
@@ -47,6 +47,6 @@ export class CategoryService implements ICategoryService {
     limit: number,
     search: string,
   ): Promise<{ categories: ICategory[]; total: number }> {
-    return await this.categoryRepository.findAllWithPagination(page, limit, search);
+    return await this._categoryRepository.findAllWithPagination(page, limit, search);
   }
 }

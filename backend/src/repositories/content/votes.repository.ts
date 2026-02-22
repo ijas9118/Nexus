@@ -18,8 +18,8 @@ export class VoteRepository extends BaseRepository<IVote> implements IVoteReposi
 
   async countVotes(contentId: string): Promise<{ upvotes: number; downvotes: number }> {
     const [upvotes, downvotes] = await Promise.all([
-      this.model.countDocuments({ contentId, voteType: "upvote" }),
-      this.model.countDocuments({ contentId, voteType: "downvote" }),
+      this._model.countDocuments({ contentId, voteType: "upvote" }),
+      this._model.countDocuments({ contentId, voteType: "downvote" }),
     ]);
     return { upvotes, downvotes };
   }

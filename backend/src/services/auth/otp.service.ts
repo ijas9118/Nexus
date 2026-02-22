@@ -16,7 +16,7 @@ const { AUTH_MESSAGES } = MESSAGES;
 
 @injectable()
 export class OTPService implements IOTPService {
-  constructor(@inject(TYPES.EmailService) private emailService: IEmailService) {}
+  constructor(@inject(TYPES.EmailService) private _emailService: IEmailService) {}
 
   // Generate a random 6-digit OTP
   generateOTP(): string {
@@ -35,7 +35,7 @@ export class OTPService implements IOTPService {
 
     const newOtp = this.generateOTP();
 
-    await this.emailService.sendOtpEmail(existingData, newOtp);
+    await this._emailService.sendOtpEmail(existingData, newOtp);
   }
 
   // Verify OTP and retrieve stored user data

@@ -13,10 +13,10 @@ const { PAYMENT_MESSAGES, MENTOR_MESSAGES } = MESSAGES;
 
 @injectable()
 export class PlanService implements IPlanService {
-  constructor(@inject(TYPES.PlanRepository) private planRepository: IPlanRepository) {}
+  constructor(@inject(TYPES.PlanRepository) private _planRepository: IPlanRepository) {}
 
   createPlan = async (data: Partial<IPlan>): Promise<IPlan> => {
-    const existingPlan = await this.planRepository.findOne({ tier: data.tier });
+    const existingPlan = await this._planRepository.findOne({ tier: data.tier });
     if (existingPlan) {
       throw new CustomError(PAYMENT_MESSAGES.PLAN_EXISTS, StatusCodes.CONFLICT);
     }
@@ -28,30 +28,30 @@ export class PlanService implements IPlanService {
     if (data.price! < 0) {
       throw new CustomError(MENTOR_MESSAGES.PRICE_NEGATIVE, StatusCodes.BAD_REQUEST);
     }
-    return this.planRepository.create(data);
+    return this._planRepository.create(data);
   };
 
   getAllPlans = async (): Promise<IPlan[]> => {
-    return this.planRepository.findActivePlans();
+    return this._planRepository.findActivePlans();
   };
 
   getPlanById = async (id: string): Promise<IPlan | null> => {
-    return this.planRepository.findById(id);
+    return this._planRepository.findById(id);
   };
 
   updatePlan = async (id: string, data: Partial<IPlan>): Promise<IPlan | null> => {
-    const existingPlan = await this.planRepository.findById(id);
+    const existingPlan = await this._planRepository.findById(id);
     if (!existingPlan) {
       throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
-    return this.planRepository.update(id, { ...data, updatedAt: new Date() });
+    return this._planRepository.update(id, { ...data, updatedAt: new Date() });
   };
 
   softDeletePlan = async (id: string): Promise<IPlan | null> => {
-    const existingPlan = await this.planRepository.findById(id);
+    const existingPlan = await this._planRepository.findById(id);
     if (!existingPlan) {
       throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
-    return this.planRepository.softDelete(id);
+    return this._planRepository.softDelete(id);
   };
 }

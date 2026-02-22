@@ -17,6 +17,6 @@ export class PlanRepository extends BaseRepository<IPlan> implements IPlanReposi
   }
 
   async findActivePlans(): Promise<IPlan[]> {
-    return this.model.find({ isActive: true });
+    return this._model.find({ isActive: true });
   }
 }

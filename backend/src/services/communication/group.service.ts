@@ -15,8 +15,8 @@ const { CHAT_MESSAGES } = MESSAGES;
 @injectable()
 export class GroupService implements IGroupService {
   constructor(
-    @inject(TYPES.GroupRepository) protected repository: IGroupRepository,
-    @inject(TYPES.ConnectionService) private connectionService: IConnectionService,
+    @inject(TYPES.GroupRepository) protected _repository: IGroupRepository,
+    @inject(TYPES.ConnectionService) private _connectionService: IConnectionService,
   ) {}
 
   async createGroup(userId: string, name: string, memberIds: string[]): Promise<IGroup> {
@@ -26,7 +26,7 @@ export class GroupService implements IGroupService {
     const invalidMembers: string[] = [];
     for (const memberId of memberIds) {
       if (memberId !== userId) {
-        const isConnected = await this.connectionService.isConnected(userId, memberId);
+        const isConnected = await this._connectionService.isConnected(userId, memberId);
         if (!isConnected) {
           invalidMembers.push(memberId);
         }
@@ -39,7 +39,7 @@ export class GroupService implements IGroupService {
       );
     }
 
-    return this.repository.create({
+    return this._repository.create({
       name,
       members: allMembers,
       createdBy: userId,
@@ -47,6 +47,6 @@ export class GroupService implements IGroupService {
   }
 
   async getUserGroups(userId: string): Promise<IGroup[]> {
-    return this.repository.getUserGroups(userId);
+    return this._repository.getUserGroups(userId);
   }
 }

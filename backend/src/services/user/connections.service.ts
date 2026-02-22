@@ -11,56 +11,56 @@ import { TYPES } from "@/di/types";
 export class ConnectionService implements IConnectionService {
   constructor(
     @inject(TYPES.ConnectionsRepository)
-    private connectionsRepository: IConnectionsRepository,
+    private _connectionsRepository: IConnectionsRepository,
   ) {}
 
   searchConnections = async (userId: string, search?: string): Promise<SearchConnections[]> => {
-    return this.connectionsRepository.searchConnections(userId, search);
+    return this._connectionsRepository.searchConnections(userId, search);
   };
 
   getPendingRequest = async (userId: string): Promise<IPendingRequestUser[]> => {
-    return this.connectionsRepository.getPendingRequests(userId);
+    return this._connectionsRepository.getPendingRequests(userId);
   };
 
   getSentConnectionRequests = async (userId: string): Promise<IPendingRequestUser[]> => {
-    return this.connectionsRepository.getSentConnectionRequests(userId);
+    return this._connectionsRepository.getSentConnectionRequests(userId);
   };
 
   sendConnectionRequest = async (
     requesterId: string,
     recipientId: string,
   ): Promise<"ALREADY_SENT" | "ALREADY_CONNECTED" | "SELF_REQUEST" | "SUCCESS"> => {
-    return this.connectionsRepository.sendConnectionRequest(requesterId, recipientId);
+    return this._connectionsRepository.sendConnectionRequest(requesterId, recipientId);
   };
 
   acceptConnectionRequest = async (userId: string, requesterId: string): Promise<boolean> => {
-    return this.connectionsRepository.acceptConnectionRequest(userId, requesterId);
+    return this._connectionsRepository.acceptConnectionRequest(userId, requesterId);
   };
 
   hasSentConnectionRequest = async (requesterId: string, recipientId: string): Promise<boolean> => {
-    return this.connectionsRepository.hasSentConnectionRequest(requesterId, recipientId);
+    return this._connectionsRepository.hasSentConnectionRequest(requesterId, recipientId);
   };
 
   withdrawConnectionRequest = async (
     requesterId: string,
     recipientId: string,
   ): Promise<boolean> => {
-    return this.connectionsRepository.withdrawConnectionRequest(requesterId, recipientId);
+    return this._connectionsRepository.withdrawConnectionRequest(requesterId, recipientId);
   };
 
   rejectConnectionRequest = async (userId: string, requesterId: string): Promise<boolean> => {
-    return this.connectionsRepository.rejectConnectionRequest(userId, requesterId);
+    return this._connectionsRepository.rejectConnectionRequest(userId, requesterId);
   };
 
   removeConnection = async (userId1: string, userId2: string): Promise<boolean> => {
-    return this.connectionsRepository.removeConnection(userId1, userId2);
+    return this._connectionsRepository.removeConnection(userId1, userId2);
   };
 
   isConnected = async (userId1: string, userId2: string): Promise<boolean> => {
-    return this.connectionsRepository.isConnected(userId1, userId2);
+    return this._connectionsRepository.isConnected(userId1, userId2);
   };
 
   getAllConnections = async (userId: string): Promise<any[]> => {
-    return this.connectionsRepository.getAllConnections(userId);
+    return this._connectionsRepository.getAllConnections(userId);
   };
 }

@@ -34,7 +34,7 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
   };
 
   findMentorByUserId = async (userId: string): Promise<IMentor | null> => {
-    return await this.model
+    return await this._model
       .findOne({ userId })
       .populate("experience.experienceLevel")
       .populate("experience.expertiseAreas")
@@ -47,11 +47,11 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
     mentorId: string,
     status: "pending" | "approved" | "rejected",
   ): Promise<IMentor | null> {
-    return await this.model.findByIdAndUpdate(mentorId, { status }, { new: true });
+    return await this._model.findByIdAndUpdate(mentorId, { status }, { new: true });
   }
 
   getAllMentors = async (): Promise<IMentor[]> => {
-    return await this.model
+    return await this._model
       .find(
         {},
         {
@@ -68,7 +68,7 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
   };
 
   getApprovedMentors = async (): Promise<IMentor[]> => {
-    return await this.model
+    return await this._model
       .find(
         { status: "approved" },
         {
@@ -85,7 +85,7 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
   };
 
   getMentorDetails = async (mentorId: string): Promise<IMentor | null> => {
-    return await this.model
+    return await this._model
       .findById(mentorId)
       .populate("userId", "name email profilePic username location") // 👈 pick what you need
       .populate("experience.experienceLevel")
@@ -108,7 +108,7 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
       resume?: string | null;
     },
   ): Promise<IMentor | null> => {
-    return await this.model
+    return await this._model
       .findOneAndUpdate(
         { userId },
         {
@@ -138,7 +138,7 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
       targetAudiences: string[];
     },
   ): Promise<IMentor | null> => {
-    return await this.model
+    return await this._model
       .findOneAndUpdate(
         { userId },
         {
@@ -164,10 +164,10 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
     }>;
   }> {
     // Get total count of all mentor applications
-    const totalApplications = await this.model.countDocuments({});
+    const totalApplications = await this._model.countDocuments({});
 
     // Aggregate mentor applications by status
-    const statusCounts = await this.model.aggregate([
+    const statusCounts = await this._model.aggregate([
       {
         $group: {
           _id: "$status",
@@ -202,7 +202,7 @@ export class MentorRepository extends BaseRepository<IMentor> implements IMentor
   }
 
   async countMentorApplicationsBefore(date: Date): Promise<number> {
-    return this.model.countDocuments({
+    return this._model.countDocuments({
       createdAt: { $lt: date },
     });
   }

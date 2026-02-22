@@ -15,14 +15,14 @@ export class ContentViewRepository
   }
 
   async hasUserViewedContent(userId: string, contentId: string): Promise<boolean> {
-    return !!(await this.model.findOne({ userId, contentId }));
+    return !!(await this._model.findOne({ userId, contentId }));
   }
 
   async createView(userId: string, contentId: string): Promise<IContentView> {
-    return this.model.create({ userId, contentId });
+    return this._model.create({ userId, contentId });
   }
 
   async getViewCount(contentId: string): Promise<number> {
-    return this.model.countDocuments({ contentId });
+    return this._model.countDocuments({ contentId });
   }
 }

@@ -29,12 +29,12 @@ interface UserUpdateData {
 @injectable()
 export class UserService implements IUserService {
   constructor(
-    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-    @inject(TYPES.ContentRepository) private contentRepo: IContentRepository,
+    @inject(TYPES.UserRepository) private _userRepository: IUserRepository,
+    @inject(TYPES.ContentRepository) private _contentRepo: IContentRepository,
   ) {}
 
   async findByEmail(email: string): Promise<IUser | null> {
-    return this.userRepository.findByEmail(email);
+    return this._userRepository.findByEmail(email);
   }
 
   async getUsers(
@@ -49,7 +49,7 @@ export class UserService implements IUserService {
   }> {
     const skip = (page - 1) * limit;
     const [usersRaw, total] = await Promise.all([
-      this.userRepository.getAllUsers(skip, limit),
+      this._userRepository.getAllUsers(skip, limit),
       UserModel.countDocuments({}),
     ]);
 
@@ -65,11 +65,11 @@ export class UserService implements IUserService {
   }
 
   async getUserById(userId: string): Promise<IUser | null> {
-    return this.userRepository.getUserById(userId);
+    return this._userRepository.getUserById(userId);
   }
 
   async updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null> {
-    return this.userRepository.updateUser(userId, userData);
+    return this._userRepository.updateUser(userId, userData);
   }
 
   async updatePassword(
@@ -86,7 +86,7 @@ export class UserService implements IUserService {
       throw new CustomError(USER_MESSAGES.PASSWORD_MISMATCH, StatusCodes.BAD_REQUEST);
     }
 
-    const user = await this.userRepository.findOne({ _id: userId });
+    const user = await this._userRepository.findOne({ _id: userId });
     if (!user) {
       throw new CustomError(USER_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -99,7 +99,7 @@ export class UserService implements IUserService {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-    await this.userRepository.updateOne({ _id: userId }, { $set: { password: hashedPassword } });
+    await this._userRepository.updateOne({ _id: userId }, { $set: { password: hashedPassword } });
 
     return true;
   }
@@ -116,7 +116,7 @@ export class UserService implements IUserService {
         resourceType: "image",
       });
 
-      const user = await this.userRepository.getUserById(userId);
+      const user = await this._userRepository.getUserById(userId);
 
       if (user?.profilePicPublicId) {
         await deleteFromCloudinary(user.profilePicPublicId);
@@ -126,7 +126,7 @@ export class UserService implements IUserService {
       data.profilePicPublicId = publicId;
     }
 
-    const updatedUser = await this.userRepository.updateUser(userId, data);
+    const updatedUser = await this._userRepository.updateUser(userId, data);
     if (!updatedUser) {
       throw new CustomError(USER_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -134,33 +134,33 @@ export class UserService implements IUserService {
   }
 
   async deleteUser(userId: string): Promise<boolean> {
-    return this.userRepository.deleteUser(userId);
+    return this._userRepository.deleteUser(userId);
   }
 
   async getUserJoinedSquads(userId: string): Promise<ISquad[]> {
-    return this.userRepository.getUserJoinedSquads(userId);
+    return this._userRepository.getUserJoinedSquads(userId);
   }
 
   async getUserByUsername(username: string): Promise<IUser | null> {
-    return this.userRepository.getUserByUsername(username);
+    return this._userRepository.getUserByUsername(username);
   }
 
   getUserContents = async (username: string): Promise<IContent[]> => {
-    const userId = await this.userRepository.getUserIdByUsername(username);
+    const userId = await this._userRepository.getUserIdByUsername(username);
     if (!userId) {
       throw new CustomError(USER_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    return this.contentRepo.getUserContents(userId);
+    return this._contentRepo.getUserContents(userId);
   };
 
   validateUsername = async (username: string): Promise<boolean> => {
-    const user = await this.userRepository.findOne({ username });
+    const user = await this._userRepository.findOne({ username });
     return !user;
   };
 
   async blockUser(userId: string): Promise<boolean> {
-    const updatedUser = await this.userRepository.updateUser(userId, { isBlocked: true });
+    const updatedUser = await this._userRepository.updateUser(userId, { isBlocked: true });
     if (!updatedUser) {
       throw new CustomError(ADMIN_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -170,7 +170,7 @@ export class UserService implements IUserService {
   }
 
   async unblockUser(userId: string): Promise<boolean> {
-    const updatedUser = await this.userRepository.updateUser(userId, { isBlocked: false });
+    const updatedUser = await this._userRepository.updateUser(userId, { isBlocked: false });
     if (!updatedUser) {
       throw new CustomError(ADMIN_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }

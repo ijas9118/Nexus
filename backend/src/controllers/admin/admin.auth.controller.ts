@@ -18,11 +18,11 @@ const { ADMIN_MESSAGES } = MESSAGES;
 
 @injectable()
 export class AdminAuthController implements IAdminAuthController {
-  constructor(@inject(TYPES.AdminAuthService) private adminAuthService: AdminAuthService) {}
+  constructor(@inject(TYPES.AdminAuthService) private _adminAuthService: AdminAuthService) {}
 
   login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const loginDto = req.body as LoginRequestDTO;
-    const user = await this.adminAuthService.login(loginDto);
+    const user = await this._adminAuthService.login(loginDto);
 
     if (!user) {
       throw new CustomError(ADMIN_MESSAGES.INVALID_CREDENTIALS, StatusCodes.UNAUTHORIZED);
@@ -58,7 +58,7 @@ export class AdminAuthController implements IAdminAuthController {
       throw new CustomError(ADMIN_MESSAGES.ACCESS_TOKEN_INVALID, StatusCodes.FORBIDDEN);
     }
 
-    const user = await this.adminAuthService.findUserByEmail(payload.user.email);
+    const user = await this._adminAuthService.findUserByEmail(payload.user.email);
 
     if (!user) {
       throw new CustomError(ADMIN_MESSAGES.ACCESS_TOKEN_INVALID, StatusCodes.FORBIDDEN);

@@ -15,7 +15,7 @@ const { MENTOR_MESSAGES } = MESSAGES;
 
 @injectable()
 export class TimeSlotController implements ITimeSlotController {
-  constructor(@inject(TYPES.TimeSlotService) private timeSlotService: ITimeSlotService) {}
+  constructor(@inject(TYPES.TimeSlotService) private _timeSlotService: ITimeSlotService) {}
 
   addTimeSlot = asyncHandler(async (req: Request, res: Response) => {
     const { date, startTime } = req.body;
@@ -29,7 +29,7 @@ export class TimeSlotController implements ITimeSlotController {
       throw new CustomError(MENTOR_MESSAGES.DATE_START_TIME_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    const timeSlot = await this.timeSlotService.addTimeSlot(mentorId, new Date(date), startTime);
+    const timeSlot = await this._timeSlotService.addTimeSlot(mentorId, new Date(date), startTime);
     res.status(StatusCodes.CREATED).json(timeSlot);
   });
 
@@ -41,7 +41,7 @@ export class TimeSlotController implements ITimeSlotController {
       throw new CustomError(MENTOR_MESSAGES.MENTOR_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    const timeSlot = await this.timeSlotService.deleteTimeSlot(mentorId, slotId as string);
+    const timeSlot = await this._timeSlotService.deleteTimeSlot(mentorId, slotId as string);
     res.status(StatusCodes.OK).json(timeSlot);
   });
 
@@ -57,7 +57,7 @@ export class TimeSlotController implements ITimeSlotController {
       throw new CustomError(MENTOR_MESSAGES.DATE_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    const timeSlots = await this.timeSlotService.getTimeSlotsByMentorAndDate(
+    const timeSlots = await this._timeSlotService.getTimeSlotsByMentorAndDate(
       mentorId,
       new Date(date as string),
     );
@@ -71,7 +71,7 @@ export class TimeSlotController implements ITimeSlotController {
       throw new CustomError(MENTOR_MESSAGES.MENTOR_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    const timeSlots = await this.timeSlotService.getAllTimeSlots(mentorId);
+    const timeSlots = await this._timeSlotService.getAllTimeSlots(mentorId);
     res.status(StatusCodes.OK).json(timeSlots);
   });
 
@@ -82,7 +82,7 @@ export class TimeSlotController implements ITimeSlotController {
       throw new CustomError(MENTOR_MESSAGES.MENTOR_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    const timeSlots = await this.timeSlotService.getBookedTimeSlots(mentorId);
+    const timeSlots = await this._timeSlotService.getBookedTimeSlots(mentorId);
     res.status(StatusCodes.OK).json(timeSlots);
   });
 
@@ -93,7 +93,7 @@ export class TimeSlotController implements ITimeSlotController {
       throw new CustomError(MENTOR_MESSAGES.MENTOR_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    const timeSlots = await this.timeSlotService.getMentorTimeSlots(mentorId);
+    const timeSlots = await this._timeSlotService.getMentorTimeSlots(mentorId);
     res.status(StatusCodes.OK).json(timeSlots);
   });
 }

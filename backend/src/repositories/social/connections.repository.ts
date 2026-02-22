@@ -24,7 +24,7 @@ export class ConnectionsRepository
   }
 
   searchConnections = async (userId: string, search?: string): Promise<SearchConnections[]> => {
-    const userFollow: IUserFollow = await this.model.findOne({ userId }).select("connections");
+    const userFollow: IUserFollow = await this._model.findOne({ userId }).select("connections");
 
     if (!userFollow || !userFollow.connections.length) {
       throw new CustomError("No connections found", StatusCodes.NOT_FOUND);

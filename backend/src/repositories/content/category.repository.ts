@@ -48,8 +48,8 @@ export class CategoryRepository extends BaseRepository<ICategory> implements ICa
       : {};
 
     const [categories, total] = await Promise.all([
-      this.model.find(query).skip(skip).limit(limit).exec(),
-      this.model.countDocuments(query).exec(),
+      this._model.find(query).skip(skip).limit(limit).exec(),
+      this._model.countDocuments(query).exec(),
     ]);
 
     return { categories, total };

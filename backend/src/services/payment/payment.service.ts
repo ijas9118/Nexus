@@ -22,10 +22,10 @@ const { PAYMENT_MESSAGES, AUTH_MESSAGES, BOOKING_MESSAGES } = MESSAGES;
 @injectable()
 export class PaymentServce implements IPaymentService {
   constructor(
-    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-    @inject(TYPES.PaymentRepository) private paymentRepository: IPaymentRepository,
-    @inject(TYPES.SubscriptionRepository) private subscriptionRepository: ISubscriptionRepository,
-    @inject(TYPES.BookingPaymentService) private bookingPaymentService: IBookingPaymentService,
+    @inject(TYPES.UserRepository) private _userRepository: IUserRepository,
+    @inject(TYPES.PaymentRepository) private _paymentRepository: IPaymentRepository,
+    @inject(TYPES.SubscriptionRepository) private _subscriptionRepository: ISubscriptionRepository,
+    @inject(TYPES.BookingPaymentService) private _bookingPaymentService: IBookingPaymentService,
   ) {}
 
   checkoutSession = async (
@@ -36,7 +36,7 @@ export class PaymentServce implements IPaymentService {
     email: string,
   ): Promise<string> => {
     const currentSubscription
-      = await this.subscriptionRepository.getUserCurrentSubscription(customerId);
+      = await this._subscriptionRepository.getUserCurrentSubscription(customerId);
     if (
       currentSubscription
       && typeof currentSubscription.planId !== "string"
@@ -85,10 +85,10 @@ export class PaymentServce implements IPaymentService {
         const metadata = session.metadata;
 
         if (metadata?.type === "booking") {
-          await this.bookingPaymentService.webhookHandler(bodyData, signature);
+          await this._bookingPaymentService.webhookHandler(bodyData, signature);
         }
         else if (metadata?.type === "subscription") {
-          await this.handleCheckoutSessionCompleted(session);
+          await this._handleCheckoutSessionCompleted(session);
         }
         else {
           logger.error(PAYMENT_MESSAGES.UNKNOWN_SESSION_TYPE);
@@ -107,7 +107,7 @@ export class PaymentServce implements IPaymentService {
     return session.payment_status === "paid" && session.status === "complete";
   }
 
-  private async handleCheckoutSessionCompleted(session: Stripe.Checkout.Session): Promise<void> {
+  private async _handleCheckoutSessionCompleted(session: Stripe.Checkout.Session): Promise<void> {
     const {
       metadata,
       amount_total,
@@ -131,7 +131,7 @@ export class PaymentServce implements IPaymentService {
       throw new CustomError(BOOKING_MESSAGES.MISSING_SESSION_DETAILS, StatusCodes.BAD_REQUEST);
     }
 
-    const payment = await this.paymentRepository.createPayment({
+    const payment = await this._paymentRepository.createPayment({
       userId: metadata.customerId,
       planId: metadata.planId,
       stripeSessionId: id,
@@ -149,7 +149,7 @@ export class PaymentServce implements IPaymentService {
 
     endDate.setMonth(endDate.getMonth() + 1);
 
-    await this.subscriptionRepository.createSubscription({
+    await this._subscriptionRepository.createSubscription({
       userId: metadata.customerId,
       planId: metadata.planId,
       paymentId: payment._id as string,
@@ -160,7 +160,7 @@ export class PaymentServce implements IPaymentService {
       interval: "month",
     });
 
-    const user = await this.userRepository.updatePremiumStatus(metadata.customerId, true);
+    const user = await this._userRepository.updatePremiumStatus(metadata.customerId, true);
     if (!user) {
       throw new CustomError(AUTH_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }

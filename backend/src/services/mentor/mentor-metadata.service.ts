@@ -17,40 +17,40 @@ const { MENTOR_MESSAGES } = MESSAGES;
 @injectable()
 export class MentorMetadataService implements IMentorMetadataService {
   constructor(
-    @inject(TYPES.MentorMetadataRepository) private repository: IMentorMetadataRepository,
+    @inject(TYPES.MentorMetadataRepository) private _repository: IMentorMetadataRepository,
   ) {}
 
   async findByType(type: string, isActive: boolean = true): Promise<IMentorMetadata[]> {
-    return (this.repository as MentorMetadataRepository).findByType(type, isActive);
+    return (this._repository as MentorMetadataRepository).findByType(type, isActive);
   }
 
   async create(data: Partial<IMentorMetadata>): Promise<IMentorMetadata> {
     if (!["experienceLevel", "expertiseArea", "technology"].includes(data.type!)) {
       throw new CustomError(MENTOR_MESSAGES.INVALID_META_TYPE, StatusCodes.BAD_REQUEST);
     }
-    return this.repository.create(data);
+    return this._repository.create(data);
   }
 
   async update(id: string, data: Partial<IMentorMetadata>): Promise<IMentorMetadata | null> {
     if (data.type && !["experienceLevel", "expertiseArea", "technology"].includes(data.type)) {
       throw new CustomError(MENTOR_MESSAGES.INVALID_META_TYPE, StatusCodes.BAD_REQUEST);
     }
-    return this.repository.update(id, data);
+    return this._repository.update(id, data);
   }
 
   async findById(id: string): Promise<IMentorMetadata | null> {
-    return this.repository.findById(id);
+    return this._repository.findById(id);
   }
 
   async find(query: QueryFilter<IMentorMetadata> = {}): Promise<IMentorMetadata[]> {
-    return this.repository.find(query);
+    return this._repository.find(query);
   }
 
   async softDelete(id: string): Promise<IMentorMetadata | null> {
-    return this.repository.softDelete(id);
+    return this._repository.softDelete(id);
   }
 
   async restore(id: string): Promise<IMentorMetadata | null> {
-    return this.repository.restore(id);
+    return this._repository.restore(id);
   }
 }
