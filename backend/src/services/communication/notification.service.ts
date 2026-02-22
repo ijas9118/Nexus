@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
 import type { INotificationRepository } from "@/core/interfaces/repositories/i-notification-repository";
@@ -6,7 +7,10 @@ import type { INotificationService } from "@/core/interfaces/services/i-notifica
 import type { INotification } from "@/models/communication/notification.model";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { NOTIFICATION_MESSAGES } = MESSAGES;
 
 @injectable()
 export class NotificationService implements INotificationService {
@@ -20,7 +24,7 @@ export class NotificationService implements INotificationService {
   async getNotificationTypeIdByName(name: string): Promise<string> {
     const notificationType = await this.notificationTypeRepo.findByName(name);
     if (!notificationType || !notificationType.isActive) {
-      throw new CustomError(`Notification type "${name}" not found or is inactive`);
+      throw new CustomError(NOTIFICATION_MESSAGES.TYPE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     return notificationType._id.toString();
   }
@@ -34,7 +38,7 @@ export class NotificationService implements INotificationService {
     const notificationType = await this.notificationTypeRepo.findById(notificationTypeId);
 
     if (!notificationType || !notificationType.isActive) {
-      throw new CustomError("Invalid or inactive notification type");
+      throw new CustomError(NOTIFICATION_MESSAGES.INVALID_TYPE, StatusCodes.BAD_REQUEST);
     }
 
     const notificationData: Partial<INotification> = {

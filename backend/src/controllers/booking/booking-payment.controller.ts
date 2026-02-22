@@ -9,6 +9,10 @@ import type { IBookingPaymentService } from "@/core/interfaces/services/i-bookin
 import type { IMentorService } from "@/core/interfaces/services/i-mentor-service";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
+
+const { COMMON_MESSAGES } = MESSAGES;
 
 @injectable()
 export class BookingPaymentController implements IBookingPaymentController {
@@ -38,8 +42,7 @@ export class BookingPaymentController implements IBookingPaymentController {
     const { sessionId } = req.params;
 
     if (!sessionId || typeof sessionId !== "string") {
-      res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: "Missing sessionId" });
-      return;
+      throw new CustomError(COMMON_MESSAGES.MISSING_SESSION_ID, StatusCodes.BAD_REQUEST);
     }
 
     const isValid = await this._bookingPaymentService.verifyCheckoutSession(sessionId);

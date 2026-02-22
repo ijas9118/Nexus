@@ -8,7 +8,10 @@ import type { IBookmarkService } from "@/core/interfaces/services/i-bookmark-ser
 import type { IContent } from "@/models/content/content.model";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { CONTENT_MESSAGES } = MESSAGES;
 
 @injectable()
 export class BookmarkService implements IBookmarkService {
@@ -21,7 +24,7 @@ export class BookmarkService implements IBookmarkService {
   async toggleBookmark(contentId: string, userId: string): Promise<{ status: boolean }> {
     const content = await this.contentRepository.find({ _id: contentId });
     if (!content) {
-      throw new CustomError("Content not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(CONTENT_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     const contentIdObject = new mongoose.Types.ObjectId(contentId);

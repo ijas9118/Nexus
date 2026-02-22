@@ -12,7 +12,10 @@ import type { IMessageService } from "@/core/interfaces/services/i-message-servi
 import type { IMessage } from "@/models/communication/message.model";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { CHAT_MESSAGES } = MESSAGES;
 
 @injectable()
 export class MessageService implements IMessageService {
@@ -120,8 +123,9 @@ export class MessageService implements IMessageService {
     io?: SocketIOServer,
   ): Promise<IMessage> {
     const message = await this.repository.findById(new Types.ObjectId(messageId));
-    if (!message || message.isDeleted)
-      throw new Error("Message not found");
+    if (!message || message.isDeleted) {
+      throw new CustomError(CHAT_MESSAGES.MESSAGE_NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
 
     await this.validateChatAccess(userId, message.chatId, message.chatType);
 
@@ -141,8 +145,9 @@ export class MessageService implements IMessageService {
 
   async removeReaction(userId: string, messageId: string, io?: SocketIOServer): Promise<IMessage> {
     const message = await this.repository.findById(new Types.ObjectId(messageId));
-    if (!message || message.isDeleted)
-      throw new Error("Message not found");
+    if (!message || message.isDeleted) {
+      throw new CustomError(CHAT_MESSAGES.MESSAGE_NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
 
     await this.validateChatAccess(userId, message.chatId, message.chatType);
 
@@ -156,10 +161,12 @@ export class MessageService implements IMessageService {
 
   async deleteMessage(userId: string, messageId: string, io?: SocketIOServer): Promise<IMessage> {
     const message = await this.repository.findById(new Types.ObjectId(messageId));
-    if (!message || message.isDeleted)
-      throw new Error("Message not found");
-    if (message.sender !== userId)
-      throw new Error("Only the sender can delete a message");
+    if (!message || message.isDeleted) {
+      throw new CustomError(CHAT_MESSAGES.MESSAGE_NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
+    if (message.sender !== userId) {
+      throw new CustomError(CHAT_MESSAGES.DELETE_ONLY_SENDER, StatusCodes.FORBIDDEN);
+    }
 
     await this.validateChatAccess(userId, message.chatId, message.chatType);
 
@@ -260,7 +267,7 @@ export class MessageService implements IMessageService {
     if (chatType === "Chat") {
       const chat = await this.chatRepository.findById(new Types.ObjectId(chatId));
       if (!chat || !chat.participants.includes(userId)) {
-        throw new CustomError("User does not have access to this chat", StatusCodes.FORBIDDEN);
+        throw new CustomError(CHAT_MESSAGES.CHAT_ACCESS_DENIED, StatusCodes.FORBIDDEN);
       }
 
       // For direct chats, check if users are still connected (only for write operations)
@@ -270,7 +277,7 @@ export class MessageService implements IMessageService {
           const isConnected = await this.connectionsRepository.isConnected(userId, otherParticipant);
           if (!isConnected) {
             throw new CustomError(
-              "Cannot send message. You are no longer connected with this user.",
+              CHAT_MESSAGES.NO_LONGER_CONNECTED,
               StatusCodes.FORBIDDEN,
             );
           }
@@ -280,7 +287,7 @@ export class MessageService implements IMessageService {
     else {
       const group = await this.groupRepository.findById(new Types.ObjectId(chatId));
       if (!group || !group.members.includes(userId)) {
-        throw new CustomError("User does not have access to this group", StatusCodes.FORBIDDEN);
+        throw new CustomError(CHAT_MESSAGES.GROUP_ACCESS_DENIED, StatusCodes.FORBIDDEN);
       }
     }
   }

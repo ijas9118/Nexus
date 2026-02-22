@@ -9,7 +9,10 @@ import type { IUserService } from "@/core/interfaces/services/i-user-service";
 
 import redisClient from "@/config/redis-client.config";
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { ADMIN_MESSAGES } = MESSAGES;
 
 @injectable()
 export class AdminController implements IAdminController {
@@ -33,7 +36,7 @@ export class AdminController implements IAdminController {
     const { id } = req.params;
     const user = await this.userService.getUserById(id as string);
     if (!user) {
-      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(ADMIN_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     res.status(StatusCodes.OK).json(user);
   });
@@ -41,7 +44,7 @@ export class AdminController implements IAdminController {
   updateUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const updatedUser = await this.userService.updateUser(req.params.id as string, req.body);
     if (!updatedUser) {
-      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(ADMIN_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     res.status(StatusCodes.OK).json(updatedUser);
   });
@@ -50,21 +53,21 @@ export class AdminController implements IAdminController {
     const userId = req.params.id as string;
     const updatedUser = await this.userService.updateUser(userId, { isBlocked: true });
     if (!updatedUser) {
-      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(ADMIN_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     await redisClient.set(`blocked_user:${userId}`, 1, "EX", 7 * 24 * 60 * 60);
 
-    res.status(StatusCodes.OK).json({ message: "User blocked successfully" });
+    res.status(StatusCodes.OK).json({ message: ADMIN_MESSAGES.USER_BLOCKED });
   });
 
   unblockUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.params.id as string;
     const updatedUser = await this.userService.updateUser(userId, { isBlocked: false });
     if (!updatedUser) {
-      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(ADMIN_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     await redisClient.del(`blocked_user:${userId}`);
-    res.status(StatusCodes.OK).json({ message: "User unblocked successfully" });
+    res.status(StatusCodes.OK).json({ message: ADMIN_MESSAGES.USER_UNBLOCKED });
   });
 }

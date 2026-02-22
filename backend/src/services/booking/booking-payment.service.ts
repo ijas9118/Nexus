@@ -1,6 +1,7 @@
 import type { Buffer } from "node:buffer";
 import type Stripe from "stripe";
 
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 import { v4 as uuidv4 } from "uuid";
 
@@ -16,7 +17,11 @@ import type { MentorshipTypeRepository } from "@/repositories/mentor/mentorship-
 import logger from "@/config/logger";
 import { stripe } from "@/config/stripe.cofig";
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
 import { env } from "@/utils/env-validation";
+
+const { BOOKING_MESSAGES, MENTOR_MESSAGES, AUTH_MESSAGES } = MESSAGES;
 
 @injectable()
 export class BookingPaymentService implements IBookingPaymentService {
@@ -44,17 +49,17 @@ export class BookingPaymentService implements IBookingPaymentService {
   ): Promise<string> {
     const isAvailable = await this.timeSlotService.isTimeSlotAvailable(timeSlot, mentorId);
     if (!isAvailable) {
-      throw new Error("Selected time slot is not available");
+      throw new CustomError(BOOKING_MESSAGES.SLOT_NOT_AVAILABLE, StatusCodes.BAD_REQUEST);
     }
 
     const reserved = await this.timeSlotService.reserveTimeSlot(timeSlot, mentorId, 10);
     if (!reserved) {
-      throw new Error("Failed to reserve time slot");
+      throw new CustomError(BOOKING_MESSAGES.RESERVE_FAILED, StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
     const mentorship = await this.mentorshipTypeRepository.findById(mentorshipType);
     if (!mentorship) {
-      throw new Error("Mentorship type not found");
+      throw new CustomError(MENTOR_MESSAGES.TYPE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     const booking = await this.bookingRepository.createBooking({
@@ -162,7 +167,7 @@ export class BookingPaymentService implements IBookingPaymentService {
       || !customer_details?.email
       || !customer_details?.name
     ) {
-      throw new Error("Missing required metadata or session details");
+      throw new CustomError(BOOKING_MESSAGES.MISSING_SESSION_DETAILS, StatusCodes.BAD_REQUEST);
     }
 
     const timeSlot = await this.timeSlotService.findById(metadata.timeSlot);
@@ -175,7 +180,7 @@ export class BookingPaymentService implements IBookingPaymentService {
         `Time slot ${metadata.timeSlot} is not reserved for booking ${metadata.bookingId}`,
       );
       await this.bookingRepository.updateOne({ _id: metadata.bookingId }, { status: "cancelled" });
-      throw new Error("Time slot is no longer available");
+      throw new CustomError(BOOKING_MESSAGES.SLOT_EXPIRED, StatusCodes.GONE);
     }
 
     await this.bookingRepository.updateOne({ _id: metadata?.bookingId }, { status: "pending" });
@@ -191,14 +196,14 @@ export class BookingPaymentService implements IBookingPaymentService {
       paymentIntentId: payment_intent as string,
       amount: amount_total / 100,
       currency,
-      paymentStatus: payment_status,
+      paymentStatus: payment_status as any,
       customerEmail: customer_details.email,
       customerName: customer_details.name,
     });
 
     const mentor = await this.mentorRepository.findById(metadata.mentorId);
     if (!mentor) {
-      throw new Error("Mentor not found");
+      throw new CustomError(AUTH_MESSAGES.MENTOR_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     await this.walletService.addMoney(

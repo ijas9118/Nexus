@@ -24,6 +24,8 @@ import CustomError from "@/utils/custom-error";
 import { env } from "@/utils/env-validation";
 import { generateAccessToken, verifyRefreshToken } from "@/utils/jwt.util";
 
+const { AUTH_MESSAGES, ADMIN_MESSAGES } = MESSAGES;
+
 @injectable()
 export class AuthController implements IAuthController {
   constructor(
@@ -40,14 +42,14 @@ export class AuthController implements IAuthController {
 
     const existingUser = await this._authService.findUserByEmail(userData.email);
     if (existingUser) {
-      throw new CustomError(MESSAGES.AUTH_MESSAGES.USER_EXISTS, StatusCodes.BAD_REQUEST);
+      throw new CustomError(AUTH_MESSAGES.USER_EXISTS, StatusCodes.BAD_REQUEST);
     }
 
     const otp = this._otpService.generateOTP();
 
     await this._emailService.sendOtpEmail(userData, otp);
 
-    res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.OTP_SENT });
+    res.status(StatusCodes.OK).json({ message: AUTH_MESSAGES.OTP_SENT });
   });
 
   // Verify OTP and register user if OTP is correct and not expired
@@ -71,7 +73,7 @@ export class AuthController implements IAuthController {
 
     await this._otpService.resendOtp(email);
 
-    res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.OTP_RESENT });
+    res.status(StatusCodes.OK).json({ message: AUTH_MESSAGES.OTP_RESENT });
   });
 
   // Login user and set refresh token cookie
@@ -83,8 +85,7 @@ export class AuthController implements IAuthController {
     const isBlocked = await this._authService.isUserBlocked(user._id);
 
     if (isBlocked) {
-      res.status(StatusCodes.FORBIDDEN).json({ message: MESSAGES.AUTH_MESSAGES.USER_BLOCKED });
-      return;
+      throw new CustomError(AUTH_MESSAGES.USER_BLOCKED, StatusCodes.FORBIDDEN);
     }
 
     setRefreshTokenCookie(res, { _id: user._id.toString(), role: user.role as UserRole });
@@ -97,13 +98,13 @@ export class AuthController implements IAuthController {
       role: user.role as UserRole,
     });
 
-    res.status(StatusCodes.OK).json({ message: "success", accessToken, user });
+    res.status(StatusCodes.OK).json({ message: ADMIN_MESSAGES.LOGIN_SUCCESS, accessToken, user });
   });
 
   // Logout user and clear refresh token cookie
   logout = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     clearRefreshTokenCookie(res);
-    res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.LOGOUT_SUCCESS });
+    res.status(StatusCodes.OK).json({ message: AUTH_MESSAGES.LOGOUT_SUCCESS });
   });
 
   // Send password reset link to email with token
@@ -112,7 +113,7 @@ export class AuthController implements IAuthController {
 
     await this._emailService.sendResetEmailWithToken(email);
 
-    res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.PASSWORD_RESET_LINK_SENT });
+    res.status(StatusCodes.OK).json({ message: AUTH_MESSAGES.PASSWORD_RESET_LINK_SENT });
   });
 
   // Verify token and update password if token is valid
@@ -121,12 +122,12 @@ export class AuthController implements IAuthController {
 
     const isValid = await this._tokenService.validateToken(email, token);
     if (!isValid) {
-      throw new CustomError(MESSAGES.AUTH_MESSAGES.REFRESH_TOKEN_INVALID, StatusCodes.BAD_REQUEST);
+      throw new CustomError(AUTH_MESSAGES.REFRESH_TOKEN_INVALID, StatusCodes.BAD_REQUEST);
     }
 
     await this._authService.updatePassword(email, password);
 
-    res.status(StatusCodes.OK).json({ message: MESSAGES.AUTH_MESSAGES.PASSWORD_UPDATED });
+    res.status(StatusCodes.OK).json({ message: AUTH_MESSAGES.PASSWORD_UPDATED });
   });
 
   // Refresh access token using refresh token
@@ -134,18 +135,17 @@ export class AuthController implements IAuthController {
     const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
-      throw new CustomError(MESSAGES.AUTH_MESSAGES.REFRESH_TOKEN_MISSING, StatusCodes.UNAUTHORIZED);
+      throw new CustomError(AUTH_MESSAGES.REFRESH_TOKEN_MISSING, StatusCodes.UNAUTHORIZED);
     }
 
     const decodedToken = verifyRefreshToken(refreshToken);
     if (!decodedToken) {
       clearRefreshTokenCookie(res);
-      throw new CustomError(MESSAGES.AUTH_MESSAGES.REFRESH_TOKEN_INVALID, StatusCodes.FORBIDDEN);
+      throw new CustomError(AUTH_MESSAGES.REFRESH_TOKEN_INVALID, StatusCodes.FORBIDDEN);
     }
     const isBlocked = await redisClient.get(`blocked_user:${decodedToken.user._id}`);
     if (isBlocked) {
-      res.status(StatusCodes.FORBIDDEN).json({ message: MESSAGES.AUTH_MESSAGES.USER_BLOCKED });
-      return;
+      throw new CustomError(AUTH_MESSAGES.USER_BLOCKED, StatusCodes.FORBIDDEN);
     }
 
     const { _id, name, email, role } = decodedToken.user;
@@ -160,7 +160,7 @@ export class AuthController implements IAuthController {
 
     if (!user) {
       clearRefreshTokenCookie(res);
-      throw new CustomError(MESSAGES.AUTH_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
+      throw new CustomError(AUTH_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     const payload: any = {
@@ -177,7 +177,7 @@ export class AuthController implements IAuthController {
       const mentor = await this._mentorService.getMentorByUserId(user._id.toString());
       if (!mentor) {
         clearRefreshTokenCookie(res);
-        throw new CustomError(MESSAGES.AUTH_MESSAGES.MENTOR_NOT_FOUND, StatusCodes.NOT_FOUND);
+        throw new CustomError(AUTH_MESSAGES.MENTOR_NOT_FOUND, StatusCodes.NOT_FOUND);
       }
 
       const mentorWithId = mentor as { _id: string };
@@ -198,7 +198,7 @@ export class AuthController implements IAuthController {
     const googleProfile = req.user as unknown as Profile;
 
     if (!googleProfile.emails || googleProfile.emails.length === 0) {
-      throw new CustomError(MESSAGES.AUTH_MESSAGES.GOOGLE_EMAIL_MISSING, StatusCodes.BAD_REQUEST);
+      throw new CustomError(AUTH_MESSAGES.GOOGLE_EMAIL_MISSING, StatusCodes.BAD_REQUEST);
     }
 
     const user = await this._authService.handleGoogleUser({
@@ -221,7 +221,7 @@ export class AuthController implements IAuthController {
     const githubProfile = req.user as unknown as GitHubProfile;
 
     if (!githubProfile.emails || githubProfile.emails.length === 0) {
-      throw new CustomError(MESSAGES.AUTH_MESSAGES.GITHUB_EMAIL_MISSING, StatusCodes.BAD_REQUEST);
+      throw new CustomError(AUTH_MESSAGES.GITHUB_EMAIL_MISSING, StatusCodes.BAD_REQUEST);
     }
 
     const user = await this._authService.handleGithubUser({

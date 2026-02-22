@@ -11,8 +11,11 @@ import type { IUser } from "@/models/user/user.model";
 import redisClient from "@/config/redis-client.config";
 import { TYPES } from "@/di/types";
 import { LoginResponseDTO, RegisterResponseDTO } from "@/dtos/responses/auth.dto";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
 import { UsernameGenerator } from "@/utils/username-generator.util";
+
+const { AUTH_MESSAGES, ADMIN_MESSAGES } = MESSAGES;
 
 @injectable()
 export class AuthService implements IAuthService {
@@ -56,12 +59,12 @@ export class AuthService implements IAuthService {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new CustomError("Invalid email or password", StatusCodes.BAD_REQUEST);
+      throw new CustomError(ADMIN_MESSAGES.INVALID_CREDENTIALS, StatusCodes.BAD_REQUEST);
     }
 
     const isPasswordValid = await compare(password, user.password);
     if (!isPasswordValid) {
-      throw new CustomError("Invalid password", StatusCodes.BAD_REQUEST);
+      throw new CustomError(AUTH_MESSAGES.INVALID_PASSWORD, StatusCodes.BAD_REQUEST);
     }
 
     let userObj = user.toObject();
@@ -83,7 +86,7 @@ export class AuthService implements IAuthService {
   async updatePassword(email: string, newPassword: string): Promise<void> {
     const user = await this.userRepository.findOne({ email });
     if (!user) {
-      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(AUTH_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     const hashedPassword = await hash(newPassword, 10);
@@ -102,7 +105,7 @@ export class AuthService implements IAuthService {
   async isUserBlocked(userId: string): Promise<boolean> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(AUTH_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     return user.isBlocked || false;
   }

@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
 import type { ICategoryRepository } from "@/core/interfaces/repositories/i-category-repository";
@@ -5,7 +6,10 @@ import type { ICategoryService } from "@/core/interfaces/services/i-category-ser
 import type { ICategory } from "@/models/content/categories.model";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { CATEGORY_MESSAGES } = MESSAGES;
 
 @injectable()
 export class CategoryService implements ICategoryService {
@@ -15,7 +19,7 @@ export class CategoryService implements ICategoryService {
     const existingCategory = await this.categoryRepository.findOne({ name });
 
     if (existingCategory) {
-      throw new CustomError("Category already exists", 409);
+      throw new CustomError(CATEGORY_MESSAGES.EXISTS, StatusCodes.CONFLICT);
     }
 
     return await this.categoryRepository.addCategory(name);
@@ -25,7 +29,7 @@ export class CategoryService implements ICategoryService {
     const existingCategory = await this.categoryRepository.findOne({ name: newName });
 
     if (existingCategory) {
-      throw new CustomError("Category already exists", 409);
+      throw new CustomError(CATEGORY_MESSAGES.EXISTS, StatusCodes.CONFLICT);
     }
     return await this.categoryRepository.updateCategory(id, newName);
   }

@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
 import type { IChatRepository } from "@/core/interfaces/repositories/i-chat-repository";
@@ -7,6 +8,10 @@ import type { IChat } from "@/models/communication/chat.model";
 
 import { TYPES } from "@/di/types";
 import { ChatModel } from "@/models/communication/chat.model";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
+
+const { CHAT_MESSAGES } = MESSAGES;
 
 @injectable()
 export class ChatService implements IChatService {
@@ -18,7 +23,7 @@ export class ChatService implements IChatService {
   async createChat(userId: string, otherUserId: string): Promise<IChat> {
     const isConnected = await this.connectionService.isConnected(userId, otherUserId);
     if (!isConnected) {
-      throw new Error("Users must be connected to start a chat");
+      throw new CustomError(CHAT_MESSAGES.CONNECTION_REQUIRED, StatusCodes.FORBIDDEN);
     }
 
     // Check if chat already exists
@@ -31,8 +36,9 @@ export class ChatService implements IChatService {
       "name username profilePic",
     );
 
-    if (!populatedChat)
-      throw new Error("Failed to fetch populated chat");
+    if (!populatedChat) {
+      throw new CustomError(CHAT_MESSAGES.FETCH_FAILED, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
 
     return populatedChat;
   }

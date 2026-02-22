@@ -7,9 +7,12 @@ import type { RegisterRequestDTO } from "@/dtos/requests/auth.dto";
 
 import redisClient from "@/config/redis-client.config";
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
 import { env } from "@/utils/env-validation";
 import { transporter } from "@/utils/nodemailer-transporter";
+
+const { AUTH_MESSAGES } = MESSAGES;
 
 @injectable()
 export class EmailService implements IEmailService {
@@ -59,7 +62,7 @@ export class EmailService implements IEmailService {
     }
     catch (error) {
       console.error("Error sending OTP email:", error);
-      throw new CustomError("Failed to send OTP. Please try again later.", StatusCodes.BAD_REQUEST);
+      throw new CustomError(AUTH_MESSAGES.OTP_FETCH_FAILED, StatusCodes.BAD_REQUEST);
     }
   }
 
@@ -112,7 +115,7 @@ export class EmailService implements IEmailService {
     }
     catch (error) {
       console.error("Error sending OTP email:", error);
-      throw new CustomError("Failed to send OTP. Please try again later.");
+      throw new CustomError(AUTH_MESSAGES.OTP_FETCH_FAILED, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 }

@@ -9,8 +9,11 @@ import type { IWalletService } from "@/core/interfaces/services/i-wallet-service
 import type { WalletInfo } from "@/core/types/wallet.types";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
 import { generateTransactionId } from "@/utils/transaction-utils";
+
+const { WALLET_MESSAGES, BOOKING_MESSAGES } = MESSAGES;
 
 @injectable()
 export class WalletService implements IWalletService {
@@ -33,7 +36,7 @@ export class WalletService implements IWalletService {
     if (bookingId) {
       const booking = await this.bookingService.getBookingById(bookingId);
       if (!booking) {
-        throw new CustomError("Booking not found", StatusCodes.BAD_REQUEST);
+        throw new CustomError(BOOKING_MESSAGES.BOOKING_NOT_FOUND, StatusCodes.BAD_REQUEST);
       }
     }
 
@@ -75,12 +78,15 @@ export class WalletService implements IWalletService {
     nexusPoints?: number,
   ): Promise<void> {
     const wallet = await this.repository.getWalletByUserId(userId);
-    if (!wallet)
-      throw new CustomError("Wallet not found", StatusCodes.NOT_FOUND);
-    if (amount > 0 && wallet.balance < amount)
-      throw new CustomError("Insufficient balance", StatusCodes.BAD_REQUEST);
-    if (nexusPoints && wallet.nexusPoints < nexusPoints)
-      throw new CustomError("Insufficient nexus points", StatusCodes.BAD_REQUEST);
+    if (!wallet) {
+      throw new CustomError(WALLET_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
+    if (amount > 0 && wallet.balance < amount) {
+      throw new CustomError(WALLET_MESSAGES.INSUFFICIENT_BALANCE, StatusCodes.BAD_REQUEST);
+    }
+    if (nexusPoints && wallet.nexusPoints < nexusPoints) {
+      throw new CustomError(WALLET_MESSAGES.INSUFFICIENT_POINTS, StatusCodes.BAD_REQUEST);
+    }
 
     const calculatedAmount
       = (amount || 0) + (nexusPoints ? nexusPoints * this.NEXUS_COIN_VALUE : 0);
@@ -109,16 +115,20 @@ export class WalletService implements IWalletService {
 
   async approveWithdrawal(requestId: string): Promise<WalletInfo> {
     const request = await this.withdrawalRequestRepository.findById(requestId);
-    if (!request)
-      throw new CustomError("Withdrawal request not found", StatusCodes.NOT_FOUND);
-    if (request.status !== "pending")
-      throw new CustomError("Request already processed", StatusCodes.BAD_REQUEST);
+    if (!request) {
+      throw new CustomError(WALLET_MESSAGES.WITHDRAWAL_NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
+    if (request.status !== "pending") {
+      throw new CustomError(WALLET_MESSAGES.REQUEST_PROCESSED, StatusCodes.BAD_REQUEST);
+    }
 
     const wallet = await this.repository.getWalletByUserId(request.userId.toString());
-    if (!wallet)
-      throw new CustomError("Wallet not found", StatusCodes.NOT_FOUND);
-    if (request.amount > wallet.balance)
-      throw new CustomError("Insufficient balance", StatusCodes.BAD_REQUEST);
+    if (!wallet) {
+      throw new CustomError(WALLET_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
+    if (request.amount > wallet.balance) {
+      throw new CustomError(WALLET_MESSAGES.INSUFFICIENT_BALANCE, StatusCodes.BAD_REQUEST);
+    }
 
     const transactionId = generateTransactionId();
     const transaction = await this.repository.addTransaction({
@@ -147,10 +157,12 @@ export class WalletService implements IWalletService {
 
   async rejectWithdrawal(requestId: string): Promise<void> {
     const request = await this.withdrawalRequestRepository.findById(requestId);
-    if (!request)
-      throw new CustomError("Withdrawal request not found", StatusCodes.NOT_FOUND);
-    if (request.status !== "pending")
-      throw new CustomError("Request already processed", StatusCodes.BAD_REQUEST);
+    if (!request) {
+      throw new CustomError(WALLET_MESSAGES.WITHDRAWAL_NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
+    if (request.status !== "pending") {
+      throw new CustomError(WALLET_MESSAGES.REQUEST_PROCESSED, StatusCodes.BAD_REQUEST);
+    }
 
     if ((request.nexusPoints ?? 0) > 0) {
       const wallet = await this.repository.getWalletByUserId(request.userId.toString());

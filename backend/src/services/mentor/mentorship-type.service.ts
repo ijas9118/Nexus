@@ -6,7 +6,10 @@ import type { IMentorshipType } from "@/models/mentor/mentorship-type.model";
 import type { MentorshipTypeRepository } from "@/repositories/mentor/mentorship-type.repository";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { MENTOR_MESSAGES } = MESSAGES;
 
 @injectable()
 export class MentorshipTypeService implements IMentorshipTypeService {
@@ -22,7 +25,7 @@ export class MentorshipTypeService implements IMentorshipTypeService {
     const existingType = await this.repository.findOne({ name: data.name });
     if (existingType) {
       throw new CustomError(
-        "Mentorship type with this name already exists",
+        MENTOR_MESSAGES.TYPE_EXISTS,
         StatusCodes.BAD_REQUEST,
       );
     }
@@ -37,7 +40,7 @@ export class MentorshipTypeService implements IMentorshipTypeService {
   async getMentorshipType(id: string): Promise<IMentorshipType> {
     const type = await this.repository.findById(id);
     if (!type || !type.isActive) {
-      throw new CustomError("Mentorship type not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(MENTOR_MESSAGES.TYPE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     return type;
   }
@@ -52,14 +55,14 @@ export class MentorshipTypeService implements IMentorshipTypeService {
   async deleteMentorshipType(id: string): Promise<void> {
     const type = await this.repository.softDelete(id);
     if (!type) {
-      throw new CustomError("Mentorship type not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(MENTOR_MESSAGES.TYPE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
   }
 
   async restoreMentorshipType(id: string): Promise<void> {
     const type = await this.repository.restore(id);
     if (!type) {
-      throw new CustomError("Mentorship type not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(MENTOR_MESSAGES.TYPE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
   }
 
@@ -75,7 +78,7 @@ export class MentorshipTypeService implements IMentorshipTypeService {
 
     if (!typeToUpdate || !typeToUpdate.isActive) {
       throw new CustomError(
-        "Cannot update inactive or non-existent mentorship type",
+        MENTOR_MESSAGES.UPDATE_INACTIVE_TYPE,
         StatusCodes.NOT_FOUND,
       );
     }
@@ -87,19 +90,19 @@ export class MentorshipTypeService implements IMentorshipTypeService {
       });
       if (existingType) {
         throw new CustomError(
-          "Mentorship type with this name already exists",
+          MENTOR_MESSAGES.TYPE_EXISTS,
           StatusCodes.BAD_REQUEST,
         );
       }
     }
 
     if (data.defaultPrice !== undefined && data.defaultPrice < 0) {
-      throw new CustomError("Price cannot be negative", StatusCodes.BAD_REQUEST);
+      throw new CustomError(MENTOR_MESSAGES.PRICE_NEGATIVE, StatusCodes.BAD_REQUEST);
     }
 
     const updatedType = await this.repository.update(id, data);
     if (!updatedType) {
-      throw new CustomError("Mentorship type not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(MENTOR_MESSAGES.TYPE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     return updatedType;

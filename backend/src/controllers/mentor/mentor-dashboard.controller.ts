@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 
 import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
 import type { IMentorDashboardController } from "@/core/interfaces/controllers/i-mentor-dashboard-controller";
@@ -15,36 +16,24 @@ export class MentorDashboardController implements IMentorDashboardController {
   getEarnings = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?._id as string;
     const data = await this._service.getEarnings(userId);
-    res.json(data);
+    res.status(StatusCodes.OK).json(data);
   });
 
   getPendingWithdrawalWithBalance = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?._id as string;
     const data = await this._service.getPendingWithdrawalWithBalance(userId);
-    res.json(data);
+    res.status(StatusCodes.OK).json(data);
   });
 
   getSessionStats = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?._id as string;
     const data = await this._service.getSessionStats(userId);
-    res.json(data);
+    res.status(StatusCodes.OK).json(data);
   });
 
   getRecentBookings = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?._id as string;
     const data = await this._service.getRecentBookings(userId);
-    res.json(data);
+    res.status(StatusCodes.OK).json(data);
   });
-
-  // getRecentTransactions = asyncHandler(async (req: Request, res: Response) => {
-  //   const userId = req.user?._id as string;
-  //   const data = await this._service.getRecentTransactions(userId);
-  //   res.json(data);
-  // });
-
-  // getMentorshipTypeStats = asyncHandler(async (req: Request, res: Response) => {
-  //   const userId = req.user?._id as string;
-  //   const data = await this._service.getMentorshipTypeStats(userId);
-  //   res.json(data);
-  // });
 }

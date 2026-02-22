@@ -18,7 +18,7 @@ export class HistoryService implements IHistoryService {
     return await this.historyRepository.removeFromHistory(userId, contentId);
   };
 
-  getAllHistory = async (userId: string) => {
+  getAllHistory = async (userId: string): Promise<any> => {
     return await this.historyRepository.getAllHistory(userId);
   };
 }

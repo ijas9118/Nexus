@@ -10,7 +10,10 @@ import type { IHistoryService } from "@/core/interfaces/services/i-history-servi
 import type { UserRole } from "@/core/types/user-types";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { CONTENT_MESSAGES, BOOKMARK_MESSAGES } = MESSAGES;
 
 @injectable()
 export class ContentController implements IContentController {
@@ -39,7 +42,7 @@ export class ContentController implements IContentController {
 
     res.status(StatusCodes.CREATED).json({
       success: true,
-      message: "Content created successfully",
+      message: CONTENT_MESSAGES.CREATED,
       contentId: content._id,
     });
   });
@@ -55,7 +58,7 @@ export class ContentController implements IContentController {
     );
 
     if (!content) {
-      throw new CustomError("Content not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(CONTENT_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     if (role === "user") {
@@ -67,7 +70,7 @@ export class ContentController implements IContentController {
 
   getAllContent = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     if (!req.user) {
-      throw new CustomError("User is not authenticated", StatusCodes.UNAUTHORIZED);
+      throw new CustomError(BOOKMARK_MESSAGES.AUTH_REQUIRED, StatusCodes.UNAUTHORIZED);
     }
 
     const { page = 1, limit = 10 } = req.query;
@@ -96,13 +99,12 @@ export class ContentController implements IContentController {
 
     const updatedContent = await this._contentService.verifyContent(contentId as string);
     if (!updatedContent) {
-      res.status(StatusCodes.NOT_FOUND).json({ message: "Content not found" });
-      return;
+      throw new CustomError(CONTENT_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     res
       .status(StatusCodes.OK)
-      .json({ message: "Content verified successfully", content: updatedContent });
+      .json({ message: CONTENT_MESSAGES.VERIFIED, content: updatedContent });
   });
 
   getFollowingUsersContents = asyncHandler(async (req: Request, res: Response) => {
@@ -110,6 +112,6 @@ export class ContentController implements IContentController {
 
     const contents = await this._contentService.getFollowingUsersContents(userId);
 
-    res.status(200).json(contents);
+    res.status(StatusCodes.OK).json(contents);
   });
 }

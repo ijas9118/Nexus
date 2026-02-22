@@ -9,7 +9,10 @@ import type { ISquadService } from "@/core/interfaces/services/i-squad-service";
 
 import logger from "@/config/logger";
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { SQUAD_MESSAGES } = MESSAGES;
 
 @injectable()
 export class SquadController implements ISquadController {
@@ -18,7 +21,7 @@ export class SquadController implements ISquadController {
   createSquad = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const existingSquad = await this.squadService.getSquadByName(req.body.name);
     if (existingSquad) {
-      throw new CustomError("Squad with this name already exists", StatusCodes.BAD_REQUEST);
+      throw new CustomError(SQUAD_MESSAGES.EXISTS, StatusCodes.BAD_REQUEST);
     }
 
     const logoFile = req.file as Express.Multer.File | undefined;
@@ -37,10 +40,10 @@ export class SquadController implements ISquadController {
     const pageNum = Number.parseInt(page as string, 10);
 
     if (Number.isNaN(limitNum) || limitNum < 1) {
-      throw new CustomError("Invalid limit value", StatusCodes.BAD_REQUEST);
+      throw new CustomError(SQUAD_MESSAGES.INVALID_LIMIT, StatusCodes.BAD_REQUEST);
     }
     if (Number.isNaN(pageNum) || pageNum < 1) {
-      throw new CustomError("Invalid page value", StatusCodes.BAD_REQUEST);
+      throw new CustomError(SQUAD_MESSAGES.INVALID_PAGE, StatusCodes.BAD_REQUEST);
     }
 
     const squads = await this.squadService.getAllSquads({
@@ -66,7 +69,7 @@ export class SquadController implements ISquadController {
       res.status(StatusCodes.OK).json(toggleSquad);
     }
     else {
-      throw new CustomError("Squad not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(SQUAD_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
   });
 
@@ -77,7 +80,7 @@ export class SquadController implements ISquadController {
     logger.debug("Fetching squads by category", { userId, category });
 
     if (!category) {
-      throw new CustomError("Category is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(SQUAD_MESSAGES.CATEGORY_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const squads = await this.squadService.getSquadsByCategory(userId, category);
@@ -89,11 +92,11 @@ export class SquadController implements ISquadController {
     const { squadId } = req.params;
 
     if (!userId) {
-      throw new CustomError("User ID is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(SQUAD_MESSAGES.USER_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     await this.squadService.joinSquad(userId, squadId as string);
-    res.status(StatusCodes.OK).json({ message: "Successfully joined squad" });
+    res.status(StatusCodes.OK).json({ message: SQUAD_MESSAGES.JOIN_SUCCESS });
   });
 
   leaveSquad = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -101,18 +104,18 @@ export class SquadController implements ISquadController {
     const { squadId } = req.params;
 
     if (!userId) {
-      throw new CustomError("User ID is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(SQUAD_MESSAGES.USER_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     await this.squadService.leaveSquad(userId, squadId as string);
-    res.status(StatusCodes.OK).json({ message: "Successfully left squad" });
+    res.status(StatusCodes.OK).json({ message: SQUAD_MESSAGES.LEAVE_SUCCESS });
   });
 
   getJoinedSquads = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId } = req.body;
 
     if (!userId) {
-      throw new CustomError("User ID is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(SQUAD_MESSAGES.USER_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const squads = await this.squadService.getJoinedSquads(userId);
@@ -124,13 +127,13 @@ export class SquadController implements ISquadController {
     const userId = req.user?._id as string;
 
     if (!handle) {
-      throw new CustomError("Squad handle is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(SQUAD_MESSAGES.HANDLE_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const squad = await this.squadService.getSquadDetailsByHandle(handle as string, userId);
 
     if (!squad) {
-      throw new CustomError("Squad not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(SQUAD_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     res.status(StatusCodes.OK).json(squad);
@@ -142,7 +145,7 @@ export class SquadController implements ISquadController {
     const role = req.user?.role as string;
 
     if (!squadId) {
-      throw new CustomError("Squad ID is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(SQUAD_MESSAGES.ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const contents = await this.squadService.getSquadContents(squadId as string, role, userId);

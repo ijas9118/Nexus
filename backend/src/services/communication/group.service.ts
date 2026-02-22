@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
 import type { IGroupRepository } from "@/core/interfaces/repositories/i-group-repository";
@@ -6,6 +7,10 @@ import type { IGroupService } from "@/core/interfaces/services/i-group-service";
 import type { IGroup } from "@/models/social/group.model";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
+
+const { CHAT_MESSAGES } = MESSAGES;
 
 @injectable()
 export class GroupService implements IGroupService {
@@ -28,7 +33,10 @@ export class GroupService implements IGroupService {
       }
     }
     if (invalidMembers.length > 0) {
-      throw new Error(`User is not connected to: ${invalidMembers.join(", ")}`);
+      throw new CustomError(
+        `${CHAT_MESSAGES.NOT_CONNECTED_TO} ${invalidMembers.join(", ")}`,
+        StatusCodes.FORBIDDEN,
+      );
     }
 
     return this.repository.create({

@@ -15,7 +15,10 @@ import { SquadListDto } from "@/dtos/responses/admin/squad-list-dto";
 import { SquadByCategoryResponseDto } from "@/dtos/responses/sqauds.dto";
 import { SquadContentResponseDto } from "@/dtos/responses/squad-contents.dto";
 import { uploadToCloudinary } from "@/utils/cloudinary-utils";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { SQUAD_MESSAGES, CATEGORY_MESSAGES, USER_MESSAGES } = MESSAGES;
 
 @injectable()
 export class SquadService implements ISquadService {
@@ -32,12 +35,12 @@ export class SquadService implements ISquadService {
   ): Promise<ISquad> => {
     const { category } = squadData;
     if (!category || typeof category !== "string") {
-      throw new Error("Invalid category provided");
+      throw new CustomError(SQUAD_MESSAGES.INVALID_CATEGORY, StatusCodes.BAD_REQUEST);
     }
 
     const categoryObj = await this.categoryRepository.findOne({ name: category });
     if (!categoryObj) {
-      throw new Error("Category not found");
+      throw new CustomError(CATEGORY_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     // Upload logo to Cloudinary if provided
@@ -101,7 +104,7 @@ export class SquadService implements ISquadService {
     const user = await this.userRepository.findOne({ _id: userId });
 
     if (!user) {
-      throw new CustomError("User not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(USER_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     return await this.squadRepository.getJoinedSquads(userId);
@@ -113,7 +116,7 @@ export class SquadService implements ISquadService {
   ): Promise<SquadByCategoryResponseDto[]> => {
     const categoryExists = await this.categoryRepository.findById(category);
     if (!categoryExists) {
-      throw new CustomError("Category not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(CATEGORY_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     const squads = await this.squadRepository.getSquadsByCategory(category, userId);
@@ -128,10 +131,10 @@ export class SquadService implements ISquadService {
   leaveSquad = async (userId: string, squadId: string): Promise<void> => {
     const squad = await this.getSquadById(squadId);
     if (!squad) {
-      throw new CustomError("Squad not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(SQUAD_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     if (!squad.members.includes(userId)) {
-      throw new CustomError("User is not a member of this squad", StatusCodes.BAD_REQUEST);
+      throw new CustomError(SQUAD_MESSAGES.NOT_A_MEMBER, StatusCodes.BAD_REQUEST);
     }
     await this.squadRepository.removeMemberFromSquad(userId, squadId);
   };

@@ -1,5 +1,6 @@
 import type { QueryFilter } from "mongoose";
 
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
 import type { ITargetAudienceRepository } from "@/core/interfaces/repositories/i-target-audience-repository";
@@ -7,7 +8,10 @@ import type { ITargetAudienceService } from "@/core/interfaces/services/i-target
 import type { ITargetAudience } from "@/models/content/target-audience.model";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { MENTOR_MESSAGES } = MESSAGES;
 
 @injectable()
 export class TargetAudienceService implements ITargetAudienceService {
@@ -18,7 +22,7 @@ export class TargetAudienceService implements ITargetAudienceService {
   async create(data: Partial<ITargetAudience>): Promise<ITargetAudience> {
     const existingAudience = await this.repository.findOne({ name: data.name });
     if (existingAudience) {
-      throw new CustomError("Target audience with this name already exists");
+      throw new CustomError(MENTOR_MESSAGES.AUDIENCE_EXISTS, StatusCodes.CONFLICT);
     }
     return this.repository.create(data);
   }
@@ -30,7 +34,7 @@ export class TargetAudienceService implements ITargetAudienceService {
         _id: { $ne: id },
       });
       if (existingAudience) {
-        throw new CustomError("Target audience with this name already exists");
+        throw new CustomError(MENTOR_MESSAGES.AUDIENCE_EXISTS, StatusCodes.CONFLICT);
       }
     }
     return this.repository.update(id, data);

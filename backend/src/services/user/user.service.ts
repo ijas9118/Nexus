@@ -1,6 +1,7 @@
 import type { Express } from "express";
 
 import bcrypt from "bcryptjs";
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
 import type { IContentRepository } from "@/core/interfaces/repositories/i-content-repository";
@@ -14,6 +15,10 @@ import { TYPES } from "@/di/types";
 import { UsersResponseDTO } from "@/dtos/responses/admin/users.dto";
 import { UserModel } from "@/models/user/user.model";
 import { deleteFromCloudinary, uploadToCloudinary } from "@/utils/cloudinary-utils";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
+
+const { USER_MESSAGES } = MESSAGES;
 
 interface UserUpdateData {
   profilePic?: string;
@@ -65,17 +70,17 @@ export class UserService implements IUserService {
     const { currentPassword, newPassword, confirmPassword } = passwordData;
 
     if (newPassword !== confirmPassword) {
-      throw new Error("New password and confirm password do not match");
+      throw new CustomError(USER_MESSAGES.PASSWORD_MISMATCH, StatusCodes.BAD_REQUEST);
     }
 
     const user = await this.userRepository.findOne({ _id: userId });
     if (!user) {
-      throw new Error("User not found");
+      throw new CustomError(USER_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
     if (!isPasswordValid) {
-      throw new Error("Current password is incorrect");
+      throw new CustomError(USER_MESSAGES.INCORRECT_PASSWORD, StatusCodes.BAD_REQUEST);
     }
 
     const saltRounds = 10;
@@ -109,8 +114,9 @@ export class UserService implements IUserService {
     }
 
     const updatedUser = await this.userRepository.updateUser(userId, data);
-    if (!updatedUser)
-      throw new Error("User not found");
+    if (!updatedUser) {
+      throw new CustomError(USER_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
     return data;
   }
 
@@ -129,7 +135,7 @@ export class UserService implements IUserService {
   getUserContents = async (username: string): Promise<IContent[] | null> => {
     const userId = await this.userRepository.getUserIdByUsername(username);
     if (!userId) {
-      throw new Error("User not found");
+      throw new CustomError(USER_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     const contents = await this.contentRepo.getUserContents(userId);

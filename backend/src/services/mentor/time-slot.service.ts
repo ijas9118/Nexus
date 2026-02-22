@@ -9,9 +9,12 @@ import type { ITimeSlot } from "@/models/booking/timeslots.model";
 import type { TimeSlotRepository } from "@/repositories/booking/time-slot.repository";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
 
 dayjs.extend(customParseFormat);
+
+const { MENTOR_MESSAGES, BOOKING_MESSAGES, COMMON_MESSAGES } = MESSAGES;
 
 @injectable()
 export class TimeSlotService implements ITimeSlotService {
@@ -24,7 +27,7 @@ export class TimeSlotService implements ITimeSlotService {
     const mentor = await this.mentorService.getMentorDetails(mentorId);
     if (!mentor) {
       throw new CustomError(
-        "Mentor not found. Please make sure you are a registered mentor.",
+        MENTOR_MESSAGES.REGISTERED_MENTOR_REQUIRED,
         StatusCodes.BAD_REQUEST,
       );
     }
@@ -34,7 +37,7 @@ export class TimeSlotService implements ITimeSlotService {
     // Validate 12-hour format with AM/PM
     const parsedStart = dayjs(startTime12Hr, "hh:mm A");
     if (!parsedStart.isValid()) {
-      throw new CustomError("Invalid start time format. Use hh:mm AM/PM.", StatusCodes.BAD_REQUEST);
+      throw new CustomError(MENTOR_MESSAGES.INVALID_TIME_FORMAT, StatusCodes.BAD_REQUEST);
     }
 
     // Combine date and time for comparison
@@ -44,7 +47,7 @@ export class TimeSlotService implements ITimeSlotService {
 
     // Check if the slot is in the past
     if (slotDateTime.isBefore(dayjs())) {
-      throw new CustomError("Cannot create a time slot in the past.", StatusCodes.BAD_REQUEST);
+      throw new CustomError(MENTOR_MESSAGES.PAST_SLOT, StatusCodes.BAD_REQUEST);
     }
 
     const startTime = parsedStart.format("hh:mm A");
@@ -75,14 +78,14 @@ export class TimeSlotService implements ITimeSlotService {
         slotDateTime.isSame(existingStart)
         || (slotDateTime.isAfter(existingStart) && slotDateTime.isBefore(existingEnd))
       ) {
-        throw new CustomError("Time slot overlaps with an existing slot.", StatusCodes.CONFLICT);
+        throw new CustomError(MENTOR_MESSAGES.SLOT_OVERLAP, StatusCodes.CONFLICT);
       }
 
       // Check if new slot starts within 1 hour before an existing slot
       const oneHourBeforeExisting = existingStart.subtract(1, "hour");
       if (slotDateTime.isAfter(oneHourBeforeExisting) && slotDateTime.isBefore(existingStart)) {
         throw new CustomError(
-          "Time slot is too close to an existing slot (must be at least 1 hour before).",
+          MENTOR_MESSAGES.SLOT_TOO_CLOSE,
           StatusCodes.CONFLICT,
         );
       }
@@ -94,7 +97,7 @@ export class TimeSlotService implements ITimeSlotService {
         && !slotEndDateTime.isSame(existingStart)
       ) {
         throw new CustomError(
-          "Time slot’s end time overlaps with an existing slot.",
+          MENTOR_MESSAGES.SLOT_END_OVERLAP,
           StatusCodes.CONFLICT,
         );
       }
@@ -113,16 +116,16 @@ export class TimeSlotService implements ITimeSlotService {
     }
     catch (error: any) {
       if (error.code === 11000) {
-        throw new CustomError("Time slot conflicts with an existing slot.", StatusCodes.CONFLICT);
+        throw new CustomError(MENTOR_MESSAGES.SLOT_CONFLICT, StatusCodes.CONFLICT);
       }
-      throw new CustomError("An unexpected error occurred.", StatusCodes.INTERNAL_SERVER_ERROR);
+      throw new CustomError(COMMON_MESSAGES.UNEXPECTED_ERROR, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 
   async deleteTimeSlot(mentorId: string, slotId: string): Promise<ITimeSlot> {
     const timeSlot = await this.timeSlotRepository.deleteByMentorAndSlotId(mentorId, slotId);
     if (!timeSlot) {
-      throw new Error("Time slot not found or cannot be deleted (already booked).");
+      throw new CustomError(BOOKING_MESSAGES.SLOT_NOT_FOUND_OR_BOOKED, StatusCodes.NOT_FOUND);
     }
     return timeSlot;
   }
@@ -143,7 +146,7 @@ export class TimeSlotService implements ITimeSlotService {
     // Validate mentor existence
     const mentor = await this.mentorService.getMentorDetails(mentorId);
     if (!mentor) {
-      throw new CustomError("Mentor not found.", StatusCodes.BAD_REQUEST);
+      throw new CustomError(BOOKING_MESSAGES.TIME_SLOT_NOT_FOUND, StatusCodes.BAD_REQUEST);
     }
 
     // Get unbooked time slots for the next 7 days
@@ -153,23 +156,23 @@ export class TimeSlotService implements ITimeSlotService {
   async bookTimeSlot(slotId: string, mentorId: string): Promise<ITimeSlot> {
     const timeSlot = await this.timeSlotRepository.findById(slotId);
     if (!timeSlot) {
-      throw new CustomError("Time slot not found.", StatusCodes.NOT_FOUND);
+      throw new CustomError(BOOKING_MESSAGES.TIME_SLOT_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     if (timeSlot.mentorId.toString() !== mentorId) {
       throw new CustomError(
-        "Time slot does not belong to the specified mentor.",
+        BOOKING_MESSAGES.SLOT_NOT_BELONG_TO_MENTOR,
         StatusCodes.FORBIDDEN,
       );
     }
 
     if (timeSlot.isBooked) {
-      throw new CustomError("Time slot is already booked.", StatusCodes.CONFLICT);
+      throw new CustomError(BOOKING_MESSAGES.TIME_SLOT_ALREADY_BOOKED, StatusCodes.CONFLICT);
     }
 
     const updatedTimeSlot = await this.timeSlotRepository.update(slotId, { isBooked: true });
     if (!updatedTimeSlot) {
-      throw new CustomError("Failed to update the time slot.", StatusCodes.NOT_FOUND);
+      throw new CustomError(BOOKING_MESSAGES.SLOT_UPDATE_FAILED, StatusCodes.NOT_FOUND);
     }
     return updatedTimeSlot;
   }
