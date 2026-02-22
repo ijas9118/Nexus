@@ -1,11 +1,12 @@
 import api from "./api";
 import { IPlan } from "@/types/plans";
 import { handleApi } from "@/utils/handleApi";
+import { PAYMENT_ROUTES } from "@/utils/constants";
 
 const PaymentService = {
   createSession: (plan: IPlan, email: string) =>
     handleApi<string>(() =>
-      api.post("payment/create-checkout-session", {
+      api.post(PAYMENT_ROUTES.CREATE_CHECKOUT_SESSION, {
         planId: plan._id,
         tier: plan.tier,
         price: plan.price,
@@ -15,7 +16,9 @@ const PaymentService = {
 
   verifySession: (sessionId: string) =>
     handleApi(() =>
-      api.get<{ success: boolean }>(`/payment/verify-session/${sessionId}`),
+      api.get<{ success: boolean }>(
+        `${PAYMENT_ROUTES.VERIFY_SESSION}/${sessionId}`,
+      ),
     ),
 };
 

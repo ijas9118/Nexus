@@ -1,10 +1,11 @@
 import { AxiosError } from "axios";
 import api from "../api";
+import { CHAT_ROUTES } from "@/utils/constants";
 
 export const ChatService = {
   fetchChats: async () => {
     try {
-      const response = await api.get("/chat/chats");
+      const response = await api.get(CHAT_ROUTES.CHATS);
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -18,7 +19,7 @@ export const ChatService = {
   },
   fetchGroups: async () => {
     try {
-      const response = await api.get("/chat/groups");
+      const response = await api.get(CHAT_ROUTES.GROUPS);
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -32,7 +33,7 @@ export const ChatService = {
   },
   fetchMessages: async (chatId: string, chatType: "Chat" | "Group") => {
     try {
-      const response = await api.get("/chat/messages", {
+      const response = await api.get(CHAT_ROUTES.MESSAGES, {
         params: { chatId, chatType },
       });
       return response.data;

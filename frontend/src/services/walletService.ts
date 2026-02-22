@@ -1,12 +1,13 @@
 import { handleApi } from "@/utils/handleApi";
 import api from "./api";
 import { IWallet } from "@/types/wallet";
+import { WALLET_ROUTES } from "@/utils/constants";
 
 const WalletService = {
-  getWalletInfo: () => handleApi(() => api.get<IWallet>("/wallet")),
+  getWalletInfo: () => handleApi(() => api.get<IWallet>(WALLET_ROUTES.BASE)),
 
   addMoney: (amount: number) =>
-    handleApi(() => api.post<IWallet>("/wallet/add", { amount })),
+    handleApi(() => api.post<IWallet>(WALLET_ROUTES.ADD, { amount })),
 
   requestWithdrawal: (
     amount: number,
@@ -14,7 +15,7 @@ const WalletService = {
     nexusPoints?: number,
   ) =>
     handleApi(() =>
-      api.post("/wallet/withdraw", {
+      api.post(WALLET_ROUTES.WITHDRAW, {
         amount,
         withdrawalNote,
         nexusPoints: nexusPoints || 0,
@@ -22,18 +23,19 @@ const WalletService = {
     ),
 
   addNexusPoints: (points: number) =>
-    handleApi(() => api.post<IWallet>("/wallet/points", { points })),
+    handleApi(() => api.post<IWallet>(WALLET_ROUTES.POINTS, { points })),
 
-  getPendingRequests: () => handleApi(() => api.get<any[]>("/wallet/requests")),
+  getPendingRequests: () =>
+    handleApi(() => api.get<any[]>(WALLET_ROUTES.REQUESTS)),
 
   getUserPendingRequests: () =>
-    handleApi(() => api.get("/wallet/requests/user")),
+    handleApi(() => api.get(WALLET_ROUTES.REQUESTS_USER)),
 
   approveWithdrawal: (requestId: string) =>
-    handleApi(() => api.post(`/wallet/requests/approve`, { requestId })),
+    handleApi(() => api.post(WALLET_ROUTES.REQUESTS_APPROVE, { requestId })),
 
   rejectWithdrawal: (requestId: string) =>
-    handleApi(() => api.post(`/wallet/requests/reject`, { requestId })),
+    handleApi(() => api.post(WALLET_ROUTES.REQUESTS_REJECT, { requestId })),
 };
 
 export default WalletService;

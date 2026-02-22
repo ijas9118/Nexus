@@ -1,5 +1,6 @@
 import { handleApi } from "@/utils/handleApi";
 import api from "./api";
+import { MENTOR_METADATA_ROUTES } from "@/utils/constants";
 
 export interface MentorMetadataData {
   _id: string;
@@ -16,7 +17,7 @@ const MentorMetadataService = {
   getAll: (includeInactive = false) => {
     const query = includeInactive ? "?all=true" : "";
     return handleApi(() =>
-      api.get<MentorMetadataData[]>(`/mentor-metadata${query}`),
+      api.get<MentorMetadataData[]>(`${MENTOR_METADATA_ROUTES.BASE}${query}`),
     );
   },
 
@@ -27,31 +28,37 @@ const MentorMetadataService = {
   ) => {
     const query = includeInactive ? "?isActive=false" : "";
     return handleApi(() =>
-      api.get<MentorMetadataData[]>(`/mentor-metadata/type/${type}${query}`),
+      api.get<MentorMetadataData[]>(
+        `${MENTOR_METADATA_ROUTES.TYPE}/${type}${query}`,
+      ),
     );
   },
 
   // Get one by ID
   getById: (id: string) =>
-    handleApi(() => api.get<MentorMetadataData>(`/mentor-metadata/${id}`)),
+    handleApi(() =>
+      api.get<MentorMetadataData>(`${MENTOR_METADATA_ROUTES.BASE}/${id}`),
+    ),
 
   // Create new metadata
   create: (data: Partial<MentorMetadataData>) =>
-    handleApi(() => api.post<MentorMetadataData>("/mentor-metadata", data)),
+    handleApi(() =>
+      api.post<MentorMetadataData>(MENTOR_METADATA_ROUTES.BASE, data),
+    ),
 
   // Update existing metadata
   update: (id: string, data: Partial<MentorMetadataData>) =>
     handleApi(() =>
-      api.put<MentorMetadataData>(`/mentor-metadata/${id}`, data),
+      api.put<MentorMetadataData>(`${MENTOR_METADATA_ROUTES.BASE}/${id}`, data),
     ),
 
   // Soft delete metadata
   softDelete: (id: string) =>
-    handleApi(() => api.delete(`/mentor-metadata/${id}`)),
+    handleApi(() => api.delete(`${MENTOR_METADATA_ROUTES.BASE}/${id}`)),
 
   // Restore soft-deleted metadata
   restore: (id: string) =>
-    handleApi(() => api.patch(`/mentor-metadata/${id}/restore`)),
+    handleApi(() => api.patch(`${MENTOR_METADATA_ROUTES.BASE}/${id}/restore`)),
 };
 
 export default MentorMetadataService;

@@ -1,4 +1,5 @@
 import api from "../api";
+import { ADMIN_ROUTES } from "@/utils/constants";
 
 const AdminSquadService = {
   getAllSquads: (
@@ -9,7 +10,7 @@ const AdminSquadService = {
     } = {},
   ) =>
     api
-      .get("admin/squad", {
+      .get(ADMIN_ROUTES.SQUAD, {
         params: {
           limit: params.limit || 10,
           page: params.page || 1,
@@ -19,7 +20,7 @@ const AdminSquadService = {
       .then((res) => res.data),
 
   toggleStatus: (id: string) =>
-    api.post(`admin/squad/${id}/toggle`).then((res) => res.data),
+    api.post(`${ADMIN_ROUTES.SQUAD}/${id}/toggle`).then((res) => res.data),
 
   createSquad: (data: {
     name: string;
@@ -27,7 +28,7 @@ const AdminSquadService = {
     handle: string;
     category: string;
     logoUrl?: string;
-  }) => api.post("admin/squad", data).then((res) => res.data),
+  }) => api.post(ADMIN_ROUTES.SQUAD, data).then((res) => res.data),
 };
 
 export default AdminSquadService;

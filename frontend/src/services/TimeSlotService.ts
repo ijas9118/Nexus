@@ -1,11 +1,12 @@
 import { handleApi } from "@/utils/handleApi";
 import api from "./api";
 import { TimeSlot } from "@/types/mentor";
+import { TIME_SLOT_ROUTES } from "@/utils/constants";
 
 const TimeSlotService = {
   addTimeSlot: (date: string, startTime: string, mentorId: string) =>
     handleApi(() =>
-      api.post<TimeSlot>("/mentor/time-slot", {
+      api.post<TimeSlot>(TIME_SLOT_ROUTES.BASE, {
         date,
         startTime,
         mentorId,
@@ -13,26 +14,28 @@ const TimeSlotService = {
     ),
 
   deleteTimeSlot: (slotId: string) =>
-    handleApi(() => api.delete<TimeSlot>(`/mentor/time-slot/${slotId}`)),
+    handleApi(() => api.delete<TimeSlot>(`${TIME_SLOT_ROUTES.BASE}/${slotId}`)),
 
   getTimeSlotsByDate: (date: string) =>
     handleApi(() =>
-      api.get<TimeSlot[]>(`/mentor/time-slot/by-date`, {
+      api.get<TimeSlot[]>(TIME_SLOT_ROUTES.BY_DATE, {
         params: { date },
       }),
     ),
 
   getAllTimeSlots: () =>
-    handleApi(() => api.get<Record<string, TimeSlot[]>>("/mentor/time-slot")),
+    handleApi(() => api.get<Record<string, TimeSlot[]>>(TIME_SLOT_ROUTES.BASE)),
 
   getBookedTimeSlots: () =>
     handleApi(() =>
-      api.get<Record<string, TimeSlot[]>>("/mentor/time-slot/booked-time-slot"),
+      api.get<Record<string, TimeSlot[]>>(TIME_SLOT_ROUTES.BOOKED),
     ),
 
   getMentorTimeSlots: (mentorId: string) =>
     handleApi(() =>
-      api.get<Record<string, TimeSlot[]>>(`/mentor/time-slot/${mentorId}`),
+      api.get<Record<string, TimeSlot[]>>(
+        `${TIME_SLOT_ROUTES.BASE}/${mentorId}`,
+      ),
     ),
 };
 
