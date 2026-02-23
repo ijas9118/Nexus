@@ -25,16 +25,72 @@ export class MentorMetadataService implements IMentorMetadataService {
   }
 
   async create(data: Partial<IMentorMetadata>): Promise<IMentorMetadata> {
-    if (!["experienceLevel", "expertiseArea", "technology"].includes(data.type!)) {
-      throw new CustomError(MENTOR_MESSAGES.INVALID_META_TYPE, StatusCodes.BAD_REQUEST);
+    if (!data.type || !data.name || !data.label) {
+      throw new CustomError(MENTOR_MESSAGES.MISSING_FIELDS, StatusCodes.BAD_REQUEST);
     }
+
+    const nameTrimmed = data.name.trim();
+    const labelTrimmed = data.label.trim();
+    const escapedName = nameTrimmed.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const escapedLabel = labelTrimmed.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    const existingMetadata = await this._repository.findOne({
+      type: data.type,
+      $or: [
+        { name: { $regex: new RegExp(`^${escapedName}$`, "i") } },
+        { label: { $regex: new RegExp(`^${escapedLabel}$`, "i") } },
+      ],
+    });
+
+    if (existingMetadata) {
+      throw new CustomError(
+        "Metadata with this name or label already exists for this type",
+        StatusCodes.BAD_REQUEST,
+      );
+    }
+
+    data.name = nameTrimmed;
+    data.label = labelTrimmed;
+
     return this._repository.create(data);
   }
 
   async update(id: string, data: Partial<IMentorMetadata>): Promise<IMentorMetadata | null> {
-    if (data.type && !["experienceLevel", "expertiseArea", "technology"].includes(data.type)) {
-      throw new CustomError(MENTOR_MESSAGES.INVALID_META_TYPE, StatusCodes.BAD_REQUEST);
+    const existingRecord = await this._repository.findById(id);
+    if (!existingRecord) {
+      throw new CustomError(MENTOR_MESSAGES.META_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
+
+    const type = data.type || existingRecord.type;
+    const name = data.name ? data.name.trim() : existingRecord.name;
+    const label = data.label ? data.label.trim() : existingRecord.label;
+
+    if (data.name || data.label || data.type) {
+      const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const escapedLabel = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+      const duplicateCheck = await this._repository.findOne({
+        type,
+        _id: { $ne: id },
+        $or: [
+          { name: { $regex: new RegExp(`^${escapedName}$`, "i") } },
+          { label: { $regex: new RegExp(`^${escapedLabel}$`, "i") } },
+        ],
+      });
+
+      if (duplicateCheck) {
+        throw new CustomError(
+          "Metadata with this name or label already exists for this type",
+          StatusCodes.BAD_REQUEST,
+        );
+      }
+    }
+
+    if (data.name)
+      data.name = name;
+    if (data.label)
+      data.label = label;
+
     return this._repository.update(id, data);
   }
 

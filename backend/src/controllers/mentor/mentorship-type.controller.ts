@@ -22,7 +22,10 @@ export class MentorshipTypeController implements IMentorshipTypeController {
   });
 
   getById = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const responseDto = await this._service.getMentorshipType(req.params.id as string);
+    const isAdmin = req.user?.role === "admin";
+    const responseDto = await this._service.getMentorshipType(req.params.id as string, {
+      includeInactive: isAdmin,
+    });
     res.status(StatusCodes.OK).json(responseDto);
   });
 

@@ -25,12 +25,20 @@ export class NotificationTypeService implements INotificationTypeService {
     iconColor: string;
     roles: string[];
   }): Promise<INotificationType> {
-    const existingType = await this._notificationTypeRepository.findByName(data.name);
+    const nameTrimmed = data.name.trim();
+    const escapedName = nameTrimmed.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const existingType = await this._notificationTypeRepository.findOne({
+      name: { $regex: new RegExp(`^${escapedName}$`, "i") },
+    });
+
     if (existingType) {
       throw new CustomError(NOTIFICATION_MESSAGES.TYPE_EXISTS, StatusCodes.CONFLICT);
     }
 
-    const notificationType = await this._notificationTypeRepository.createNotificationType(data);
+    const notificationType = await this._notificationTypeRepository.createNotificationType({
+      ...data,
+      name: nameTrimmed,
+    });
 
     return notificationType;
   }
@@ -50,10 +58,16 @@ export class NotificationTypeService implements INotificationTypeService {
     }>,
   ): Promise<INotificationType> {
     if (data.name) {
-      const existingType = await this._notificationTypeRepository.findByName(data.name);
-      if (existingType && existingType._id.toString() !== id) {
+      const nameTrimmed = data.name.trim();
+      const escapedName = nameTrimmed.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const existingType = await this._notificationTypeRepository.findOne({
+        name: { $regex: new RegExp(`^${escapedName}$`, "i") },
+        _id: { $ne: id },
+      });
+      if (existingType) {
         throw new CustomError(NOTIFICATION_MESSAGES.TYPE_EXISTS, StatusCodes.CONFLICT);
       }
+      data.name = nameTrimmed;
     }
 
     const updatedType = await this._notificationTypeRepository.update(id, data);

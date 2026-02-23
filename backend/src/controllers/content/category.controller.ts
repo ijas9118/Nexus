@@ -78,12 +78,8 @@ export class CategoryController implements ICategoryController {
         search,
       );
 
-      if (!categories || categories.length === 0) {
-        throw new CustomError(CATEGORY_MESSAGES.NONE_FOUND, StatusCodes.NOT_FOUND);
-      }
-
       res.status(StatusCodes.OK).json({
-        categories,
+        categories: categories || [],
         total,
         page,
         limit,
@@ -92,12 +88,7 @@ export class CategoryController implements ICategoryController {
     }
     else {
       const categories = await this._categoryService.getAllCategories();
-
-      if (!categories || categories.length === 0) {
-        throw new CustomError(CATEGORY_MESSAGES.NONE_FOUND, StatusCodes.NOT_FOUND);
-      }
-
-      res.status(StatusCodes.OK).json(categories);
+      res.status(StatusCodes.OK).json(categories || []);
     }
   });
 }

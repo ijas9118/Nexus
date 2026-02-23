@@ -70,33 +70,11 @@ export default function TargetAudiencesPage() {
     name: string;
     isActive: boolean;
   }) => {
-    if (!formData.name.trim()) {
-      toast.error("Validation Error", {
-        description: "Name is required",
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      await TargetAudienceService.create({
-        name: formData.name,
-        isActive: formData.isActive,
-      });
-
-      toast.success("Success", {
-        description: "Target audience created successfully",
-      });
-
-      setIsCreateDialogOpen(false);
-      fetchTargetAudiences();
-    } catch {
-      toast.error("Error", {
-        description: "Failed to create target audience",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    await TargetAudienceService.create({
+      name: formData.name,
+      isActive: formData.isActive,
+    });
+    fetchTargetAudiences();
   };
 
   // Handle update audience
@@ -104,34 +82,13 @@ export default function TargetAudiencesPage() {
     name: string;
     isActive: boolean;
   }) => {
-    if (!currentAudience || !formData.name.trim()) {
-      toast.error("Validation Error", {
-        description: "Name is required",
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      await TargetAudienceService.update(currentAudience._id, {
-        name: formData.name,
-        isActive: formData.isActive,
-      });
-
-      toast.success("Success", {
-        description: "Target audience updated successfully",
-      });
-
-      setIsEditDialogOpen(false);
-      setCurrentAudience(null);
-      fetchTargetAudiences();
-    } catch {
-      toast.error("Error", {
-        description: "Failed to update target audience",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    if (!currentAudience) return;
+    await TargetAudienceService.update(currentAudience._id, {
+      name: formData.name,
+      isActive: formData.isActive,
+    });
+    setCurrentAudience(null);
+    fetchTargetAudiences();
   };
 
   // Handle delete audience
@@ -255,7 +212,6 @@ export default function TargetAudiencesPage() {
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
         onSubmit={handleCreateAudience}
-        isSubmitting={isSubmitting}
         mode="create"
       />
 
@@ -264,7 +220,6 @@ export default function TargetAudiencesPage() {
         onOpenChange={setIsEditDialogOpen}
         onSubmit={handleUpdateAudience}
         audience={currentAudience}
-        isSubmitting={isSubmitting}
         mode="edit"
       />
 

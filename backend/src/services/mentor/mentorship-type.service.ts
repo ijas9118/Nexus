@@ -22,7 +22,11 @@ export class MentorshipTypeService implements IMentorshipTypeService {
     description: string;
     defaultPrice?: number;
   }): Promise<MentorshipTypeResponseDto> {
-    const existingType = await this._repository.findOne({ name: data.name });
+    const nameTrimmed = data.name.trim();
+    const escapedName = nameTrimmed.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const existingType = await this._repository.findOne({
+      name: { $regex: new RegExp(`^${escapedName}$`, "i") },
+    });
     if (existingType) {
       throw new CustomError(
         MENTOR_MESSAGES.TYPE_EXISTS,
@@ -31,7 +35,7 @@ export class MentorshipTypeService implements IMentorshipTypeService {
     }
 
     const created = await this._repository.create({
-      name: data.name,
+      name: nameTrimmed,
       description: data.description,
       defaultPrice: data.defaultPrice,
     });
@@ -39,9 +43,12 @@ export class MentorshipTypeService implements IMentorshipTypeService {
     return MentorshipTypeResponseDto.fromEntity(created);
   }
 
-  async getMentorshipType(id: string): Promise<MentorshipTypeResponseDto> {
+  async getMentorshipType(
+    id: string,
+    options?: { includeInactive?: boolean },
+  ): Promise<MentorshipTypeResponseDto> {
     const type = await this._repository.findById(id);
-    if (!type || !type.isActive) {
+    if (!type || (!type.isActive && !options?.includeInactive)) {
       throw new CustomError(MENTOR_MESSAGES.TYPE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     return MentorshipTypeResponseDto.fromEntity(type);
@@ -87,8 +94,10 @@ export class MentorshipTypeService implements IMentorshipTypeService {
     }
 
     if (data.name) {
+      const nameTrimmed = data.name.trim();
+      const escapedName = nameTrimmed.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const existingType = await this._repository.findOne({
-        name: data.name,
+        name: { $regex: new RegExp(`^${escapedName}$`, "i") },
         _id: { $ne: id },
       });
       if (existingType) {
@@ -97,6 +106,7 @@ export class MentorshipTypeService implements IMentorshipTypeService {
           StatusCodes.BAD_REQUEST,
         );
       }
+      data.name = nameTrimmed;
     }
 
     if (data.defaultPrice !== undefined && data.defaultPrice < 0) {

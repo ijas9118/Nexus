@@ -1,13 +1,17 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Min } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min, MinLength } from "class-validator";
 
 // Request DTO for creating a mentorship type
 export class CreateMentorshipTypeRequestDto {
   @IsString()
   @IsNotEmpty({ message: "Name is required" })
+  @MinLength(3, { message: "Name must be at least 3 characters long" })
+  @MaxLength(50, { message: "Name must not exceed 50 characters" })
   name!: string;
 
   @IsString()
   @IsNotEmpty({ message: "Description is required" })
+  @MinLength(10, { message: "Description must be at least 10 characters long" })
+  @MaxLength(500, { message: "Description must not exceed 500 characters" })
   description!: string;
 
   @IsNumber()
@@ -39,11 +43,15 @@ interface UpdateMentorshipTypePayload {
 export class UpdateMentorshipTypeRequestDto {
   @IsString()
   @IsNotEmpty({ message: "Name is required" })
+  @MinLength(3, { message: "Name must be at least 3 characters long" })
+  @MaxLength(50, { message: "Name must not exceed 50 characters" })
   @IsOptional()
   name?: string;
 
   @IsString()
   @IsNotEmpty({ message: "Description is required" })
+  @MinLength(10, { message: "Description must be at least 10 characters long" })
+  @MaxLength(500, { message: "Description must not exceed 500 characters" })
   @IsOptional()
   description?: string;
 

@@ -95,26 +95,13 @@ export default function MentorMetadataPage() {
   };
 
   const handleFormSubmit = async (data: Partial<MentorMetadataData>) => {
-    try {
-      if (editingMetadata) {
-        await MentorMetadataService.update(editingMetadata._id, data);
-      } else {
-        await MentorMetadataService.create(data);
-      }
-      toast.success(editingMetadata ? "Metadata updated" : "Metadata created", {
-        description: editingMetadata
-          ? "The metadata has been successfully updated"
-          : "The metadata has been successfully created",
-      });
-      setIsFormOpen(false);
-      setEditingMetadata(null);
-      fetchMetadata();
-    } catch {
-      toast.error(
-        editingMetadata ? "Error updating metadata" : "Error creating metadata",
-        { description: "An unexpected error occurred" },
-      );
+    if (editingMetadata) {
+      await MentorMetadataService.update(editingMetadata._id, data);
+    } else {
+      await MentorMetadataService.create(data);
     }
+    setEditingMetadata(null);
+    fetchMetadata();
   };
 
   return (

@@ -12,6 +12,7 @@ import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
 
 const { PAYMENT_MESSAGES } = MESSAGES;
+const OBJECT_ID_REGEX = /^[a-f\d]{24}$/i;
 
 @injectable()
 export class PlanController implements IPlanController {
@@ -28,7 +29,12 @@ export class PlanController implements IPlanController {
   });
 
   getPlanById = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const plan = await this._planService.getPlanById(req.params.id as string);
+    const id = req.params.id as string | undefined;
+    if (!id || !OBJECT_ID_REGEX.test(id)) {
+      throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.BAD_REQUEST);
+    }
+
+    const plan = await this._planService.getPlanById(id);
     if (!plan) {
       throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -36,7 +42,12 @@ export class PlanController implements IPlanController {
   });
 
   updatePlan = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const plan = await this._planService.updatePlan(req.params.id as string, req.body);
+    const id = req.params.id as string | undefined;
+    if (!id || !OBJECT_ID_REGEX.test(id)) {
+      throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.BAD_REQUEST);
+    }
+
+    const plan = await this._planService.updatePlan(id, req.body);
     if (!plan) {
       throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
@@ -44,7 +55,12 @@ export class PlanController implements IPlanController {
   });
 
   deletePlan = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const plan = await this._planService.softDeletePlan(req.params.id as string);
+    const id = req.params.id as string | undefined;
+    if (!id || !OBJECT_ID_REGEX.test(id)) {
+      throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.BAD_REQUEST);
+    }
+
+    const plan = await this._planService.softDeletePlan(id);
     if (!plan) {
       throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.NOT_FOUND);
     }

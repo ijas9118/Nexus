@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/atoms/button";
 import {
   Form,
@@ -23,48 +25,36 @@ import { HexColorPicker } from "react-colorful";
 const roles = [
   { id: "admin", label: "Admin" },
   { id: "mentor", label: "Mentor" },
-  { id: "premium user", label: "Premium User" },
-  { id: "normal user", label: "Normal User" },
+  { id: "premium", label: "Premium User" },
+  { id: "user", label: "Normal User" },
 ];
 
 const formSchema = z.object({
   name: z
     .string()
-    .min(2, {
-      message: "Name must be at least 2 characters.",
-    })
-    .max(50, {
-      message: "Name must not exceed 50 characters.",
-    }),
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must not exceed 50 characters"),
   description: z
     .string()
-    .min(5, {
-      message: "Description must be at least 5 characters.",
-    })
-    .max(200, {
-      message: "Description must not exceed 200 characters.",
-    }),
+    .min(10, "Description must be at least 10 characters")
+    .max(500, "Description must not exceed 500 characters"),
   icon: z
     .string()
-    .min(1, {
-      message: "Icon name is required.",
-    })
+    .min(1, "Icon name is required")
     .refine((val) => isValidLucideIcon(val), {
       message: "This icon doesn't exist in Lucide icons library.",
     }),
   iconColor: z.string().regex(/^#([0-9A-F]{3}){1,2}$/i, {
     message: "Must be a valid hex color code (e.g., #FF0000).",
   }),
-  roles: z.array(z.string()).min(1, {
-    message: "Select at least one role.",
-  }),
+  roles: z.array(z.string()).min(1, "Select at least one role."),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 interface NotificationTypeFormProps {
   initialData?: NotificationTypeData;
-  onSubmit: (data: FormValues) => void;
+  onSubmit: (data: FormValues) => Promise<void>;
   onCancel: () => void;
   isEditing?: boolean;
 }
@@ -83,18 +73,45 @@ export default function NotificationTypeForm({
   );
   const [iconValid, setIconValid] = useState<boolean>(!!initialData?.icon);
   const [isColorPickerOpen, setIsColorPickerOpen] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const colorPickerRef = useRef<HTMLDivElement>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: initialData?.name || "",
-      description: initialData?.description || "",
-      icon: initialData?.icon || "",
-      iconColor: initialData?.iconColor || "#000000",
-      roles: initialData?.roles || [],
+      name: "",
+      description: "",
+      icon: "",
+      iconColor: "#000000",
+      roles: [],
     },
   });
+
+  useEffect(() => {
+    if (initialData) {
+      form.reset({
+        name: initialData.name,
+        description: initialData.description,
+        icon: initialData.icon,
+        iconColor: initialData.iconColor,
+        roles: initialData.roles,
+      });
+      setIconPreview(initialData.icon);
+      setIconColor(initialData.iconColor);
+      setIconValid(true);
+    } else {
+      form.reset({
+        name: "",
+        description: "",
+        icon: "",
+        iconColor: "#000000",
+        roles: [],
+      });
+      setIconPreview(null);
+      setIconColor("#000000");
+      setIconValid(false);
+    }
+  }, [initialData, form]);
 
   // Close color picker when clicking outside
   useEffect(() => {
@@ -125,14 +142,29 @@ export default function NotificationTypeForm({
     form.setValue("iconColor", value, { shouldValidate: true });
   };
 
-  const handleSubmit = (values: FormValues) => {
-    if (isEditing && initialData) {
-      onSubmit({
-        ...initialData,
-        ...values,
-      });
-    } else {
-      onSubmit(values);
+  const handleSubmit = async (values: FormValues) => {
+    setIsSubmitting(true);
+    try {
+      await onSubmit(values);
+      toast.success(
+        isEditing
+          ? "Notification type updated successfully"
+          : "Notification type created successfully",
+      );
+    } catch (error: any) {
+      console.error("Failed to save notification type:", error);
+      const errorMessage = error?.message || "Failed to save notification type";
+
+      if (errorMessage.toLowerCase().includes("already exists")) {
+        form.setError("name", {
+          type: "manual",
+          message: "A notification type with this name already exists.",
+        });
+      } else {
+        toast.error(errorMessage);
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -333,7 +365,8 @@ export default function NotificationTypeForm({
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel
           </Button>
-          <Button type="submit">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isEditing ? "Update" : "Create"} Notification Type
           </Button>
         </div>

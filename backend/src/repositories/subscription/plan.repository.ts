@@ -13,10 +13,10 @@ export class PlanRepository extends BaseRepository<IPlan> implements IPlanReposi
   }
 
   async softDelete(planId: string): Promise<IPlan | null> {
-    return this.findByIdAndUpdate(planId, { isActive: false });
+    return this.update(planId, { isActive: false });
   }
 
   async findActivePlans(): Promise<IPlan[]> {
-    return this._model.find({ isActive: true });
+    return this._model.find({ isActive: true }).sort({ createdAt: -1 });
   }
 }

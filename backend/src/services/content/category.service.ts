@@ -16,22 +16,26 @@ export class CategoryService implements ICategoryService {
   constructor(@inject(TYPES.CategoryRepository) private _categoryRepository: ICategoryRepository) {}
 
   async addCategory(name: string): Promise<ICategory> {
-    const existingCategory = await this._categoryRepository.findOne({ name });
+    const normalizedName = this.normalizeCategoryName(name);
+
+    const existingCategory = await this.findByNameCaseInsensitive(normalizedName);
 
     if (existingCategory) {
       throw new CustomError(CATEGORY_MESSAGES.EXISTS, StatusCodes.CONFLICT);
     }
 
-    return await this._categoryRepository.addCategory(name);
+    return await this._categoryRepository.addCategory(normalizedName);
   }
 
   async updateCategory(id: string, newName: string): Promise<ICategory | null> {
-    const existingCategory = await this._categoryRepository.findOne({ name: newName });
+    const normalizedNewName = this.normalizeCategoryName(newName);
 
-    if (existingCategory) {
+    const existingCategory = await this.findByNameCaseInsensitive(normalizedNewName);
+
+    if (existingCategory && existingCategory._id.toString() !== id) {
       throw new CustomError(CATEGORY_MESSAGES.EXISTS, StatusCodes.CONFLICT);
     }
-    return await this._categoryRepository.updateCategory(id, newName);
+    return await this._categoryRepository.updateCategory(id, normalizedNewName);
   }
 
   async toggleCategory(id: string): Promise<ICategory | null> {
@@ -48,5 +52,20 @@ export class CategoryService implements ICategoryService {
     search: string,
   ): Promise<{ categories: ICategory[]; total: number }> {
     return await this._categoryRepository.findAllWithPagination(page, limit, search);
+  }
+
+  private normalizeCategoryName(name: string): string {
+    const normalizedName = name.trim();
+    if (!normalizedName) {
+      throw new CustomError(CATEGORY_MESSAGES.NAME_REQUIRED, StatusCodes.BAD_REQUEST);
+    }
+    return normalizedName;
+  }
+
+  private async findByNameCaseInsensitive(name: string): Promise<ICategory | null> {
+    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return await this._categoryRepository.findOne({
+      name: { $regex: `^${escapedName}$`, $options: "i" },
+    });
   }
 }

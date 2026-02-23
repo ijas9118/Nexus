@@ -6,7 +6,10 @@ export interface IMentorshipTypeService {
     description: string;
     defaultPrice?: number;
   }) => Promise<MentorshipTypeResponseDto>;
-  getMentorshipType: (id: string) => Promise<MentorshipTypeResponseDto>;
+  getMentorshipType: (
+    id: string,
+    options?: { includeInactive?: boolean },
+  ) => Promise<MentorshipTypeResponseDto>;
   getAllMentorshipTypes: (options?: {
     includeInactive?: boolean;
   }) => Promise<MentorshipTypeResponseDto[]>;

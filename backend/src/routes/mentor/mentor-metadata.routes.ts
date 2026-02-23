@@ -4,12 +4,19 @@ import type { IMentorMetadataController } from "@/core/interfaces/controllers/i-
 
 import { container } from "@/di/container";
 import { TYPES } from "@/di/types";
+import { CreateMentorMetadataRequestDto, UpdateMentorMetadataRequestDto } from "@/dtos/requests/mentor-metadata.dto";
 import { authenticate } from "@/middlewares/auth.middleware";
+import { validateDto } from "@/middlewares/validate-dto.middleware";
 
 const router = Router();
 const controller = container.get<IMentorMetadataController>(TYPES.MentorMetadataController);
 
-router.post("/", authenticate(["admin", "user", "premium", "mentor"]), controller.create);
+router.post(
+  "/",
+  authenticate(["admin"]),
+  validateDto(CreateMentorMetadataRequestDto),
+  controller.create,
+);
 router.get("/", authenticate(["admin", "user", "premium", "mentor"]), controller.findAll);
 router.get(
   "/type/:type",
@@ -17,7 +24,12 @@ router.get(
   controller.findByType,
 );
 router.get("/:id", authenticate(["admin", "user", "premium", "mentor"]), controller.findById);
-router.put("/:id", authenticate(["admin"]), controller.update);
+router.put(
+  "/:id",
+  authenticate(["admin"]),
+  validateDto(UpdateMentorMetadataRequestDto),
+  controller.update,
+);
 router.delete("/:id", authenticate(["admin"]), controller.softDelete);
 router.patch("/:id/restore", authenticate(["admin"]), controller.restore);
 

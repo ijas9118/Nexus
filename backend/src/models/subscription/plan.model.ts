@@ -22,33 +22,45 @@ const PlanSchema = new Schema<IPlan>(
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
     description: {
       type: String,
       required: true,
+      trim: true,
     },
     price: {
       type: Number,
       required: true,
+      min: 0,
     },
     interval: {
       type: String,
       required: true,
+      trim: true,
     },
     durationInDays: {
       type: Number,
+      min: 1,
     },
     ctaText: {
       type: String,
       required: true,
+      trim: true,
     },
     highlights: {
       type: [String],
       required: true,
+      validate: {
+        validator: (highlights: string[]) => highlights.length > 0,
+        message: "At least one highlight is required",
+      },
+      set: (highlights: string[]) => highlights.map(h => h.trim()).filter(Boolean),
     },
     logo: {
       type: String,
       required: true,
+      trim: true,
     },
     featured: {
       type: Boolean,

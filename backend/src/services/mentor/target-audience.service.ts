@@ -20,22 +20,33 @@ export class TargetAudienceService implements ITargetAudienceService {
   ) {}
 
   async create(data: Partial<ITargetAudience>): Promise<ITargetAudience> {
-    const existingAudience = await this._repository.findOne({ name: data.name });
+    if (!data.name) {
+      throw new CustomError(MENTOR_MESSAGES.MISSING_FIELDS, StatusCodes.BAD_REQUEST);
+    }
+    const nameTrimmed = data.name.trim();
+    const escapedName = nameTrimmed.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const existingAudience = await this._repository.findOne({
+      name: { $regex: new RegExp(`^${escapedName}$`, "i") },
+    });
     if (existingAudience) {
       throw new CustomError(MENTOR_MESSAGES.AUDIENCE_EXISTS, StatusCodes.CONFLICT);
     }
+    data.name = nameTrimmed;
     return this._repository.create(data);
   }
 
   async update(id: string, data: Partial<ITargetAudience>): Promise<ITargetAudience | null> {
     if (data.name) {
+      const nameTrimmed = data.name.trim();
+      const escapedName = nameTrimmed.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const existingAudience = await this._repository.findOne({
-        name: data.name,
+        name: { $regex: new RegExp(`^${escapedName}$`, "i") },
         _id: { $ne: id },
       });
       if (existingAudience) {
         throw new CustomError(MENTOR_MESSAGES.AUDIENCE_EXISTS, StatusCodes.CONFLICT);
       }
+      data.name = nameTrimmed;
     }
     return this._repository.update(id, data);
   }

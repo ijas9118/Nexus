@@ -50,14 +50,12 @@ export default function MentorshipTypesPage() {
   };
 
   const handleSave = async (type: MentorshipTypeData) => {
-    console.log(type, editingType);
     if (editingType) {
       await MentorshipTypeService.update(editingType._id as string, type);
     } else {
       await MentorshipTypeService.create(type);
     }
 
-    setOpen(false);
     queryClient.invalidateQueries({ queryKey: ["mentorshipTypes"] });
   };
 
