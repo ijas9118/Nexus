@@ -8,6 +8,11 @@ import type { IPlanController } from "@/core/interfaces/controllers/i-plan-contr
 import type { IPlanService } from "@/core/interfaces/services/i-plan-service";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
+
+const { PAYMENT_MESSAGES } = MESSAGES;
+const OBJECT_ID_REGEX = /^[a-f\d]{24}$/i;
 
 @injectable()
 export class PlanController implements IPlanController {
@@ -15,7 +20,7 @@ export class PlanController implements IPlanController {
 
   createPlan = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const plan = await this._planService.createPlan(req.body);
-    res.status(201).json(plan);
+    res.status(StatusCodes.CREATED).json(plan);
   });
 
   getAllPlans = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -24,29 +29,41 @@ export class PlanController implements IPlanController {
   });
 
   getPlanById = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const plan = await this._planService.getPlanById(req.params.id as string);
+    const id = req.params.id as string | undefined;
+    if (!id || !OBJECT_ID_REGEX.test(id)) {
+      throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.BAD_REQUEST);
+    }
+
+    const plan = await this._planService.getPlanById(id);
     if (!plan) {
-      res.status(StatusCodes.NOT_FOUND).json({ message: "Plan not found" });
-      return;
+      throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     res.status(StatusCodes.OK).json(plan);
   });
 
   updatePlan = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const plan = await this._planService.updatePlan(req.params.id as string, req.body);
+    const id = req.params.id as string | undefined;
+    if (!id || !OBJECT_ID_REGEX.test(id)) {
+      throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.BAD_REQUEST);
+    }
+
+    const plan = await this._planService.updatePlan(id, req.body);
     if (!plan) {
-      res.status(StatusCodes.NOT_FOUND).json({ message: "Plan not found" });
-      return;
+      throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     res.status(StatusCodes.OK).json(plan);
   });
 
   deletePlan = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const plan = await this._planService.softDeletePlan(req.params.id as string);
-    if (!plan) {
-      res.status(StatusCodes.NOT_FOUND).json({ message: "Plan not found" });
-      return;
+    const id = req.params.id as string | undefined;
+    if (!id || !OBJECT_ID_REGEX.test(id)) {
+      throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.BAD_REQUEST);
     }
-    res.status(StatusCodes.OK).json({ message: "Plan deleted successfully" });
+
+    const plan = await this._planService.softDeletePlan(id);
+    if (!plan) {
+      throw new CustomError(PAYMENT_MESSAGES.PLAN_NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
+    res.status(StatusCodes.OK).json({ message: PAYMENT_MESSAGES.PLAN_DELETED });
   });
 }

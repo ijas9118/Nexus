@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,8 +30,14 @@ import { Button } from "@/components/atoms/button";
 import type { MentorMetadataData } from "@/services/mentorMetadataService";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  label: z.string().min(1, "Label is required"),
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must not exceed 50 characters"),
+  label: z
+    .string()
+    .min(2, "Label must be at least 2 characters")
+    .max(50, "Label must not exceed 50 characters"),
   type: z.enum(["experienceLevel", "expertiseArea", "technology"], {
     required_error: "Type is required",
   }),
@@ -42,7 +49,7 @@ type FormValues = z.infer<typeof formSchema>;
 interface MetadataFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: Partial<MentorMetadataData>) => void;
+  onSubmit: (data: Partial<MentorMetadataData>) => Promise<void>;
   initialData: MentorMetadataData | null;
 }
 
@@ -65,27 +72,51 @@ export default function MetadataForm({
   });
 
   useEffect(() => {
-    if (initialData) {
-      form.reset({
-        name: initialData.name,
-        label: initialData.label,
-        type: initialData.type,
-        isActive: initialData.isActive,
-      });
-    } else {
-      form.reset({
-        name: "",
-        label: "",
-        type: "experienceLevel",
-        isActive: true,
-      });
+    if (isOpen) {
+      if (initialData) {
+        form.reset({
+          name: initialData.name,
+          label: initialData.label,
+          type: initialData.type,
+          isActive: initialData.isActive,
+        });
+      } else {
+        form.reset({
+          name: "",
+          label: "",
+          type: "experienceLevel",
+          isActive: true,
+        });
+      }
     }
-  }, [initialData, form]);
+  }, [initialData, form, isOpen]);
 
   const handleSubmit = async (values: FormValues) => {
     setIsSubmitting(true);
     try {
       await onSubmit(values);
+      toast.success(
+        initialData
+          ? "Metadata updated successfully"
+          : "Metadata created successfully",
+      );
+      onClose();
+    } catch (error: any) {
+      console.error("Failed to save metadata:", error);
+      const errorMessage = error?.message || "Failed to save metadata";
+
+      if (errorMessage.toLowerCase().includes("already exists")) {
+        form.setError("name", {
+          type: "manual",
+          message: "Metadata with this name or label already exists.",
+        });
+        form.setError("label", {
+          type: "manual",
+          message: "Metadata with this name or label already exists.",
+        });
+      } else {
+        toast.error(errorMessage);
+      }
     } finally {
       setIsSubmitting(false);
     }

@@ -22,7 +22,7 @@ const CategorySchema = new Schema<ICategory>(
     squads: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Squads",
+        ref: "Squad",
       },
     ],
     isActive: {

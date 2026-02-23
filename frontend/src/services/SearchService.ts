@@ -1,5 +1,6 @@
 import api from "./api";
 import { handleApi } from "@/utils/handleApi";
+import { SEARCH_ROUTES } from "@/utils/constants";
 
 interface SearchResultItem {
   id: string;
@@ -12,7 +13,7 @@ interface SearchResultItem {
 const SearchService = {
   globalSearch: (query: string, limit = 20) =>
     handleApi(() =>
-      api.get<SearchResultItem[]>("/search", {
+      api.get<SearchResultItem[]>(SEARCH_ROUTES.GLOBAL, {
         params: { q: query, limit },
       }),
     ),

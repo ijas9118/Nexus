@@ -53,11 +53,13 @@ import type { IMessageService } from "@/core/interfaces/services/i-message-servi
 import type { INotificationService } from "@/core/interfaces/services/i-notification-service";
 import type { INotificationTypeService } from "@/core/interfaces/services/i-notification-type-service";
 import type { IReviewService } from "@/core/interfaces/services/i-review-service";
+import type { ISocketService } from "@/core/interfaces/services/i-socket-service";
 import type { ISubscriptionService } from "@/core/interfaces/services/i-subscription-service";
 import type { ITargetAudienceService } from "@/core/interfaces/services/i-target-audience-service";
 import type { ITimeSlotService } from "@/core/interfaces/services/i-time-slot-service";
 import type { IVoteService } from "@/core/interfaces/services/i-vote-service";
 import type { IWalletService } from "@/core/interfaces/services/i-wallet-service";
+import type { IWithdrawalRequestService } from "@/core/interfaces/services/i-withdrawal-request-service";
 
 import { AdminDashboardController } from "@/controllers/admin/admin.dashboard.controller";
 import { BookingPaymentController } from "@/controllers/booking/booking-payment.controller";
@@ -119,6 +121,7 @@ import { GroupService } from "@/services/communication/group.service";
 import { MessageService } from "@/services/communication/message.service";
 import { NotificationTypeService } from "@/services/communication/notification-type.service";
 import { NotificationService } from "@/services/communication/notification.service";
+import { SocketService } from "@/services/communication/socket.service";
 import { BookmarkService } from "@/services/content/bookmark.service";
 import { CategoryService } from "@/services/content/category.service";
 import { CommentService } from "@/services/content/comment.service";
@@ -132,6 +135,7 @@ import { MentorService } from "@/services/mentor/mentor.service";
 import { MentorshipTypeService } from "@/services/mentor/mentorship-type.service";
 import { TargetAudienceService } from "@/services/mentor/target-audience.service";
 import { TimeSlotService } from "@/services/mentor/time-slot.service";
+import { WithdrawalRequestService } from "@/services/mentor/withdrawal-request.service";
 import { PaymentServce } from "@/services/payment/payment.service";
 import { PlanService } from "@/services/payment/plan.service";
 import { SubscriptionService } from "@/services/payment/subscription.service";
@@ -273,6 +277,7 @@ container.bind<IGroupService>(TYPES.GroupService).to(GroupService);
 container.bind<IMessageRepository>(TYPES.MessageRepository).to(MessageRepository);
 container.bind<IMessageService>(TYPES.MessageService).to(MessageService);
 
+container.bind<ISocketService>(TYPES.SocketService).to(SocketService);
 container.bind<SocketController>(TYPES.SocketController).to(SocketController);
 
 container.bind<IMentorController>(TYPES.MentorController).to(MentorController);
@@ -346,6 +351,9 @@ container
 container
   .bind<IWithdrawalRequestController>(TYPES.WithdrawalRequestController)
   .to(WithdrawalRequestController);
+container
+  .bind<IWithdrawalRequestService>(TYPES.WithdrawalRequestService)
+  .to(WithdrawalRequestService);
 
 container.bind<INexusPointRepository>(TYPES.NexusPointRepository).to(NexusPointRepository);
 

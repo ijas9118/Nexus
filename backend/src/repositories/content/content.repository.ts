@@ -18,18 +18,18 @@ import CustomError from "@/utils/custom-error";
 @injectable()
 export class ContentRepository extends BaseRepository<IContent> implements IContentRepository {
   constructor(
-    @inject(TYPES.FollowersRepository) private followersRepository: IFollowersRepository,
-    @inject(TYPES.VoteRepository) private voteRepo: IVoteRepository,
+    @inject(TYPES.FollowersRepository) private _followersRepository: IFollowersRepository,
+    @inject(TYPES.VoteRepository) private _voteRepo: IVoteRepository,
   ) {
     super(ContentModel);
   }
 
   async countContents(): Promise<number> {
-    return this.model.countDocuments({});
+    return this._model.countDocuments({});
   }
 
   async countContentsBefore(date: Date): Promise<number> {
-    return this.model.countDocuments({
+    return this._model.countDocuments({
       createdAt: { $lt: date },
     });
   }
@@ -218,7 +218,7 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       },
     ];
 
-    const [content] = await this.model.aggregate(pipeline);
+    const [content] = await this._model.aggregate(pipeline);
 
     if (!content) {
       return null;
@@ -235,13 +235,13 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
   }
 
   async getContentCount(): Promise<number> {
-    return this.model.countDocuments({});
+    return this._model.countDocuments({});
   }
 
   async getFeedContents(userId: string, page: number, limit: number): Promise<IContent[]> {
     const userObjectId = new Types.ObjectId(userId);
 
-    const contents = await this.model.aggregate([
+    const contents = await this._model.aggregate([
       { $sort: { createdAt: -1 } }, // Sort by latest
       { $skip: (page - 1) * limit }, // Skip items based on page
       { $limit: limit },
@@ -564,7 +564,7 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
       { $sort: { createdAt: -1 } },
     ];
 
-    const contents = await this.model.aggregate(pipeline);
+    const contents = await this._model.aggregate(pipeline);
 
     return contents;
   }
@@ -590,7 +590,7 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
 
     const followingUserIds = userFollow.following.map(id => new mongoose.Types.ObjectId(id));
 
-    const contents = await this.model.aggregate([
+    const contents = await this._model.aggregate([
       // Match content from followed users
       {
         $match: {
@@ -737,8 +737,8 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
     return contents;
   }
 
-  getUserContents = async (userId: string): Promise<IContent[] | null> => {
-    return this.model
+  getUserContents = async (userId: string): Promise<IContent[]> => {
+    return this._model
       .find({ author: userId })
       .populate("author", "name profilePic username")
       .populate("squad", "name")
@@ -746,7 +746,7 @@ export class ContentRepository extends BaseRepository<IContent> implements ICont
   };
 
   incrementViewCount = async (contentId: string): Promise<void> => {
-    await this.model.findByIdAndUpdate(contentId, { $inc: { viewCount: 1 } });
+    await this._model.findByIdAndUpdate(contentId, { $inc: { viewCount: 1 } });
   };
 
   async search(criteria: SearchCriteria): Promise<SearchResultItem[]> {

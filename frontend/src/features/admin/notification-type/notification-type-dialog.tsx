@@ -11,7 +11,7 @@ interface NotificationTypeDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initialData?: NotificationTypeData | null;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: any) => Promise<void>;
   title: string;
   isEditing?: boolean;
 }
@@ -24,9 +24,8 @@ export default function NotificationTypeDialog({
   title,
   isEditing = false,
 }: NotificationTypeDialogProps) {
-  const handleSubmit = (data: any) => {
-    onSubmit(data);
-    onOpenChange(false);
+  const handleSubmit = async (data: any) => {
+    await onSubmit(data);
   };
 
   return (

@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
 import type { INotificationRepository } from "@/core/interfaces/repositories/i-notification-repository";
@@ -6,21 +7,24 @@ import type { INotificationService } from "@/core/interfaces/services/i-notifica
 import type { INotification } from "@/models/communication/notification.model";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { NOTIFICATION_MESSAGES } = MESSAGES;
 
 @injectable()
 export class NotificationService implements INotificationService {
   constructor(
     @inject(TYPES.NotificationRepository)
-    protected repository: INotificationRepository,
+    protected _repository: INotificationRepository,
     @inject(TYPES.NotificationTypeRepository)
-    protected notificationTypeRepo: INotificationTypeRepository,
+    protected _notificationTypeRepo: INotificationTypeRepository,
   ) {}
 
   async getNotificationTypeIdByName(name: string): Promise<string> {
-    const notificationType = await this.notificationTypeRepo.findByName(name);
+    const notificationType = await this._notificationTypeRepo.findByName(name);
     if (!notificationType || !notificationType.isActive) {
-      throw new CustomError(`Notification type "${name}" not found or is inactive`);
+      throw new CustomError(NOTIFICATION_MESSAGES.TYPE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     return notificationType._id.toString();
   }
@@ -31,10 +35,10 @@ export class NotificationService implements INotificationService {
     heading: string,
     message: string,
   ): Promise<INotification> {
-    const notificationType = await this.notificationTypeRepo.findById(notificationTypeId);
+    const notificationType = await this._notificationTypeRepo.findById(notificationTypeId);
 
     if (!notificationType || !notificationType.isActive) {
-      throw new CustomError("Invalid or inactive notification type");
+      throw new CustomError(NOTIFICATION_MESSAGES.INVALID_TYPE, StatusCodes.BAD_REQUEST);
     }
 
     const notificationData: Partial<INotification> = {
@@ -45,7 +49,7 @@ export class NotificationService implements INotificationService {
       read: false,
     };
 
-    const notification = await this.repository.create(notificationData);
+    const notification = await this._repository.create(notificationData);
 
     // TODO: Emit Socket.IO event for real-time notification
     // io.to(recipientId.toString()).emit('newNotification', notification);
@@ -54,22 +58,22 @@ export class NotificationService implements INotificationService {
   }
 
   async getUserNotifications(userId: string, read?: boolean): Promise<INotification[]> {
-    return this.repository.findByUserId(userId, read);
+    return this._repository.findByUserId(userId, read);
   }
 
   async markAsRead(id: string): Promise<INotification | null> {
-    return this.repository.markAsRead(id);
+    return this._repository.markAsRead(id);
   }
 
   async markAllAsRead(userId: string): Promise<number> {
-    return this.repository.markAllAsRead(userId);
+    return this._repository.markAllAsRead(userId);
   }
 
   async deleteManyByIds(ids: string[]): Promise<number> {
-    return this.repository.deleteManyByIds(ids);
+    return this._repository.deleteManyByIds(ids);
   }
 
   async delete(id: string): Promise<INotification | null> {
-    return this.repository.delete(id);
+    return this._repository.delete(id);
   }
 }

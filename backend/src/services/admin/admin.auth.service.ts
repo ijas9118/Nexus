@@ -9,10 +9,10 @@ import { TYPES } from "@/di/types";
 
 @injectable()
 export class AdminAuthService {
-  constructor(@inject(TYPES.AdminRepository) private adminRepository: IAdminRepository) {}
+  constructor(@inject(TYPES.AdminRepository) private _adminRepository: IAdminRepository) {}
 
   async findUserByEmail(email: string): Promise<boolean> {
-    const user = await this.adminRepository.findByEmail(email);
+    const user = await this._adminRepository.findByEmail(email);
     return !!user;
   }
 
@@ -23,7 +23,7 @@ export class AdminAuthService {
     role: UserRole;
   } | null> {
     const { email, password } = loginDto;
-    const user = await this.adminRepository.findByEmail(email);
+    const user = await this._adminRepository.findByEmail(email);
     if (!user) {
       return null;
     }

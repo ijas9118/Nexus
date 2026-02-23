@@ -15,7 +15,7 @@ export class NotificationRepository
   }
 
   async findByUserId(userId: string, read?: boolean): Promise<INotification[]> {
-    const notification = await this.model
+    const notification = await this._model
       .find({ recipientId: userId, read: !!read })
       .populate("notificationTypeId", "name icon iconColor")
       .sort({ createdAt: -1 })
@@ -25,21 +25,21 @@ export class NotificationRepository
   }
 
   async markAsRead(id: string): Promise<INotification | null> {
-    return this.model
+    return this._model
       .findByIdAndUpdate(id, { read: true }, { new: true })
       .populate("notificationTypeId", "name icon iconColor")
       .exec();
   }
 
   async markAllAsRead(userId: string): Promise<number> {
-    const result = await this.model
+    const result = await this._model
       .updateMany({ recipientId: userId, read: false }, { read: true })
       .exec();
     return result.modifiedCount;
   }
 
   async deleteManyByIds(ids: string[]): Promise<number> {
-    const result = await this.model.deleteMany({ _id: { $in: ids } }).exec();
+    const result = await this._model.deleteMany({ _id: { $in: ids } }).exec();
     return result.deletedCount;
   }
 }

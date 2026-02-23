@@ -6,7 +6,7 @@ const ContentService = {
   // Add new content
   addContent: async (formData: FormData) => {
     try {
-      const response = await api.post("/content/posts", formData, {
+      const response = await api.post(CONTENT_ROUTES.POST, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

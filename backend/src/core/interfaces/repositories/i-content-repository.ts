@@ -10,7 +10,7 @@ export interface IContentRepository extends BaseRepository<IContent> {
   verifyContent: (contentId: string) => Promise<IContent | null>;
   getFollowingUsersContents: (userId: string) => Promise<IContent[]>;
   getContentCount: () => Promise<number>;
-  getUserContents: (userId: string) => Promise<IContent[] | null>;
+  getUserContents: (userId: string) => Promise<IContent[]>;
   incrementViewCount: (contentId: string) => Promise<void>;
   search: (criteria: SearchCriteria) => Promise<SearchResultItem[]>;
   getSquadContents: (squadId: string, role: UserRole, userId: string) => Promise<any[]>;

@@ -8,7 +8,10 @@ import type { ICategoryController } from "@/core/interfaces/controllers/i-catego
 import type { ICategoryService } from "@/core/interfaces/services/i-category-service";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { CATEGORY_MESSAGES } = MESSAGES;
 
 @injectable()
 export class CategoryController implements ICategoryController {
@@ -19,7 +22,7 @@ export class CategoryController implements ICategoryController {
     const { name } = req.body;
 
     if (!name) {
-      throw new CustomError("Category name is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(CATEGORY_MESSAGES.NAME_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const category = await this._categoryService.addCategory(name);
@@ -31,13 +34,13 @@ export class CategoryController implements ICategoryController {
     const { id, newName } = req.body;
 
     if (!id || !newName) {
-      throw new CustomError("Category ID and new name are required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(CATEGORY_MESSAGES.ID_NAME_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const updatedCategory = await this._categoryService.updateCategory(id, newName);
 
     if (!updatedCategory) {
-      throw new CustomError("Category not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(CATEGORY_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     res.status(StatusCodes.OK).json(updatedCategory);
@@ -48,13 +51,13 @@ export class CategoryController implements ICategoryController {
     const { id } = req.params;
 
     if (!id) {
-      throw new CustomError("Category ID is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(CATEGORY_MESSAGES.ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const toggledCategory = await this._categoryService.toggleCategory(id as string);
 
     if (!toggledCategory) {
-      throw new CustomError("Category not found", StatusCodes.NOT_FOUND);
+      throw new CustomError(CATEGORY_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     res.status(StatusCodes.OK).json(toggledCategory);
@@ -75,12 +78,8 @@ export class CategoryController implements ICategoryController {
         search,
       );
 
-      if (!categories || categories.length === 0) {
-        throw new CustomError("No categories found", StatusCodes.NOT_FOUND);
-      }
-
       res.status(StatusCodes.OK).json({
-        categories,
+        categories: categories || [],
         total,
         page,
         limit,
@@ -89,12 +88,7 @@ export class CategoryController implements ICategoryController {
     }
     else {
       const categories = await this._categoryService.getAllCategories();
-
-      if (!categories || categories.length === 0) {
-        throw new CustomError("No categories found", StatusCodes.NOT_FOUND);
-      }
-
-      res.status(StatusCodes.OK).json(categories);
+      res.status(StatusCodes.OK).json(categories || []);
     }
   });
 }

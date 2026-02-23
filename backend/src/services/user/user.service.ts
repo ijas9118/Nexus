@@ -1,6 +1,7 @@
 import type { Express } from "express";
 
 import bcrypt from "bcryptjs";
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
 import type { IContentRepository } from "@/core/interfaces/repositories/i-content-repository";
@@ -10,10 +11,15 @@ import type { IContent } from "@/models/content/content.model";
 import type { ISquad } from "@/models/social/squads.model";
 import type { IUser } from "@/models/user/user.model";
 
+import redisClient from "@/config/redis-client.config";
 import { TYPES } from "@/di/types";
 import { UsersResponseDTO } from "@/dtos/responses/admin/users.dto";
 import { UserModel } from "@/models/user/user.model";
 import { deleteFromCloudinary, uploadToCloudinary } from "@/utils/cloudinary-utils";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
+
+const { USER_MESSAGES, ADMIN_MESSAGES } = MESSAGES;
 
 interface UserUpdateData {
   profilePic?: string;
@@ -23,35 +29,47 @@ interface UserUpdateData {
 @injectable()
 export class UserService implements IUserService {
   constructor(
-    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-    @inject(TYPES.ContentRepository) private contentRepo: IContentRepository,
+    @inject(TYPES.UserRepository) private _userRepository: IUserRepository,
+    @inject(TYPES.ContentRepository) private _contentRepo: IContentRepository,
   ) {}
 
   async findByEmail(email: string): Promise<IUser | null> {
-    return this.userRepository.findByEmail(email);
+    return this._userRepository.findByEmail(email);
   }
 
   async getUsers(
     page: number = 1,
     limit: number = 10,
-  ): Promise<{ users: UsersResponseDTO[]; total: number }> {
+  ): Promise<{
+    users: UsersResponseDTO[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
     const skip = (page - 1) * limit;
     const [usersRaw, total] = await Promise.all([
-      this.userRepository.getAllUsers(skip, limit),
+      this._userRepository.getAllUsers(skip, limit),
       UserModel.countDocuments({}),
     ]);
 
     const users = UsersResponseDTO.fromEntities(usersRaw);
 
-    return { users, total };
+    return {
+      users,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async getUserById(userId: string): Promise<IUser | null> {
-    return this.userRepository.getUserById(userId);
+    return this._userRepository.getUserById(userId);
   }
 
   async updateUser(userId: string, userData: Partial<IUser>): Promise<IUser | null> {
-    return this.userRepository.updateUser(userId, userData);
+    return this._userRepository.updateUser(userId, userData);
   }
 
   async updatePassword(
@@ -65,23 +83,23 @@ export class UserService implements IUserService {
     const { currentPassword, newPassword, confirmPassword } = passwordData;
 
     if (newPassword !== confirmPassword) {
-      throw new Error("New password and confirm password do not match");
+      throw new CustomError(USER_MESSAGES.PASSWORD_MISMATCH, StatusCodes.BAD_REQUEST);
     }
 
-    const user = await this.userRepository.findOne({ _id: userId });
+    const user = await this._userRepository.findOne({ _id: userId });
     if (!user) {
-      throw new Error("User not found");
+      throw new CustomError(USER_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
     if (!isPasswordValid) {
-      throw new Error("Current password is incorrect");
+      throw new CustomError(USER_MESSAGES.INCORRECT_PASSWORD, StatusCodes.BAD_REQUEST);
     }
 
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-    await this.userRepository.updateOne({ _id: userId }, { $set: { password: hashedPassword } });
+    await this._userRepository.updateOne({ _id: userId }, { $set: { password: hashedPassword } });
 
     return true;
   }
@@ -98,7 +116,7 @@ export class UserService implements IUserService {
         resourceType: "image",
       });
 
-      const user = await this.userRepository.getUserById(userId);
+      const user = await this._userRepository.getUserById(userId);
 
       if (user?.profilePicPublicId) {
         await deleteFromCloudinary(user.profilePicPublicId);
@@ -108,37 +126,56 @@ export class UserService implements IUserService {
       data.profilePicPublicId = publicId;
     }
 
-    const updatedUser = await this.userRepository.updateUser(userId, data);
-    if (!updatedUser)
-      throw new Error("User not found");
+    const updatedUser = await this._userRepository.updateUser(userId, data);
+    if (!updatedUser) {
+      throw new CustomError(USER_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
     return data;
   }
 
   async deleteUser(userId: string): Promise<boolean> {
-    return this.userRepository.deleteUser(userId);
+    return this._userRepository.deleteUser(userId);
   }
 
   async getUserJoinedSquads(userId: string): Promise<ISquad[]> {
-    return this.userRepository.getUserJoinedSquads(userId);
+    return this._userRepository.getUserJoinedSquads(userId);
   }
 
   async getUserByUsername(username: string): Promise<IUser | null> {
-    return this.userRepository.getUserByUsername(username);
+    return this._userRepository.getUserByUsername(username);
   }
 
-  getUserContents = async (username: string): Promise<IContent[] | null> => {
-    const userId = await this.userRepository.getUserIdByUsername(username);
+  getUserContents = async (username: string): Promise<IContent[]> => {
+    const userId = await this._userRepository.getUserIdByUsername(username);
     if (!userId) {
-      throw new Error("User not found");
+      throw new CustomError(USER_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    const contents = await this.contentRepo.getUserContents(userId);
-
-    return contents;
+    return this._contentRepo.getUserContents(userId);
   };
 
   validateUsername = async (username: string): Promise<boolean> => {
-    const user = await this.userRepository.findOne({ username });
+    const user = await this._userRepository.findOne({ username });
     return !user;
   };
+
+  async blockUser(userId: string): Promise<boolean> {
+    const updatedUser = await this._userRepository.updateUser(userId, { isBlocked: true });
+    if (!updatedUser) {
+      throw new CustomError(ADMIN_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
+
+    await redisClient.set(`blocked_user:${userId}`, 1, "EX", 7 * 24 * 60 * 60);
+    return true;
+  }
+
+  async unblockUser(userId: string): Promise<boolean> {
+    const updatedUser = await this._userRepository.updateUser(userId, { isBlocked: false });
+    if (!updatedUser) {
+      throw new CustomError(ADMIN_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
+
+    await redisClient.del(`blocked_user:${userId}`);
+    return true;
+  }
 }

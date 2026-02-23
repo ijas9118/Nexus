@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
 import type { IGroupRepository } from "@/core/interfaces/repositories/i-group-repository";
@@ -6,12 +7,16 @@ import type { IGroupService } from "@/core/interfaces/services/i-group-service";
 import type { IGroup } from "@/models/social/group.model";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
+
+const { CHAT_MESSAGES } = MESSAGES;
 
 @injectable()
 export class GroupService implements IGroupService {
   constructor(
-    @inject(TYPES.GroupRepository) protected repository: IGroupRepository,
-    @inject(TYPES.ConnectionService) private connectionService: IConnectionService,
+    @inject(TYPES.GroupRepository) protected _repository: IGroupRepository,
+    @inject(TYPES.ConnectionService) private _connectionService: IConnectionService,
   ) {}
 
   async createGroup(userId: string, name: string, memberIds: string[]): Promise<IGroup> {
@@ -21,17 +26,20 @@ export class GroupService implements IGroupService {
     const invalidMembers: string[] = [];
     for (const memberId of memberIds) {
       if (memberId !== userId) {
-        const isConnected = await this.connectionService.isConnected(userId, memberId);
+        const isConnected = await this._connectionService.isConnected(userId, memberId);
         if (!isConnected) {
           invalidMembers.push(memberId);
         }
       }
     }
     if (invalidMembers.length > 0) {
-      throw new Error(`User is not connected to: ${invalidMembers.join(", ")}`);
+      throw new CustomError(
+        `${CHAT_MESSAGES.NOT_CONNECTED_TO} ${invalidMembers.join(", ")}`,
+        StatusCodes.FORBIDDEN,
+      );
     }
 
-    return this.repository.create({
+    return this._repository.create({
       name,
       members: allMembers,
       createdBy: userId,
@@ -39,6 +47,6 @@ export class GroupService implements IGroupService {
   }
 
   async getUserGroups(userId: string): Promise<IGroup[]> {
-    return this.repository.getUserGroups(userId);
+    return this._repository.getUserGroups(userId);
   }
 }

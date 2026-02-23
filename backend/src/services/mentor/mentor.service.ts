@@ -10,14 +10,24 @@ import type { IMentor } from "@/models/mentor/mentor.model";
 import type { IMentorshipType } from "@/models/mentor/mentorship-type.model";
 import type { IUser } from "@/models/user/user.model";
 
+import {
+  ExperienceLevel,
+  ExpertiseArea,
+  MentorshipType,
+  TargetAudience,
+  Technology,
+} from "@/core/types/entities/mentor";
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { MENTOR_MESSAGES, AUTH_MESSAGES } = MESSAGES;
 
 @injectable()
 export class MentorService implements IMentorService {
   constructor(
-    @inject(TYPES.MentorRepository) private mentorRepository: IMentorRepository,
-    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
+    @inject(TYPES.MentorRepository) private _mentorRepository: IMentorRepository,
+    @inject(TYPES.UserRepository) private _userRepository: IUserRepository,
   ) {}
 
   applyAsMentor = async (
@@ -28,12 +38,25 @@ export class MentorService implements IMentorService {
       mentorshipDetails: IMentor["mentorshipDetails"];
     },
   ): Promise<IMentor> => {
-    const existingMentor = await this.mentorRepository.findMentorByUserId(userId);
-    if (existingMentor) {
-      throw new CustomError("You have already applied to be a mentor.", StatusCodes.CONFLICT);
+    const { personalInfo, experience, mentorshipDetails } = data;
+
+    // Basic validation
+    if (!personalInfo || !experience || !mentorshipDetails) {
+      throw new CustomError(MENTOR_MESSAGES.MISSING_FIELDS, StatusCodes.BAD_REQUEST);
     }
 
-    const { personalInfo, experience, mentorshipDetails } = data;
+    if (
+      !personalInfo.firstName
+      || !personalInfo.lastName
+      || !personalInfo.email
+    ) {
+      throw new CustomError(MENTOR_MESSAGES.MISSING_PERSONAL_INFO, StatusCodes.BAD_REQUEST);
+    }
+
+    const existingMentor = await this._mentorRepository.findMentorByUserId(userId);
+    if (existingMentor) {
+      throw new CustomError(MENTOR_MESSAGES.ALREADY_APPLIED, StatusCodes.CONFLICT);
+    }
 
     // Map personalInfo to IUser fields
     const userUpdate: Partial<IUser> = {
@@ -54,13 +77,13 @@ export class MentorService implements IMentorService {
     }
 
     // Update user with personalInfo
-    const updatedUser = await this.userRepository.updateUser(userId, userUpdate);
+    const updatedUser = await this._userRepository.updateUser(userId, userUpdate);
     if (!updatedUser) {
-      throw new CustomError("User not found.", StatusCodes.NOT_FOUND);
+      throw new CustomError(AUTH_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     // Create mentor application
-    const mentor = await this.mentorRepository.createMentorApplication(userId, {
+    const mentor = await this._mentorRepository.createMentorApplication(userId, {
       experience,
       mentorshipDetails,
       status: "pending",
@@ -70,30 +93,30 @@ export class MentorService implements IMentorService {
   };
 
   approveMentor = async (mentorId: string, userId: string): Promise<IMentor> => {
-    const mentor = await this.mentorRepository.updateMentorStatus(mentorId, "approved");
+    const mentor = await this._mentorRepository.updateMentorStatus(mentorId, "approved");
     if (!mentor) {
-      throw new CustomError("Mentor application not found.");
+      throw new CustomError(MENTOR_MESSAGES.APPLICATION_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     // Update user role to 'mentor'
-    const updatedUser = await this.userRepository.updateUser(userId, { role: "mentor" });
+    const updatedUser = await this._userRepository.updateUser(userId, { role: "mentor" });
     if (!updatedUser) {
-      throw new CustomError("User not found.");
+      throw new CustomError(AUTH_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     return mentor;
   };
 
   rejectMentor = async (mentorId: string): Promise<IMentor> => {
-    const mentor = await this.mentorRepository.updateMentorStatus(mentorId, "rejected");
+    const mentor = await this._mentorRepository.updateMentorStatus(mentorId, "rejected");
     if (!mentor) {
-      throw new CustomError("Mentor application not found.");
+      throw new CustomError(MENTOR_MESSAGES.APPLICATION_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     return mentor;
   };
 
   getStatus = async (userId: string): Promise<MentorStatus | null> => {
-    const mentor = await this.mentorRepository.findOne({ userId });
+    const mentor = await this._mentorRepository.findOne({ userId });
 
     if (!mentor) {
       return null; // User hasn't applied yet
@@ -103,39 +126,39 @@ export class MentorService implements IMentorService {
   };
 
   getAllMentors = async (): Promise<IMentor[] | null> => {
-    return await this.mentorRepository.getAllMentors();
+    return await this._mentorRepository.getAllMentors();
   };
 
   getApprovedMentors = async (): Promise<IMentor[] | null> => {
-    return await this.mentorRepository.getApprovedMentors();
+    return await this._mentorRepository.getApprovedMentors();
   };
 
   getMentorDetails = async (mentorId: string): Promise<IMentor | null> => {
-    return await this.mentorRepository.getMentorDetails(mentorId);
+    return await this._mentorRepository.getMentorDetails(mentorId);
   };
 
   getMentorByUserId = async (userId: string): Promise<IMentor | null> => {
-    return await this.mentorRepository.findOne({ userId });
+    return await this._mentorRepository.findOne({ userId });
   };
 
   getUserIdByMentorId = async (mentorId: string): Promise<string> => {
-    const mentor = await this.mentorRepository.getMentorDetails(mentorId);
+    const mentor = await this._mentorRepository.getMentorDetails(mentorId);
 
     if (!mentor) {
-      throw new CustomError("Mentor not found.");
+      throw new CustomError(AUTH_MESSAGES.MENTOR_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     if (typeof mentor.userId === "object" && "_id" in mentor.userId) {
-      return mentor.userId._id.toString();
+      return (mentor.userId as any)._id.toString();
     }
-    throw new CustomError("Invalid userId format.");
+    throw new CustomError(MENTOR_MESSAGES.INVALID_USER_ID, StatusCodes.BAD_REQUEST);
   };
 
   getMentorshipTypes = async (mentorId: string): Promise<IMentorshipType[]> => {
-    const mentor = await this.mentorRepository.getMentorDetails(mentorId);
+    const mentor = await this._mentorRepository.getMentorDetails(mentorId);
 
     if (!mentor) {
-      throw new CustomError("Mentor not found.");
+      throw new CustomError(AUTH_MESSAGES.MENTOR_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     const mentorshipTypes = mentor.mentorshipDetails?.mentorshipTypes;
@@ -159,17 +182,17 @@ export class MentorService implements IMentorService {
       resume?: string | null;
     },
   ): Promise<IMentor> => {
-    const mentor = await this.mentorRepository.findMentorByUserId(userId);
+    const mentor = await this._mentorRepository.findMentorByUserId(userId);
     if (!mentor) {
-      throw new CustomError("Mentor not found.");
+      throw new CustomError(AUTH_MESSAGES.MENTOR_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    const updatedMentor = await this.mentorRepository.updateMentorExperience(
+    const updatedMentor = await this._mentorRepository.updateMentorExperience(
       userId,
       experienceData,
     );
     if (!updatedMentor) {
-      throw new CustomError("Failed to update mentor experience.");
+      throw new CustomError(MENTOR_MESSAGES.EXPERIENCE_UPDATE_FAILED, StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
     return updatedMentor;
@@ -182,19 +205,29 @@ export class MentorService implements IMentorService {
       targetAudiences: string[];
     },
   ): Promise<IMentor> => {
-    const mentor = await this.mentorRepository.findMentorByUserId(userId);
+    const mentor = await this._mentorRepository.findMentorByUserId(userId);
     if (!mentor) {
-      throw new CustomError("Mentor not found.");
+      throw new CustomError(AUTH_MESSAGES.MENTOR_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    const updatedMentor = await this.mentorRepository.updateMentorshipDetails(
+    const updatedMentor = await this._mentorRepository.updateMentorshipDetails(
       userId,
       mentorshipDetailsData,
     );
     if (!updatedMentor) {
-      throw new CustomError("Failed to update mentorship details.");
+      throw new CustomError(MENTOR_MESSAGES.DETAILS_UPDATE_FAILED, StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
     return updatedMentor;
+  };
+
+  getMentorEnums = () => {
+    return {
+      experienceLevels: Object.values(ExperienceLevel),
+      expertiseAreas: Object.values(ExpertiseArea),
+      mentorshipTypes: Object.values(MentorshipType),
+      targetAudiences: Object.values(TargetAudience),
+      technologies: Object.values(Technology),
+    };
   };
 }

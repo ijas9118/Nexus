@@ -8,20 +8,23 @@ import type { ISubscriptionController } from "@/core/interfaces/controllers/i-su
 import type { ISubscriptionService } from "@/core/interfaces/services/i-subscription-service";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
+
+const { PAYMENT_MESSAGES } = MESSAGES;
 
 @injectable()
 export class SubscriptionController implements ISubscriptionController {
   constructor(
-    @inject(TYPES.SubscriptionService) private subscriptionService: ISubscriptionService,
+    @inject(TYPES.SubscriptionService) private _subscriptionService: ISubscriptionService,
   ) {}
 
   getCurrentSubscription = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user?._id as string;
 
-    const subscription = await this.subscriptionService.getUserSubscription(userId);
+    const subscription = await this._subscriptionService.getUserSubscription(userId);
     if (!subscription) {
-      res.status(StatusCodes.NOT_FOUND).json({ message: "No active subscription found." });
-      return;
+      throw new CustomError(PAYMENT_MESSAGES.NO_SUBSCRIPTION, StatusCodes.NOT_FOUND);
     }
 
     res.status(StatusCodes.OK).json(subscription);

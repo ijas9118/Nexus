@@ -1,12 +1,17 @@
 import type { Request, Response } from "express";
 
 import asyncHandler from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
 import type { IReviewController } from "@/core/interfaces/controllers/i-review-controller";
 import type { IReviewService } from "@/core/interfaces/services/i-review-service";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
+
+const { REVIEW_MESSAGES } = MESSAGES;
 
 @injectable()
 export class ReviewController implements IReviewController {
@@ -17,13 +22,11 @@ export class ReviewController implements IReviewController {
     const userId = req.user?._id as string; // Assuming user is attached to request via auth middleware
 
     if (!userId) {
-      res.status(401).json({ error: "Authentication required" });
-      return;
+      throw new CustomError(REVIEW_MESSAGES.AUTH_REQUIRED, StatusCodes.UNAUTHORIZED);
     }
 
     if (!rating || !mentorId) {
-      res.status(400).json({ error: "Rating and mentorId are required" });
-      return;
+      throw new CustomError(REVIEW_MESSAGES.RATING_MENTOR_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const review = await this._reviewService.createReview({
@@ -33,9 +36,9 @@ export class ReviewController implements IReviewController {
       userId,
     });
 
-    res.status(201).json({
+    res.status(StatusCodes.CREATED).json({
       success: true,
-      message: "Review created successfully",
+      message: REVIEW_MESSAGES.CREATED,
       data: review,
     });
   });
@@ -45,11 +48,10 @@ export class ReviewController implements IReviewController {
     const review = await this._reviewService.getReviewById(id as string);
 
     if (!review) {
-      res.status(404).json({ error: "Review not found" });
-      return;
+      throw new CustomError(REVIEW_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    res.json({
+    res.status(StatusCodes.OK).json({
       success: true,
       data: review,
     });
@@ -61,7 +63,7 @@ export class ReviewController implements IReviewController {
 
     const result = await this._reviewService.getAllReviews(page, limit);
 
-    res.json({
+    res.status(StatusCodes.OK).json({
       success: true,
       data: result,
     });
@@ -74,7 +76,7 @@ export class ReviewController implements IReviewController {
 
     const result = await this._reviewService.getReviewsByMentor(mentorId as string, page, limit);
 
-    res.json({
+    res.status(StatusCodes.OK).json({
       success: true,
       data: result,
     });
@@ -84,13 +86,12 @@ export class ReviewController implements IReviewController {
     const userId = req.user?._id as string;
 
     if (!userId) {
-      res.status(401).json({ error: "Authentication required" });
-      return;
+      throw new CustomError(REVIEW_MESSAGES.AUTH_REQUIRED, StatusCodes.UNAUTHORIZED);
     }
 
     const reviews = await this._reviewService.getReviewsByUser(userId);
 
-    res.json({
+    res.status(StatusCodes.OK).json({
       success: true,
       data: reviews,
     });
@@ -102,8 +103,7 @@ export class ReviewController implements IReviewController {
     const userId = req.user?._id as string;
 
     if (!userId) {
-      res.status(401).json({ error: "Authentication required" });
-      return;
+      throw new CustomError(REVIEW_MESSAGES.AUTH_REQUIRED, StatusCodes.UNAUTHORIZED);
     }
 
     const review = await this._reviewService.updateReview(
@@ -113,13 +113,12 @@ export class ReviewController implements IReviewController {
     );
 
     if (!review) {
-      res.status(404).json({ error: "Review not found" });
-      return;
+      throw new CustomError(REVIEW_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    res.json({
+    res.status(StatusCodes.OK).json({
       success: true,
-      message: "Review updated successfully",
+      message: REVIEW_MESSAGES.UPDATED,
       data: review,
     });
   });
@@ -129,20 +128,18 @@ export class ReviewController implements IReviewController {
     const userId = req.user?._id as string;
 
     if (!userId) {
-      res.status(401).json({ error: "Authentication required" });
-      return;
+      throw new CustomError(REVIEW_MESSAGES.AUTH_REQUIRED, StatusCodes.UNAUTHORIZED);
     }
 
     const success = await this._reviewService.deleteReview(id as string, userId);
 
     if (!success) {
-      res.status(404).json({ error: "Review not found" });
-      return;
+      throw new CustomError(REVIEW_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    res.json({
+    res.status(StatusCodes.OK).json({
       success: true,
-      message: "Review deleted successfully",
+      message: REVIEW_MESSAGES.DELETED,
     });
   });
 
@@ -150,7 +147,7 @@ export class ReviewController implements IReviewController {
     const { mentorId } = req.params;
     const stats = await this._reviewService.getMentorStats(mentorId as string);
 
-    res.json({
+    res.status(StatusCodes.OK).json({
       success: true,
       data: stats,
     });
@@ -161,8 +158,7 @@ export class ReviewController implements IReviewController {
     const userId = req.user?._id as string;
 
     if (!userId) {
-      res.status(401).json({ error: "Authentication required" });
-      return;
+      throw new CustomError(REVIEW_MESSAGES.AUTH_REQUIRED, StatusCodes.UNAUTHORIZED);
     }
 
     const existingReview = await this._reviewService.checkExistingReview(
@@ -170,7 +166,7 @@ export class ReviewController implements IReviewController {
       userId,
     );
 
-    res.json({
+    res.status(StatusCodes.OK).json({
       success: true,
       data: {
         hasReviewed: !!existingReview,

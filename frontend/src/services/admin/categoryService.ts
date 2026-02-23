@@ -1,12 +1,15 @@
 import api from "../api";
 import { Category, PaginatedCategoryResponse } from "@/types/category";
+import { ADMIN_ROUTES } from "@/utils/constants";
 
 const CategoryService = {
   createCategory: (name: string) =>
-    api.post<Category[]>("admin/category", { name }).then((res) => res.data),
+    api
+      .post<Category[]>(ADMIN_ROUTES.CATEGORY, { name })
+      .then((res) => res.data),
 
   getAllCategory: () =>
-    api.get<Category[]>("admin/category").then((res) => res.data),
+    api.get<Category[]>(ADMIN_ROUTES.CATEGORY).then((res) => res.data),
 
   getAllCategoriesWithPagination: (
     page: number = 1,
@@ -14,17 +17,19 @@ const CategoryService = {
     search: string = "",
   ) =>
     api
-      .get<PaginatedCategoryResponse>("admin/category", {
+      .get<PaginatedCategoryResponse>(ADMIN_ROUTES.CATEGORY, {
         params: { page, limit, search },
       })
       .then((res) => res.data),
 
   toggleStatus: (id: string) =>
-    api.post<Category>(`admin/category/${id}/toggle`).then((res) => res.data),
+    api
+      .post<Category>(`${ADMIN_ROUTES.CATEGORY}/${id}/toggle`)
+      .then((res) => res.data),
 
   updateCategory: (id: string, newName: string) =>
     api
-      .post<Category>("admin/category/update", { id, newName })
+      .post<Category>(`${ADMIN_ROUTES.CATEGORY}/update`, { id, newName })
       .then((res) => res.data),
 };
 

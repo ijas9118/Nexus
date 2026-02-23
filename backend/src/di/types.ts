@@ -79,6 +79,7 @@ export const TYPES = {
   // Chat
   ChatRepository: Symbol.for("ChatRepository"),
   ChatService: Symbol.for("ChatService"),
+  SocketService: Symbol.for("SocketService"),
   SocketController: Symbol.for("SocketController"),
 
   // Group
@@ -143,6 +144,7 @@ export const TYPES = {
 
   // Withdrawel Request
   WithdrawalRequestRepository: Symbol.for("WithdrawalRequestRepository"),
+  WithdrawalRequestService: Symbol.for("WithdrawalRequestService"),
   WithdrawalRequestController: Symbol.for("WithdrawalRequestController"),
 
   // Nexus points

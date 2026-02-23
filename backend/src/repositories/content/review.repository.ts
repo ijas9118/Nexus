@@ -14,14 +14,14 @@ export class ReviewRepository extends BaseRepository<IReview> implements IReview
   }
 
   async findByMentorId(mentorId: Types.ObjectId | string): Promise<IReview[]> {
-    return this.model
+    return this._model
       .find({ mentorId, isActive: true })
       .populate("userId", "name email avatar")
       .sort({ createdAt: -1 });
   }
 
   async findByUserId(userId: Types.ObjectId | string): Promise<IReview[]> {
-    return this.model
+    return this._model
       .find({ userId, isActive: true })
       .populate("mentorId", "name email avatar")
       .sort({ createdAt: -1 });
@@ -31,11 +31,11 @@ export class ReviewRepository extends BaseRepository<IReview> implements IReview
     mentorId: Types.ObjectId | string,
     userId: Types.ObjectId | string,
   ): Promise<IReview | null> {
-    return this.model.findOne({ mentorId, userId, isActive: true });
+    return this._model.findOne({ mentorId, userId, isActive: true });
   }
 
   async getAverageRatingByMentor(mentorId: Types.ObjectId | string): Promise<number> {
-    const result = await this.model.aggregate([
+    const result = await this._model.aggregate([
       { $match: { mentorId: new Types.ObjectId(mentorId), isActive: true } },
       { $group: { _id: null, averageRating: { $avg: "$rating" } } },
     ]);
@@ -49,12 +49,12 @@ export class ReviewRepository extends BaseRepository<IReview> implements IReview
     ratingDistribution: { [key: string]: number };
   }> {
     const [avgResult, countResult, distributionResult] = await Promise.all([
-      this.model.aggregate([
+      this._model.aggregate([
         { $match: { mentorId: new Types.ObjectId(mentorId), isActive: true } },
         { $group: { _id: null, averageRating: { $avg: "$rating" } } },
       ]),
-      this.model.countDocuments({ mentorId, isActive: true }),
-      this.model.aggregate([
+      this._model.countDocuments({ mentorId, isActive: true }),
+      this._model.aggregate([
         { $match: { mentorId: new Types.ObjectId(mentorId), isActive: true } },
         { $group: { _id: "$rating", count: { $sum: 1 } } },
         { $sort: { _id: 1 } },
@@ -80,7 +80,7 @@ export class ReviewRepository extends BaseRepository<IReview> implements IReview
   }
 
   async findActiveReviews(): Promise<IReview[]> {
-    return this.model
+    return this._model
       .find({ isActive: true })
       .populate("userId", "name email avatar")
       .populate("mentorId", "name email avatar")
@@ -105,14 +105,14 @@ export class ReviewRepository extends BaseRepository<IReview> implements IReview
     }
 
     const [reviews, total] = await Promise.all([
-      this.model
+      this._model
         .find(filter)
         .populate("userId", "name email avatar")
         .populate("mentorId", "name email avatar")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
-      this.model.countDocuments(filter),
+      this._model.countDocuments(filter),
     ]);
 
     return {

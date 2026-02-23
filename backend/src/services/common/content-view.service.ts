@@ -9,19 +9,19 @@ import { TYPES } from "@/di/types";
 @injectable()
 export class ContentViewService implements IContentViewService {
   constructor(
-    @inject(TYPES.ContentViewRepository) private viewRepo: IContentViewRepository,
-    @inject(TYPES.ContentRepository) private contentRepo: IContentRepository,
+    @inject(TYPES.ContentViewRepository) private _viewRepo: IContentViewRepository,
+    @inject(TYPES.ContentRepository) private _contentRepo: IContentRepository,
   ) {}
 
   async handleContentView(userId: string, contentId: string): Promise<void> {
-    const alreadyViewed = await this.viewRepo.hasUserViewedContent(userId, contentId);
+    const alreadyViewed = await this._viewRepo.hasUserViewedContent(userId, contentId);
     if (!alreadyViewed) {
-      await this.viewRepo.createView(userId, contentId);
-      await this.contentRepo.incrementViewCount(contentId);
+      await this._viewRepo.createView(userId, contentId);
+      await this._contentRepo.incrementViewCount(contentId);
     }
   }
 
   async getContentViewCount(contentId: string): Promise<number> {
-    return this.viewRepo.getViewCount(contentId);
+    return this._viewRepo.getViewCount(contentId);
   }
 }

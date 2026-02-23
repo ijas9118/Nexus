@@ -1,10 +1,11 @@
 import { AxiosError } from "axios";
 import api from "../api";
+import { ADMIN_ROUTES, CONTENT_ROUTES } from "@/utils/constants";
 
 export const ContentService = {
   getAllContents: async () => {
     try {
-      const response = await api.get("admin/content");
+      const response = await api.get(ADMIN_ROUTES.CONTENT);
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -19,7 +20,7 @@ export const ContentService = {
 
   getContentById: async (contentId: string) => {
     try {
-      const response = await api.get(`/content/posts/${contentId}`);
+      const response = await api.get(`${CONTENT_ROUTES.POST}/${contentId}`);
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -33,7 +34,9 @@ export const ContentService = {
   },
   verifyContent: async (contentId: string) => {
     try {
-      const response = await api.post(`/content/posts/verify/${contentId}`);
+      const response = await api.post(
+        `${CONTENT_ROUTES.POST}/verify/${contentId}`,
+      );
 
       return response.data;
     } catch (error: unknown) {

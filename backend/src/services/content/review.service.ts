@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 import { Types } from "mongoose";
 
@@ -7,30 +8,34 @@ import type { CreateReviewDTO, UpdateReviewDTO } from "@/dtos/responses/review.d
 import type { IReview } from "@/models/social/review.model";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
+
+const { REVIEW_MESSAGES } = MESSAGES;
 
 @injectable()
 export class ReviewService implements IReviewService {
-  constructor(@inject(TYPES.ReviewRepository) private reviewRepository: IReviewRepository) {}
+  constructor(@inject(TYPES.ReviewRepository) private _reviewRepository: IReviewRepository) {}
 
   async createReview(data: CreateReviewDTO): Promise<IReview> {
     // Check if user already reviewed this mentor
-    const existingReview = await this.reviewRepository.findByMentorAndUser(
+    const existingReview = await this._reviewRepository.findByMentorAndUser(
       data.mentorId,
       data.userId,
     );
 
     if (existingReview) {
-      throw new Error("You have already reviewed this mentor");
+      throw new CustomError(REVIEW_MESSAGES.ALREADY_REVIEWED, StatusCodes.CONFLICT);
     }
 
     // Validate rating
     if (data.rating < 0.5 || data.rating > 5 || (data.rating * 2) % 1 !== 0) {
-      throw new Error("Rating must be between 0.5 and 5 in increments of 0.5");
+      throw new CustomError(REVIEW_MESSAGES.INVALID_RATING, StatusCodes.BAD_REQUEST);
     }
 
     // Prevent self-review
     if (data.mentorId === data.userId) {
-      throw new Error("You cannot review yourself");
+      throw new CustomError(REVIEW_MESSAGES.SELF_REVIEW, StatusCodes.BAD_REQUEST);
     }
 
     const reviewData = {
@@ -39,15 +44,15 @@ export class ReviewService implements IReviewService {
       userId: new Types.ObjectId(data.userId),
     };
 
-    return this.reviewRepository.create(reviewData);
+    return this._reviewRepository.create(reviewData);
   }
 
   async getReviewById(id: string): Promise<IReview | null> {
     if (!Types.ObjectId.isValid(id)) {
-      throw new Error("Invalid review ID");
+      throw new CustomError(REVIEW_MESSAGES.INVALID_ID, StatusCodes.BAD_REQUEST);
     }
 
-    const review = await this.reviewRepository.findById(id);
+    const review = await this._reviewRepository.findById(id);
     if (!review || !review.isActive) {
       return null;
     }
@@ -65,10 +70,10 @@ export class ReviewService implements IReviewService {
     currentPage: number;
   }> {
     if (page < 1 || limit < 1 || limit > 100) {
-      throw new Error("Invalid pagination parameters");
+      throw new CustomError(REVIEW_MESSAGES.INVALID_PAGINATION, StatusCodes.BAD_REQUEST);
     }
 
-    return this.reviewRepository.findReviewsWithPagination(page, limit);
+    return this._reviewRepository.findReviewsWithPagination(page, limit);
   }
 
   async getReviewsByMentor(
@@ -82,65 +87,65 @@ export class ReviewService implements IReviewService {
     currentPage: number;
   }> {
     if (!Types.ObjectId.isValid(mentorId)) {
-      throw new Error("Invalid mentor ID");
+      throw new CustomError(REVIEW_MESSAGES.INVALID_MENTOR_ID, StatusCodes.BAD_REQUEST);
     }
 
     if (page < 1 || limit < 1 || limit > 100) {
-      throw new Error("Invalid pagination parameters");
+      throw new CustomError(REVIEW_MESSAGES.INVALID_PAGINATION, StatusCodes.BAD_REQUEST);
     }
 
-    return this.reviewRepository.findReviewsWithPagination(page, limit, mentorId);
+    return this._reviewRepository.findReviewsWithPagination(page, limit, mentorId);
   }
 
   async getReviewsByUser(userId: string): Promise<IReview[]> {
     if (!Types.ObjectId.isValid(userId)) {
-      throw new Error("Invalid user ID");
+      throw new CustomError(MESSAGES.USER_MESSAGES.USER_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
-    return this.reviewRepository.findByUserId(userId);
+    return this._reviewRepository.findByUserId(userId);
   }
 
   async updateReview(id: string, data: UpdateReviewDTO, userId: string): Promise<IReview | null> {
     if (!Types.ObjectId.isValid(id)) {
-      throw new Error("Invalid review ID");
+      throw new CustomError(REVIEW_MESSAGES.INVALID_ID, StatusCodes.BAD_REQUEST);
     }
 
-    const existingReview = await this.reviewRepository.findById(id);
+    const existingReview = await this._reviewRepository.findById(id);
     if (!existingReview || !existingReview.isActive) {
-      throw new Error("Review not found");
+      throw new CustomError(REVIEW_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     // Check if user owns this review
     if (existingReview.userId.toString() !== userId) {
-      throw new Error("You can only update your own reviews");
+      throw new CustomError(REVIEW_MESSAGES.UPDATE_OWN_ONLY, StatusCodes.FORBIDDEN);
     }
 
     // Validate rating if provided
     if (data.rating !== undefined) {
       if (data.rating < 0.5 || data.rating > 5 || (data.rating * 2) % 1 !== 0) {
-        throw new Error("Rating must be between 0.5 and 5 in increments of 0.5");
+        throw new CustomError(REVIEW_MESSAGES.INVALID_RATING, StatusCodes.BAD_REQUEST);
       }
     }
 
-    return this.reviewRepository.update(id, data);
+    return this._reviewRepository.update(id, data);
   }
 
   async deleteReview(id: string, userId: string): Promise<boolean> {
     if (!Types.ObjectId.isValid(id)) {
-      throw new Error("Invalid review ID");
+      throw new CustomError(REVIEW_MESSAGES.INVALID_ID, StatusCodes.BAD_REQUEST);
     }
 
-    const existingReview = await this.reviewRepository.findById(id);
+    const existingReview = await this._reviewRepository.findById(id);
     if (!existingReview || !existingReview.isActive) {
-      throw new Error("Review not found");
+      throw new CustomError(REVIEW_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     // Check if user owns this review
     if (existingReview.userId.toString() !== userId) {
-      throw new Error("You can only delete your own reviews");
+      throw new CustomError(REVIEW_MESSAGES.DELETE_OWN_ONLY, StatusCodes.FORBIDDEN);
     }
 
-    const result = await this.reviewRepository.softDelete(id);
+    const result = await this._reviewRepository.softDelete(id);
     return result !== null;
   }
 
@@ -150,17 +155,17 @@ export class ReviewService implements IReviewService {
     ratingDistribution: { [key: string]: number };
   }> {
     if (!Types.ObjectId.isValid(mentorId)) {
-      throw new Error("Invalid mentor ID");
+      throw new CustomError(REVIEW_MESSAGES.INVALID_MENTOR_ID, StatusCodes.BAD_REQUEST);
     }
 
-    return this.reviewRepository.getMentorReviewStats(mentorId);
+    return this._reviewRepository.getMentorReviewStats(mentorId);
   }
 
   async checkExistingReview(mentorId: string, userId: string): Promise<IReview | null> {
     if (!Types.ObjectId.isValid(mentorId) || !Types.ObjectId.isValid(userId)) {
-      throw new Error("Invalid mentor or user ID");
+      throw new CustomError(REVIEW_MESSAGES.INVALID_MENTOR_USER_ID, StatusCodes.BAD_REQUEST);
     }
 
-    return this.reviewRepository.findByMentorAndUser(mentorId, userId);
+    return this._reviewRepository.findByMentorAndUser(mentorId, userId);
   }
 }

@@ -8,7 +8,10 @@ import type { INotificationController } from "@/core/interfaces/controllers/i-no
 import type { INotificationService } from "@/core/interfaces/services/i-notification-service";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { NOTIFICATION_MESSAGES } = MESSAGES;
 
 @injectable()
 export class NotificationController implements INotificationController {
@@ -33,7 +36,7 @@ export class NotificationController implements INotificationController {
     const { id } = req.params;
     const notification = await this._notificationService.markAsRead(id as string);
     if (!notification) {
-      throw new CustomError("Notification not found");
+      throw new CustomError(NOTIFICATION_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
     res.status(StatusCodes.OK).json(notification);
   });
@@ -48,15 +51,15 @@ export class NotificationController implements INotificationController {
     const { id } = req.params;
     const notification = await this._notificationService.delete(id as string);
     if (!notification) {
-      throw new CustomError("Notification not found");
+      throw new CustomError(NOTIFICATION_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
-    res.status(StatusCodes.OK).json({ message: "Notification deleted" });
+    res.status(StatusCodes.OK).json({ message: NOTIFICATION_MESSAGES.DELETED });
   });
 
   deleteManyNotifications = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { ids } = req.body;
     if (!Array.isArray(ids) || ids.length === 0) {
-      throw new CustomError("Provide an array of notification IDs");
+      throw new CustomError(NOTIFICATION_MESSAGES.PROVIDE_IDS, StatusCodes.BAD_REQUEST);
     }
 
     const deletedCount = await this._notificationService.deleteManyByIds(ids);

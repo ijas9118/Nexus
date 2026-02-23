@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
 import type { INotificationTypeRepository } from "@/core/interfaces/repositories/i-notification-type-repository";
@@ -5,12 +6,16 @@ import type { INotificationTypeService } from "@/core/interfaces/services/i-noti
 import type { INotificationType } from "@/models/communication/notification-type.model";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
+
+const { NOTIFICATION_MESSAGES } = MESSAGES;
 
 @injectable()
 export class NotificationTypeService implements INotificationTypeService {
   constructor(
     @inject(TYPES.NotificationTypeRepository)
-    private notificationTypeRepository: INotificationTypeRepository,
+    private _notificationTypeRepository: INotificationTypeRepository,
   ) {}
 
   async createNotificationType(data: {
@@ -20,18 +25,26 @@ export class NotificationTypeService implements INotificationTypeService {
     iconColor: string;
     roles: string[];
   }): Promise<INotificationType> {
-    const existingType = await this.notificationTypeRepository.findByName(data.name);
+    const nameTrimmed = data.name.trim();
+    const escapedName = nameTrimmed.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const existingType = await this._notificationTypeRepository.findOne({
+      name: { $regex: new RegExp(`^${escapedName}$`, "i") },
+    });
+
     if (existingType) {
-      throw new Error("Notification type with this name already exists");
+      throw new CustomError(NOTIFICATION_MESSAGES.TYPE_EXISTS, StatusCodes.CONFLICT);
     }
 
-    const notificationType = await this.notificationTypeRepository.createNotificationType(data);
+    const notificationType = await this._notificationTypeRepository.createNotificationType({
+      ...data,
+      name: nameTrimmed,
+    });
 
     return notificationType;
   }
 
   async getNotificationTypes(): Promise<INotificationType[]> {
-    return this.notificationTypeRepository.findAll();
+    return this._notificationTypeRepository.findAll();
   }
 
   async updateNotificationType(
@@ -45,25 +58,31 @@ export class NotificationTypeService implements INotificationTypeService {
     }>,
   ): Promise<INotificationType> {
     if (data.name) {
-      const existingType = await this.notificationTypeRepository.findByName(data.name);
-      if (existingType && existingType._id.toString() !== id) {
-        throw new Error("Notification type with this name already exists");
+      const nameTrimmed = data.name.trim();
+      const escapedName = nameTrimmed.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const existingType = await this._notificationTypeRepository.findOne({
+        name: { $regex: new RegExp(`^${escapedName}$`, "i") },
+        _id: { $ne: id },
+      });
+      if (existingType) {
+        throw new CustomError(NOTIFICATION_MESSAGES.TYPE_EXISTS, StatusCodes.CONFLICT);
       }
+      data.name = nameTrimmed;
     }
 
-    const updatedType = await this.notificationTypeRepository.update(id, data);
+    const updatedType = await this._notificationTypeRepository.update(id, data);
     if (!updatedType) {
-      throw new Error("Notification type not found");
+      throw new CustomError(NOTIFICATION_MESSAGES.NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     return updatedType;
   }
 
   async deleteNotificationType(id: string): Promise<void> {
-    await this.notificationTypeRepository.softDelete(id);
+    await this._notificationTypeRepository.softDelete(id);
   }
 
   async restoreNotificationType(id: string): Promise<void> {
-    await this.notificationTypeRepository.restore(id);
+    await this._notificationTypeRepository.restore(id);
   }
 }

@@ -1,10 +1,11 @@
 import { AxiosError } from "axios";
 import api from "../api";
+import { ADMIN_ROUTES } from "@/utils/constants";
 
 export const CommentService = {
   getAllComment: async () => {
     try {
-      const response = await api.get("admin/comment");
+      const response = await api.get(ADMIN_ROUTES.COMMENT);
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {

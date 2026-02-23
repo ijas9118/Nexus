@@ -28,16 +28,9 @@ export default function NotificationTypeManagement() {
   // Mutation for creating a notification type
   const createMutation = useMutation({
     mutationFn: NotificationTypeService.create,
-    onSuccess: (newType) => {
-      queryClient.setQueryData(
-        ["notificationTypes"],
-        (old: NotificationTypeData[] | undefined) => [...(old || []), newType],
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notificationTypes"] });
       setIsCreateDialogOpen(false);
-      toast.success("Notification type created successfully");
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Failed to create notification type");
     },
   });
 
@@ -50,19 +43,9 @@ export default function NotificationTypeManagement() {
       id: string;
       data: Partial<NotificationTypeData>;
     }) => NotificationTypeService.update(id, data),
-    onSuccess: (updatedType) => {
-      queryClient.setQueryData(
-        ["notificationTypes"],
-        (old: NotificationTypeData[] | undefined) =>
-          old?.map((item) =>
-            item._id === updatedType._id ? updatedType : item,
-          ),
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notificationTypes"] });
       setEditingNotificationType(null);
-      toast.success("Notification type updated successfully");
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Failed to update notification type");
     },
   });
 
@@ -102,19 +85,19 @@ export default function NotificationTypeManagement() {
     },
   });
 
-  const handleCreateNotificationType = (
+  const handleCreateNotificationType = async (
     notificationType: Omit<
       NotificationTypeData,
       "_id" | "createdAt" | "updatedAt"
     >,
   ) => {
-    createMutation.mutate(notificationType);
+    await createMutation.mutateAsync(notificationType);
   };
 
-  const handleUpdateNotificationType = (
+  const handleUpdateNotificationType = async (
     updatedNotificationType: NotificationTypeData,
   ) => {
-    updateMutation.mutate({
+    await updateMutation.mutateAsync({
       id: updatedNotificationType._id,
       data: updatedNotificationType,
     });

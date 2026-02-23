@@ -8,7 +8,10 @@ import type { IHistoryController } from "@/core/interfaces/controllers/i-history
 import type { IHistoryService } from "@/core/interfaces/services/i-history-service";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { USER_MESSAGES, CONTENT_MESSAGES } = MESSAGES;
 
 @injectable()
 export class HistoryController implements IHistoryController {
@@ -19,16 +22,16 @@ export class HistoryController implements IHistoryController {
     const { contentId } = req.body;
 
     if (!contentId) {
-      throw new CustomError("Content ID is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(CONTENT_MESSAGES.ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const result = await this._historyService.removeFromHistory(userId, contentId);
 
     if (!result) {
-      throw new CustomError("Failed to remove from history", StatusCodes.INTERNAL_SERVER_ERROR);
+      throw new CustomError(USER_MESSAGES.HISTORY_REMOVE_FAILED, StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
-    res.status(StatusCodes.OK).json({ message: "Removed from history" });
+    res.status(StatusCodes.OK).json({ message: USER_MESSAGES.HISTORY_REMOVED });
   });
 
   getAllHistory = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -37,7 +40,7 @@ export class HistoryController implements IHistoryController {
     const history = await this._historyService.getAllHistory(userId);
 
     if (!history) {
-      throw new CustomError("Failed to fetch history", StatusCodes.INTERNAL_SERVER_ERROR);
+      throw new CustomError(USER_MESSAGES.HISTORY_FETCH_FAILED, StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
     res.status(StatusCodes.OK).json(history);

@@ -20,7 +20,7 @@ export class BookingRepository extends BaseRepository<IBooking> implements IBook
 
   async getUpcomingBookings(): Promise<IBooking[]> {
     const today = dayjs().startOf("day").toDate();
-    return this.model
+    return this._model
       .find({
         status: { $in: ["pending", "confirmed"] },
         bookingDate: { $gte: today },
@@ -40,7 +40,7 @@ export class BookingRepository extends BaseRepository<IBooking> implements IBook
   }
 
   async getCompletedBookings(): Promise<IBooking[]> {
-    return this.model
+    return this._model
       .find({ status: "completed" })
       .sort({ bookingDate: -1 })
       .populate("timeSlot")
@@ -68,7 +68,7 @@ export class BookingRepository extends BaseRepository<IBooking> implements IBook
       query.mentorshipType = mentorshipTypeId;
     }
 
-    return this.model
+    return this._model
       .find(query)
       .sort({ "bookingDate": 1, "timeSlot.startTime": 1 })
       .populate("timeSlot")
@@ -80,7 +80,7 @@ export class BookingRepository extends BaseRepository<IBooking> implements IBook
   }
 
   async getRecentBookings(userId: string): Promise<RecentBooking[]> {
-    const bookings = await this.model
+    const bookings = await this._model
       .find({ mentorUserId: userId, status: { $ne: "unpaid" } })
       .sort({ createdAt: -1 })
       .limit(3)

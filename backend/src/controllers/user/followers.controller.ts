@@ -8,7 +8,10 @@ import type { IFollowersController } from "@/core/interfaces/controllers/i-follo
 import type { IFollowersService } from "@/core/interfaces/services/i-followers-service";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { USER_MESSAGES } = MESSAGES;
 
 @injectable()
 export class FollowersController implements IFollowersController {
@@ -19,16 +22,16 @@ export class FollowersController implements IFollowersController {
     const followerId = req.user?._id as string;
 
     if (!followedId) {
-      throw new CustomError("Followed user ID is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(USER_MESSAGES.FOLLOWED_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const result = await this._followersService.followUser(followerId, followedId);
 
     if (!result) {
-      throw new CustomError("Already following this user", StatusCodes.BAD_REQUEST);
+      throw new CustomError(USER_MESSAGES.ALREADY_FOLLOWING, StatusCodes.BAD_REQUEST);
     }
 
-    res.status(StatusCodes.CREATED).json({ message: "Followed successfully" });
+    res.status(StatusCodes.CREATED).json({ message: USER_MESSAGES.FOLLOW_SUCCESS });
   });
 
   unfollowUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -36,16 +39,16 @@ export class FollowersController implements IFollowersController {
     const followerId = req.user?._id as string;
 
     if (!followedId) {
-      throw new CustomError("Followed user ID is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(USER_MESSAGES.FOLLOWED_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const result = await this._followersService.unfollowUser(followerId, followedId);
 
     if (!result) {
-      throw new CustomError("Not following this user", StatusCodes.BAD_REQUEST);
+      throw new CustomError(USER_MESSAGES.NOT_FOLLOWING, StatusCodes.BAD_REQUEST);
     }
 
-    res.status(StatusCodes.OK).json({ message: "Unfollowed successfully" });
+    res.status(StatusCodes.OK).json({ message: USER_MESSAGES.UNFOLLOW_SUCCESS });
   });
 
   // Get All Followers of a User
@@ -54,7 +57,7 @@ export class FollowersController implements IFollowersController {
     const currentUserId = req.user?._id as string;
 
     if (!userId) {
-      throw new CustomError("User ID is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(USER_MESSAGES.USER_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const followers = await this._followersService.getFollowers(userId as string, currentUserId);
@@ -67,7 +70,7 @@ export class FollowersController implements IFollowersController {
     const { userId } = req.params;
 
     if (!userId) {
-      throw new CustomError("User ID is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(USER_MESSAGES.USER_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const following = await this._followersService.getFollowing(userId as string);
@@ -79,7 +82,7 @@ export class FollowersController implements IFollowersController {
     const { userId } = req.params;
 
     if (!userId) {
-      throw new CustomError("User ID is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(USER_MESSAGES.USER_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const connections = await this._followersService.getConnections(userId as string);
@@ -91,7 +94,7 @@ export class FollowersController implements IFollowersController {
     const { followerId, followedId } = req.body;
 
     if (!followerId || !followedId) {
-      throw new CustomError("Missing required query parameters", StatusCodes.BAD_REQUEST);
+      throw new CustomError(USER_MESSAGES.MISSING_PARAMS, StatusCodes.BAD_REQUEST);
     }
 
     const result = await this._followersService.isFollowing(
@@ -106,7 +109,7 @@ export class FollowersController implements IFollowersController {
     const { userId } = req.params;
 
     if (!userId) {
-      throw new CustomError("User ID is required", StatusCodes.BAD_REQUEST);
+      throw new CustomError(USER_MESSAGES.USER_ID_REQUIRED, StatusCodes.BAD_REQUEST);
     }
 
     const stats = await this._followersService.getFollowStats(userId as string);

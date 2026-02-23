@@ -20,7 +20,7 @@ export class SubscriptionRepository
   }
 
   async getUserCurrentSubscription(userId: string): Promise<ISubscription | null> {
-    return this.model
+    return this._model
       .findOne({ userId, status: { $in: ["active"] } })
       .populate("planId")
       .sort({ createdAt: -1 })
@@ -28,13 +28,13 @@ export class SubscriptionRepository
   }
 
   async countSubscription(): Promise<number> {
-    return this.model.countDocuments({
+    return this._model.countDocuments({
       status: "active",
     });
   }
 
   async countSubscriptionBefore(date: Date): Promise<number> {
-    return this.model.countDocuments({
+    return this._model.countDocuments({
       status: "active",
       createdAt: { $lt: date },
     });
@@ -50,7 +50,7 @@ export class SubscriptionRepository
     }>;
   }> {
     // Get all active subscriptions with plan details
-    const subscriptions = await this.model.find({ status: "active" }).populate("planId").lean();
+    const subscriptions = await this._model.find({ status: "active" }).populate("planId").lean();
 
     // Initialize result object
     const result = {
@@ -133,7 +133,7 @@ export class SubscriptionRepository
         dateFormat = "%Y-%m-%d"; // Default to day
     }
 
-    const result = await this.model.aggregate([
+    const result = await this._model.aggregate([
       {
         $match: {
           startDate: { $gte: startDate, $lte: endDate },

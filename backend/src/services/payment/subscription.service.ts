@@ -9,10 +9,10 @@ import { TYPES } from "@/di/types";
 @injectable()
 export class SubscriptionService implements ISubscriptionService {
   constructor(
-    @inject(TYPES.SubscriptionRepository) private subscriptionRepo: ISubscriptionRepository,
+    @inject(TYPES.SubscriptionRepository) private _subscriptionRepo: ISubscriptionRepository,
   ) {}
 
   async getUserSubscription(userId: string): Promise<ISubscription | null> {
-    return this.subscriptionRepo.getUserCurrentSubscription(userId);
+    return this._subscriptionRepo.getUserCurrentSubscription(userId);
   }
 }

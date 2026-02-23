@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 
 import { Router } from "express";
+import { StatusCodes } from "http-status-codes";
 
 import type { IChatService } from "@/core/interfaces/services/i-chat-service";
 import type { IGroupService } from "@/core/interfaces/services/i-group-service";
@@ -26,7 +27,7 @@ router.get(
       res.json(chats);
     }
     catch (error) {
-      res.status(500).json({ error: (error as Error).message });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: (error as Error).message });
     }
   },
 );
@@ -41,7 +42,7 @@ router.get(
       res.json(groups);
     }
     catch (error) {
-      res.status(500).json({ error: (error as Error).message });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: (error as Error).message });
     }
   },
 );
@@ -61,7 +62,7 @@ router.get(
       res.json(messages);
     }
     catch (error) {
-      res.status(500).json({ error: (error as Error).message });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: (error as Error).message });
     }
   },
 );

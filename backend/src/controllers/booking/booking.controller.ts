@@ -1,6 +1,5 @@
 import type { Request, Response } from "express";
 
-import dayjs from "dayjs";
 import asyncHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
@@ -13,6 +12,8 @@ import { TYPES } from "@/di/types";
 import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
 
+const { BOOKING_MESSAGES } = MESSAGES;
+
 @injectable()
 export class BookingController implements IBookingController {
   constructor(@inject(TYPES.BookingService) private _bookingService: IBookingService) {}
@@ -22,18 +23,16 @@ export class BookingController implements IBookingController {
     const userId = req.user?._id as string;
 
     if (!userId) {
-      res.status(401).json({ error: MESSAGES.BOOKING_MESSAGES.AUTH_REQUIRED });
-      return;
+      throw new CustomError(BOOKING_MESSAGES.AUTH_REQUIRED, StatusCodes.UNAUTHORIZED);
     }
 
     const booking = await this._bookingService.getBookingByMeetUrl(meetUrl, userId);
 
     if (!booking) {
-      res.status(404).json({ error: MESSAGES.BOOKING_MESSAGES.BOOKING_NOT_FOUND });
-      return;
+      throw new CustomError(BOOKING_MESSAGES.BOOKING_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    res.json({
+    res.status(StatusCodes.OK).json({
       success: true,
       data: {
         _id: booking._id,
@@ -64,24 +63,17 @@ export class BookingController implements IBookingController {
     const { bookingId } = req.params;
     const { timeSlotId, bookingDate } = req.body as RescheduleBookingRequestDTO;
 
-    // Validate input
     if (!timeSlotId || !bookingDate) {
       throw new CustomError(
-        MESSAGES.BOOKING_MESSAGES.RESCHEDULE_FIELDS_REQUIRED,
+        BOOKING_MESSAGES.RESCHEDULE_FIELDS_REQUIRED,
         StatusCodes.BAD_REQUEST,
       );
-    }
-
-    // Validate date format
-    const parsedDate = dayjs(bookingDate);
-    if (!parsedDate.isValid()) {
-      throw new CustomError(MESSAGES.BOOKING_MESSAGES.INVALID_DATE_FORMAT, StatusCodes.BAD_REQUEST);
     }
 
     const updatedBooking = await this._bookingService.rescheduleBooking(
       bookingId as string,
       timeSlotId,
-      parsedDate.toDate(),
+      bookingDate,
     );
     res.status(StatusCodes.OK).json(updatedBooking);
   });
@@ -89,21 +81,8 @@ export class BookingController implements IBookingController {
   getFilteredBookings = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { date, mentorshipTypeId } = req.query;
 
-    // Validate date if provided
-    let parsedDate: Date | undefined;
-    if (date) {
-      const tempDate = dayjs(date as string);
-      if (!tempDate.isValid()) {
-        throw new CustomError(
-          MESSAGES.BOOKING_MESSAGES.INVALID_DATE_FORMAT,
-          StatusCodes.BAD_REQUEST,
-        );
-      }
-      parsedDate = tempDate.toDate();
-    }
-
     const bookings = await this._bookingService.getFilteredBookings(
-      parsedDate,
+      date as string,
       mentorshipTypeId as string,
     );
     res.status(StatusCodes.OK).json(bookings);

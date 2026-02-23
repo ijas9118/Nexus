@@ -1,6 +1,7 @@
 import type { Request } from "express";
 
 import rateLimit from "express-rate-limit";
+import { StatusCodes } from "http-status-codes";
 
 /**
  * Rate limiter for connection requests
@@ -23,6 +24,7 @@ export const connectionRequestLimiter = rateLimit({
     const userId = (req as any).user?.userId || (req as any).user?.id || req.ip;
     return userId?.toString() || req.ip || "anonymous";
   },
+  validate: false,
   // Skip rate limiting for admin users
   skip: (req: Request) => {
     const userRole = (req as any).user?.role;
@@ -30,7 +32,7 @@ export const connectionRequestLimiter = rateLimit({
   },
   // Handler for when limit is exceeded
   handler: (req, res) => {
-    res.status(429).json({
+    res.status(StatusCodes.TOO_MANY_REQUESTS).json({
       success: false,
       message: "Too many connection requests. Please try again later.",
       retryAfter: "1 hour",
@@ -63,12 +65,13 @@ export function createCustomRateLimiter(
       const userId = (req as any).user?.userId || (req as any).user?.id || req.ip;
       return userId?.toString() || req.ip || "anonymous";
     },
+    validate: false,
     skip: (req: Request) => {
       const userRole = (req as any).user?.role;
       return userRole === "admin";
     },
     handler: (req, res) => {
-      res.status(429).json({
+      res.status(StatusCodes.TOO_MANY_REQUESTS).json({
         success: false,
         message,
       });

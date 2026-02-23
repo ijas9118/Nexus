@@ -8,7 +8,10 @@ import type { IBookmarkController } from "@/core/interfaces/controllers/i-bookma
 import type { IBookmarkService } from "@/core/interfaces/services/i-bookmark-service";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { BOOKMARK_MESSAGES } = MESSAGES;
 
 @injectable()
 export class BookmarkController implements IBookmarkController {
@@ -19,7 +22,7 @@ export class BookmarkController implements IBookmarkController {
     const { id: contentId } = req.params;
     const userId = req.user?._id;
     if (!userId) {
-      throw new CustomError("User is not authenticated", StatusCodes.UNAUTHORIZED);
+      throw new CustomError(BOOKMARK_MESSAGES.AUTH_REQUIRED, StatusCodes.UNAUTHORIZED);
     }
 
     await this._bookmarkService.toggleBookmark(contentId as string, userId);

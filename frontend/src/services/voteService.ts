@@ -1,5 +1,6 @@
 import api from "./api";
 import { handleApi } from "@/utils/handleApi";
+import { CONTENT_ROUTES } from "@/utils/constants";
 
 // Define types for the response from the API
 export interface IVoteResponse {
@@ -23,10 +24,11 @@ export interface IUserVotesResponse {
 const VoteService = {
   voteContent: (contentId: string, voteType: "upvote" | "downvote") =>
     handleApi<IVoteResponse>(() =>
-      api.post("/content/posts/vote", { contentId, voteType }),
+      api.post(`${CONTENT_ROUTES.POST}/vote`, { contentId, voteType }),
     ),
 
-  getUserVotes: () => handleApi(() => api.get("/content/posts/user-votes")),
+  getUserVotes: () =>
+    handleApi(() => api.get(`${CONTENT_ROUTES.POST}/user-votes`)),
 };
 
 export default VoteService;

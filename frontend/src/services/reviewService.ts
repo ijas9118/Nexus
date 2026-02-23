@@ -6,20 +6,21 @@ import {
   UpdateReviewData,
 } from "@/types/review";
 import api from "./api";
+import { REVIEW_ROUTES } from "@/utils/constants";
 
 const ReviewService = {
   // Create a new review (POST /review)
   createReview: (data: CreateReviewData) =>
-    api.post<Review>("/review", data).then((res) => res.data),
+    api.post<Review>(REVIEW_ROUTES.BASE, data).then((res) => res.data),
 
   // Get a review by ID (GET /review/:id)
   getReviewById: (id: string) =>
-    api.get<Review>(`/review/${id}`).then((res) => res.data),
+    api.get<Review>(`${REVIEW_ROUTES.BASE}/${id}`).then((res) => res.data),
 
   // Get all reviews with pagination (GET /review)
   getAllReviews: (page: number = 1, limit: number = 10) =>
     api
-      .get<PaginatedReviewResponse>("/review", {
+      .get<PaginatedReviewResponse>(REVIEW_ROUTES.BASE, {
         params: { page, limit },
       })
       .then((res) => res.data),
@@ -31,29 +32,34 @@ const ReviewService = {
     limit: number = 10,
   ) =>
     api
-      .get<PaginatedReviewResponse>(`/review/mentor/${mentorId}`, {
+      .get<PaginatedReviewResponse>(`${REVIEW_ROUTES.MENTOR}/${mentorId}`, {
         params: { page, limit },
       })
       .then((res) => res.data),
 
   // Get reviews by the authenticated user (GET /review/user/my-reviews)
   getMyReviews: () =>
-    api.get<Review[]>("/review/user/my-reviews").then((res) => res.data),
+    api.get<Review[]>(REVIEW_ROUTES.USER_MY_REVIEWS).then((res) => res.data),
 
   // Update a review (PUT /review/:id)
   updateReview: (id: string, data: UpdateReviewData) =>
-    api.put<Review>(`/review/${id}`, data).then((res) => res.data),
+    api
+      .put<Review>(`${REVIEW_ROUTES.BASE}/${id}`, data)
+      .then((res) => res.data),
 
   // Delete a review (DELETE /review/:id)
   deleteReview: (id: string) =>
     api
-      .delete<{ success: boolean; message: string }>(`/review/${id}`)
+      .delete<{
+        success: boolean;
+        message: string;
+      }>(`${REVIEW_ROUTES.BASE}/${id}`)
       .then((res) => res.data),
 
   // Get mentor review stats (GET /review/mentor/:mentorId/stats)
   getMentorStats: (mentorId: string) =>
     api
-      .get<MentorStats>(`/review/mentor/${mentorId}/stats`)
+      .get<MentorStats>(`${REVIEW_ROUTES.MENTOR}/${mentorId}/stats`)
       .then((res) => res.data),
 
   // Check if the user has already reviewed a mentor (GET /review/check/:mentorId)
@@ -62,7 +68,7 @@ const ReviewService = {
       .get<{
         hasReviewed: boolean;
         review: Review | null;
-      }>(`/review/check/${mentorId}`)
+      }>(`${REVIEW_ROUTES.CHECK}/${mentorId}`)
       .then((res) => res.data),
 };
 

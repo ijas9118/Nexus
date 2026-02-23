@@ -1,5 +1,6 @@
 import api from "./api";
 import { handleApi } from "@/utils/handleApi";
+import { BOOKING_PAYMENT_ROUTES } from "@/utils/constants";
 
 interface BookingData {
   mentorId: string;
@@ -13,12 +14,12 @@ interface BookingData {
 const BookingPaymentService = {
   createSession: (bookingData: BookingData) =>
     handleApi<string>(() =>
-      api.post("/booking-payment/create-booking-checkout-session", bookingData),
+      api.post(BOOKING_PAYMENT_ROUTES.CREATE_CHECKOUT_SESSION, bookingData),
     ),
 
   verifySession: (sessionId: string) =>
     handleApi<{ success: boolean }>(() =>
-      api.get(`/booking-payment/verify-booking-session/${sessionId}`),
+      api.get(`${BOOKING_PAYMENT_ROUTES.VERIFY_SESSION}/${sessionId}`),
     ),
 };
 

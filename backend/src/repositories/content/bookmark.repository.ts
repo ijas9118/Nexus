@@ -25,7 +25,7 @@ export class BookmarkRepository extends BaseRepository<IBookmark> implements IBo
   async getBookmarks(userId: string): Promise<IContent[]> {
     const userObjectId = new mongoose.Types.ObjectId(userId);
 
-    const bookmarkedContents = await this.model.aggregate([
+    const bookmarkedContents = await this._model.aggregate([
       { $match: { userId: userObjectId } },
       { $unwind: "$contentIds" },
 

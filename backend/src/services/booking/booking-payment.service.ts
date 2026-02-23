@@ -1,6 +1,7 @@
 import type { Buffer } from "node:buffer";
 import type Stripe from "stripe";
 
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 import { v4 as uuidv4 } from "uuid";
 
@@ -16,20 +17,24 @@ import type { MentorshipTypeRepository } from "@/repositories/mentor/mentorship-
 import logger from "@/config/logger";
 import { stripe } from "@/config/stripe.cofig";
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
+import CustomError from "@/utils/custom-error";
 import { env } from "@/utils/env-validation";
+
+const { BOOKING_MESSAGES, MENTOR_MESSAGES, AUTH_MESSAGES } = MESSAGES;
 
 @injectable()
 export class BookingPaymentService implements IBookingPaymentService {
   constructor(
-    @inject(TYPES.BookingRepository) private bookingRepository: IBookingRepository,
+    @inject(TYPES.BookingRepository) private _bookingRepository: IBookingRepository,
     @inject(TYPES.BookingPaymentRepository)
-    private bookingPaymentRepository: IBookingPaymentRepository,
+    private _bookingPaymentRepository: IBookingPaymentRepository,
     @inject(TYPES.MentorshipTypeRepository)
-    private mentorshipTypeRepository: MentorshipTypeRepository,
-    @inject(TYPES.NotificationService) private notificationService: INotificationService,
-    @inject(TYPES.MentorRepository) private mentorRepository: IMentorRepository,
-    @inject(TYPES.TimeSlotService) private timeSlotService: ITimeSlotService,
-    @inject(TYPES.WalletService) private walletService: IWalletService,
+    private _mentorshipTypeRepository: MentorshipTypeRepository,
+    @inject(TYPES.NotificationService) private _notificationService: INotificationService,
+    @inject(TYPES.MentorRepository) private _mentorRepository: IMentorRepository,
+    @inject(TYPES.TimeSlotService) private _timeSlotService: ITimeSlotService,
+    @inject(TYPES.WalletService) private _walletService: IWalletService,
   ) {}
 
   async checkoutSession(
@@ -42,22 +47,22 @@ export class BookingPaymentService implements IBookingPaymentService {
     customerId: string,
     email: string,
   ): Promise<string> {
-    const isAvailable = await this.timeSlotService.isTimeSlotAvailable(timeSlot, mentorId);
+    const isAvailable = await this._timeSlotService.isTimeSlotAvailable(timeSlot, mentorId);
     if (!isAvailable) {
-      throw new Error("Selected time slot is not available");
+      throw new CustomError(BOOKING_MESSAGES.SLOT_NOT_AVAILABLE, StatusCodes.BAD_REQUEST);
     }
 
-    const reserved = await this.timeSlotService.reserveTimeSlot(timeSlot, mentorId, 10);
+    const reserved = await this._timeSlotService.reserveTimeSlot(timeSlot, mentorId, 10);
     if (!reserved) {
-      throw new Error("Failed to reserve time slot");
+      throw new CustomError(BOOKING_MESSAGES.RESERVE_FAILED, StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
-    const mentorship = await this.mentorshipTypeRepository.findById(mentorshipType);
+    const mentorship = await this._mentorshipTypeRepository.findById(mentorshipType);
     if (!mentorship) {
-      throw new Error("Mentorship type not found");
+      throw new CustomError(MENTOR_MESSAGES.TYPE_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    const booking = await this.bookingRepository.createBooking({
+    const booking = await this._bookingRepository.createBooking({
       userId: customerId,
       mentorId,
       mentorUserId,
@@ -107,7 +112,7 @@ export class BookingPaymentService implements IBookingPaymentService {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object;
-        await this.handleCheckoutSessionCompleted(session);
+        await this._handleCheckoutSessionCompleted(session);
         break;
       }
       case "checkout.session.expired": {
@@ -117,11 +122,11 @@ export class BookingPaymentService implements IBookingPaymentService {
           && session.metadata?.timeSlot
           && session.metadata?.mentorId
         ) {
-          await this.bookingRepository.updateOne(
+          await this._bookingRepository.updateOne(
             { _id: session.metadata.bookingId },
             { status: "cancelled" },
           );
-          await this.timeSlotService.update(session.metadata.timeSlot, {
+          await this._timeSlotService.update(session.metadata.timeSlot, {
             status: "available",
             reservedUntil: undefined,
           });
@@ -138,7 +143,7 @@ export class BookingPaymentService implements IBookingPaymentService {
     return session.payment_status === "paid" && session.status === "complete";
   }
 
-  private async handleCheckoutSessionCompleted(session: Stripe.Checkout.Session): Promise<void> {
+  private async _handleCheckoutSessionCompleted(session: Stripe.Checkout.Session): Promise<void> {
     const {
       metadata,
       amount_total,
@@ -162,10 +167,10 @@ export class BookingPaymentService implements IBookingPaymentService {
       || !customer_details?.email
       || !customer_details?.name
     ) {
-      throw new Error("Missing required metadata or session details");
+      throw new CustomError(BOOKING_MESSAGES.MISSING_SESSION_DETAILS, StatusCodes.BAD_REQUEST);
     }
 
-    const timeSlot = await this.timeSlotService.findById(metadata.timeSlot);
+    const timeSlot = await this._timeSlotService.findById(metadata.timeSlot);
     if (
       !timeSlot
       || timeSlot.mentorId.toString() !== metadata.mentorId
@@ -174,15 +179,15 @@ export class BookingPaymentService implements IBookingPaymentService {
       logger.error(
         `Time slot ${metadata.timeSlot} is not reserved for booking ${metadata.bookingId}`,
       );
-      await this.bookingRepository.updateOne({ _id: metadata.bookingId }, { status: "cancelled" });
-      throw new Error("Time slot is no longer available");
+      await this._bookingRepository.updateOne({ _id: metadata.bookingId }, { status: "cancelled" });
+      throw new CustomError(BOOKING_MESSAGES.SLOT_EXPIRED, StatusCodes.GONE);
     }
 
-    await this.bookingRepository.updateOne({ _id: metadata?.bookingId }, { status: "pending" });
+    await this._bookingRepository.updateOne({ _id: metadata?.bookingId }, { status: "pending" });
 
-    await this.timeSlotService.bookTimeSlot(metadata.timeSlot, metadata.mentorId);
+    await this._timeSlotService.bookTimeSlot(metadata.timeSlot, metadata.mentorId);
 
-    await this.bookingPaymentRepository.createBookingPayment({
+    await this._bookingPaymentRepository.createBookingPayment({
       userId: metadata.customerId,
       bookingId: metadata.bookingId,
       mentorId: metadata.mentorId,
@@ -191,17 +196,17 @@ export class BookingPaymentService implements IBookingPaymentService {
       paymentIntentId: payment_intent as string,
       amount: amount_total / 100,
       currency,
-      paymentStatus: payment_status,
+      paymentStatus: payment_status as any,
       customerEmail: customer_details.email,
       customerName: customer_details.name,
     });
 
-    const mentor = await this.mentorRepository.findById(metadata.mentorId);
+    const mentor = await this._mentorRepository.findById(metadata.mentorId);
     if (!mentor) {
-      throw new Error("Mentor not found");
+      throw new CustomError(AUTH_MESSAGES.MENTOR_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
-    await this.walletService.addMoney(
+    await this._walletService.addMoney(
       mentor.userId.toString(), // Mentor's user ID
       amount_total / 100 - 20,
       metadata.bookingId,
@@ -211,12 +216,12 @@ export class BookingPaymentService implements IBookingPaymentService {
     const meetToken = uuidv4();
     const meetUrl = `${env.CLIENT_URL}/meeting/${meetToken}`;
 
-    await this.bookingRepository.update(metadata.bookingId, { meetUrl });
+    await this._bookingRepository.update(metadata.bookingId, { meetUrl });
 
     const notificationTypeId
-      = await this.notificationService.getNotificationTypeIdByName("New Booking Request");
+      = await this._notificationService.getNotificationTypeIdByName("New Booking Request");
 
-    await this.notificationService.createForUser(
+    await this._notificationService.createForUser(
       notificationTypeId,
       mentor.userId.toString(),
       "New Booking Confirmed",

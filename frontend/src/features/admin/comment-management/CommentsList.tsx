@@ -64,7 +64,7 @@ const CommentsList = ({ comments, getStatusBadge }: CommentsListProps) => {
             <div className="text-sm text-muted-foreground mb-2">
               On:{" "}
               <span className="font-medium text-foreground">
-                {comment.contentId.title}
+                {comment.contentId?.title}
               </span>
             </div>
             <p className="text-sm">{comment.text}</p>

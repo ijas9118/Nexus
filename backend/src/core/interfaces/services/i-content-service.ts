@@ -5,14 +5,20 @@ import type { IContent } from "@/models/content/content.model";
 
 export interface IContentService {
   createContent: (
-    contentData: Partial<IContent>,
+    contentData: any,
     thumbnailFile?: Express.Multer.File,
     videoFile?: Express.Multer.File,
+    user?: { _id: string; name: string },
   ) => Promise<IContent>;
   getContentById: (id: string, role: UserRole, userId: string) => Promise<IContent | null>;
-  getAllContent: (userId: string, page: number, limit: number) => Promise<IContent[]>;
+  getAllContent: (
+    userId: string,
+    page: number,
+    limit: number,
+  ) => Promise<{ contents: IContent[]; nextPage: number | null }>;
+  getContentCount: () => Promise<number>;
   getPosts: () => Promise<IContent[]>;
   verifyContent: (contentId: string) => Promise<IContent | null>;
   getFollowingUsersContents: (userId: string) => Promise<IContent[]>;
-  getContentCount: () => Promise<number>;
+  getUserContents: (userId: string) => Promise<IContent[]>;
 }

@@ -10,15 +10,7 @@ import type { PersonalInfo } from "@/core/types";
 import type { IMentor } from "@/models/mentor/mentor.model";
 
 import logger from "@/config/logger";
-import {
-  ExperienceLevel,
-  ExpertiseArea,
-  MentorshipType,
-  TargetAudience,
-  Technology,
-} from "@/core/types/entities/mentor";
 import { TYPES } from "@/di/types";
-import CustomError from "@/utils/custom-error";
 
 @injectable()
 export class MentorController implements IMentorController {
@@ -31,25 +23,6 @@ export class MentorController implements IMentorController {
       experience: req.body.experience as IMentor["experience"],
       mentorshipDetails: req.body.mentorshipDetails as IMentor["mentorshipDetails"],
     };
-
-    // Basic validation
-    if (!mentorData.personalInfo || !mentorData.experience || !mentorData.mentorshipDetails) {
-      throw new CustomError(
-        "Missing required fields: personalInfo, experience, or mentorshipDetails.",
-        StatusCodes.BAD_REQUEST,
-      );
-    }
-
-    if (
-      !mentorData.personalInfo.firstName
-      || !mentorData.personalInfo.lastName
-      || !mentorData.personalInfo.email
-    ) {
-      throw new CustomError(
-        "Missing required personalInfo fields: firstName, lastName, or email.",
-        StatusCodes.BAD_REQUEST,
-      );
-    }
 
     logger.debug("Received mentor application data", { userId, mentorData });
 
@@ -92,13 +65,8 @@ export class MentorController implements IMentorController {
   });
 
   getMentorEnums = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({
-      experienceLevels: Object.values(ExperienceLevel),
-      expertiseAreas: Object.values(ExpertiseArea),
-      mentorshipTypes: Object.values(MentorshipType),
-      targetAudiences: Object.values(TargetAudience),
-      technologies: Object.values(Technology),
-    });
+    const enums = this._mentorService.getMentorEnums();
+    res.status(StatusCodes.OK).json(enums);
   });
 
   getMentorshipTypes = asyncHandler(async (req: Request, res: Response): Promise<void> => {

@@ -15,7 +15,7 @@ export class TransactionRepository
   }
 
   async getTransactionsByDateRange(startDate: Date, endDate: Date): Promise<ITransaction[]> {
-    return this.model
+    return this._model
       .find({
         date: { $gte: startDate, $lte: endDate },
         status: "completed",
@@ -26,7 +26,7 @@ export class TransactionRepository
   }
 
   async countTransactionsByDateRange(startDate: Date, endDate: Date): Promise<number> {
-    return this.model.countDocuments({
+    return this._model.countDocuments({
       date: { $gte: startDate, $lte: endDate },
       status: "completed",
       type: "incoming",
@@ -54,7 +54,7 @@ export class TransactionRepository
         dateFormat = "%Y-%m-%d"; // Default to day
     }
 
-    const result = await this.model.aggregate([
+    const result = await this._model.aggregate([
       {
         $match: {
           date: { $gte: startDate, $lte: endDate },

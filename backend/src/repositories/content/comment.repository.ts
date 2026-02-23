@@ -12,7 +12,7 @@ import { FormatTime } from "@/utils/format-time";
 
 @injectable()
 export class CommentRepository extends BaseRepository<IComment> implements ICommentRepository {
-  constructor(@inject(TYPES.ContentRepository) private contentRepository: IContentRepository) {
+  constructor(@inject(TYPES.ContentRepository) private _contentRepository: IContentRepository) {
     super(CommentModel);
   }
 
@@ -32,13 +32,13 @@ export class CommentRepository extends BaseRepository<IComment> implements IComm
       await CommentModel.findByIdAndUpdate(commentData.parentCommentId, {
         $push: { replies: newComment._id },
       });
-      await this.contentRepository.updateOne(
+      await this._contentRepository.updateOne(
         { _id: commentData.contentId },
         { $inc: { commentCount: 1 } },
       );
     }
     else {
-      await this.contentRepository.updateOne(
+      await this._contentRepository.updateOne(
         { _id: commentData.contentId },
         { $inc: { commentCount: 1 } },
       );

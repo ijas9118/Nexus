@@ -9,17 +9,20 @@ import type { IBooking } from "@/models/booking/booking.model";
 
 import { TYPES } from "@/di/types";
 import { BookingModel } from "@/models/booking/booking.model";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { BOOKING_MESSAGES } = MESSAGES;
 
 @injectable()
 export class BookingService implements IBookingService {
   constructor(
-    @inject(TYPES.BookingRepository) private bookingRepository: IBookingRepository,
-    @inject(TYPES.TimeSlotService) private timeSlotService: ITimeSlotService,
+    @inject(TYPES.BookingRepository) private _bookingRepository: IBookingRepository,
+    @inject(TYPES.TimeSlotService) private _timeSlotService: ITimeSlotService,
   ) {}
 
   async getUpcomingBookings(): Promise<IBooking[]> {
-    return this.bookingRepository.getUpcomingBookings();
+    return this._bookingRepository.getUpcomingBookings();
   }
 
   async getBookingByMeetUrl(meetUrl: string, userId: string): Promise<IBooking | null> {
@@ -40,82 +43,94 @@ export class BookingService implements IBookingService {
   }
 
   async getCompletedBookings(): Promise<IBooking[]> {
-    return this.bookingRepository.getCompletedBookings();
+    return this._bookingRepository.getCompletedBookings();
   }
 
-  async getFilteredBookings(date?: Date, mentorshipTypeId?: string): Promise<IBooking[]> {
-    return this.bookingRepository.getFilteredBookings(date, mentorshipTypeId);
+  async getFilteredBookings(date?: string | Date, mentorshipTypeId?: string): Promise<IBooking[]> {
+    let parsedDate: Date | undefined;
+    if (date) {
+      const tempDate = dayjs(date);
+      if (!tempDate.isValid()) {
+        throw new CustomError(BOOKING_MESSAGES.INVALID_DATE_FORMAT, StatusCodes.BAD_REQUEST);
+      }
+      parsedDate = tempDate.toDate();
+    }
+    return this._bookingRepository.getFilteredBookings(parsedDate, mentorshipTypeId);
   }
 
   async rescheduleBooking(
     bookingId: string,
     newTimeSlotId: string,
-    newBookingDate: Date,
+    newBookingDate: string | Date,
   ): Promise<IBooking> {
-    const booking = await this.bookingRepository.findById(bookingId);
+    const booking = await this._bookingRepository.findById(bookingId);
     if (!booking) {
-      throw new CustomError("Booking not found.", StatusCodes.NOT_FOUND);
+      throw new CustomError(BOOKING_MESSAGES.BOOKING_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     if (booking.status === "completed") {
-      throw new CustomError("Cannot reschedule a completed booking.", StatusCodes.BAD_REQUEST);
+      throw new CustomError(BOOKING_MESSAGES.CANNOT_RESCHEDULE_COMPLETED, StatusCodes.BAD_REQUEST);
     }
 
-    const timeSlot = await this.timeSlotService.findById(newTimeSlotId);
+    const timeSlot = await this._timeSlotService.findById(newTimeSlotId);
     if (!timeSlot) {
-      throw new CustomError("Time slot not found.", StatusCodes.NOT_FOUND);
+      throw new CustomError(BOOKING_MESSAGES.TIME_SLOT_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     if (timeSlot.isBooked) {
-      throw new CustomError("Time slot is already booked.", StatusCodes.CONFLICT);
+      throw new CustomError(BOOKING_MESSAGES.TIME_SLOT_ALREADY_BOOKED, StatusCodes.CONFLICT);
     }
 
     const bookingDate = dayjs(newBookingDate);
+    if (!bookingDate.isValid()) {
+      throw new CustomError(BOOKING_MESSAGES.INVALID_DATE_FORMAT, StatusCodes.BAD_REQUEST);
+    }
+
     if (bookingDate.isBefore(dayjs().startOf("day"))) {
-      throw new CustomError("Cannot reschedule to a past date.", StatusCodes.BAD_REQUEST);
+      throw new CustomError(BOOKING_MESSAGES.PAST_DATE_RESCHEDULE, StatusCodes.BAD_REQUEST);
     }
 
     if (booking.timeSlot.toString() !== newTimeSlotId) {
-      await this.timeSlotService.update(booking.timeSlot.toString(), { isBooked: false });
+      await this._timeSlotService.update(booking.timeSlot.toString(), { isBooked: false });
     }
 
-    await this.timeSlotService.bookTimeSlot(newTimeSlotId, timeSlot.mentorId.toString());
+    await this._timeSlotService.bookTimeSlot(newTimeSlotId, timeSlot.mentorId.toString());
 
-    const updatedBooking = await this.bookingRepository.update(bookingId, {
+    const updatedBooking = await this._bookingRepository.update(bookingId, {
       timeSlot: newTimeSlotId,
-      bookingDate: newBookingDate,
+      bookingDate: bookingDate.toDate(),
       status: "pending",
     });
 
     if (!updatedBooking) {
-      throw new CustomError("Failed to update booking.", StatusCodes.INTERNAL_SERVER_ERROR);
+      throw new CustomError(BOOKING_MESSAGES.UPDATE_FAILED, StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
     return updatedBooking;
   }
 
   async confirmBooking(bookingId: string): Promise<IBooking> {
-    const booking = await this.bookingRepository.findById(bookingId);
+    const booking = await this._bookingRepository.findById(bookingId);
     if (!booking) {
-      throw new CustomError("Booking not found.", StatusCodes.NOT_FOUND);
+      throw new CustomError(BOOKING_MESSAGES.BOOKING_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
 
     if (booking.status !== "pending") {
-      throw new CustomError("Only pending bookings can be confirmed.", StatusCodes.BAD_REQUEST);
+      throw new CustomError(BOOKING_MESSAGES.ONLY_PENDING_CONFIRM, StatusCodes.BAD_REQUEST);
     }
 
-    const updatedBooking = await this.bookingRepository.update(bookingId, {
+    const updatedBooking = await this._bookingRepository.update(bookingId, {
       status: "confirmed",
     });
 
     if (!updatedBooking) {
-      throw new CustomError("Failed to confirm booking.", StatusCodes.INTERNAL_SERVER_ERROR);
+      throw new CustomError(BOOKING_MESSAGES.CONFIRM_FAILED, StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
     return updatedBooking;
   }
 
   async getBookingById(bookingId: string): Promise<IBooking | null> {
-    return this.bookingRepository.findById(bookingId);
+    return this._bookingRepository.findById(bookingId);
   }
 }

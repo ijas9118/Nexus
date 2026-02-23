@@ -12,27 +12,27 @@ import { TYPES } from "@/di/types";
 @injectable()
 export class AdminDashboardController implements IAdminDashboardController {
   constructor(
-    @inject(TYPES.AdminDashboardService) private adminDashboardService: IAdminDashboardService,
+    @inject(TYPES.AdminDashboardService) private _adminDashboardService: IAdminDashboardService,
   ) {}
 
   getDashboardStats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const stats = await this.adminDashboardService.getStats();
+    const stats = await this._adminDashboardService.getStats();
     res.status(StatusCodes.OK).json(stats);
   });
 
   getSubscriptionStats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const stats = await this.adminDashboardService.getSubscriptionStats();
+    const stats = await this._adminDashboardService.getSubscriptionStats();
     res.status(StatusCodes.OK).json(stats);
   });
 
   getRevenueStats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const timeRange = (req.query.timeRange as string) || "30days";
-    const stats = await this.adminDashboardService.getRevenueStats(timeRange);
+    const stats = await this._adminDashboardService.getRevenueStats(timeRange);
     res.status(StatusCodes.OK).json(stats);
   });
 
   getMentorApplicationStats = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const stats = await this.adminDashboardService.getMentorApplicationStats();
+    const stats = await this._adminDashboardService.getMentorApplicationStats();
     res.status(StatusCodes.OK).json(stats);
   });
 }

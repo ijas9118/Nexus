@@ -1,12 +1,18 @@
+import type { WalletInfo } from "@/core/types/wallet.types";
 import type { IWithdrawalRequest } from "@/models/payment/withdrawal-request.model";
 
 export interface IWithdrawalRequestService {
-  createWithdrawalRequest: (
+  requestWithdrawal: (
     userId: string,
     amount: number,
     withdrawalNote: string,
-  ) => Promise<IWithdrawalRequest>;
+    nexusPoints?: number,
+  ) => Promise<void>;
   getPendingRequests: () => Promise<IWithdrawalRequest[]>;
-  approveRequest: (requestId: string) => Promise<void>;
-  rejectRequest: (requestId: string) => Promise<void>;
+  getRequestsByUserId: (
+    userId: string,
+    status?: "pending" | "approved" | "rejected",
+  ) => Promise<IWithdrawalRequest[]>;
+  approveWithdrawal: (requestId: string) => Promise<WalletInfo>;
+  rejectWithdrawal: (requestId: string) => Promise<void>;
 }

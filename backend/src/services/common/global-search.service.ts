@@ -10,16 +10,16 @@ import { TYPES } from "@/di/types";
 
 export class GlobalSearchService implements IGlobalSearchService {
   constructor(
-    @inject(TYPES.ContentRepository) private contentRepo: IContentRepository,
-    @inject(TYPES.SquadRepository) private squadRepo: ISquadRepository,
-    @inject(TYPES.UserRepository) private userRepo: IUserRepository,
+    @inject(TYPES.ContentRepository) private _contentRepo: IContentRepository,
+    @inject(TYPES.SquadRepository) private _squadRepo: ISquadRepository,
+    @inject(TYPES.UserRepository) private _userRepo: IUserRepository,
   ) {}
 
   async search(criteria: SearchCriteria): Promise<SearchResultItem[]> {
     const [blogs, squads, users] = await Promise.all([
-      this.contentRepo.search({ ...criteria, filters: { contentType: "blog" } }),
-      this.squadRepo.search(criteria),
-      this.userRepo.search(criteria),
+      this._contentRepo.search({ ...criteria, filters: { contentType: "blog" } }),
+      this._squadRepo.search(criteria),
+      this._userRepo.search(criteria),
     ]);
 
     // Combine all results

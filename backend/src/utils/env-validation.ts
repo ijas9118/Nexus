@@ -9,7 +9,7 @@ const envSchema = z.object({
     .string()
     .default("3000")
     .transform(val => Number(val)),
-  CLIENT_URL: z.url(),
+  CLIENT_URL: z.string().url(),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   MONGO_URI: z.string().min(1),
   REDIS_HOST: z.string().min(1),
@@ -31,11 +31,10 @@ const envSchema = z.object({
   STRIPE_WEBHOOK_SECRET: z.string().min(1),
   GITHUB_CLIENT_ID: z.string().optional(),
   GITHUB_CLIENT_SECRET: z.string().optional(),
-  LINKEDIN_CLIENT_ID: z.string().optional(),
-  LINKEDIN_CLIENT_SECRET: z.string().optional(),
-  CLOUDINARY_CLOUD_NAME: z.string().min(1),
   CLOUDINARY_API_KEY: z.string().min(1),
   CLOUDINARY_API_SECRET: z.string().min(1),
+  GOOGLE_CALLBACK_URL: z.string().url(),
+  GITHUB_CALLBACK_URL: z.string().url().optional(),
 });
 
 function validateEnv() {

@@ -15,6 +15,6 @@ export class MentorMetadataRepository
   }
 
   async findByType(type: string, isActive: boolean = true): Promise<IMentorMetadata[]> {
-    return this.model.find({ type, isActive });
+    return this._model.find({ type, isActive });
   }
 }

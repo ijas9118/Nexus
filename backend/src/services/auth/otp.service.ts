@@ -9,11 +9,14 @@ import type { RegisterRequestDTO } from "@/dtos/requests/auth.dto";
 import logger from "@/config/logger";
 import redisClient from "@/config/redis-client.config";
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { AUTH_MESSAGES } = MESSAGES;
 
 @injectable()
 export class OTPService implements IOTPService {
-  constructor(@inject(TYPES.EmailService) private emailService: IEmailService) {}
+  constructor(@inject(TYPES.EmailService) private _emailService: IEmailService) {}
 
   // Generate a random 6-digit OTP
   generateOTP(): string {
@@ -25,14 +28,14 @@ export class OTPService implements IOTPService {
     const existingData = JSON.parse((await redisClient.get(`otp:${email}`)) as string);
     if (!existingData) {
       throw new CustomError(
-        "OTP expired or not found. Please register again.",
+        AUTH_MESSAGES.OTP_EXPIRED_OR_NOT_FOUND,
         StatusCodes.BAD_REQUEST,
       );
     }
 
     const newOtp = this.generateOTP();
 
-    await this.emailService.sendOtpEmail(existingData, newOtp);
+    await this._emailService.sendOtpEmail(existingData, newOtp);
   }
 
   // Verify OTP and retrieve stored user data
@@ -40,7 +43,7 @@ export class OTPService implements IOTPService {
     const storedData = await redisClient.get(`otp:${email}`);
 
     if (!storedData) {
-      throw new CustomError("OTP expired or invalid.", StatusCodes.BAD_REQUEST);
+      throw new CustomError(AUTH_MESSAGES.OTP_EXPIRED_OR_INVALID, StatusCodes.BAD_REQUEST);
     }
 
     const { userData, otp: storedOTP } = JSON.parse(storedData);
@@ -48,7 +51,7 @@ export class OTPService implements IOTPService {
     logger.debug("User", userData, otp);
 
     if (otp !== storedOTP) {
-      throw new CustomError("Invalid OTP.", StatusCodes.BAD_REQUEST);
+      throw new CustomError(AUTH_MESSAGES.OTP_INVALID, StatusCodes.BAD_REQUEST);
     }
 
     return userData;

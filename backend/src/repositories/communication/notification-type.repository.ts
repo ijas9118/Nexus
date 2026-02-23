@@ -19,10 +19,10 @@ export class NotificationTypeRepository
   }
 
   async findByName(name: string): Promise<INotificationType | null> {
-    return this.model.findOne({ name }).exec();
+    return this._model.findOne({ name }).exec();
   }
 
   async findByRoles(roles: string[]): Promise<INotificationType[]> {
-    return this.model.find({ roles: { $in: roles } }).exec();
+    return this._model.find({ roles: { $in: roles } }).exec();
   }
 }

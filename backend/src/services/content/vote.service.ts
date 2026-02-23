@@ -10,18 +10,18 @@ import { TYPES } from "@/di/types";
 @injectable()
 export class VoteService implements IVoteService {
   constructor(
-    @inject(TYPES.VoteRepository) private voteRepository: IVoteRepository,
-    @inject(TYPES.ContentRepository) private contentRepository: IContentRepository,
+    @inject(TYPES.VoteRepository) private _voteRepository: IVoteRepository,
+    @inject(TYPES.ContentRepository) private _contentRepository: IContentRepository,
   ) {}
 
   async vote(contentId: string, userId: string, voteType: "upvote" | "downvote"): Promise<void> {
-    const existingVote = await this.voteRepository.findUserVote(contentId, userId);
+    const existingVote = await this._voteRepository.findUserVote(contentId, userId);
 
     if (existingVote) {
       if (existingVote.voteType === voteType) {
         // If same vote clicked again, remove the vote (toggle off)
-        await this.voteRepository.delete(existingVote._id as string);
-        await this.contentRepository.updateOne(
+        await this._voteRepository.delete(existingVote._id as string);
+        await this._contentRepository.updateOne(
           { _id: contentId },
           {
             $inc: {
@@ -32,8 +32,8 @@ export class VoteService implements IVoteService {
       }
       else {
         // If different vote, update it
-        await this.voteRepository.update(existingVote._id as string, { voteType });
-        await this.contentRepository.updateOne(
+        await this._voteRepository.update(existingVote._id as string, { voteType });
+        await this._contentRepository.updateOne(
           { _id: contentId },
           { $inc: { [`${existingVote.voteType}Count`]: -1, [`${voteType}Count`]: 1 } },
         );
@@ -41,8 +41,8 @@ export class VoteService implements IVoteService {
     }
     else {
       // If no vote yet, create a new vote
-      await this.voteRepository.create({ contentId, userId, voteType });
-      await this.contentRepository.updateOne(
+      await this._voteRepository.create({ contentId, userId, voteType });
+      await this._contentRepository.updateOne(
         { _id: contentId },
         { $inc: { [`${voteType}Count`]: 1 } },
       );
@@ -50,10 +50,10 @@ export class VoteService implements IVoteService {
   }
 
   async getVotes(contentId: string): Promise<{ upvotes: number; downvotes: number }> {
-    return this.voteRepository.countVotes(contentId);
+    return this._voteRepository.countVotes(contentId);
   }
 
   async getUserVotes(userId: string): Promise<IVote[]> {
-    return this.voteRepository.findUserVotes(userId);
+    return this._voteRepository.findUserVotes(userId);
   }
 }

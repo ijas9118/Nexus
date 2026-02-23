@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/atoms/button";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -26,12 +27,22 @@ import { Textarea } from "@/components/atoms/textarea";
 import { MentorshipTypeData } from "@/types/mentor";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  description: z.string().min(10, {
-    message: "Description must be at least 10 characters.",
-  }),
+  name: z
+    .string()
+    .min(3, {
+      message: "Name must be at least 3 characters.",
+    })
+    .max(50, {
+      message: "Name must not exceed 50 characters.",
+    }),
+  description: z
+    .string()
+    .min(10, {
+      message: "Description must be at least 10 characters.",
+    })
+    .max(500, {
+      message: "Description must not exceed 500 characters.",
+    }),
   defaultPrice: z
     .number({
       required_error: "Default price is required",
@@ -45,7 +56,7 @@ interface MentorshipTypeDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   initialData: MentorshipTypeData | null;
-  onSave: (data: MentorshipTypeData) => void;
+  onSave: (data: MentorshipTypeData) => Promise<void>;
 }
 
 export function MentorshipTypeDialog({
@@ -54,6 +65,8 @@ export function MentorshipTypeDialog({
   initialData,
   onSave,
 }: MentorshipTypeDialogProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,23 +77,51 @@ export function MentorshipTypeDialog({
   });
 
   useEffect(() => {
-    if (initialData) {
-      form.reset({
-        name: initialData.name,
-        description: initialData.description,
-        defaultPrice: initialData.defaultPrice ?? 0,
-      });
-    } else {
-      form.reset({
-        name: "",
-        description: "",
-        defaultPrice: 0,
-      });
+    if (open) {
+      if (initialData) {
+        form.reset({
+          name: initialData.name,
+          description: initialData.description,
+          defaultPrice: initialData.defaultPrice ?? 0,
+        });
+      } else {
+        form.reset({
+          name: "",
+          description: "",
+          defaultPrice: 0,
+        });
+      }
     }
   }, [initialData, form, open]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    onSave(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
+    try {
+      await onSave(values as MentorshipTypeData);
+      toast.success(
+        initialData
+          ? "Mentorship type updated successfully"
+          : "Mentorship type created successfully",
+      );
+      setOpen(false);
+    } catch (error: any) {
+      console.error("Failed to save mentorship type:", error);
+      const errorMessage = error?.message || "Failed to save mentorship type";
+
+      if (
+        errorMessage.toLowerCase().includes("already exists") ||
+        errorMessage.toLowerCase().includes("duplicate")
+      ) {
+        form.setError("name", {
+          type: "manual",
+          message: "A mentorship type with this name already exists.",
+        });
+      } else {
+        toast.error(errorMessage);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -185,7 +226,13 @@ export function MentorshipTypeDialog({
                     >
                       Cancel
                     </Button>
-                    <Button type="submit">Save Changes</Button>
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="min-w-[100px]"
+                    >
+                      {isSubmitting ? "Saving..." : "Save Changes"}
+                    </Button>
                   </DialogFooter>
                 </form>
               </Form>

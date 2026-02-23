@@ -51,4 +51,12 @@ export interface IMentorService {
       targetAudiences: string[];
     },
   ) => Promise<IMentor>;
+
+  getMentorEnums: () => {
+    experienceLevels: string[];
+    expertiseAreas: string[];
+    mentorshipTypes: string[];
+    targetAudiences: string[];
+    technologies: string[];
+  };
 }

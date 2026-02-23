@@ -7,26 +7,29 @@ import type { AddCommentParams } from "@/core/types/service/add-comment";
 import type { IComment } from "@/models/social/comments.model";
 
 import { TYPES } from "@/di/types";
+import { MESSAGES } from "@/utils/constants/message";
 import CustomError from "@/utils/custom-error";
+
+const { COMMENT_MESSAGES } = MESSAGES;
 
 @injectable()
 export class CommentService implements ICommentService {
-  constructor(@inject(TYPES.CommentRepository) private commentRepository: ICommentRepository) {}
+  constructor(@inject(TYPES.CommentRepository) private _commentRepository: ICommentRepository) {}
 
   addComment = async (commentData: AddCommentParams): Promise<IComment> => {
-    const comment = await this.commentRepository.createComment(commentData);
+    const comment = await this._commentRepository.createComment(commentData);
     if (!comment) {
-      throw new CustomError("Failed to create comment", StatusCodes.INTERNAL_SERVER_ERROR);
+      throw new CustomError(COMMENT_MESSAGES.CREATE_FAILED, StatusCodes.INTERNAL_SERVER_ERROR);
     }
     return comment;
   };
 
   getCommentsByContentId = async (contentId: string): Promise<IComment[]> => {
-    const comments = await this.commentRepository.findCommentsByContentId(contentId);
+    const comments = await this._commentRepository.findCommentsByContentId(contentId);
     return comments;
   };
 
   getAllComments = async (): Promise<IComment[]> => {
-    return await this.commentRepository.getAllComments();
+    return await this._commentRepository.getAllComments();
   };
 }

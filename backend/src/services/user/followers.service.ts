@@ -9,34 +9,34 @@ import { TYPES } from "@/di/types";
 @injectable()
 export class FollowersService implements IFollowersService {
   constructor(
-    @inject(TYPES.FollowersRepository) private followersRepository: IFollowersRepository,
+    @inject(TYPES.FollowersRepository) private _followersRepository: IFollowersRepository,
   ) {}
 
   followUser = async (followerId: string, followedId: string): Promise<boolean> => {
-    return this.followersRepository.followUser(followerId, followedId);
+    return this._followersRepository.followUser(followerId, followedId);
   };
 
   unfollowUser = async (followerId: string, followedId: string): Promise<boolean> => {
-    return this.followersRepository.unfollowUser(followerId, followedId);
+    return this._followersRepository.unfollowUser(followerId, followedId);
   };
 
   getFollowers = async (
     userId: string,
     currentUserId: string,
   ): Promise<(IUserWhoFollow & { isFollowing: boolean; isConnected: boolean })[]> => {
-    return this.followersRepository.getFollowers(userId, currentUserId);
+    return this._followersRepository.getFollowers(userId, currentUserId);
   };
 
   getFollowing = async (userId: string): Promise<IUserWhoFollow[]> => {
-    return this.followersRepository.getFollowing(userId);
+    return this._followersRepository.getFollowing(userId);
   };
 
   getConnections = async (userId: string): Promise<IUserWhoFollow[]> => {
-    return this.followersRepository.getConnections(userId);
+    return this._followersRepository.getConnections(userId);
   };
 
   isFollowing = async (followerId: string, followedId: string): Promise<boolean> => {
-    return this.followersRepository.isFollowing(followerId, followedId);
+    return this._followersRepository.isFollowing(followerId, followedId);
   };
 
   getFollowStats = async (
@@ -46,6 +46,6 @@ export class FollowersService implements IFollowersService {
     followingCount: number;
     connectionsCount: number;
   }> => {
-    return this.followersRepository.getFollowStats(userId);
+    return this._followersRepository.getFollowStats(userId);
   };
 }

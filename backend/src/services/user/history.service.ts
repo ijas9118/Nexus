@@ -8,17 +8,17 @@ import { TYPES } from "@/di/types";
 
 @injectable()
 export class HistoryService implements IHistoryService {
-  constructor(@inject(TYPES.HistoryRepository) private historyRepository: IHistoryRepository) {}
+  constructor(@inject(TYPES.HistoryRepository) private _historyRepository: IHistoryRepository) {}
 
   addHistory = async (userId: string, contentId: string): Promise<IHistory> => {
-    return await this.historyRepository.addHistory(userId, contentId);
+    return await this._historyRepository.addHistory(userId, contentId);
   };
 
   removeFromHistory = async (userId: string, contentId: string): Promise<IHistory> => {
-    return await this.historyRepository.removeFromHistory(userId, contentId);
+    return await this._historyRepository.removeFromHistory(userId, contentId);
   };
 
-  getAllHistory = async (userId: string) => {
-    return await this.historyRepository.getAllHistory(userId);
+  getAllHistory = async (userId: string): Promise<any> => {
+    return await this._historyRepository.getAllHistory(userId);
   };
 }

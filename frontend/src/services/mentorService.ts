@@ -1,25 +1,31 @@
+import { Mentor, MentorFormData, MentorshipType } from "@/types/mentor";
+import { ADMIN_ROUTES } from "@/utils/constants";
 import { handleApi } from "@/utils/handleApi";
 import api from "./api";
-import { Mentor, MentorFormData, MentorshipType } from "@/types/mentor";
+const MENTOR_ROUTE = "/mentor";
 
 const MentorService = {
   applyAsMentor: (formData: MentorFormData) =>
-    handleApi(() => api.post("/mentor/apply", formData)),
+    handleApi(() => api.post(`${MENTOR_ROUTE}/apply`, formData)),
 
-  getStatus: () => handleApi(() => api.get("/mentor/get-status")),
+  getStatus: () => handleApi(() => api.get(`${MENTOR_ROUTE}/get-status`)),
 
-  getAllMentors: () => handleApi(() => api.get<Mentor[]>("/mentor/admin/all")),
+  getAllMentors: () =>
+    handleApi(() => api.get<Mentor[]>(`${MENTOR_ROUTE}/admin/all`)),
 
-  getApprovedMentors: () => handleApi(() => api.get<Mentor[]>("/mentor/all")),
+  getApprovedMentors: () =>
+    handleApi(() => api.get<Mentor[]>(`${MENTOR_ROUTE}/all`)),
 
   getMentorDetails: (mentorId: string) =>
-    handleApi(() => api.get<Mentor>(`/mentor/get-mentor-details/${mentorId}`)),
+    handleApi(() =>
+      api.get<Mentor>(`${MENTOR_ROUTE}/get-mentor-details/${mentorId}`),
+    ),
 
   approveMentor: (mentorId: string, userId: string) =>
-    handleApi(() => api.patch(`/mentor/approve/${mentorId}/${userId}`)),
+    handleApi(() => api.patch(`${MENTOR_ROUTE}/approve/${mentorId}/${userId}`)),
 
   rejectMentor: (mentorId: string) =>
-    handleApi(() => api.patch(`/mentor/reject/${mentorId}`)),
+    handleApi(() => api.patch(`${MENTOR_ROUTE}/reject/${mentorId}`)),
 
   getMentorEnums: () =>
     handleApi(() =>
@@ -29,12 +35,12 @@ const MentorService = {
         technologies: string[];
         mentorshipTypes: string[];
         targetAudiences: string[];
-      }>("/mentor/enums"),
+      }>(`${MENTOR_ROUTE}/enums`),
     ),
 
   getMentorshipTypes: (mentorId: string) =>
     handleApi(() =>
-      api.get<MentorshipType[]>(`/mentor/${mentorId}/mentorship-types`),
+      api.get<MentorshipType[]>(`${MENTOR_ROUTE}/${mentorId}/mentorship-types`),
     ),
 
   updateMentorExperience: (data: {
@@ -45,14 +51,15 @@ const MentorService = {
     technologies: string[];
     bio: string;
     resume?: string;
-  }) => handleApi(() => api.put("/mentor/experience", data)),
+  }) => handleApi(() => api.put(`${MENTOR_ROUTE}/experience`, data)),
 
   updateMentorshipDetails: (data: {
     mentorshipTypes: string[];
     targetAudiences: string[];
-  }) => handleApi(() => api.put("/mentor/mentorship-details", data)),
+  }) => handleApi(() => api.put(`${MENTOR_ROUTE}/mentorship-details`, data)),
 
-  getMentorDashboard: () => handleApi(() => api.get<any>("/mentor/dashboard")),
+  getMentorDashboard: () =>
+    handleApi(() => api.get<any>(ADMIN_ROUTES.DASHBOARD)),
 };
 
 export default MentorService;
