@@ -34,8 +34,8 @@ const envSchema = z.object({
   CLOUDINARY_API_KEY: z.string().min(1),
   CLOUDINARY_API_SECRET: z.string().min(1),
   CLOUDINARY_CLOUD_NAME: z.string().min(1),
-  GOOGLE_CALLBACK_URL: z.url(),
-  GITHUB_CALLBACK_URL: z.url().optional(),
+  GOOGLE_CALLBACK_URL: z.string().url(),
+  GITHUB_CALLBACK_URL: z.string().url().optional(),
 });
 
 function validateEnv() {
