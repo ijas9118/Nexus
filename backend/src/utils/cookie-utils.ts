@@ -2,18 +2,20 @@ import type { Response } from "express";
 
 import type { UserRole } from "@/core/types/user-types";
 
+import logger from "@/config/logger";
+
 import { env } from "../utils/env-validation";
 import { generateRefreshToken } from "./jwt.util";
-import logger from "@/config/logger";
 
 export function setRefreshTokenCookie(res: Response, payload: { _id: string; role: UserRole }) {
   const refreshToken = generateRefreshToken(payload);
 
   const isProduction = env.NODE_ENV === "production";
-  
+
   if (isProduction) {
     logger.info("Setting secure cookies for production environment (SameSite=None)");
-  } else {
+  }
+  else {
     logger.warn(`Setting non-secure cookies for ${env.NODE_ENV} environment (SameSite=Lax)`);
   }
 
