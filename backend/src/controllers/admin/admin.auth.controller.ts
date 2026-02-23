@@ -28,7 +28,7 @@ export class AdminAuthController implements IAdminAuthController {
       throw new CustomError(ADMIN_MESSAGES.INVALID_CREDENTIALS, StatusCodes.UNAUTHORIZED);
     }
 
-    setRefreshTokenCookie(res, { _id: user._id.toString(), role: "admin" });
+    setRefreshTokenCookie(req, res, { _id: user._id.toString(), role: "admin" });
 
     const accessToken = generateAccessToken({
       _id: user._id.toString(),
