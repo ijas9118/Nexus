@@ -12,8 +12,21 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     (async () => {
-      if (localStorage.getItem("sessionActive"))
+      const urlParams = new URLSearchParams(window.location.search);
+      const isSocialSession = urlParams.get("session") === "active";
+
+      if (localStorage.getItem("sessionActive") || isSocialSession) {
         await store.dispatch(refreshAccessToken());
+
+        // Clear the query param if it exists to keep URL clean
+        if (isSocialSession) {
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname,
+          );
+        }
+      }
       setIsLoading(false);
     })();
   }, []);

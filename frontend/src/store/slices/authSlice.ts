@@ -45,6 +45,7 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
       state.isAuthenticated = true;
+      localStorage.setItem("sessionActive", "true");
     },
     updateToken: (state, action: PayloadAction<string>) => {
       state.accessToken = action.payload;
@@ -53,6 +54,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
       state.accessToken = null;
+      localStorage.removeItem("sessionActive");
     },
     updateUserProfile: (
       state,
@@ -77,6 +79,7 @@ const authSlice = createSlice({
         state.user = null;
         state.accessToken = null;
         state.status = "failed";
+        localStorage.removeItem("sessionActive");
       });
   },
 });

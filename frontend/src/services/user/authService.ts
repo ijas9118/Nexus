@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import api from "../api";
-import { AUTH_ROUTES } from "@/utils/constants";
+import { AUTH_ROUTES, HOST } from "@/utils/constants";
 
 export const loginUser = async (email: string, password: string) => {
   try {
@@ -112,11 +112,11 @@ export const resetPassword = async (
 };
 
 export const googleAuth = async () => {
-  window.location.href = AUTH_ROUTES.GOOGLE;
+  window.location.href = `${HOST}/api${AUTH_ROUTES.GOOGLE}`;
 };
 
 export const githubAuth = async () => {
-  window.location.href = AUTH_ROUTES.GITHUB;
+  window.location.href = `${HOST}/api${AUTH_ROUTES.GITHUB}`;
 };
 
 export const logout = async () => {

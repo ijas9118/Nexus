@@ -129,7 +129,7 @@ export class AuthController implements IAuthController {
 
   handleGoogleUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     if (!req.user) {
-      return res.redirect("http://localhost:3000/login");
+      return res.redirect(`${env.CLIENT_URL}/login`);
     }
 
     const googleProfile = req.user as unknown as Profile;
@@ -145,14 +145,14 @@ export class AuthController implements IAuthController {
       profile: googleProfile._json.picture as string,
     });
 
-    setRefreshTokenCookie(res, { _id: user._id.toString(), role: "user" });
+    setRefreshTokenCookie(res, { _id: user._id.toString(), role: user.role as UserRole });
 
-    res.redirect(`${env.CLIENT_URL}/myFeed`);
+    res.redirect(`${env.CLIENT_URL}/myFeed?session=active`);
   });
 
   handleGithubUser = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     if (!req.user) {
-      return res.redirect("http://localhost:3000/login");
+      return res.redirect(`${env.CLIENT_URL}/login`);
     }
 
     const githubProfile = req.user as unknown as GitHubProfile;
@@ -168,7 +168,7 @@ export class AuthController implements IAuthController {
       profile: githubProfile.photos ? githubProfile.photos[0].value : "",
     });
 
-    setRefreshTokenCookie(res, { _id: user._id.toString(), role: "user" });
-    res.redirect(`${env.CLIENT_URL}/myFeed`);
+    setRefreshTokenCookie(res, { _id: user._id.toString(), role: user.role as UserRole });
+    res.redirect(`${env.CLIENT_URL}/myFeed?session=active`);
   });
 }
