@@ -57,6 +57,7 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/nexus-backend:latest
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/nexus-backend:latest
           cache-to: type=inline
+          provenance: false
 
   deploy:
     name: Deploy to Azure VM
