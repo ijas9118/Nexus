@@ -12,17 +12,20 @@ import { env } from "./utils/env-validation";
 import { setupSwagger } from "./utils/swagger-config";
 
 const app = express();
-app.set("trust proxy", 1);
+app.set("trust proxy", true); // Trust all proxies for secure cookies
 
 setupSwagger(app);
 
+// Normalize origin to remove trailing slash
+const clientUrl = env.CLIENT_URL.endsWith("/") ? env.CLIENT_URL.slice(0, -1) : env.CLIENT_URL;
+
 const corsOptions = {
   origin: [
-    env.CLIENT_URL,
+    clientUrl,
     "http://localhost:5173",
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
   credentials: true,
 };
 

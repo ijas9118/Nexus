@@ -55,7 +55,7 @@ export class AuthController implements IAuthController {
 
     const { user, accessToken } = await this._authService.register(userData);
 
-    setRefreshTokenCookie(res, { _id: user._id, role: "user" });
+    setRefreshTokenCookie(req, res, { _id: user._id, role: "user" });
 
     res.status(StatusCodes.CREATED).json({ user, accessToken });
   });
@@ -73,7 +73,7 @@ export class AuthController implements IAuthController {
   login = asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { user, accessToken } = await this._authService.login(req.body as LoginRequestDTO);
 
-    setRefreshTokenCookie(res, { _id: user._id.toString(), role: user.role as UserRole });
+    setRefreshTokenCookie(req, res, { _id: user._id.toString(), role: user.role as UserRole });
 
     res.status(StatusCodes.OK).json({ message: ADMIN_MESSAGES.LOGIN_SUCCESS, accessToken, user });
   });
@@ -145,7 +145,7 @@ export class AuthController implements IAuthController {
       profile: googleProfile._json.picture as string,
     });
 
-    setRefreshTokenCookie(res, { _id: user._id.toString(), role: user.role as UserRole });
+    setRefreshTokenCookie(req, res, { _id: user._id.toString(), role: user.role as UserRole });
 
     res.redirect(`${env.CLIENT_URL}/myFeed?session=active`);
   });
@@ -168,7 +168,7 @@ export class AuthController implements IAuthController {
       profile: githubProfile.photos ? githubProfile.photos[0].value : "",
     });
 
-    setRefreshTokenCookie(res, { _id: user._id.toString(), role: user.role as UserRole });
+    setRefreshTokenCookie(req, res, { _id: user._id.toString(), role: user.role as UserRole });
     res.redirect(`${env.CLIENT_URL}/myFeed?session=active`);
   });
 }

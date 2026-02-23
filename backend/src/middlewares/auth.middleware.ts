@@ -41,6 +41,7 @@ export function validateRefreshToken(req: Request, res: Response, next: NextFunc
     const token = req.cookies.refreshToken;
 
     if (!token) {
+      logger.warn(`Refresh token missing. Origin: ${req.headers.origin || "Unknown"}. Cookies received: ${Object.keys(req.cookies).join(", ") || "None"}`);
       res.status(StatusCodes.FORBIDDEN).json({ message: "Refresh token not found" });
       return;
     }
