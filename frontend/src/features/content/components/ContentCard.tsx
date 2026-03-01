@@ -17,6 +17,8 @@ import {
 import BookmarkService from "@/services/user/bookmarkService";
 import PremiumAccessAlert from "@/components/organisms/PremiumAccessAlert";
 import { ShareMenu } from "@/components/organisms/share-menu";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ContentCardProps {
   id: string;
@@ -48,6 +50,8 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient();
+
   const handleBookmark = async (id: string) => {
     const prevIsBookmarked = isBookmarked;
     const optimisticStatus = !isBookmarked;
@@ -57,10 +61,18 @@ const ContentCard: React.FC<ContentCardProps> = (props) => {
 
     try {
       await BookmarkService.bookmarkContent(id);
+      if (optimisticStatus) {
+        toast.success("Added to bookmarks");
+      } else {
+        toast.success("Removed from bookmarks");
+        // Invalidate the bookmarks list so it disappears from the bookmark page if we're there
+        queryClient.invalidateQueries({ queryKey: ["bookmarkedContent"] });
+      }
     } catch (error) {
       console.error("Failed to bookmark content:", error);
       // Revert UI if request fails
       setIsBookmarked(prevIsBookmarked);
+      toast.error("Failed to update bookmark");
     }
   };
 

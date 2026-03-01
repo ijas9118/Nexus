@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Tabs,
   TabsContent,
@@ -19,7 +19,7 @@ export default function BookingsPage() {
     mentorshipTypeId?: string;
   }>({});
 
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     setIsLoading(true);
     try {
       if (Object.keys(filters).length > 0) {
@@ -37,11 +37,11 @@ export default function BookingsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [activeTab, filters]);
 
   useEffect(() => {
     fetchBookings();
-  }, [activeTab, filters]);
+  }, [fetchBookings]);
 
   console.log(bookings);
 

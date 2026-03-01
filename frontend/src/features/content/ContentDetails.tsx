@@ -12,6 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CommentService } from "@/services/user/commentService";
 import { toast } from "sonner";
 import VoteService from "@/services/voteService";
+import BookmarkService from "@/services/user/bookmarkService";
 
 export default function ContentDetails() {
   const { id } = useParams<{ id: string }>();
@@ -110,6 +111,44 @@ export default function ContentDetails() {
     mutation.mutate({ text: comment });
   };
 
+  const bookmarkMutation = useMutation({
+    mutationFn: () => BookmarkService.bookmarkContent(id as string),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["content", id] });
+      const previousContent = queryClient.getQueryData(["content", id]);
+
+      queryClient.setQueryData(["content", id], (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          isBookmarked: !old.isBookmarked,
+        };
+      });
+
+      return { previousContent };
+    },
+    onError: (_error, _variables, context) => {
+      queryClient.setQueryData(["content", id], context?.previousContent);
+      toast.error("Failed to update bookmark");
+    },
+    onSuccess: (_data, _variables, context) => {
+      const wasBookmarked = (context?.previousContent as any)?.isBookmarked;
+      if (wasBookmarked) {
+        toast.success("Removed from bookmarks");
+      } else {
+        toast.success("Added to bookmarks");
+      }
+      queryClient.invalidateQueries({ queryKey: ["bookmarkedContent"] });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["content", id] });
+    },
+  });
+
+  const handleBookmark = () => {
+    bookmarkMutation.mutate();
+  };
+
   if (isLoading) return <ContentLoadingSkeleton />;
   if (error || !content) {
     return (
@@ -131,8 +170,10 @@ export default function ContentDetails() {
         downvoteCount={content.downvoteCount ?? 0}
         commentCount={content.commentCount ?? 0}
         viewCount={content.viewCount ?? 0}
+        isBookmarked={content.isBookmarked}
         onUpvote={handleUpvote}
         onDownvote={handleDownvote}
+        onBookmark={handleBookmark}
       />
 
       <ContentBody

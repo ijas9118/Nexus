@@ -7,8 +7,11 @@ import { Calendar, Clock, Video } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { IBooking } from "@/types/booking";
 import { isMeetingTimeReached } from "@/utils/meetingUtils";
+import { useNavigate } from "react-router-dom";
 
 export const MeetingCard = ({ booking }: { booking: IBooking }) => {
+  const navigate = useNavigate();
+
   const [isJoinable, setIsJoinable] = useState(
     booking.status !== "completed" && isMeetingTimeReached(booking),
   );
@@ -36,6 +39,24 @@ export const MeetingCard = ({ booking }: { booking: IBooking }) => {
   }, [booking]);
 
   const meetingTime = `${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}`;
+
+  const handleJoinMeeting = () => {
+    // If meetUrl is an absolute URL, we should convert it to a relative path for internal navigation
+    const meetUrl = booking.meetUrl;
+    if (!meetUrl) return;
+
+    if (meetUrl.startsWith("http")) {
+      try {
+        const url = new URL(meetUrl);
+        navigate(url.pathname + url.search);
+      } catch (e) {
+        console.error("Invalid URL:", meetUrl, e);
+        navigate(meetUrl); // Fallback
+      }
+    } else {
+      navigate(meetUrl);
+    }
+  };
 
   return (
     <Card className="mb-4">
@@ -86,7 +107,7 @@ export const MeetingCard = ({ booking }: { booking: IBooking }) => {
               <Button
                 className="gap-2 w-full sm:w-auto"
                 disabled={!isJoinable}
-                onClick={() => window.open(booking.meetUrl, "_self")}
+                onClick={handleJoinMeeting}
               >
                 <Video className="h-4 w-4" />
                 Join Meeting

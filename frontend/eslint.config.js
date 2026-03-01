@@ -28,16 +28,13 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
 
-      "@typescript-eslint/explicit-function-return-type": "off", // Allow implicit return types
       "@typescript-eslint/no-explicit-any": "off", // Warn about using `any`
       "@typescript-eslint/no-unused-vars": [
         "warn",
         { argsIgnorePattern: "^_" }, // Ignore unused variables starting with `_`
       ],
-      "@typescript-eslint/ban-ts-comment": "warn", // Warns about using `@ts-ignore` comments
-      "@typescript-eslint/no-empty-function": "warn", // Warns about empty functions
+      "@typescript-eslint/no-empty-function": "error", // Warns about empty functions
 
-      // "no-console": "warn", // Warn about `console.log`
       "no-undef": "error", // Prevent using undeclared variables
       eqeqeq: "error", // Enforce strict equality (=== and !==)
       curly: "error", // Enforce consistent brace style for control statements

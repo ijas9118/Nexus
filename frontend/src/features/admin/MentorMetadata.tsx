@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Tabs,
   TabsContent,
@@ -27,7 +27,7 @@ export default function MentorMetadataPage() {
   const [editingMetadata, setEditingMetadata] =
     useState<MentorMetadataData | null>(null);
 
-  const fetchMetadata = async () => {
+  const fetchMetadata = useCallback(async () => {
     setLoading(true);
     try {
       const response = await MentorMetadataService.getAll(showInactive);
@@ -40,11 +40,11 @@ export default function MentorMetadataPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showInactive]);
 
   useEffect(() => {
     fetchMetadata();
-  }, [showInactive]);
+  }, [fetchMetadata]);
 
   useEffect(() => {
     if (selectedType) {

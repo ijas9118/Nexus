@@ -19,8 +19,10 @@ interface InteractionBarProps {
   downvoteCount: number;
   commentCount: number;
   viewCount: number;
+  isBookmarked: boolean;
   onUpvote: () => void;
   onDownvote: () => void;
+  onBookmark: () => void;
 }
 
 export const InteractionBar = ({
@@ -30,8 +32,10 @@ export const InteractionBar = ({
   downvoteCount,
   commentCount,
   viewCount,
+  isBookmarked,
   onUpvote,
   onDownvote,
+  onBookmark,
 }: InteractionBarProps) => (
   <div className="flex items-center justify-between py-3 border-y mb-6">
     <div className="flex items-center gap-4">
@@ -75,9 +79,18 @@ export const InteractionBar = ({
       </div>
     </div>
     <div className="flex items-center gap-2">
-      <Button variant="ghost" size="sm" className="flex items-center gap-2">
-        <BookmarkIcon className="h-5 w-5 fill-primary text-primary" />
-        <span className="sr-only md:not-sr-only">Save</span>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="flex items-center gap-2"
+        onClick={onBookmark}
+      >
+        <BookmarkIcon
+          className={`h-5 w-5 ${isBookmarked ? "fill-primary text-primary" : ""}`}
+        />
+        <span className="sr-only md:not-sr-only">
+          {isBookmarked ? "Saved" : "Save"}
+        </span>
       </Button>
       <Button variant="ghost" size="sm" className="flex items-center gap-2">
         <ShareIcon className="h-5 w-5" />

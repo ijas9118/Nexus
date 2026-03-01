@@ -15,6 +15,7 @@ import {
 import { toast } from "sonner";
 import { RescheduleDialog } from "./reschedule-dialog";
 import BookingService from "@/services/bookingService";
+import { useNavigate } from "react-router-dom";
 
 interface BookingCardProps {
   booking: IBooking;
@@ -24,6 +25,7 @@ interface BookingCardProps {
 export function BookingCard({ booking, onActionComplete }: BookingCardProps) {
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const user = booking.userId;
   const timeSlot = booking.timeSlot;
@@ -63,8 +65,19 @@ export function BookingCard({ booking, onActionComplete }: BookingCardProps) {
   };
 
   const handleJoinMeet = () => {
-    if (booking.meetUrl) {
-      window.open(booking.meetUrl, "_self");
+    const meetUrl = booking.meetUrl;
+    if (meetUrl) {
+      if (meetUrl.startsWith("http")) {
+        try {
+          const url = new URL(meetUrl);
+          navigate(url.pathname + url.search);
+        } catch (e) {
+          console.error("Invalid URL:", meetUrl, e);
+          navigate(meetUrl);
+        }
+      } else {
+        navigate(meetUrl);
+      }
     } else {
       toast.error("Meeting link is not available");
     }

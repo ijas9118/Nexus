@@ -10,7 +10,7 @@ import {
 } from "@/store/slices/chatSlice";
 import store, { RootState } from "@/store/store";
 import { HOST } from "@/utils/constants";
-import { ReactNode, useEffect, useMemo } from "react";
+import { ReactNode, useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import { toast } from "sonner";
@@ -36,6 +36,15 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     });
   }, [user?._id]);
 
+  // Use refs to avoid re-subscribing to socket events when these values change
+  const userRef = useRef(user);
+  const activeChatRef = useRef(activeChat);
+
+  useEffect(() => {
+    userRef.current = user;
+    activeChatRef.current = activeChat;
+  }, [user, activeChat]);
+
   useEffect(() => {
     if (!socket) return;
 
@@ -58,11 +67,13 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         }),
       );
 
-      const userId = user?._id;
+      const currentUser = userRef.current;
+      const currentActiveChat = activeChatRef.current;
+      const userId = currentUser?._id;
       const isActiveChat =
-        activeChat &&
-        activeChat.id === message.chatId &&
-        activeChat.type === message.chatType;
+        currentActiveChat &&
+        currentActiveChat.id === message.chatId &&
+        currentActiveChat.type === message.chatType;
 
       if (userId && message.sender !== userId && !isActiveChat) {
         dispatch(

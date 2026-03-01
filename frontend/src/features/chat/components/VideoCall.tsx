@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import Peer, { MediaConnection } from "peerjs";
 import { Dialog, DialogContent } from "@/components/organisms/dialog";
 import { Button } from "@/components/atoms/button";
@@ -37,7 +37,32 @@ const VideoCall: React.FC<VideoCallProps> = ({
   const callInstance = useRef<MediaConnection | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const setupMedia = async () => {
+  const endCall = useCallback(
+    (reason: string = "Call ended") => {
+      if (callInstance.current) {
+        callInstance.current.close();
+        callInstance.current = null;
+      }
+      if (peerInstance.current) {
+        peerInstance.current.destroy();
+        peerInstance.current = null;
+      }
+      if (localStream.current) {
+        localStream.current.getTracks().forEach((track) => track.stop());
+        localStream.current = null;
+      }
+      // socket?.emit("end-call", { to: recipientId });
+      // socket?.disconnect();
+      setCallActive(false);
+      setStreamReady(false);
+      setCallStatus(reason);
+      setIsFullScreen(false);
+      onClose();
+    },
+    [onClose],
+  );
+
+  const setupMedia = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
@@ -54,7 +79,7 @@ const VideoCall: React.FC<VideoCallProps> = ({
       setCallStatus("Failed to access camera/microphone");
       setStreamReady(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     setupMedia();
@@ -136,7 +161,7 @@ const VideoCall: React.FC<VideoCallProps> = ({
     // });
 
     return () => endCall("Component unmounted");
-  }, [userId]);
+  }, [userId, endCall, setupMedia]);
 
   const startCall = () => {
     if (localStream.current && peerInstance.current) {
@@ -164,28 +189,6 @@ const VideoCall: React.FC<VideoCallProps> = ({
     } else {
       setCallStatus("Cannot start call: stream or peer not ready");
     }
-  };
-
-  const endCall = (reason: string = "Call ended") => {
-    if (callInstance.current) {
-      callInstance.current.close();
-      callInstance.current = null;
-    }
-    if (peerInstance.current) {
-      peerInstance.current.destroy();
-      peerInstance.current = null;
-    }
-    if (localStream.current) {
-      localStream.current.getTracks().forEach((track) => track.stop());
-      localStream.current = null;
-    }
-    // socket?.emit("end-call", { to: recipientId });
-    // socket?.disconnect();
-    setCallActive(false);
-    setStreamReady(false);
-    setCallStatus(reason);
-    setIsFullScreen(false);
-    onClose();
   };
 
   const toggleMic = () => {

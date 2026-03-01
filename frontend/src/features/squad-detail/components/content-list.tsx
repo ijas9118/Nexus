@@ -75,8 +75,15 @@ export function ContentList({ squadId }: { squadId: string }) {
       }
       toast.error("Failed to bookmark. Please try again.");
     },
-    onSuccess: () => {
-      toast.info("Bookmark updated.");
+    onSuccess: (_, contentId, context) => {
+      const wasBookmarked = context?.previousContents?.find(
+        (c) => c._id === contentId,
+      )?.isBookmarked;
+      if (wasBookmarked) {
+        toast.success("Removed from bookmarks");
+      } else {
+        toast.success("Added to bookmarks");
+      }
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["squadContents", squadId] });

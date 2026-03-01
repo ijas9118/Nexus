@@ -7,8 +7,6 @@ export const useVideoCall = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isCallConnected, setIsCallConnected] = useState(true);
-  const [peerId, setPeerId] = useState<string | null>(null);
-
   const localStreamRef = useRef<MediaStream | null>(null);
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -24,7 +22,6 @@ export const useVideoCall = () => {
     peerRef.current = new Peer();
 
     peerRef.current.on("open", (id) => {
-      setPeerId(id);
       socket.emit("join-video-room", { roomId: meetId, peerId: id });
     });
 
@@ -56,7 +53,7 @@ export const useVideoCall = () => {
         });
 
         socket.on("user-joined", ({ peerId: remotePeerId }) => {
-          if (peerRef.current && peerId !== remotePeerId) {
+          if (peerRef.current && peerRef.current.id !== remotePeerId) {
             const call = peerRef.current.call(remotePeerId, stream);
             currentCallRef.current = call;
 
@@ -93,7 +90,7 @@ export const useVideoCall = () => {
       socket.off("user-joined");
       socket.off("user-disconnected");
     };
-  }, [isCallConnected]);
+  }, [isCallConnected, meetId, socket]);
 
   const toggleMute = () => {
     localStreamRef.current
@@ -120,7 +117,7 @@ export const useVideoCall = () => {
     currentCallRef.current?.close();
     localStreamRef.current?.getTracks().forEach((track) => track.stop());
     peerRef.current?.destroy();
-    socket.emit("leave-video-room", { roomId: meetId });
+    socket?.emit("leave-video-room", { roomId: meetId });
   };
 
   return {
