@@ -1,3 +1,6 @@
+import type { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
 import { Checkbox } from "@/components/atoms/checkbox";
@@ -9,9 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { Content } from "@/types/content";
+import type { Content } from "@/types/content";
 
 export const columns = (): ColumnDef<Content>[] => [
   {
@@ -132,9 +133,7 @@ export const columns = (): ColumnDef<Content>[] => [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
-      const category = row.original;
-
+    cell: () => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -145,9 +144,7 @@ export const columns = (): ColumnDef<Content>[] => [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => console.log(category._id)}>
-              Edit
-            </DropdownMenuItem>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Toggle Status</DropdownMenuItem>
           </DropdownMenuContent>

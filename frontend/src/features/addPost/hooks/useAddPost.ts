@@ -1,8 +1,10 @@
-import ContentService from "@/services/user/contentService";
-import { FormValues } from "../components/BlogCreationForm";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+import ContentService from "@/services/user/contentService";
+
+import type { FormValues } from "../components/BlogCreationForm";
 
 export function useAddPost() {
   const navigate = useNavigate();

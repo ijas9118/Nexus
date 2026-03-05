@@ -1,7 +1,8 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "./api";
-import { NotificationTypeData } from "@/types/notification";
+import type { NotificationTypeData } from "@/types/notification";
 import { NOTIFICATION_TYPE_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 const NotificationTypeService = {
   // Get all notification types

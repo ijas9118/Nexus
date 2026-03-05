@@ -1,4 +1,4 @@
-import { ContentItem } from "../VerifyContentPage";
+import type { ContentItem } from "../VerifyContentPage";
 
 // Mock service functions - replace with actual API calls
 export const fetchPendingContent = async (): Promise<ContentItem[]> => {

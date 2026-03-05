@@ -1,6 +1,8 @@
+import type { MediaConnection } from "peerjs";
+import Peer from "peerjs";
 import { useEffect, useRef, useState } from "react";
-import Peer, { MediaConnection } from "peerjs";
 import { useParams } from "react-router-dom";
+
 import { useSocket } from "@/hooks/useSocket";
 
 export const useVideoCall = () => {

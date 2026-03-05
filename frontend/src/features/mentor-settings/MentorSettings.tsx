@@ -1,16 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+import { Briefcase, ChevronRight, User } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
-import { User, Briefcase, ChevronRight } from "lucide-react";
-import type { RootState } from "@/store/store";
-import MentorService from "@/services/mentorService";
 
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/organisms/tabs";
 import {
   Card,
   CardContent,
@@ -18,6 +10,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/organisms/tabs";
+import MentorService from "@/services/mentorService";
+import type { RootState } from "@/store/store";
+
 import ExperienceForm from "./components/ExperienceForm";
 import MentorshipDetailsForm from "./components/MentorshipDetailsForm";
 

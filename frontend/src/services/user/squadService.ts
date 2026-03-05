@@ -1,7 +1,8 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "../api";
-import { SquadContent, SquadDetail } from "@/types/squad";
+import type { SquadContent, SquadDetail } from "@/types/squad";
 import { SQUAD_ROUTES, USER_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "../api";
 
 const SquadService = {
   createSquad: async (formData: FormData) =>

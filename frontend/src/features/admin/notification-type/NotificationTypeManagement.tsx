@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
+import NotificationTypeService from "@/services/notificationTypeService";
 import type {
   NotificationTypeData,
   NotificationTypeFormValues,
 } from "@/types/notification";
-import NotificationTypeList from "./notification-type-list";
+
 import NotificationTypeDialog from "./notification-type-dialog";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import NotificationTypeService from "@/services/notificationTypeService";
-import { toast } from "sonner";
+import NotificationTypeList from "./notification-type-list";
 
 export default function NotificationTypeManagement() {
   const queryClient = useQueryClient();

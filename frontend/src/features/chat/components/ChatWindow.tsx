@@ -1,14 +1,16 @@
-import { useSocket } from "@/hooks/useSocket";
-import { RootState } from "@/store/store";
-import { Message } from "@/types";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import MessageBubble from "./MessageBubble";
-import MessageInput from "./MessageInput";
+
+import { ScrollArea } from "@/components/organisms/scroll-area";
+import { useSocket } from "@/hooks/useSocket";
 import { ChatService } from "@/services/user/chatService";
 import { setMessages } from "@/store/slices/chatSlice";
+import type { RootState } from "@/store/store";
+import type { Message } from "@/types";
+
 import ChatHeader from "./ChatHeader";
-import { ScrollArea } from "@/components/organisms/scroll-area";
+import MessageBubble from "./MessageBubble";
+import MessageInput from "./MessageInput";
 
 const ChatWindow = () => {
   const dispatch = useDispatch();

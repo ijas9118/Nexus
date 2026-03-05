@@ -1,6 +1,7 @@
-import type { IBooking } from "@/types/booking";
-import { BookingCard } from "./booking-card";
 import { Skeleton } from "@/components/atoms/skeleton";
+import type { IBooking } from "@/types/booking";
+
+import { BookingCard } from "./booking-card";
 
 interface BookingListProps {
   bookings: IBooking[];

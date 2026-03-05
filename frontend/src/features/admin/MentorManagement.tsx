@@ -1,8 +1,12 @@
-import { FC, useState } from "react";
-import { columns, TransformedMentor } from "./mentorManagement/columns";
-import { DataTable } from "./mentorManagement/components/data-table";
-import MentorService from "@/services/mentorService";
 import { useQuery } from "@tanstack/react-query";
+import type { FC } from "react";
+import { useState } from "react";
+
+import MentorService from "@/services/mentorService";
+
+import type { TransformedMentor } from "./mentorManagement/columns";
+import { columns } from "./mentorManagement/columns";
+import { DataTable } from "./mentorManagement/components/data-table";
 import { MentorDetailsDialog } from "./mentorManagement/components/MentorDetailsDialog";
 
 const MentorManagement: FC = () => {
@@ -47,10 +51,6 @@ const MentorManagement: FC = () => {
     setDialogOpen(true);
   };
 
-  const hanldeBlock = (mentor: TransformedMentor) => {
-    console.log(mentor);
-  };
-
   if (isMentorsLoading) {
     return <div className="p-6 text-lg">Loading mentors...</div>;
   }
@@ -64,7 +64,7 @@ const MentorManagement: FC = () => {
       <h1 className="text-3xl font-semibold mb-6">Mentor Management</h1>
 
       <DataTable
-        columns={columns(handleRowClick, hanldeBlock)} // Pass handleRowClick to columns
+        columns={columns(handleRowClick)} // Pass handleRowClick to columns
         data={mentors}
         onRowClick={handleRowClick} // Add row click handler
       />

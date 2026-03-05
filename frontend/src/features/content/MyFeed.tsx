@@ -1,12 +1,14 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+
 import ContentService from "@/services/user/contentService";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import type { Content } from "@/types/content";
+
 import ContentCard from "./components/ContentCard";
-import FilterComponent from "./components/FilterComponent";
 import ContentTypeTab from "./components/ContentTypeTab";
-import { Content } from "@/types/content";
+import FilterComponent from "./components/FilterComponent";
 
 export default function MyFeed() {
   const dispatch = useDispatch();

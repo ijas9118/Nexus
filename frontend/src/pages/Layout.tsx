@@ -1,5 +1,13 @@
-import { ModeToggle } from "@/components/theme/mode-toggle";
-import { AppSidebar } from "@/components/organisms/app-sidebar";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Outlet, useNavigate } from "react-router-dom";
+
+import { Button } from "@/components/atoms/button";
+import { Separator } from "@/components/atoms/separator";
+import Mentor from "@/components/icons/Mentor";
+import NPDark from "@/components/icons/NPDark";
+import NPLight from "@/components/icons/NPLight";
+import Premium from "@/components/icons/Premium";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,34 +16,27 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/molecules/breadcrumb";
-import { Button } from "@/components/atoms/button";
-import { Separator } from "@/components/atoms/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/organisms/sidebar";
-import useLogout from "@/hooks/useLogout";
-import type { RootState } from "@/store/store";
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Outlet, useNavigate } from "react-router-dom";
-import Premium from "@/components/icons/Premium";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/molecules/tooltip";
-import Mentor from "@/components/icons/Mentor";
+import { AppSidebar } from "@/components/organisms/app-sidebar";
+import { GlobalSearch } from "@/components/organisms/global-search";
+import { NotificationsDropdown } from "@/components/organisms/notifications-dropdown";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/organisms/sidebar";
+import { ModeToggle } from "@/components/theme/mode-toggle";
 import { useTheme } from "@/components/theme/theme-provider";
-import NPDark from "@/components/icons/NPDark";
-import NPLight from "@/components/icons/NPLight";
+import useLogout from "@/hooks/useLogout";
 import NotificationService from "@/services/notificationService";
 import { setUnreadCount } from "@/store/slices/notificationSlice";
-import { NotificationsDropdown } from "@/components/organisms/notifications-dropdown";
-import { INotification } from "@/types/notification";
-import { GlobalSearch } from "@/components/organisms/global-search";
+import type { RootState } from "@/store/store";
+import type { INotification } from "@/types/notification";
 
 export default function Layout() {
   const navigate = useNavigate();

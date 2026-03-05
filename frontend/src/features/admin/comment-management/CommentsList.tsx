@@ -1,11 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { Button } from "@/components/atoms/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/molecules/card";
 import {
   CheckCircle,
   Flag,
@@ -14,8 +6,17 @@ import {
   Search,
   Trash2,
 } from "lucide-react";
-import { AdminComment } from "@/types/admin/comment";
 import React from "react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Button } from "@/components/atoms/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/molecules/card";
+import type { AdminComment } from "@/types/admin/comment";
 
 interface CommentsListProps {
   comments: AdminComment[];

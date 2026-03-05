@@ -1,7 +1,8 @@
 import { useSelector } from "react-redux";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
-import { RootState } from "@/store/store";
+import type { RootState } from "@/store/store";
 import { getPlanLogo } from "@/utils/planLogo";
 
 export default function ProfileHeader({

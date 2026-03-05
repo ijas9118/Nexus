@@ -1,12 +1,13 @@
-import * as React from "react";
+import { Command as CommandPrimitive } from "cmdk";
 import { X } from "lucide-react";
+import * as React from "react";
+
 import { Badge } from "@/components/atoms/badge";
 import {
   Command,
   CommandGroup,
   CommandItem,
 } from "@/components/organisms/command";
-import { Command as CommandPrimitive } from "cmdk";
 
 type Option = {
   value: string;

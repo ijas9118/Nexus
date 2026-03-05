@@ -1,3 +1,8 @@
+import { Upload } from "lucide-react";
+import React from "react";
+import type { UseFormReturn } from "react-hook-form";
+
+import { Input } from "@/components/atoms/input";
 import {
   FormControl,
   FormDescription,
@@ -6,12 +11,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/organisms/form";
-import React from "react";
-import { Input } from "@/components/atoms/input";
-import { Upload } from "lucide-react";
-import { UseFormReturn } from "react-hook-form";
-import { FormValues } from "./BlogCreationForm";
 import { TipTapEditor } from "@/features/addPost/components/TipTapEditor";
+
+import type { FormValues } from "./BlogCreationForm";
 
 interface ContentEditorProps {
   form: UseFormReturn<FormValues>;

@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
+
+import { Separator } from "@/components/atoms/separator";
 import {
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
-import { Separator } from "@/components/atoms/separator";
 
 interface PageHeaderProps {
   title: string;

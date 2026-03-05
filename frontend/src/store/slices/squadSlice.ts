@@ -1,5 +1,7 @@
-import { SquadDetail } from "@/types/squad";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+
+import type { SquadDetail } from "@/types/squad";
 
 interface SquadState {
   squadsByCategory: { [key: string]: SquadDetail[] };

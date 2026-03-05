@@ -1,7 +1,8 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "./api";
-import { INotification } from "@/types/notification";
+import type { INotification } from "@/types/notification";
 import { NOTIFICATION_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 const NotificationService = {
   getUserNotifications: (userId: string, read?: boolean) =>

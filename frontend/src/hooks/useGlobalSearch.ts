@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+
 import SearchService from "@/services/SearchService";
 
 export const useGlobalSearch = (query: string, limit = 20) => {

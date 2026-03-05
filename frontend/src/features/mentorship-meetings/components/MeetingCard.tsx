@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { format, parseISO } from "date-fns";
+import { Calendar, Clock, Video } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
 import { Card, CardContent } from "@/components/molecules/card";
-import { Badge } from "@/components/atoms/badge";
-import { Calendar, Clock, Video } from "lucide-react";
-import { format, parseISO } from "date-fns";
-import { IBooking } from "@/types/booking";
+import type { IBooking } from "@/types/booking";
 import { isMeetingTimeReached } from "@/utils/meetingUtils";
-import { useNavigate } from "react-router-dom";
 
 export const MeetingCard = ({ booking }: { booking: IBooking }) => {
   const navigate = useNavigate();

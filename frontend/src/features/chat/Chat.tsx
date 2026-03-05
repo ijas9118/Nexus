@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
-import { useSocket } from "@/hooks/useSocket";
+
 import { Skeleton } from "@/components/atoms/skeleton";
+import { useSocket } from "@/hooks/useSocket";
 const ChatList = lazy(() => import("./components/ChatList"));
 const ChatWindow = lazy(() => import("./components/ChatWindow"));
 

@@ -1,6 +1,7 @@
-import api from "./api";
-import { handleApi } from "@/utils/handleApi";
 import { CONTENT_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 // Define types for the response from the API
 export interface IVoteResponse {

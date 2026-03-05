@@ -1,24 +1,25 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { Badge } from "@/components/atoms/badge";
-import { Button } from "@/components/atoms/button";
+import { useQueryClient } from "@tanstack/react-query";
 import { Bookmark, EyeIcon, MessageCircle } from "lucide-react";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Premium from "@/components/icons/Premium";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { extractTextFromHtml } from "@/utils/htmlToText";
 import {
   BiDownvote,
   BiSolidDownvote,
   BiSolidUpvote,
   BiUpvote,
 } from "react-icons/bi";
-import BookmarkService from "@/services/user/bookmarkService";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
+import Premium from "@/components/icons/Premium";
 import PremiumAccessAlert from "@/components/organisms/PremiumAccessAlert";
 import { ShareMenu } from "@/components/organisms/share-menu";
-import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
+import BookmarkService from "@/services/user/bookmarkService";
+import type { RootState } from "@/store/store";
+import { extractTextFromHtml } from "@/utils/htmlToText";
 
 interface ContentCardProps {
   id: string;

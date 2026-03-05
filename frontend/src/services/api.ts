@@ -1,7 +1,8 @@
+import axios from "axios";
+
 import { refreshAccessToken } from "@/store/slices/authSlice";
 import store from "@/store/store";
 import { HOST } from "@/utils/constants";
-import axios from "axios";
 
 const baseURL = `${HOST}/api`;
 

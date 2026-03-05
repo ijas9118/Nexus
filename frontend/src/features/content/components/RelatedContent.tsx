@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardFooter } from "@/components/molecules/card";
-import { Badge } from "@/components/atoms/badge";
 import {
+  BookmarkIcon,
   CalendarIcon,
   MessageCircleIcon,
   ThumbsUpIcon,
-  BookmarkIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+
+import { Badge } from "@/components/atoms/badge";
+import { Card, CardContent, CardFooter } from "@/components/molecules/card";
 
 // Mock function to get related content - replace with your actual API call
 const getRelatedContent = async () =>

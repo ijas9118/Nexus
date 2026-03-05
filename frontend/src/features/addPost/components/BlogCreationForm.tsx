@@ -1,23 +1,27 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import type React from "react";
 import { lazy, Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { motion, AnimatePresence } from "motion/react";
-import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+
 import { Button } from "@/components/atoms/button";
 import { Card, CardContent } from "@/components/molecules/card";
-import { ContentPreview } from "./ContentPreview";
 import { Progress } from "@/components/molecules/progress";
 import { Form } from "@/components/organisms/form";
+
+import { ContentPreview } from "./ContentPreview";
 const ContentEditor = lazy(() => import("./ContentEditor"));
 const ContentSummary = lazy(() => import("./ContentSummary"));
 const ContentTypeSelector = lazy(() => import("./ContentTypeSelector"));
 const BasicDetailsForm = lazy(() => import("./BasicDetailsForm"));
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { useAddPost } from "../hooks/useAddPost";
+
 import { Skeleton } from "@/components/atoms/skeleton";
+import type { RootState } from "@/store/store";
+
+import { useAddPost } from "../hooks/useAddPost";
 
 const formSchema = z.object({
   contentType: z.enum(["blog", "video"]),

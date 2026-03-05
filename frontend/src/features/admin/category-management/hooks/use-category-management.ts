@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
-import type { Category } from "@/types/category";
-import CategoryService from "@/services/admin/categoryService";
-import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
+
+import CategoryService from "@/services/admin/categoryService";
+import type { Category } from "@/types/category";
 
 interface PaginationData {
   page: number;

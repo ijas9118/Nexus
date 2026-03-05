@@ -1,21 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { Input } from "@/components/atoms/input";
-import { Alert, AlertDescription } from "@/components/atoms/alert";
 import { AlertCircle } from "lucide-react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+
+import { Alert, AlertDescription } from "@/components/atoms/alert";
+import { Input } from "@/components/atoms/input";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/organisms/tabs";
-import UserCard from "./user-card";
 import FollowService from "@/services/followService";
+import type { RootState } from "@/store/store";
+import type { PendingRequest } from "@/types/follow";
+import type { UserInterface } from "@/types/user";
+
 import { EmptyState } from "./empty-state";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { UserInterface } from "@/types/user";
-import { PendingRequest } from "@/types/follow";
+import UserCard from "./user-card";
 
 export default function ConnectionsList() {
   const [searchTerm, setSearchTerm] = useState("");

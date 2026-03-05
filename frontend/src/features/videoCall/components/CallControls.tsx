@@ -1,12 +1,13 @@
 import {
+  Maximize,
   Mic,
   MicOff,
+  Minimize,
+  PhoneOff,
   Video,
   VideoOff,
-  PhoneOff,
-  Maximize,
-  Minimize,
 } from "lucide-react";
+
 import { Button } from "@/components/atoms/button";
 
 type Props = {

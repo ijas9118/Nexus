@@ -1,4 +1,9 @@
 import { ChevronUp, Plus } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import NexusLogo from "@/components/icons/NexusLogo";
 import {
   Sidebar,
   SidebarContent,
@@ -10,26 +15,23 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/organisms/sidebar";
+import useLogout from "@/hooks/useLogout";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import type { RootState } from "@/store/store";
+import {
+  getNetworkItems,
+  getSidebarItems,
+  mentorItems,
+} from "@/utils/sidebarLinks";
+
+import { Collapsible } from "../molecules/collapsible";
+import CollapsibleComponent from "./CollapsibleComponent";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
-import { Collapsible } from "../molecules/collapsible";
-import {
-  getSidebarItems,
-  mentorItems,
-  getNetworkItems,
-} from "@/utils/sidebarLinks";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { useNavigate } from "react-router-dom";
-import useLogout from "@/hooks/useLogout";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
-import NexusLogo from "@/components/icons/NexusLogo";
-import CollapsibleComponent from "./CollapsibleComponent";
 import SquadSubmenu from "./SquadSubmenu";
 
 export function AppSidebar() {

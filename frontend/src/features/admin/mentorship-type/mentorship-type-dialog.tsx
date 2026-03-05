@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/atoms/button";
-import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+import { Textarea } from "@/components/atoms/textarea";
 import {
   Dialog,
   DialogContent,
@@ -23,9 +26,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/organisms/form";
-import { Input } from "@/components/atoms/input";
-import { Textarea } from "@/components/atoms/textarea";
-import { MentorshipTypeData } from "@/types/mentor";
+import type { MentorshipTypeData } from "@/types/mentor";
 
 const formSchema = z.object({
   name: z

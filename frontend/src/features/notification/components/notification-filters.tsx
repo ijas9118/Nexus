@@ -1,4 +1,3 @@
-import { Card, CardContent } from "@/components/molecules/card";
 import { Input } from "@/components/atoms/input";
 import {
   Select,
@@ -7,7 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select";
-import { NotificationTypeData } from "@/types/notification";
+import { Card, CardContent } from "@/components/molecules/card";
+import type { NotificationTypeData } from "@/types/notification";
 
 const notificationTypes: NotificationTypeData[] = [
   {

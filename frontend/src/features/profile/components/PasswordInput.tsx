@@ -1,7 +1,8 @@
-import { Input } from "@/components/atoms/input";
-import { Label } from "@/components/atoms/label";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
 
 interface PasswordInputProps {
   label: string;

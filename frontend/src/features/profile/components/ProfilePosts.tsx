@@ -1,3 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
+import { MdDelete } from "react-icons/md";
+import { useParams } from "react-router-dom";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
 import Premium from "@/components/icons/Premium";
@@ -14,10 +18,7 @@ import {
 } from "@/components/molecules/alert-dialog";
 import { Card, CardContent } from "@/components/molecules/card";
 import ProfileService from "@/services/user/profileService";
-import { useQuery } from "@tanstack/react-query";
-import { MdDelete } from "react-icons/md";
-import { useParams } from "react-router-dom";
-import { Content } from "@/types/content";
+import type { Content } from "@/types/content";
 
 export default function ProfilePosts() {
   const { username } = useParams();

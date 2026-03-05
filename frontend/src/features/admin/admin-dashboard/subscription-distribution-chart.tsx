@@ -1,11 +1,12 @@
+import { Loader } from "lucide-react";
 import { Cell, Pie, PieChart } from "recharts";
+
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/organisms/chart";
-import { SubscriptionStatsResponse } from "@/types/admin/dashboard";
-import { Loader } from "lucide-react";
+import type { SubscriptionStatsResponse } from "@/types/admin/dashboard";
 
 interface SubscriptionDistributionChartProps {
   data?: SubscriptionStatsResponse;

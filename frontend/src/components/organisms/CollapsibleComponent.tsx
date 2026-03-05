@@ -1,3 +1,9 @@
+import { ChevronDown } from "lucide-react";
+import type { FC } from "react";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import {
   CollapsibleContent,
   CollapsibleTrigger,
@@ -11,10 +17,6 @@ import {
   SidebarMenuItem,
 } from "@/components/organisms/sidebar";
 import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
-import { ChevronDown } from "lucide-react";
-import React, { FC } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 interface SidebarCollapsibleSectionProps {
   title: string;

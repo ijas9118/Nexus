@@ -1,6 +1,8 @@
 import { AxiosError } from "axios";
-import api from "../api";
+
 import { CHAT_ROUTES } from "@/utils/constants";
+
+import api from "../api";
 
 export const ChatService = {
   fetchChats: async () => {

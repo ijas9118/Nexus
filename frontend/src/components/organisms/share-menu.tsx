@@ -1,21 +1,23 @@
+import { MessageCircle, Share2, Twitter } from "lucide-react";
 import type { FC } from "react";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaReddit,
+  FaTelegram,
+  FaWhatsapp,
+} from "react-icons/fa";
+import { toast } from "sonner";
+
+import { Button } from "@/components/atoms/button";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
-import { Button } from "@/components/atoms/button";
-import { Share2, MessageCircle, Twitter } from "lucide-react";
-import {
-  FaWhatsapp,
-  FaInstagram,
-  FaFacebook,
-  FaLinkedin,
-  FaTelegram,
-  FaReddit,
-} from "react-icons/fa";
-import { toast } from "sonner";
 
 interface ShareMenuProps {
   contentId: string;

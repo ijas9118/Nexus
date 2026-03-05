@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
 import { Card } from "@/components/molecules/card";
 import type { RootState } from "@/store/store";
-import { useAuth } from "./hooks/useAuth";
-import { useOtpVerification } from "./hooks/useOtpVerification";
+
+import { DemoLoginModal } from "./components/DemoLoginModal";
 import { LoginForm } from "./components/LoginForm";
 import { OtpVerification } from "./components/OtpVerification";
 import { SocialLogin } from "./components/SocialLogin";
-import { DemoLoginModal } from "./components/DemoLoginModal";
+import { useAuth } from "./hooks/useAuth";
+import { useOtpVerification } from "./hooks/useOtpVerification";
 
 export default function LoginPage() {
   const [showDemoModal, setShowDemoModal] = useState(false);

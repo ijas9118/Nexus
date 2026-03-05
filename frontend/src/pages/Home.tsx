@@ -1,15 +1,16 @@
+import { useQuery } from "@tanstack/react-query";
+import { Rocket, Send, Users, Zap } from "lucide-react";
+
 import BackgroundPattern from "@/components/molecules/BackgroundPattern";
 import FeatureCard from "@/components/organisms/FeatureCard";
-import HeroSection from "@/components/organisms/HeroSection";
-import { Rocket, Send, Users, Zap } from "lucide-react";
-import Navbar from "@/components/organisms/Navbar";
-import TestimonialsCarousel from "@/components/organisms/TestimonialsCarousel";
-import SectionHeader from "@/components/organisms/SectionHeader";
 import Footer from "@/components/organisms/Footer";
-import { useQuery } from "@tanstack/react-query";
-import { IPlan } from "@/types/plans";
-import PlanService from "@/services/planService";
+import HeroSection from "@/components/organisms/HeroSection";
+import Navbar from "@/components/organisms/Navbar";
 import PriceCard from "@/components/organisms/PricingCard";
+import SectionHeader from "@/components/organisms/SectionHeader";
+import TestimonialsCarousel from "@/components/organisms/TestimonialsCarousel";
+import PlanService from "@/services/planService";
+import type { IPlan } from "@/types/plans";
 import { getPlanLogo } from "@/utils/planLogo";
 
 const testimonials = [

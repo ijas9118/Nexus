@@ -1,10 +1,11 @@
+import { useQuery } from "@tanstack/react-query";
+import { Atom } from "lucide-react";
+import { Link } from "react-router-dom";
+
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import { Card } from "@/components/molecules/card";
 import { ScrollArea } from "@/components/organisms/scroll-area";
-import { Badge } from "@/components/atoms/badge";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/atoms/button";
-import { Atom } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import SquadService from "@/services/user/squadService";
 
 export default function SquadsList({

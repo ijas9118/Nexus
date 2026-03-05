@@ -1,6 +1,7 @@
+import { Crown, Info, Sparkles } from "lucide-react";
+
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
-import { Crown, Info, Sparkles } from "lucide-react";
 
 const Hero = () => {
   return (

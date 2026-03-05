@@ -1,6 +1,7 @@
-import FollowService from "@/services/followService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+import FollowService from "@/services/followService";
 
 export const useFollowUser = () => {
   const queryClient = useQueryClient();

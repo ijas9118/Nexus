@@ -1,6 +1,7 @@
-import api from "../api";
-import { Category, PaginatedCategoryResponse } from "@/types/category";
+import type { Category, PaginatedCategoryResponse } from "@/types/category";
 import { ADMIN_ROUTES } from "@/utils/constants";
+
+import api from "../api";
 
 const CategoryService = {
   createCategory: (name: string) =>

@@ -8,6 +8,7 @@ import type {
   NotificationTypeData,
   NotificationTypeFormValues,
 } from "@/types/notification";
+
 import NotificationTypeForm from "./notification-type-form";
 
 interface NotificationTypeDialogProps {

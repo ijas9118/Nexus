@@ -1,11 +1,12 @@
-import MentorMetadataService from "@/services/mentorMetadataService";
-import MentorService from "@/services/mentorService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+import MentorMetadataService from "@/services/mentorMetadataService";
+import MentorService from "@/services/mentorService";
 
 const experienceFormSchema = z.object({
   currentRole: z.string().min(2, {
@@ -36,7 +37,7 @@ const experienceFormSchema = z.object({
 
 type ExperienceFormValues = z.infer<typeof experienceFormSchema>;
 
-import { ExpertiseArea, Technology } from "@/types/mentor";
+import type { ExpertiseArea, Technology } from "@/types/mentor";
 
 export interface ExperienceData {
   currentRole?: string;

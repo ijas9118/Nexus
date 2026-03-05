@@ -1,19 +1,21 @@
-import { Sparkles } from "lucide-react";
-import { Button } from "@/components/atoms/button";
-import { Link } from "react-router-dom";
-import Hero from "./components/Hero";
-import Benifits from "./components/Benifits";
-import Testimonials from "./components/Testimonials";
-import FAQ from "./components/FAQ";
 import { useQuery } from "@tanstack/react-query";
-import PlanService from "@/services/planService";
-import { IPlan } from "@/types/plans";
-import PriceCard from "../../components/organisms/PricingCard";
-import { getPlanLogo } from "@/utils/planLogo";
-import PaymentService from "@/services/paymentService";
-import { toast } from "sonner";
+import { Sparkles } from "lucide-react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
+
+import { Button } from "@/components/atoms/button";
+import PaymentService from "@/services/paymentService";
+import PlanService from "@/services/planService";
+import type { RootState } from "@/store/store";
+import type { IPlan } from "@/types/plans";
+import { getPlanLogo } from "@/utils/planLogo";
+
+import PriceCard from "../../components/organisms/PricingCard";
+import Benifits from "./components/Benifits";
+import FAQ from "./components/FAQ";
+import Hero from "./components/Hero";
+import Testimonials from "./components/Testimonials";
 
 export default function PremiumPage() {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -26,8 +28,6 @@ export default function PremiumPage() {
     queryKey: ["plans"],
     queryFn: PlanService.getAllPlans,
   });
-
-  console.log(plans);
 
   const handleCTAClick = async (plan: IPlan) => {
     try {

@@ -1,13 +1,14 @@
+import { Star, Trophy, Users } from "lucide-react";
+
+import { Button } from "@/components/atoms/button";
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from "@/components/molecules/card";
-import { Button } from "@/components/atoms/button";
-import { Star, Trophy, Users } from "lucide-react";
 
 export default function StatsCard() {
   return (

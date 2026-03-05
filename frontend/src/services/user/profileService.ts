@@ -1,8 +1,9 @@
-import api from "../api";
-import { handleApi } from "@/utils/handleApi";
-import { Content } from "@/types/content";
+import type { Content } from "@/types/content";
+import type { UserInterface } from "@/types/user";
 import { USER_ROUTES } from "@/utils/constants";
-import { UserInterface } from "@/types/user";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "../api";
 
 const ProfileService = {
   getUserProfile: (username: string) =>

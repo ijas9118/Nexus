@@ -1,18 +1,19 @@
+import dayjs from "dayjs";
+import { MapPin } from "lucide-react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import { Button } from "@/components/atoms/button";
 import Mentor from "@/components/icons/Mentor";
 import Premium from "@/components/icons/Premium";
 import { Card } from "@/components/molecules/card";
 import ConfirmDialog from "@/components/molecules/ConfirmDialog";
+import type { RootState } from "@/store/store";
+import type { UserInterface } from "@/types/user";
 import getSocialIcon from "@/utils/getSocialIcons";
-import dayjs from "dayjs";
-import { MapPin } from "lucide-react";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { useNavigate } from "react-router-dom";
-import StatDialog from "./StatDialog";
 
-import { UserInterface } from "@/types/user";
+import StatDialog from "./StatDialog";
 
 interface ProfileHeaderProps {
   profileUser: UserInterface | null;

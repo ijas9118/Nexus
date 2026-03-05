@@ -1,15 +1,5 @@
-import { Badge } from "@/components/atoms/badge";
-import { Button } from "@/components/atoms/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/molecules/card";
-import { Separator } from "@/components/atoms/separator";
-import { ContentService } from "@/services/admin/contentService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import {
   ArrowLeft,
   Bookmark,
@@ -19,11 +9,22 @@ import {
   MessageSquare,
   XCircle,
 } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
 import { BiDownvote, BiUpvote } from "react-icons/bi";
-import dayjs from "dayjs";
-import { Content } from "@/types/content";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
+
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
+import { Separator } from "@/components/atoms/separator";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/molecules/card";
+import { ContentService } from "@/services/admin/contentService";
+import type { Content } from "@/types/content";
 
 const ContentDetail = () => {
   const params = useParams();

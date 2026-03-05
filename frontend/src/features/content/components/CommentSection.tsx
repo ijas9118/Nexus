@@ -1,6 +1,7 @@
+import type { Comment } from "@/types/comment";
+
 import { useComments } from "../hooks/useComments";
 import { CommentItem } from "./CommentItem";
-import { Comment } from "@/types/comment";
 
 interface CommentSectionProps {
   contentId: string;

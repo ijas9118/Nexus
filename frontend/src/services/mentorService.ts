@@ -1,6 +1,7 @@
-import { Mentor, MentorFormData, MentorshipType } from "@/types/mentor";
+import type { Mentor, MentorFormData, MentorshipType } from "@/types/mentor";
 import { ADMIN_ROUTES } from "@/utils/constants";
 import { handleApi } from "@/utils/handleApi";
+
 import api from "./api";
 const MENTOR_ROUTE = "/mentor";
 

@@ -1,18 +1,20 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/atoms/alert";
-import { Button } from "@/components/atoms/button";
-import PlanService from "@/services/planService";
-import { IPlan } from "@/types/plans";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
-import { motion, Variants } from "motion/react";
+import type { Variants } from "motion/react";
+import { motion } from "motion/react";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/atoms/alert";
+import { Button } from "@/components/atoms/button";
 import PriceCard from "@/components/organisms/PricingCard";
-import { getPlanLogo } from "@/utils/planLogo";
-import SubscriptionService from "@/services/subscriptionService";
 import { useConfirmDialog } from "@/context/ConfirmDialogContext";
 import PaymentService from "@/services/paymentService";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { toast } from "sonner";
+import PlanService from "@/services/planService";
+import SubscriptionService from "@/services/subscriptionService";
+import type { RootState } from "@/store/store";
+import type { IPlan } from "@/types/plans";
+import { getPlanLogo } from "@/utils/planLogo";
 
 export default function UpgradePlanPage() {
   const { showConfirm } = useConfirmDialog();
@@ -51,7 +53,6 @@ export default function UpgradePlanPage() {
 
       window.location.href = sessionUrl;
     } catch (error: unknown) {
-      console.error("Payment failed:", error);
       toast.error(
         (error as { message?: string })?.message ||
           "Something went wrong. Please try again.",
@@ -59,7 +60,6 @@ export default function UpgradePlanPage() {
     }
 
     // Here you would typically navigate to checkout or confirm the selection
-    console.log(`Selected plan: ${plan._id}`);
   };
 
   const containerVariants: Variants = {

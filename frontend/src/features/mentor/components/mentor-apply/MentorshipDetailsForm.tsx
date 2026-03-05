@@ -1,4 +1,11 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
+import { Checkbox } from "@/components/atoms/checkbox";
+import { Label } from "@/components/atoms/label";
+import { Textarea } from "@/components/atoms/textarea";
 import {
   Card,
   CardContent,
@@ -7,17 +14,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
-import { Checkbox } from "@/components/atoms/checkbox";
-import { Label } from "@/components/atoms/label";
-import { Textarea } from "@/components/atoms/textarea";
-import { Link, useNavigate } from "react-router-dom";
 import { useMentorForm } from "@/context/MentorFormContext";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import MentorService from "@/services/mentorService";
-import { toast } from "sonner";
-import { MentorFormData, MentorshipType, TargetAudience } from "@/types/mentor";
 import MentorshipTypeService from "@/services/mentorshipTypeService";
 import TargetAudienceService from "@/services/targetAudienceService";
+import type {
+  MentorFormData,
+  MentorshipType,
+  TargetAudience,
+} from "@/types/mentor";
 
 const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
   const navigator = useNavigate();
@@ -88,7 +93,6 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
   });
 
   const onSubmit = (data: MentorFormData) => {
-    console.log(data);
     mutation.mutate(data);
   };
 

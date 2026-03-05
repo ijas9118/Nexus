@@ -1,13 +1,15 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { CommentActions } from "./CommentActions";
-import { ReplyInput } from "./ReplyInput";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+
 import { useCommentInteraction } from "../hooks/useCommentInteraction";
+import { CommentActions } from "./CommentActions";
+import { ReplyInput } from "./ReplyInput";
 
 dayjs.extend(relativeTime);
 
-import { Comment } from "@/types/comment";
+import type { Comment } from "@/types/comment";
 
 interface CommentItemProps {
   comment: Comment;
@@ -91,10 +93,8 @@ export const CommentItem = ({
                         <div className="flex items-center gap-4 text-xs text-muted-foreground mt-1">
                           <CommentActions
                             likes={reply.likes}
-                            onLike={() => console.log("Like reply:", reply._id)}
-                            onReplyToggle={() =>
-                              console.log("Reply to:", reply._id)
-                            }
+                            onLike={handleLike}
+                            onReplyToggle={handleReplyToggle}
                           />
                         </div>
                       </div>

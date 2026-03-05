@@ -1,21 +1,8 @@
-import { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/organisms/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/organisms/dropdown-menu";
-import { Button } from "@/components/atoms/button";
 import { MoreHorizontal, Pencil, ToggleLeft, ToggleRight } from "lucide-react";
+import { useState } from "react";
+
 import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +13,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/molecules/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/organisms/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/organisms/table";
 import type { NotificationTypeData } from "@/types/notification";
+
 import { DynamicIcon } from "./dynamic-icon";
 
 interface NotificationTypeListProps {

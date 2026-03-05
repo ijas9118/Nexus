@@ -1,12 +1,13 @@
-import {
+import type { LoginResponse } from "@/types/admin/auth";
+import type {
   DashboardStatsResponse,
   MentorApplicationStatsResponse,
   RevenueStatsResponse,
   SubscriptionStatsResponse,
 } from "@/types/admin/dashboard";
-import api from "../api";
-import { LoginResponse } from "@/types/admin/auth";
 import { ADMIN_ROUTES } from "@/utils/constants";
+
+import api from "../api";
 
 export const AdminService = {
   loginAdmin: (email: string, password: string): Promise<LoginResponse> =>

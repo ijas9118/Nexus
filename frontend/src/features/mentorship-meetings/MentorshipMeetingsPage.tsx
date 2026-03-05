@@ -1,14 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
-import { IBooking } from "@/types/booking";
-import BookingService from "@/services/bookingService";
+import { useCallback, useEffect, useState } from "react";
+
 import {
+  Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-  Tabs,
 } from "@/components/organisms/tabs";
-import { MeetingCard } from "./components/MeetingCard";
+import BookingService from "@/services/bookingService";
+import type { IBooking } from "@/types/booking";
+
 import { EmptyState } from "./components/EmptyState";
+import { MeetingCard } from "./components/MeetingCard";
 
 export default function MentorshipMeetingsPage() {
   const [activeTab, setActiveTab] = useState<"upcoming" | "completed">(

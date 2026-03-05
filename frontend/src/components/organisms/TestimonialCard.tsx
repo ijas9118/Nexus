@@ -1,6 +1,7 @@
-import { Card } from "@/components/molecules/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import React from "react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Card } from "@/components/molecules/card";
 
 interface TestimonialProps {
   name: string;

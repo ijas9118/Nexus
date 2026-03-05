@@ -1,26 +1,26 @@
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import Heading from "@tiptap/extension-heading";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import TextAlign from "@tiptap/extension-text-align";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import {
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
   Bold,
-  Italic,
-  List,
-  ListOrdered,
   Heading1,
   Heading2,
   Heading3,
-  LinkIcon,
   ImageIcon,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  Undo,
-  Redo,
+  Italic,
+  LinkIcon,
+  List,
+  ListOrdered,
   Minus,
+  Redo,
+  Undo,
 } from "lucide-react";
 
 import { Toggle } from "@/components/molecules/toggle";
@@ -37,7 +37,6 @@ interface TipTapEditorProps {
 }
 
 export function TipTapEditor({ content, onChange }: TipTapEditorProps) {
-  console.log("Content", content, content.length);
   const editor = useEditor({
     extensions: [
       StarterKit,

@@ -1,5 +1,6 @@
 import { isAfter } from "date-fns";
-import { IBooking } from "@/types/booking";
+
+import type { IBooking } from "@/types/booking";
 
 export const isMeetingTimeReached = (booking: IBooking) => {
   const meetingDate = new Date(booking.timeSlot.date);

@@ -1,9 +1,10 @@
+import { Calendar, Star, Users } from "lucide-react";
+import { Link } from "react-router-dom";
+
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
 import { Card } from "@/components/molecules/card";
-import { Mentor } from "@/types/mentor";
-import { Calendar, Star, Users } from "lucide-react";
-import { Link } from "react-router-dom";
+import type { Mentor } from "@/types/mentor";
 
 const MentorCard = ({ mentor }: { mentor: Mentor }) => {
   return (

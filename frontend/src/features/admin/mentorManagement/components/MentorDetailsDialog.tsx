@@ -1,19 +1,21 @@
-import { FC, useState } from "react";
+import { AxiosError } from "axios";
+import { Loader2 } from "lucide-react";
+import type { FC } from "react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/organisms/dialog";
-import { Button } from "@/components/atoms/button";
-import { Loader2 } from "lucide-react";
-import { Badge } from "@/components/atoms/badge";
 import { ScrollArea } from "@/components/organisms/scroll-area";
-import { Mentor } from "@/types/mentor";
-import { toast } from "sonner";
 import MentorService from "@/services/mentorService";
-import { AxiosError } from "axios";
+import type { Mentor } from "@/types/mentor";
 
 interface MentorDetailsDialogProps {
   open: boolean;

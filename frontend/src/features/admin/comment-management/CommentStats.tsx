@@ -1,5 +1,6 @@
+import { BarChart, Flag, Trash2, Users } from "lucide-react";
+
 import { Card, CardContent } from "@/components/molecules/card";
-import { Users, Flag, Trash2, BarChart } from "lucide-react";
 
 const stats = [
   {

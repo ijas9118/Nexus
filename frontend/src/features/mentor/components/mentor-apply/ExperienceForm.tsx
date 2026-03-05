@@ -1,12 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+import { ArrowRight } from "lucide-react";
+import React from "react";
+
 import { Button } from "@/components/atoms/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/molecules/card";
 import { Checkbox } from "@/components/atoms/checkbox";
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
@@ -18,14 +14,17 @@ import {
   SelectValue,
 } from "@/components/atoms/select";
 import { Textarea } from "@/components/atoms/textarea";
-import { ArrowRight } from "lucide-react";
-
-import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/molecules/card";
 import { useMentorForm } from "@/context/MentorFormContext";
-import { useQuery } from "@tanstack/react-query";
-import MentorMetadataService, {
-  MentorMetadataData,
-} from "@/services/mentorMetadataService";
+import type { MentorMetadataData } from "@/services/mentorMetadataService";
+import MentorMetadataService from "@/services/mentorMetadataService";
 
 interface ExperienceFormProps {
   onBack: () => void;

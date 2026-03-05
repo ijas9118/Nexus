@@ -1,11 +1,12 @@
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { useSocket } from "@/hooks/useSocket";
-import { RootState } from "@/store/store";
-import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { setActiveChat, setChats } from "@/store/slices/chatSlice"; // Import relevant actions
-import { Chat } from "@/types";
+import type { RootState } from "@/store/store";
+import type { Chat } from "@/types";
 
 interface MessageInputProps {
   chatId: string;

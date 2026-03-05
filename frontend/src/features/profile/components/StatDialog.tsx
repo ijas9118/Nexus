@@ -1,4 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Button } from "@/components/atoms/button";
 import {
   Dialog,
   DialogContent,
@@ -6,9 +9,7 @@ import {
   DialogTitle,
 } from "@/components/organisms/dialog";
 import { ScrollArea } from "@/components/organisms/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import FollowService from "@/services/followService";
-import { Button } from "@/components/atoms/button";
 
 interface StatDialogProps {
   isOpen: boolean;
@@ -43,7 +44,6 @@ export default function StatDialog({
         switch (statType) {
           case "followers":
             response = await FollowService.getFollowers(userId);
-            console.log(response);
             break;
           case "following":
             response = await FollowService.getFollowings(userId);
@@ -114,11 +114,7 @@ export default function StatDialog({
                     </div>
                   </div>
                   {statType === "following" && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => console.log(user._id)}
-                    >
+                    <Button variant="outline" size="sm">
                       Unfollow
                     </Button>
                   )}

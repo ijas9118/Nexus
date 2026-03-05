@@ -1,13 +1,14 @@
 "use client";
 
+import { Loader } from "lucide-react";
 import { Cell, Pie, PieChart } from "recharts";
+
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/organisms/chart";
-import { Loader } from "lucide-react";
-import { MentorApplicationStatsResponse } from "@/types/admin/dashboard";
+import type { MentorApplicationStatsResponse } from "@/types/admin/dashboard";
 
 interface MentorApplicationsChartProps {
   data?: MentorApplicationStatsResponse;

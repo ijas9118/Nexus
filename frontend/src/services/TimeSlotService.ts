@@ -1,7 +1,8 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "./api";
-import { TimeSlot } from "@/types/mentor";
+import type { TimeSlot } from "@/types/mentor";
 import { TIME_SLOT_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 const TimeSlotService = {
   addTimeSlot: (date: string, startTime: string, mentorId: string) =>

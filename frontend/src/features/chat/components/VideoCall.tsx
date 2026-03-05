@@ -1,7 +1,3 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import Peer, { MediaConnection } from "peerjs";
-import { Dialog, DialogContent } from "@/components/organisms/dialog";
-import { Button } from "@/components/atoms/button";
 import {
   Maximize2,
   Mic,
@@ -11,6 +7,12 @@ import {
   VideoIcon,
   VideoOff,
 } from "lucide-react";
+import type { MediaConnection } from "peerjs";
+import Peer from "peerjs";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+
+import { Button } from "@/components/atoms/button";
+import { Dialog, DialogContent } from "@/components/organisms/dialog";
 
 interface VideoCallProps {
   userId: string;
@@ -89,21 +91,17 @@ const VideoCall: React.FC<VideoCallProps> = ({
 
     peer.on("open", (id) => {
       setPeerId(id);
-      console.log("My peer ID is: " + id);
     });
 
     peer.on("error", (err) => {
-      console.error("Peer error:", err);
       setCallStatus(`Peer error: ${err.message}`);
     });
 
     peer.on("call", (call) => {
-      console.log("Received incoming call");
       callInstance.current = call; // Store the call
       if (localStream.current) {
         call.answer(localStream.current);
         call.on("stream", (remoteStream) => {
-          console.log("Received remote stream from call");
           if (remoteVideoRef.current) {
             remoteVideoRef.current.srcObject = remoteStream;
           }
@@ -111,54 +109,11 @@ const VideoCall: React.FC<VideoCallProps> = ({
           setCallStatus("In call");
         });
         call.on("error", (err) => {
-          console.error("Call error:", err);
           setCallStatus(`Call error: ${err.message}`);
         });
         call.on("close", () => endCall("Call ended by remote user"));
       }
     });
-
-    // socket?.on("call-made", (data) => {
-    //   console.log(`Call-made received from ${data.from}`);
-    //   if (data.from !== userId && localStream.current) {
-    //     // const accept = window.confirm(`${data.from} is calling. Accept?`);
-    //     // console.log("asdfasdf", accept);
-    //     // if (accept) {
-    //     const call = peerInstance.current!.call(data.from, localStream.current);
-    //     callInstance.current = call;
-    //     call.on("stream", (remoteStream) => {
-    //       if (remoteVideoRef.current) {
-    //         remoteVideoRef.current.srcObject = remoteStream;
-    //       }
-    //       setCallActive(true);
-    //       setCallStatus("In call");
-    //     });
-    //     call.on("error", (err) => {
-    //       console.error("Call error:", err);
-    //       setCallStatus(`Call error: ${err.message}`);
-    //     });
-    //     call.on("close", () => endCall("Call ended by remote user"));
-    //     // } else {
-    //     //   socket.emit("reject-call", { to: data.from });
-    //     //   setCallStatus("Call rejected");
-    //     // }
-    //   }
-    // });
-
-    // socket?.on("call-rejected", (data) => {
-    //   console.log(`Call rejected by ${data.from}`);
-    //   setCallStatus(`Call rejected by ${data.from}`);
-    //   setCallActive(false);
-    //   if (callInstance.current) {
-    //     callInstance.current.close();
-    //     callInstance.current = null;
-    //   }
-    // });
-
-    // socket?.on("call-ended", (data) => {
-    //   console.log(`Call ended by ${data.from}`);
-    //   endCall(`Call ended by ${data.from}`);
-    // });
 
     return () => endCall("Component unmounted");
   }, [userId, endCall, setupMedia]);
@@ -176,16 +131,9 @@ const VideoCall: React.FC<VideoCallProps> = ({
         setCallStatus("In call");
       });
       call.on("error", (err) => {
-        console.error("Call error:", err);
         setCallStatus(`Call error: ${err.message}`);
       });
       call.on("close", () => endCall("Call ended by remote user"));
-
-      // socket?.emit("call-user", {
-      //   to: recipientId,
-      //   signal: null,
-      // });
-      console.log("Call-user event emitted");
     } else {
       setCallStatus("Cannot start call: stream or peer not ready");
     }
@@ -211,9 +159,7 @@ const VideoCall: React.FC<VideoCallProps> = ({
     if (!modalRef.current) return;
 
     if (!isFullScreen) {
-      modalRef.current.requestFullscreen().catch((err) => {
-        console.error("Error entering fullscreen:", err);
-      });
+      modalRef.current.requestFullscreen();
       setIsFullScreen(true);
     } else {
       document.exitFullscreen();

@@ -1,10 +1,12 @@
-import { FC } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ContentService } from "@/services/admin/contentService";
-import { DataTable } from "./content-management/components/data-table";
-import { columns } from "./content-management/columns";
+import type { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { Content } from "@/types/content";
+
+import { ContentService } from "@/services/admin/contentService";
+import type { Content } from "@/types/content";
+
+import { columns } from "./content-management/columns";
+import { DataTable } from "./content-management/components/data-table";
 
 const ContentManagement: FC = () => {
   const navigator = useNavigate();

@@ -1,17 +1,18 @@
-import { useState, useEffect, useCallback } from "react";
-import { Plus, Loader2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
 import { Card, CardContent, CardFooter } from "@/components/molecules/card";
-
 import TargetAudienceService from "@/services/targetAudienceService";
-import { toast } from "sonner";
+import type { TargetAudience } from "@/types/mentor";
+
+import { AudienceFormDialog } from "./target-audience/audience-form-dialog";
+import { AudienceTable } from "./target-audience/audience-table";
+import { ConfirmationDialog } from "./target-audience/confirmation-dialog";
+import { EmptyState } from "./target-audience/empty-state";
 import { PageHeader } from "./target-audience/page-header";
 import { SearchFilterBar } from "./target-audience/search-filter-bar";
-import { EmptyState } from "./target-audience/empty-state";
-import { AudienceTable } from "./target-audience/audience-table";
-import { AudienceFormDialog } from "./target-audience/audience-form-dialog";
-import { ConfirmationDialog } from "./target-audience/confirmation-dialog";
-import { TargetAudience } from "@/types/mentor";
 
 export default function TargetAudiencesPage() {
   const [targetAudiences, setTargetAudiences] = useState<TargetAudience[]>([]);

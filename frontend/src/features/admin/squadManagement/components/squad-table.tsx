@@ -1,3 +1,8 @@
+import { Crown, ToggleLeft, ToggleRight, Users } from "lucide-react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import {
   Table,
   TableBody,
@@ -6,10 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/organisms/table";
-import { Button } from "@/components/atoms/button";
-import { Badge } from "@/components/atoms/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { ToggleLeft, ToggleRight, Users, Crown } from "lucide-react";
 import type { Squad } from "@/types/squad";
 
 interface SquadTableProps {

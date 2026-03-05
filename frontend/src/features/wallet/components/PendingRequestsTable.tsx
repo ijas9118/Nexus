@@ -4,6 +4,8 @@ import {
   DollarSignIcon,
   StarIcon,
 } from "lucide-react";
+
+import { Badge } from "@/components/atoms/badge";
 import {
   Card,
   CardContent,
@@ -18,8 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/organisms/table";
-import { Badge } from "@/components/atoms/badge";
-import { IWithdrawalRequest } from "@/types/wallet";
+import type { IWithdrawalRequest } from "@/types/wallet";
 
 interface PendingRequestsTableProps {
   requests: IWithdrawalRequest[];

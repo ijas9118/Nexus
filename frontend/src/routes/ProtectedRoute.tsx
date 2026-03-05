@@ -1,8 +1,9 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { UserRoles } from "@/types/user";
+import { Navigate, Outlet } from "react-router-dom";
+
+import type { RootState } from "@/store/store";
+import type { UserRoles } from "@/types/user";
 
 interface ProtectedRouteProps {
   requiredRoles: UserRoles[];

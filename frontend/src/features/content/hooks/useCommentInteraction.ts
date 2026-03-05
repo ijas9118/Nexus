@@ -1,7 +1,8 @@
-import { CommentService } from "@/services/user/commentService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
+
+import { CommentService } from "@/services/user/commentService";
 
 export const useCommentInteraction = (commentId: string, contentId: string) => {
   const [showReplyInput, setShowReplyInput] = useState(false);
@@ -31,7 +32,6 @@ export const useCommentInteraction = (commentId: string, contentId: string) => {
 
   const handleLike = () => {
     // API call to like/unlike comment would go here
-    console.log("Like/unlike comment:", commentId);
   };
 
   const handleReplyToggle = () => setShowReplyInput((prev) => !prev);

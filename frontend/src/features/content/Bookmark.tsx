@@ -1,10 +1,12 @@
-import FilterComponent from "@/features/content/components/FilterComponent";
-import ContentTypeTab from "@/features/content/components/ContentTypeTab";
-import { useState } from "react";
-import BookmarkService from "@/services/user/bookmarkService";
-import ContentCard from "./components/ContentCard";
 import { useQuery } from "@tanstack/react-query";
-import { Content } from "@/types/content";
+import { useState } from "react";
+
+import ContentTypeTab from "@/features/content/components/ContentTypeTab";
+import FilterComponent from "@/features/content/components/FilterComponent";
+import BookmarkService from "@/services/user/bookmarkService";
+import type { Content } from "@/types/content";
+
+import ContentCard from "./components/ContentCard";
 
 export default function Bookmark() {
   const [selectedTab, setSelectedTab] = useState<string>("all");

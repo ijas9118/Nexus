@@ -1,6 +1,11 @@
+import { AxiosError } from "axios";
+import { Loader2 } from "lucide-react";
 import type React from "react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
 import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
 import {
   Dialog,
   DialogContent,
@@ -9,10 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/organisms/dialog";
-import { Input } from "@/components/atoms/input";
-import { Label } from "@/components/atoms/label";
-import { Loader2 } from "lucide-react";
-import { AxiosError } from "axios";
 
 interface EditCategoryDialogProps {
   category: { id: string; name: string };

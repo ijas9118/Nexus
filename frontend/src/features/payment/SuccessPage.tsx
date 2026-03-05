@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
-import { motion, Variants } from "motion/react";
+import type { Variants } from "motion/react";
+import { motion } from "motion/react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { clearUser } from "@/store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
-import { logout } from "@/services/user/authService";
+
 import PaymentService from "@/services/paymentService";
+import { logout } from "@/services/user/authService";
+import { clearUser } from "@/store/slices/authSlice";
 
 const SuccessPage = ({ sessionId }: { sessionId: string }) => {
   const [countdown, setCountdown] = useState(10);

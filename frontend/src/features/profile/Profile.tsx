@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
+
+import FollowService from "@/services/followService";
+import ProfileService from "@/services/user/profileService";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import type { RootState } from "@/store/store";
+import type { UserInterface } from "@/types/user";
+
 import ProfileActivity from "./components/ProfileActivity";
 import ProfileHeader from "./components/ProfileHeader";
 import SquadsList from "./components/SquadsList";
-import ProfileService from "@/services/user/profileService";
-import FollowService from "@/services/followService";
-import { RootState } from "@/store/store";
-import { UserInterface } from "@/types/user";
 
 export default function ProfilePage() {
   const { username } = useParams();

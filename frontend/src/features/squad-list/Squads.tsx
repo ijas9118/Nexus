@@ -1,3 +1,13 @@
+import { Plus } from "lucide-react";
+import type { FC } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+import { Button } from "@/components/atoms/button";
+import { Skeleton } from "@/components/atoms/skeleton";
+import Premium from "@/components/icons/Premium";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,24 +18,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/molecules/alert-dialog";
-import { Button } from "@/components/atoms/button";
 import { Card } from "@/components/molecules/card";
-import Premium from "@/components/icons/Premium";
-import { Skeleton } from "@/components/atoms/skeleton";
 import CategoryService from "@/services/admin/categoryService";
 import SquadService from "@/services/user/squadService";
 import { setSquadsByCategory } from "@/store/slices/squadSlice";
 import { addUserSquad } from "@/store/slices/userSquadsSlice";
-import { RootState } from "@/store/store";
-import { Category } from "@/types/category";
-import { Plus } from "lucide-react";
-import { FC, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import type { RootState } from "@/store/store";
+import type { Category } from "@/types/category";
+import type { SquadDetail } from "@/types/squad";
+
 import CategoryScroll from "./components/CategoryScroll";
 import { CreateSquadDialog } from "./components/CreateSquadDialog";
-import { SquadDetail } from "@/types/squad";
 
 const Squads: FC = () => {
   const dispatch = useDispatch();
@@ -88,7 +91,6 @@ const Squads: FC = () => {
         const squadsData = await SquadService.getSquadsByCategory(
           selectedCategory._id,
         );
-        console.log(squadsData);
         dispatch(
           setSquadsByCategory({
             category: selectedCategory._id,

@@ -1,7 +1,9 @@
 import { AxiosError } from "axios";
-import api from "../api";
+
+import type { Comment } from "@/types/comment";
 import { CONTENT_ROUTES } from "@/utils/constants";
-import { Comment } from "@/types/comment";
+
+import api from "../api";
 
 export const CommentService = {
   addComment: async (

@@ -1,7 +1,8 @@
-import api from "../api";
-import { handleApi } from "@/utils/handleApi";
+import type { Content, IHistoryItem } from "@/types/content";
 import { CONTENT_ROUTES } from "@/utils/constants";
-import { Content, IHistoryItem } from "@/types/content";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "../api";
 
 const ContentService = {
   // Add new content

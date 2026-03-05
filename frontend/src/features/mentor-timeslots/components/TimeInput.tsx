@@ -1,6 +1,9 @@
-import { useState, useEffect, FC } from "react";
-import { motion, Variants } from "motion/react";
 import { Clock } from "lucide-react";
+import type { Variants } from "motion/react";
+import { motion } from "motion/react";
+import type { FC } from "react";
+import { useEffect, useState } from "react";
+
 import {
   Select,
   SelectContent,

@@ -1,17 +1,19 @@
-import { useState } from "react";
-import { format } from "date-fns";
-import { motion } from "motion/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { AlertCircle, Loader2, X } from "lucide-react";
+import { motion } from "motion/react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import TimeSlotService from "@/services/TimeSlotService";
+
+import { Alert, AlertDescription } from "@/components/atoms/alert";
 import { Button } from "@/components/atoms/button";
 import { Label } from "@/components/atoms/label";
-import { Alert, AlertDescription } from "@/components/atoms/alert";
-import { AlertCircle, Loader2, X } from "lucide-react";
+import TimeSlotService from "@/services/TimeSlotService";
+import type { RootState } from "@/store/store";
+import type { TimeSlot } from "@/types/mentor";
+
 import TimeInput from "./TimeInput";
 import TimeSlotListByDate from "./TimeSlotListByDate";
-import { TimeSlot } from "@/types/mentor";
 
 interface AddTimeSlotTabProps {
   date: Date | undefined;

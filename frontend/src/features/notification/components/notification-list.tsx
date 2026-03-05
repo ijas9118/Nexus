@@ -1,4 +1,5 @@
 import type { INotification } from "@/types/notification";
+
 import { NotificationItem } from "./notification-item";
 
 interface NotificationListProps {

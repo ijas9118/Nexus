@@ -1,7 +1,8 @@
-import api from "./api";
-import { IPlan } from "@/types/plans";
-import { handleApi } from "@/utils/handleApi";
+import type { IPlan } from "@/types/plans";
 import { PAYMENT_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 const PaymentService = {
   createSession: (plan: IPlan, email: string) =>

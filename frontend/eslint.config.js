@@ -3,7 +3,7 @@ import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
-import eslintPluginPrettier from "eslint-plugin-prettier";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 import eslintConfigPrettier from "eslint-config-prettier";
 
 export default tseslint.config(
@@ -18,35 +18,37 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
-      prettier: eslintPluginPrettier,
+      "simple-import-sort": simpleImportSort,
     },
     rules: {
-      "prettier/prettier": "error",
+      // React
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
       ],
 
-      "@typescript-eslint/no-explicit-any": "warn", // Warn about using `any`
+      // TypeScript
+      "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-unused-vars": [
         "warn",
-        { argsIgnorePattern: "^_" }, // Ignore unused variables starting with `_`
+        { argsIgnorePattern: "^_" },
       ],
-      "@typescript-eslint/no-empty-function": "error", // Warns about empty functions
+      "@typescript-eslint/no-empty-function": "error",
+      "@typescript-eslint/consistent-type-imports": [
+        "warn",
+        { prefer: "type-imports" },
+      ],
 
-      "no-undef": "error", // Prevent using undeclared variables
-      eqeqeq: "error", // Enforce strict equality (=== and !==)
-      curly: "error", // Enforce consistent brace style for control statements
-      quotes: ["error", "single"], // Enforce single quotes
-      semi: ["error", "always"], // Enforce semicolons
+      // Code quality
+      eqeqeq: "error",
+      curly: "error",
+      "no-console": ["warn", { allow: ["warn", "error"] }],
 
-      indent: ["error", 2], // Enforce 2-space indentation
-      "comma-dangle": ["error", "always-multiline"], // Enforce trailing commas in multiline objects/arrays
-      "object-curly-spacing": ["error", "always"], // Enforce spacing inside curly braces
-      "array-bracket-spacing": ["error", "never"], // Disallow spacing inside array brackets
-      "arrow-parens": ["error", "always"], // Enforce parentheses around arrow function parameters
+      // Import ordering
+      "simple-import-sort/imports": "warn",
+      "simple-import-sort/exports": "warn",
     },
   },
-  eslintConfigPrettier,
+  eslintConfigPrettier, // Must be last — disables formatting rules that conflict with Prettier
 );

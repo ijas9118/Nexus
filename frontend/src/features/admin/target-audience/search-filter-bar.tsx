@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
 import { Switch } from "@/components/atoms/switch";

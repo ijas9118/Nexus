@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import type { Variants } from "motion/react";
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { motion, Variants } from "motion/react";
 
 export default function ForbiddenPage() {
   const [mounted, setMounted] = useState(false);
@@ -62,8 +63,6 @@ export default function ForbiddenPage() {
     const previousPath = location.state?.from || "/";
     navigate(previousPath);
   };
-
-  console.log("=========");
 
   return (
     <div className="h-full bg-gradient-to-b from-muted-foreground/5 to-muted-foreground/15 flex items-center justify-center p-4">

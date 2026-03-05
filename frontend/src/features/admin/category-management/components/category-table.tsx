@@ -1,3 +1,7 @@
+import { Edit, ToggleLeft, ToggleRight } from "lucide-react";
+
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import {
   Table,
   TableBody,
@@ -6,9 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/organisms/table";
-import { Button } from "@/components/atoms/button";
-import { Badge } from "@/components/atoms/badge";
-import { Edit, ToggleLeft, ToggleRight } from "lucide-react";
 import type { Category } from "@/types/category";
 
 interface CategoryTableProps {

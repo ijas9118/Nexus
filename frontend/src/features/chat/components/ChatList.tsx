@@ -1,3 +1,7 @@
+import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Input } from "@/components/atoms/input";
 import {
@@ -7,10 +11,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/organisms/dialog";
-import MultipleSelector, {
-  Option,
-} from "@/components/organisms/multiple-select";
+import type { Option } from "@/components/organisms/multiple-select";
+import MultipleSelector from "@/components/organisms/multiple-select";
 import { useSocket } from "@/hooks/useSocket";
+import FollowService from "@/services/followService";
 import { ChatService } from "@/services/user/chatService";
 import {
   setActiveChat,
@@ -18,13 +22,10 @@ import {
   setGroups,
   setPendingChat,
 } from "@/store/slices/chatSlice";
-import { RootState } from "@/store/store";
-import { Chat, Group, User } from "@/types";
-import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/store/store";
+import type { Chat, Group, User } from "@/types";
+
 import { formatLastMessageTime } from "../utils/last-message-format";
-import FollowService from "@/services/followService";
 
 const ChatList = () => {
   const dispatch = useDispatch();

@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+
+import { resendOtp, verifyOtp } from "@/services/user/authService";
 import { setCredentials } from "@/store/slices/authSlice";
-import { verifyOtp, resendOtp } from "@/services/user/authService";
 
 export function useOtpVerification(email: string) {
   const [timer, setTimer] = useState(60);
@@ -26,7 +27,6 @@ export function useOtpVerification(email: string) {
             ? error
             : (error as { message?: string })?.message ||
               "Invalid OTP. Please try again.";
-      console.log("Error occurred: ", errorMessage);
       toast.error("Verification Failed", {
         description: errorMessage,
       });

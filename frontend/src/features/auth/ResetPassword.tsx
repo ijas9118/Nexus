@@ -1,5 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { Loader2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
 import {
   Card,
   CardContent,
@@ -7,12 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
-import { Input } from "@/components/atoms/input";
-import { Label } from "@/components/atoms/label";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Loader2 } from "lucide-react";
 import { resetPassword } from "@/services/user/authService";
-import { toast } from "sonner";
 
 export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState("");

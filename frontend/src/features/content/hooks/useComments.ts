@@ -1,6 +1,7 @@
-import { CommentService } from "@/services/user/commentService";
 import { useQuery } from "@tanstack/react-query";
-import { Comment } from "@/types/comment";
+
+import { CommentService } from "@/services/user/commentService";
+import type { Comment } from "@/types/comment";
 
 export const useComments = (contentId: string) => {
   return useQuery<Comment[]>({

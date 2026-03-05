@@ -1,7 +1,8 @@
+import { UserPlus } from "lucide-react";
 import { useState } from "react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Button } from "@/components/atoms/button";
-import { UserPlus } from "lucide-react";
 import ConfirmDialog from "@/components/molecules/ConfirmDialog";
 
 export interface UserData {

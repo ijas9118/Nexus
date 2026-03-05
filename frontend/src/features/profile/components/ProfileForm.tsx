@@ -1,9 +1,3 @@
-import { Button } from "@/components/atoms/button";
-import { Input } from "@/components/atoms/input";
-import { Label } from "@/components/atoms/label";
-import { Textarea } from "@/components/atoms/textarea";
-import ProfileService from "@/services/user/profileService";
-import { updateUserProfile } from "@/store/slices/authSlice";
 import { Edit, Link, Loader2, X } from "lucide-react";
 import React, { useRef, useState } from "react";
 import { useForm, useFormState } from "react-hook-form";
@@ -17,12 +11,20 @@ import {
 } from "react-icons/fa";
 import { FaSquareThreads, FaSquareXTwitter } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "sonner";
-import { useUpdateProfilePic } from "../hooks/useUpdateProfilePic";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
+import { Textarea } from "@/components/atoms/textarea";
+import ProfileService from "@/services/user/profileService";
+import { updateUserProfile } from "@/store/slices/authSlice";
+import type { RootState } from "@/store/store";
+import type { UserInterface } from "@/types/user";
 import { debounce } from "@/utils/debounce";
-import { RootState } from "@/store/store";
-import { UserInterface } from "@/types/user";
+
+import { useUpdateProfilePic } from "../hooks/useUpdateProfilePic";
 
 const socialLinks = [
   { key: "github", icon: FaGithub, label: "Github" },
@@ -91,7 +93,6 @@ const ProfileForm = () => {
   const validateUsername = useRef(
     debounce(
       async (username: string, callback: (result: string | true) => void) => {
-        console.log("==========");
         if (username === user.username) {
           callback(true);
           return;
@@ -99,7 +100,6 @@ const ProfileForm = () => {
 
         try {
           const res = await ProfileService.validateUsername(username);
-          console.log(res.status);
           callback(res.status ? true : "Username is already taken");
         } catch {
           callback("Error checking username");
@@ -139,7 +139,6 @@ const ProfileForm = () => {
       });
       navigator(`/profile/${data.username}`);
     } catch (error: unknown) {
-      console.error("Profile update failed:", error);
       toast.error("Oops!", {
         description:
           error instanceof Error ? error.message : "Profile update failed",

@@ -1,21 +1,23 @@
 /* eslint-disable react-refresh/only-export-components */
 
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Search } from "lucide-react";
+import { useState } from "react";
+
+import { Input } from "@/components/atoms/input";
 import {
   Tabs,
+  TabsContent,
   TabsList,
   TabsTrigger,
-  TabsContent,
 } from "@/components/organisms/tabs";
-import { Input } from "@/components/atoms/input";
-import { Search } from "lucide-react";
-import DashboardHeader from "./components/dashboard-header";
-import StatsOverview from "./components/stats-overview";
-import AllSquadsTab from "./components/all-squads-tab";
-import PendingContentTab from "./components/pending-content-tab";
+
 import ActiveSquadsTab from "./components/active-squads-tab";
+import AllSquadsTab from "./components/all-squads-tab";
+import DashboardHeader from "./components/dashboard-header";
 import InviteModeratorDialog from "./components/invite-moderator-dialog";
+import PendingContentTab from "./components/pending-content-tab";
+import StatsOverview from "./components/stats-overview";
 
 // Mock service functions - replace with actual API calls
 export const fetchSquadStats = async (): Promise<SquadStats> => {

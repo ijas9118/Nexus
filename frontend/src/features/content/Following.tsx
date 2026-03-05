@@ -1,12 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+
 import ContentService from "@/services/user/contentService";
-import FilterComponent from "./components/FilterComponent";
-import ContentTypeTab from "./components/ContentTypeTab";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import type { Content } from "@/types/content";
+
 import ContentCard from "./components/ContentCard";
-import { useQuery } from "@tanstack/react-query";
-import { Content } from "@/types/content";
+import ContentTypeTab from "./components/ContentTypeTab";
+import FilterComponent from "./components/FilterComponent";
 
 export default function Following() {
   const dispatch = useDispatch();
@@ -32,8 +34,6 @@ export default function Following() {
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
   });
-
-  console.log(data);
 
   return (
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 py-8">

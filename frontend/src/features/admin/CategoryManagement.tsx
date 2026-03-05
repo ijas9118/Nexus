@@ -1,14 +1,16 @@
+import { Loader2, Plus, Search } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
-import { Loader2, Plus, Search } from "lucide-react";
-import { toast } from "sonner";
-import { useCategoryManagement } from "./category-management/hooks/use-category-management";
-import CategoryTable from "./category-management/components/category-table";
-import CategoryPagination from "./category-management/components/category-pagination";
+
 import AddCategoryDialog from "./category-management/components/add-category-dialog";
+import CategoryPagination from "./category-management/components/category-pagination";
+import CategoryTable from "./category-management/components/category-table";
 import EditCategoryDialog from "./category-management/components/edit-category-dialog";
+import { useCategoryManagement } from "./category-management/hooks/use-category-management";
 
 export default function CategoryManagement() {
   const [searchQuery, setSearchQuery] = useState("");

@@ -1,3 +1,6 @@
+import type { ReactNode } from "react";
+
+import { Button } from "@/components/atoms/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,8 +12,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/molecules/alert-dialog";
-import { Button } from "@/components/atoms/button";
-import { ReactNode } from "react";
 
 type ConfirmDialogProps = {
   triggerLabel: string;

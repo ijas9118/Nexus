@@ -1,7 +1,8 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "../api";
+import type { Content } from "@/types/content";
 import { CONTENT_ROUTES } from "@/utils/constants";
-import { Content } from "@/types/content";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "../api";
 
 const BookmarkService = {
   // Bookmark a content

@@ -1,4 +1,7 @@
+import { format } from "date-fns";
+import { CalendarIcon, SearchIcon } from "lucide-react";
 import { useState } from "react";
+
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import {
@@ -8,14 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select";
-import { Calendar } from "@/components/organisms/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/molecules/popover";
-import { CalendarIcon, SearchIcon } from "lucide-react";
-import { format } from "date-fns";
+import { Calendar } from "@/components/organisms/calendar";
 import { cn } from "@/lib/utils";
 
 export function WithdrawalRequestsFilters() {

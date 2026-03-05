@@ -1,7 +1,7 @@
-import { IoSparklesSharp } from "react-icons/io5";
+import clsx from "clsx";
 import { BiSolidFlame } from "react-icons/bi";
 import { FaFire } from "react-icons/fa";
-import clsx from "clsx";
+import { IoSparklesSharp } from "react-icons/io5";
 
 export const SparkIcon = ({ className }: { className?: string }) => (
   <IoSparklesSharp

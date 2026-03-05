@@ -1,16 +1,17 @@
-import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 import NotificationService from "@/services/notificationService";
-import { NotificationHeader } from "./components/notification-header";
-import { NotificationFilters } from "./components/notification-filters";
+import type { RootState } from "@/store/store";
+
 import { BulkActions } from "./components/bulk-actions";
-import { LoadingState } from "./components/loading-state";
-import { ErrorState } from "./components/error-state";
 import { EmptyState } from "./components/empty-state";
+import { ErrorState } from "./components/error-state";
+import { LoadingState } from "./components/loading-state";
+import { NotificationFilters } from "./components/notification-filters";
+import { NotificationHeader } from "./components/notification-header";
 import { NotificationList } from "./components/notification-list";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 
 export default function NotificationsPage() {
   // Current user ID - in a real app, this would come from auth context
@@ -80,8 +81,6 @@ export default function NotificationsPage() {
       const dateB = new Date(b.createdAt).getTime();
       return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
     });
-
-  console.log(filteredNotifications);
 
   // Handle select all
   const handleSelectAll = () => {

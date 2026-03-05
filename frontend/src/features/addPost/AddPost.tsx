@@ -1,9 +1,10 @@
+import { ArrowLeft } from "lucide-react";
 import { lazy, Suspense, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+
 import { Skeleton } from "@/components/atoms/skeleton";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
 const BlogCreationForm = lazy(() => import("./components/BlogCreationForm"));
 
 const AddPost = () => {

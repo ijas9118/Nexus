@@ -1,16 +1,16 @@
 import type React from "react";
-
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { setCredentials } from "@/store/slices/authSlice";
+
 import {
-  loginUser,
-  registerUser,
   githubAuth,
   googleAuth,
+  loginUser,
+  registerUser,
 } from "@/services/user/authService";
+import { setCredentials } from "@/store/slices/authSlice";
 import { isValidEmail } from "@/utils/validation";
 
 export interface AuthFormData {

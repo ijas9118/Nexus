@@ -1,3 +1,7 @@
+import { CheckCircle, TrendingUp, UserPlus } from "lucide-react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Button } from "@/components/atoms/button";
 import {
   Card,
   CardContent,
@@ -6,10 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
-import { Button } from "@/components/atoms/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { CheckCircle, TrendingUp, UserPlus } from "lucide-react";
-import { Squad } from "../SquadAdminDashboard";
+
+import type { Squad } from "../SquadAdminDashboard";
 
 interface ActiveSquadsTabProps {
   squads: Squad[];

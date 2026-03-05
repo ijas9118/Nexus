@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Filter } from "lucide-react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
 import {
   AlertDialog,
@@ -12,9 +14,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/molecules/alert-dialog";
-import NotificationService from "@/services/notificationService";
-import { toast } from "sonner";
 import { DynamicLucidIcon } from "@/components/organisms/lucide-icon";
+import NotificationService from "@/services/notificationService";
 
 interface NotificationHeaderProps {
   unreadCount: number;

@@ -1,8 +1,15 @@
 import type { Column } from "@tanstack/react-table";
+import { CheckIcon, PlusCircleIcon } from "lucide-react";
+import React from "react";
 
-import { cn } from "@/lib/utils";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
+import { Separator } from "@/components/atoms/separator";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/molecules/popover";
 import {
   Command,
   CommandEmpty,
@@ -12,14 +19,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/organisms/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/molecules/popover";
-import { Separator } from "@/components/atoms/separator";
-import { CheckIcon, PlusCircleIcon } from "lucide-react";
-import React from "react";
+import { cn } from "@/lib/utils";
 
 interface FacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;

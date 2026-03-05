@@ -1,7 +1,8 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "./api";
-import { IBooking } from "@/types/booking";
+import type { IBooking } from "@/types/booking";
 import { BOOKING_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 const BookingService = {
   // Get upcoming bookings (pending or confirmed)

@@ -1,7 +1,9 @@
 import { AxiosError } from "axios";
-import api from "../api";
+
+import type { Content } from "@/types/content";
 import { ADMIN_ROUTES, CONTENT_ROUTES } from "@/utils/constants";
-import { Content } from "@/types/content";
+
+import api from "../api";
 
 export const ContentService = {
   getAllContents: async (): Promise<Content[]> => {

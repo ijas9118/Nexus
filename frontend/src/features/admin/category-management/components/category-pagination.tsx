@@ -1,5 +1,6 @@
-import { Button } from "@/components/atoms/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
+import { Button } from "@/components/atoms/button";
 
 interface CategoryPaginationProps {
   currentPage: number;

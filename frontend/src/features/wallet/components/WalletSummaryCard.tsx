@@ -1,11 +1,12 @@
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
+
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
-import { TransactionDetails } from "@/types/wallet";
+import type { TransactionDetails } from "@/types/wallet";
 
 interface WalletSummaryCardProps {
   transactions: TransactionDetails[];

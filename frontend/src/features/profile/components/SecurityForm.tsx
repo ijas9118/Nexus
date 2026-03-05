@@ -1,17 +1,20 @@
+import { Lock, Trash2, Unlink } from "lucide-react";
+import type { FC } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
-import ProfileService from "@/services/user/profileService";
-import { Lock, Trash2, Unlink } from "lucide-react";
-import { FC, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
-import PasswordInput from "./PasswordInput";
-import { toast } from "sonner";
-import { FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
 import { ScrollArea } from "@/components/organisms/scroll-area";
-import { RootState } from "@/store/store";
+import ProfileService from "@/services/user/profileService";
+import type { RootState } from "@/store/store";
+
+import PasswordInput from "./PasswordInput";
 
 const SecurityForm: FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -47,11 +50,9 @@ const SecurityForm: FC = () => {
     setLoading(true);
 
     try {
-      console.log("Updating Password...", data);
       await ProfileService.updatePassword(data);
       toast.success("Your password is updated.");
     } catch (error: unknown) {
-      console.error("Failed to update password", error);
       toast.error("Failed", {
         description:
           error instanceof Error ? error.message : "Failed to update password",

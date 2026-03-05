@@ -1,5 +1,6 @@
+import { Calendar, MessageCircleMore, Star, Users } from "lucide-react";
+
 import { Card, CardContent } from "@/components/molecules/card";
-import { Users, Calendar, Star, MessageCircleMore } from "lucide-react";
 
 type MentorStatsProps = {
   stats: {

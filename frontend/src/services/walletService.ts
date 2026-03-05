@@ -1,7 +1,8 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "./api";
-import { IWallet, IWithdrawalRequest } from "@/types/wallet";
+import type { IWallet, IWithdrawalRequest } from "@/types/wallet";
 import { WALLET_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 const WalletService = {
   getWalletInfo: () => handleApi(() => api.get<IWallet>(WALLET_ROUTES.BASE)),

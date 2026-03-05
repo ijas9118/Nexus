@@ -1,8 +1,13 @@
-import api from "./api";
-import { handleApi } from "@/utils/handleApi";
+import type {
+  ConnectionStatus,
+  FollowStats,
+  PendingRequest,
+} from "@/types/follow";
+import type { UserInterface } from "@/types/user";
 import { FOLLOWER_ROUTES } from "@/utils/constants";
-import { ConnectionStatus, FollowStats, PendingRequest } from "@/types/follow";
-import { UserInterface } from "@/types/user";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 const FollowService = {
   followUser: (followedId: string) =>

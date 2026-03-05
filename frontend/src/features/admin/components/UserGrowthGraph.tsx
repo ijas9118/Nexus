@@ -9,8 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
+import type { ChartConfig } from "@/components/organisms/chart";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,

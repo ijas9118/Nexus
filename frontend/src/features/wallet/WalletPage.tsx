@@ -1,16 +1,18 @@
-import { useState } from "react";
 import {
   QueryClient,
   QueryClientProvider,
   useQuery,
 } from "@tanstack/react-query";
-import { IWallet, IWithdrawalRequest } from "@/types/wallet";
+import { useState } from "react";
+
 import WalletService from "@/services/walletService";
-import WithdrawalDialog from "./components/WithdrawalDialog";
+import type { IWallet, IWithdrawalRequest } from "@/types/wallet";
+
+import PendingRequestsTable from "./components/PendingRequestsTable";
+import TransactionTabs from "./components/TransactionTabs";
 import WalletBalanceCard from "./components/WalletBalanceCard";
 import WalletSummaryCard from "./components/WalletSummaryCard";
-import TransactionTabs from "./components/TransactionTabs";
-import PendingRequestsTable from "./components/PendingRequestsTable";
+import WithdrawalDialog from "./components/WithdrawalDialog";
 
 // Create QueryClient
 const queryClient = new QueryClient();

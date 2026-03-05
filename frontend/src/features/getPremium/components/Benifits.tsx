@@ -1,3 +1,5 @@
+import { Check, Crown, Star, Zap } from "lucide-react";
+
 import {
   Card,
   CardContent,
@@ -5,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
-import { Check, Crown, Star, Zap } from "lucide-react";
 
 const Benifits = () => {
   return (

@@ -1,11 +1,13 @@
-import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react";
+import { useState } from "react";
+
 import { Button } from "@/components/atoms/button";
+
 import ContentList from "./components/content-list";
 import ContentPreview from "./components/content-preview";
-import RejectDialog from "./components/reject-dialog";
 import { fetchPendingContent } from "./components/content-service";
+import RejectDialog from "./components/reject-dialog";
 
 // Types - exported for reuse in other components
 export interface ContentItem {

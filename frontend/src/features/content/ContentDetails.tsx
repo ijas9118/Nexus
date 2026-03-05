@@ -1,19 +1,21 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
+
 import { Separator } from "@/components/atoms/separator";
 import CommentSection from "@/features/content/components/CommentSection";
+import BookmarkService from "@/services/user/bookmarkService";
+import { CommentService } from "@/services/user/commentService";
+import VoteService from "@/services/voteService";
+import type { Content } from "@/types/content";
+
+import { CommentInput } from "./components/CommentInput";
+import { ContentBody } from "./components/ContentBody";
+import { ContentHeader } from "./components/ContentHeader";
+import { ContentLoadingSkeleton } from "./components/ContentLoadingSkeleton";
+import { InteractionBar } from "./components/InteractionBar";
 // import RelatedContent from "@/features/content/components/RelatedContent";
 import { useContent } from "./hooks/useContent";
-import { ContentLoadingSkeleton } from "./components/ContentLoadingSkeleton";
-import { ContentHeader } from "./components/ContentHeader";
-import { InteractionBar } from "./components/InteractionBar";
-import { ContentBody } from "./components/ContentBody";
-import { CommentInput } from "./components/CommentInput";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CommentService } from "@/services/user/commentService";
-import { toast } from "sonner";
-import VoteService from "@/services/voteService";
-import BookmarkService from "@/services/user/bookmarkService";
-import { Content } from "@/types/content";
 
 export default function ContentDetails() {
   const { id } = useParams<{ id: string }>();

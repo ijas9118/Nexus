@@ -1,3 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+
 import {
   Card,
   CardContent,
@@ -11,12 +14,11 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/organisms/tabs";
-import { format } from "date-fns";
-import TimeSlotList from "./time-slot-list";
-import { useQuery } from "@tanstack/react-query";
 import TimeSlotService from "@/services/TimeSlotService";
-import BookedTimeSlots from "./BookedTimeSlots";
+
 import AddTimeSlotTab from "./AddTimeSlotTab";
+import BookedTimeSlots from "./BookedTimeSlots";
+import TimeSlotList from "./time-slot-list";
 
 interface TimeSlotManagementProps {
   date?: Date;

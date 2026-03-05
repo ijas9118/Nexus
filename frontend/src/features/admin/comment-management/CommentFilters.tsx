@@ -1,3 +1,6 @@
+import { Search } from "lucide-react";
+
+import { Input } from "@/components/atoms/input";
 import {
   Select,
   SelectContent,
@@ -7,8 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select";
-import { Input } from "@/components/atoms/input";
-import { Search } from "lucide-react";
 
 interface CommentFiltersProps {
   squads: { id: string; name: string }[];

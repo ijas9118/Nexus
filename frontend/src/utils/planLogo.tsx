@@ -1,4 +1,4 @@
-import { SparkIcon, FlameIcon, FireIcon } from "@/components/icons/PlanIcons";
+import { FireIcon, FlameIcon, SparkIcon } from "@/components/icons/PlanIcons";
 
 export function getPlanLogo(logoKey?: string, className?: string) {
   switch (logoKey) {

@@ -1,6 +1,7 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "./api";
 import { MENTOR_METADATA_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 export interface MentorMetadataData {
   _id: string;

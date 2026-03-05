@@ -1,5 +1,7 @@
-import { Skeleton } from "@/components/atoms/skeleton";
 import { Suspense } from "react";
+
+import { Skeleton } from "@/components/atoms/skeleton";
+
 import NotificationTypeManagement from "./notification-type/NotificationTypeManagement";
 
 export default function NotificationTypesPage() {

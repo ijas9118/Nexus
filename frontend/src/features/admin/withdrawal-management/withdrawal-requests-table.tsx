@@ -1,9 +1,12 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { CheckIcon, MoreHorizontalIcon, XIcon } from "lucide-react";
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { IWithdrawalRequest } from "@/types/wallet";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
+import { Textarea } from "@/components/atoms/textarea";
 import { Card, CardContent } from "@/components/molecules/card";
 import {
   Dialog,
@@ -27,10 +30,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/organisms/table";
-import { Textarea } from "@/components/atoms/textarea";
-import { format } from "date-fns";
-import { CheckIcon, MoreHorizontalIcon, XIcon } from "lucide-react";
 import WalletService from "@/services/walletService";
+import type { IWithdrawalRequest } from "@/types/wallet";
 
 export function WithdrawalRequestsTable() {
   const [selectedRequest, setSelectedRequest] =
@@ -50,8 +51,6 @@ export function WithdrawalRequestsTable() {
     queryKey: ["pendingRequests"],
     queryFn: WalletService.getPendingRequests,
   });
-
-  console.log(withdrawalRequests);
 
   // Mutation for approving a withdrawal request
   const approveMutation = useMutation({
@@ -92,11 +91,6 @@ export function WithdrawalRequestsTable() {
 
   const handleConfirmAction = () => {
     if (!selectedRequest) return;
-
-    // Log admin note (optional: send to backend if required)
-    console.log(
-      `${actionType} request ${selectedRequest._id} with note: ${adminNote}`,
-    );
 
     if (actionType === "approve") {
       approveMutation.mutate(selectedRequest._id.toString());

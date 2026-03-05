@@ -1,11 +1,8 @@
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/organisms/form";
+import { ImageIcon } from "lucide-react";
+import React from "react";
+import type { UseFormReturn } from "react-hook-form";
+import { useSelector } from "react-redux";
+
 import { Input } from "@/components/atoms/input";
 import {
   Select,
@@ -15,12 +12,17 @@ import {
   SelectValue,
 } from "@/components/atoms/select";
 import { Switch } from "@/components/atoms/switch";
-import { ImageIcon } from "lucide-react";
-import React from "react";
-import { UseFormReturn } from "react-hook-form";
-import { FormValues } from "./BlogCreationForm";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/organisms/form";
+import type { RootState } from "@/store/store";
+
+import type { FormValues } from "./BlogCreationForm";
 
 interface BasicDetailsFormProps {
   form: UseFormReturn<FormValues>;

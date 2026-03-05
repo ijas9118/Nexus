@@ -1,3 +1,8 @@
+import { Atom, DiamondPlus, Podcast } from "lucide-react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -9,12 +14,8 @@ import {
 } from "@/components/organisms/sidebar";
 import SquadService from "@/services/user/squadService";
 import { setUserSquads } from "@/store/slices/userSquadsSlice";
-import { Atom, DiamondPlus, Podcast } from "lucide-react";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { RootState } from "@/store/store";
-import { SquadDetail } from "@/types/squad";
+import type { RootState } from "@/store/store";
+import type { SquadDetail } from "@/types/squad";
 
 const SquadSubmenu: React.FC = () => {
   const dispatch = useDispatch();

@@ -1,3 +1,9 @@
+import type { ReactNode } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { io } from "socket.io-client";
+import { toast } from "sonner";
+
 import { SocketContext } from "@/hooks/useSocket";
 import {
   addMessage,
@@ -8,12 +14,9 @@ import {
   updateLastMessage,
   updateMessage,
 } from "@/store/slices/chatSlice";
-import store, { RootState } from "@/store/store";
+import type { RootState } from "@/store/store";
+import store from "@/store/store";
 import { HOST } from "@/utils/constants";
-import { ReactNode, useEffect, useMemo, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { io } from "socket.io-client";
-import { toast } from "sonner";
 
 interface SocketProviderProps {
   children: ReactNode;
@@ -26,10 +29,8 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
   const socket = useMemo(() => {
     if (!user?._id) {
-      console.log("No user ID available, socket not created");
       return null;
     }
-    console.log("Creating socket for user:", user._id);
     return io(HOST, {
       withCredentials: true,
       query: { userId: user._id },
@@ -111,7 +112,6 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
     return () => {
       socket.disconnect();
-      console.log("Socket disconnected");
     };
   }, [socket, dispatch]);
 

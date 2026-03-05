@@ -4,6 +4,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/organisms/tabs";
+
 import ProfilePosts from "./ProfilePosts";
 import ProfileUpvoted from "./ProfileUpvoted";
 

@@ -1,7 +1,8 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "../api";
-import { IGetUsersResponse, UserManagementData } from "@/types/admin/user";
+import type { IGetUsersResponse, UserManagementData } from "@/types/admin/user";
 import { ADMIN_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "../api";
 
 const AdminUserService = {
   getUsers: (page: number = 1, limit: number = 10) =>
