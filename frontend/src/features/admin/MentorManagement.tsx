@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { columns } from "./mentorManagement/columns";
+import { columns, TransformedMentor } from "./mentorManagement/columns";
 import { DataTable } from "./mentorManagement/components/data-table";
 import MentorService from "@/services/mentorService";
 import { useQuery } from "@tanstack/react-query";
@@ -16,16 +16,18 @@ const MentorManagement: FC = () => {
   } = useQuery({
     queryKey: ["mentors"],
     queryFn: async () => {
-      const mentors: any = await MentorService.getAllMentors();
-      return mentors.map((mentor: any) => ({
-        _id: mentor._id,
-        name: mentor.userId?.name || "N/A",
-        email: mentor.userId?.email || "N/A",
-        username: mentor.userId?.username || "N/A",
-        profilePic: mentor.userId?.profilePic || "",
-        status: mentor.status,
-        createdAt: new Date(mentor.createdAt).toLocaleDateString(),
-      }));
+      const mentors = await MentorService.getAllMentors();
+      return mentors.map(
+        (mentor): TransformedMentor => ({
+          _id: mentor._id,
+          name: mentor.userId?.name || "N/A",
+          email: mentor.userId?.email || "N/A",
+          username: mentor.userId?.username || "N/A",
+          profilePic: mentor.userId?.profilePic || "",
+          status: mentor.status,
+          createdAt: new Date(mentor.createdAt).toLocaleDateString(),
+        }),
+      );
     },
   });
 
@@ -40,12 +42,12 @@ const MentorManagement: FC = () => {
     enabled: !!selectedMentorId,
   });
 
-  const handleRowClick = (mentor: any) => {
+  const handleRowClick = (mentor: TransformedMentor) => {
     setSelectedMentorId(mentor._id);
     setDialogOpen(true);
   };
 
-  const hanldeBlock = (mentor: any) => {
+  const hanldeBlock = (mentor: TransformedMentor) => {
     console.log(mentor);
   };
 

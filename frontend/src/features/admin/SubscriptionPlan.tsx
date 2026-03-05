@@ -31,9 +31,11 @@ const SubscriptionPlan = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["plans"] }); // Refresh list
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Delete Error:", error);
-      alert(error?.message || "Failed to delete plan");
+      const message =
+        error instanceof Error ? error.message : "Failed to delete plan";
+      alert(message);
     },
   });
 

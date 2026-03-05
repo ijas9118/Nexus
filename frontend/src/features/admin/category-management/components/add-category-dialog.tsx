@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
 import { Loader2 } from "lucide-react";
+import { AxiosError } from "axios";
 
 interface AddCategoryDialogProps {
   isOpen: boolean;
@@ -43,11 +44,12 @@ export default function AddCategoryDialog({
       await onAdd(name);
       setName("");
       onClose();
-    } catch (err: any) {
-      setError(
-        err.response.data.message ||
-          "Failed to add category. Please try again.",
-      );
+    } catch (err: unknown) {
+      const message =
+        err instanceof AxiosError
+          ? err.response?.data?.message
+          : "Failed to add category. Please try again.";
+      setError(message || "Failed to add category. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

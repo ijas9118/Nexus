@@ -173,7 +173,9 @@ const Dashboard: FC = () => {
             </div>
             <Select
               value={timeRange}
-              onValueChange={(value) => setTimeRange(value as any)}
+              onValueChange={(value) =>
+                setTimeRange(value as "7days" | "30days" | "90days" | "year")
+              }
             >
               <SelectTrigger className="w-[140px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
                 <SelectValue placeholder="Select period" />

@@ -43,10 +43,12 @@ export default function AdminLogin() {
         dispatch(setCredentials({ user, accessToken }));
       }
       if (result) navigate("/admin/dashboard");
-    } catch (error: any) {
-      setErrorMessage(
-        error.message || "An error occurred. Please try again later.",
-      );
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "An error occurred. Please try again later.";
+      setErrorMessage(message);
     }
   };
 

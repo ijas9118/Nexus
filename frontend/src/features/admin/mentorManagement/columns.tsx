@@ -9,14 +9,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import { Mentor } from "@/types/mentor";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
+export interface TransformedMentor {
+  _id: string;
+  name: string;
+  email: string;
+  username: string;
+  profilePic: string;
+  status: string;
+  createdAt: string;
+}
+
 export const columns = (
-  handleRowClick: (mentor: any) => void,
-  handleBlock: (mentor: any) => void,
-): ColumnDef<Mentor>[] => [
+  handleRowClick: (mentor: TransformedMentor) => void,
+  handleBlock: (mentor: TransformedMentor) => void,
+): ColumnDef<TransformedMentor>[] => [
   {
     id: "select",
     header: ({ table }) => (
