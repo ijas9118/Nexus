@@ -4,6 +4,7 @@ import { useState } from "react";
 import BookmarkService from "@/services/user/bookmarkService";
 import ContentCard from "./components/ContentCard";
 import { useQuery } from "@tanstack/react-query";
+import { Content } from "@/types/content";
 
 export default function Bookmark() {
   const [selectedTab, setSelectedTab] = useState<string>("all");
@@ -46,27 +47,27 @@ export default function Bookmark() {
       )}
 
       <div className="flex flex-col space-y-8">
-        {data.map((item: any) => (
+        {data.map((item: Content) => (
           <ContentCard
             id={item._id}
             key={item._id}
             avatarFallback={"IA"}
-            profilePic={item.profilePic}
-            userName={item.name}
-            username={item.username}
+            profilePic={item.profilePic || ""}
+            userName={item.name || ""}
+            username={item.username || ""}
             contentType={item.contentType}
             heading={item.title}
             date={item.date}
             squad={item.squad}
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
-            isBookmarked={item.isBookmarked}
+            isBookmarked={!!item.isBookmarked}
             upvoteCount={item.upvoteCount}
             downvoteCount={item.downvoteCount}
             commentCount={item.commentCount}
-            content={item.content}
-            isUpvoted={item.isUpvoted}
-            isDownvoted={item.isDownvoted}
+            content={item.content || ""}
+            isUpvoted={!!item.isUpvoted}
+            isDownvoted={!!item.isDownvoted}
             viewCount={item.viewCount}
           />
         ))}

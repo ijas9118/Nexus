@@ -22,6 +22,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { BiDownvote, BiUpvote } from "react-icons/bi";
 import dayjs from "dayjs";
+import { Content } from "@/types/content";
 
 const ContentDetail = () => {
   const params = useParams();
@@ -33,7 +34,7 @@ const ContentDetail = () => {
     data: content,
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<Content>({
     queryKey: ["content", contentId],
     queryFn: () => ContentService.getContentById(contentId),
   });
@@ -118,7 +119,7 @@ const ContentDetail = () => {
               />
             </div>
 
-            {content.contentType === "Video" && content.videoUrl && (
+            {content.contentType === "video" && content.videoUrl && (
               <div className="mb-6">
                 <h3 className="text-lg font-medium mb-2">Video URL</h3>
                 <div className="flex items-center">

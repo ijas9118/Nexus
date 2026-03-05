@@ -1,6 +1,7 @@
 import { handleApi } from "@/utils/handleApi";
 import api from "../api";
 import { CONTENT_ROUTES } from "@/utils/constants";
+import { Content } from "@/types/content";
 
 const BookmarkService = {
   // Bookmark a content
@@ -9,7 +10,7 @@ const BookmarkService = {
 
   // Get all bookmarked content
   getAllBookmarks: () =>
-    handleApi(() => api.get<any[]>(CONTENT_ROUTES.BOOKMARKS)),
+    handleApi(() => api.get<Content[]>(CONTENT_ROUTES.BOOKMARKS)),
 };
 
 export default BookmarkService;

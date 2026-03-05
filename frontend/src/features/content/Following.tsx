@@ -6,6 +6,7 @@ import FilterComponent from "./components/FilterComponent";
 import ContentTypeTab from "./components/ContentTypeTab";
 import ContentCard from "./components/ContentCard";
 import { useQuery } from "@tanstack/react-query";
+import { Content } from "@/types/content";
 
 export default function Following() {
   const dispatch = useDispatch();
@@ -62,27 +63,27 @@ export default function Following() {
       )}
 
       <div className="flex flex-col space-y-8">
-        {data.map((item: any) => (
+        {data.map((item: Content) => (
           <ContentCard
             id={item._id}
             key={item._id}
             avatarFallback={"IA"}
-            profilePic={item.profilePic}
-            userName={item.name}
-            username={item.username}
+            profilePic={item.profilePic || ""}
+            userName={item.name || ""}
+            username={item.username || ""}
             contentType={item.contentType}
             heading={item.title}
             date={item.date}
             squad={item.squad}
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
-            isBookmarked={item.isBookmarked}
+            isBookmarked={!!item.isBookmarked}
             upvoteCount={item.upvoteCount}
             downvoteCount={item.downvoteCount}
             commentCount={item.commentCount}
-            content={item.content}
-            isUpvoted={item.isUpvoted}
-            isDownvoted={item.isDownvoted}
+            content={item.content || ""}
+            isUpvoted={!!item.isUpvoted}
+            isDownvoted={!!item.isDownvoted}
             viewCount={item.viewCount}
           />
         ))}

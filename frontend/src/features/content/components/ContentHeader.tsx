@@ -12,9 +12,10 @@ import {
   useUnfollowUser,
 } from "../hooks/useFollow";
 import { useConfirmDialog } from "@/context/ConfirmDialogContext";
+import { Content } from "@/types/content";
 
 interface ContentHeaderProps {
-  content: any;
+  content: Content;
 }
 
 export const ContentHeader = ({ content }: ContentHeaderProps) => {

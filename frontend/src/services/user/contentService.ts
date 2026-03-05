@@ -1,12 +1,19 @@
 import api from "../api";
 import { handleApi } from "@/utils/handleApi";
 import { CONTENT_ROUTES } from "@/utils/constants";
+import { Content, IHistoryItem } from "@/types/content";
 
 const ContentService = {
   // Add new content
-  addContent: async (formData: FormData) => {
+  addContent: async (
+    formData: FormData,
+  ): Promise<{ success: boolean; message: string; contentId: string }> => {
     try {
-      const response = await api.post(CONTENT_ROUTES.POST, formData, {
+      const response = await api.post<{
+        success: boolean;
+        message: string;
+        contentId: string;
+      }>(CONTENT_ROUTES.POST, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -20,24 +27,29 @@ const ContentService = {
   // Get paginated content
   getAllContent: ({ pageParam = 1 }: { pageParam?: number }) =>
     handleApi(() =>
-      api.get<any>(`${CONTENT_ROUTES.POST}?page=${pageParam}&limit=4`),
+      api.get<{ contents: Content[]; nextPage: number | null }>(
+        `${CONTENT_ROUTES.POST}?page=${pageParam}&limit=4`,
+      ),
     ),
 
   // Get single content by ID
   getContent: (id: string) =>
-    handleApi(() => api.get<any>(`${CONTENT_ROUTES.POST}/${id}`)),
+    handleApi(() => api.get<Content>(`${CONTENT_ROUTES.POST}/${id}`)),
 
   // Get contents from followed users
   getFollowingUsersContents: () =>
-    handleApi(() => api.get<any>(CONTENT_ROUTES.GET_FOLLOWING_POSTS)),
+    handleApi(() => api.get<Content[]>(CONTENT_ROUTES.GET_FOLLOWING_POSTS)),
 
   // Get user's content history
-  getHistory: () => handleApi(() => api.get<any>(CONTENT_ROUTES.GET_HISTORY)),
+  getHistory: () =>
+    handleApi(() => api.get<IHistoryItem[]>(CONTENT_ROUTES.GET_HISTORY)),
 
   // Remove a content from history
   removeFromHistory: (contentId: string) =>
     handleApi(() =>
-      api.post<any>(CONTENT_ROUTES.REMOVE_FROM_HISTORY, { contentId }),
+      api.post<{ message: string }>(CONTENT_ROUTES.REMOVE_FROM_HISTORY, {
+        contentId,
+      }),
     ),
 };
 

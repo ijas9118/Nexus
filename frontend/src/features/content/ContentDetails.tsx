@@ -13,6 +13,7 @@ import { CommentService } from "@/services/user/commentService";
 import { toast } from "sonner";
 import VoteService from "@/services/voteService";
 import BookmarkService from "@/services/user/bookmarkService";
+import { Content } from "@/types/content";
 
 export default function ContentDetails() {
   const { id } = useParams<{ id: string }>();
@@ -27,7 +28,7 @@ export default function ContentDetails() {
 
       const previousContent = queryClient.getQueryData(["content", id]);
 
-      queryClient.setQueryData(["content", id], (old: any) => {
+      queryClient.setQueryData<Content>(["content", id], (old) => {
         if (!old) return old;
         let upvoteCount = old.upvoteCount || 0;
         let downvoteCount = old.downvoteCount || 0;
@@ -117,7 +118,7 @@ export default function ContentDetails() {
       await queryClient.cancelQueries({ queryKey: ["content", id] });
       const previousContent = queryClient.getQueryData(["content", id]);
 
-      queryClient.setQueryData(["content", id], (old: any) => {
+      queryClient.setQueryData<Content>(["content", id], (old) => {
         if (!old) return old;
         return {
           ...old,
@@ -132,7 +133,7 @@ export default function ContentDetails() {
       toast.error("Failed to update bookmark");
     },
     onSuccess: (_data, _variables, context) => {
-      const wasBookmarked = (context?.previousContent as any)?.isBookmarked;
+      const wasBookmarked = (context?.previousContent as Content)?.isBookmarked;
       if (wasBookmarked) {
         toast.success("Removed from bookmarks");
       } else {
@@ -164,13 +165,13 @@ export default function ContentDetails() {
     <div className="container mx-auto px-4 py-8 max-w-4xl h-screen">
       <ContentHeader content={content} />
       <InteractionBar
-        isUpvoted={content.isUpvoted}
-        isDownvoted={content.isDownvoted}
+        isUpvoted={!!content.isUpvoted}
+        isDownvoted={!!content.isDownvoted}
         upvoteCount={content.upvoteCount ?? 0}
         downvoteCount={content.downvoteCount ?? 0}
         commentCount={content.commentCount ?? 0}
         viewCount={content.viewCount ?? 0}
-        isBookmarked={content.isBookmarked}
+        isBookmarked={!!content.isBookmarked}
         onUpvote={handleUpvote}
         onDownvote={handleDownvote}
         onBookmark={handleBookmark}
@@ -179,7 +180,7 @@ export default function ContentDetails() {
       <ContentBody
         thumbnailUrl={content.thumbnailUrl}
         title={content.title}
-        content={content.content}
+        content={content.content || ""}
       />
       <div className="mt-8">
         <h3 className="text-xl font-semibold mb-4">Comments</h3>

@@ -1,6 +1,6 @@
 import { handleApi } from "@/utils/handleApi";
 import api from "./api";
-import { MentorshipTypeData } from "@/types/mentor";
+import { MentorshipType, MentorshipTypeData } from "@/types/mentor";
 import { MENTORSHIP_TYPE_ROUTES } from "@/utils/constants";
 
 const MentorshipTypeService = {
@@ -8,7 +8,7 @@ const MentorshipTypeService = {
   getAllTypes: (includeInactive = false) => {
     const query = includeInactive ? "?all=true" : "";
     return handleApi(() =>
-      api.get<MentorshipTypeData[]>(`${MENTORSHIP_TYPE_ROUTES.BASE}${query}`),
+      api.get<MentorshipType[]>(`${MENTORSHIP_TYPE_ROUTES.BASE}${query}`),
     );
   },
 
@@ -18,16 +18,14 @@ const MentorshipTypeService = {
       api.get<MentorshipTypeData>(`${MENTORSHIP_TYPE_ROUTES.BASE}/${id}`),
     ),
 
-  // Create new
   create: (data: Partial<MentorshipTypeData>) =>
     handleApi(() =>
-      api.post<MentorshipTypeData>(MENTORSHIP_TYPE_ROUTES.BASE, data),
+      api.post<MentorshipType>(MENTORSHIP_TYPE_ROUTES.BASE, data),
     ),
 
-  // Update existing
   update: (id: string, data: Partial<MentorshipTypeData>) =>
     handleApi(() =>
-      api.put<MentorshipTypeData>(`${MENTORSHIP_TYPE_ROUTES.BASE}/${id}`, data),
+      api.put<MentorshipType>(`${MENTORSHIP_TYPE_ROUTES.BASE}/${id}`, data),
     ),
 
   // Soft delete

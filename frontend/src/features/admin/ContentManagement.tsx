@@ -4,6 +4,7 @@ import { ContentService } from "@/services/admin/contentService";
 import { DataTable } from "./content-management/components/data-table";
 import { columns } from "./content-management/columns";
 import { useNavigate } from "react-router-dom";
+import { Content } from "@/types/content";
 
 const ContentManagement: FC = () => {
   const navigator = useNavigate();
@@ -11,12 +12,12 @@ const ContentManagement: FC = () => {
     data: contents,
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<Content[]>({
     queryKey: ["contents"],
     queryFn: ContentService.getAllContents,
   });
 
-  const handleRowClick = (content: any) => {
+  const handleRowClick = (content: Content) => {
     navigator(`/admin/contents/${content._id}`);
   };
 
