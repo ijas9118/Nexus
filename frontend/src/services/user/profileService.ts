@@ -1,12 +1,13 @@
 import api from "../api";
 import { handleApi } from "@/utils/handleApi";
 import { USER_ROUTES } from "@/utils/constants";
+import { UserInterface } from "@/types/user";
 
 const ProfileService = {
   getUserProfile: (username: string) =>
-    handleApi(() => api.get<any>(`${USER_ROUTES.BASE}/${username}`)),
+    handleApi(() => api.get<UserInterface>(`${USER_ROUTES.BASE}/${username}`)),
 
-  updateProfile: (data: { username: string; bio: string; socials: [] }) =>
+  updateProfile: (data: Partial<UserInterface>) =>
     handleApi(() => api.post(USER_ROUTES.UPDATE, data)),
 
   updatePassword: (data: {

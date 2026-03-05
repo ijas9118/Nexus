@@ -23,7 +23,7 @@ const SquadService = {
     handleApi(() => api.post(`${SQUAD_ROUTES.BASE}/${squadId}/leave`)),
 
   getUserJoinedSquads: async () =>
-    handleApi(() => api.get<any>(USER_ROUTES.SQUADS)),
+    handleApi(() => api.get<SquadDetail[]>(USER_ROUTES.SQUADS)),
 
   getSquadDetailsByHandle: async (handle: string) =>
     handleApi(() => api.get<SquadDetail>(`${SQUAD_ROUTES.DETAIL}/${handle}`)),
@@ -34,7 +34,7 @@ const SquadService = {
     ),
 
   getJoinedSquads: async (userId: string) =>
-    handleApi(() => api.post<any[]>(SQUAD_ROUTES.JOINED, { userId })),
+    handleApi(() => api.post<SquadDetail[]>(SQUAD_ROUTES.JOINED, { userId })),
 };
 
 export default SquadService;

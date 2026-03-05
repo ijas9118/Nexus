@@ -21,6 +21,8 @@ import { toast } from "sonner";
 import { useUpdateProfilePic } from "../hooks/useUpdateProfilePic";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "@/utils/debounce";
+import { RootState } from "@/store/store";
+import { UserInterface } from "@/types/user";
 
 const socialLinks = [
   { key: "github", icon: FaGithub, label: "Github" },
@@ -34,8 +36,18 @@ const socialLinks = [
   { key: "threads", icon: FaSquareThreads, label: "Threads" },
 ];
 
+interface ProfileFormData {
+  username: string;
+  bio: string;
+  name: string;
+  socials: Record<string, string>;
+  skills: string[];
+}
+
 const ProfileForm = () => {
-  const user = useSelector((state: any) => state.auth.user);
+  const user = useSelector(
+    (state: RootState) => state.auth.user,
+  ) as UserInterface;
   const { updateProfilePic, isUpdating } = useUpdateProfilePic();
   const [loading, setLoading] = useState(false);
   const [skills, setSkills] = useState<string[]>(user.skills || []);
@@ -53,26 +65,27 @@ const ProfileForm = () => {
   const navigator = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { register, handleSubmit, control, setValue } = useForm({
-    mode: "onChange",
-    defaultValues: {
-      username: user.username || "",
-      bio: user.bio || "",
-      name: user.name || "",
-      socials:
-        user.socials?.reduce(
-          (
-            acc: Record<string, string>,
-            { platform, url }: { platform: string; url: string },
-          ) => {
-            acc[platform] = url;
-            return acc;
-          },
-          {},
-        ) || {},
-      skills: user.skills || [],
-    },
-  });
+  const { register, handleSubmit, control, setValue } =
+    useForm<ProfileFormData>({
+      mode: "onChange",
+      defaultValues: {
+        username: user.username || "",
+        bio: user.bio || "",
+        name: user.name || "",
+        socials:
+          user.socials?.reduce(
+            (
+              acc: Record<string, string>,
+              { platform, url }: { platform: string; url: string },
+            ) => {
+              acc[platform] = url;
+              return acc;
+            },
+            {},
+          ) || {},
+        skills: user.skills || [],
+      },
+    });
   const { isDirty, errors } = useFormState({ control });
 
   const validateUsername = useRef(
@@ -100,13 +113,15 @@ const ProfileForm = () => {
     setVisibleInputs((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: ProfileFormData) => {
     setLoading(true);
     const formattedSocials = Object.entries(data.socials || {})
       .filter(([_, url]) => url) // Remove empty values
       .map(([platform, url]) => ({ platform, url }));
 
-    const formattedData = {
+    const formattedData: Omit<Partial<ProfileFormData>, "socials"> & {
+      socials: { platform: string; url: string }[];
+    } = {
       ...data,
       socials: formattedSocials,
       skills,
