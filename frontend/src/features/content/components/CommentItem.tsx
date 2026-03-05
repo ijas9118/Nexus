@@ -7,18 +7,7 @@ import { useCommentInteraction } from "../hooks/useCommentInteraction";
 
 dayjs.extend(relativeTime);
 
-interface Comment {
-  _id: string;
-  contentId: string;
-  userId: { _id: string; name: string; profilePic?: string; username: string };
-  parentCommentId?: string;
-  text: string;
-  likes: string[];
-  replies: Comment[];
-  createdAt: string;
-  isDeleted: boolean;
-  status: string;
-}
+import { Comment } from "@/types/comment";
 
 interface CommentItemProps {
   comment: Comment;

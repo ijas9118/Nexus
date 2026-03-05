@@ -11,22 +11,10 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import StatDialog from "./StatDialog";
 
+import { UserInterface } from "@/types/user";
+
 interface ProfileHeaderProps {
-  profileUser: {
-    _id: string;
-    name: string;
-    username: string;
-    profilePic?: string;
-    joinedAt: string;
-    role: string;
-    bio?: string;
-    socials: [{ platform: string; url: string }];
-    location: string;
-    postsCount: number;
-    totalLikes: number;
-    totalViews: number;
-    skills: string[];
-  };
+  profileUser: UserInterface | null;
   isFollowing: boolean;
   isConnected: boolean;
   hasSentRequest: boolean;

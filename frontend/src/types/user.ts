@@ -16,6 +16,9 @@ export interface UserInterface {
   phone: string;
   mentorId?: string;
   skills?: string[];
+  postsCount?: number;
+  totalLikes?: number;
+  totalViews?: number;
 }
 
 export interface IUser {

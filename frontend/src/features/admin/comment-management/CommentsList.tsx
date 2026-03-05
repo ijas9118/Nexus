@@ -14,10 +14,11 @@ import {
   Search,
   Trash2,
 } from "lucide-react";
+import { AdminComment } from "@/types/admin/comment";
 import React from "react";
 
 interface CommentsListProps {
-  comments: any;
+  comments: AdminComment[];
   getStatusBadge: (status: string) => React.ReactNode;
 }
 
@@ -38,7 +39,7 @@ const CommentsList = ({ comments, getStatusBadge }: CommentsListProps) => {
 
   return (
     <div className="grid gap-4">
-      {comments.map((comment: any) => (
+      {comments.map((comment: AdminComment) => (
         <Card key={comment._id}>
           <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
             <div className="flex items-center gap-2">

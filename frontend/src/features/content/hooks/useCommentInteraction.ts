@@ -17,8 +17,9 @@ export const useCommentInteraction = (commentId: string, contentId: string) => {
       setShowReplyInput(false);
       queryClient.invalidateQueries({ queryKey: ["comments", contentId] }); // Refresh comments
     },
-    onError: (error: any) => {
-      toast.error(`Failed to post reply: ${error.message || "Unknown error"}`);
+    onError: (error: unknown) => {
+      const message = error instanceof Error ? error.message : String(error);
+      toast.error(`Failed to post reply: ${message || "Unknown error"}`);
     },
   });
 

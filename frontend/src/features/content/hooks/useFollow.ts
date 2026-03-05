@@ -30,8 +30,8 @@ export const useConnectUser = () => {
   return useMutation({
     mutationFn: (recipientId: string) =>
       FollowService.sendConnectionRequest(recipientId),
-    onSuccess: (data) => {
-      toast.success(data.message || "Connection request sent");
+    onSuccess: () => {
+      toast.success("Connection request sent");
     },
     onError: (error: any) => {
       if (typeof error === "string") {

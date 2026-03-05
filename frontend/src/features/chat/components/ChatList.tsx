@@ -64,8 +64,12 @@ const ChatList = () => {
   useEffect(() => {
     const fetchConnections = async () => {
       try {
-        const options = await FollowService.getAllConnections();
-        setConnectionOptions(options.data);
+        const connections = await FollowService.getAllConnections();
+        const options = connections.map((conn) => ({
+          label: conn.name,
+          value: conn._id,
+        }));
+        setConnectionOptions(options);
       } catch (error) {
         console.error("Failed to load connections:", error);
       }
