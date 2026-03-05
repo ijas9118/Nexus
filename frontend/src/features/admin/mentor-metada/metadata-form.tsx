@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -101,9 +102,12 @@ export default function MetadataForm({
           : "Metadata created successfully",
       );
       onClose();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to save metadata:", error);
-      const errorMessage = error?.message || "Failed to save metadata";
+      const errorMessage =
+        error instanceof AxiosError
+          ? error.response?.data?.message
+          : "Failed to save metadata";
 
       if (errorMessage.toLowerCase().includes("already exists")) {
         form.setError("name", {

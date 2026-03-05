@@ -186,8 +186,9 @@ const PricingPlanForm = ({ onClose, initialData }: PricingPlanFormProps) => {
       });
       onClose(); // Close the dialog
     },
-    onError: (error: any) => {
-      const errorMessage = error.message || "Failed to create plan";
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to create plan";
       toast.error("Error", {
         description: errorMessage,
       });
@@ -195,7 +196,7 @@ const PricingPlanForm = ({ onClose, initialData }: PricingPlanFormProps) => {
   });
 
   const updatePlanMutation = useMutation({
-    mutationFn: (updatedData: any) =>
+    mutationFn: (updatedData: Partial<IPlan>) =>
       PlanService.updatePlan(initialData!._id as string, updatedData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["plans"] });
@@ -204,9 +205,11 @@ const PricingPlanForm = ({ onClose, initialData }: PricingPlanFormProps) => {
       });
       onClose();
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to update plan";
       toast.error("Error", {
-        description: error.message || "Failed to update plan",
+        description: errorMessage,
       });
     },
   });

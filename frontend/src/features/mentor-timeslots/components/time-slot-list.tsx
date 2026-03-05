@@ -27,7 +27,7 @@ export default function TimeSlotList() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allTimeSlots"] });
     },
-    onError: (err: any) => {
+    onError: (err: unknown) => {
       console.error("Failed to delete time slot:", err);
     },
   });

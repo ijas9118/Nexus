@@ -10,9 +10,14 @@ import {
   FormMessage,
 } from "@/components/organisms/form";
 import { MultiSelect } from "./multi-select";
-import { useMentorshipForm } from "../hooks/useMentorshipForm";
+import {
+  useMentorshipForm,
+  UseMentorshipFormProps,
+} from "../hooks/useMentorshipForm";
 
-export default function MentorshipDetailsForm({ mentorData }: any) {
+export default function MentorshipDetailsForm({
+  mentorData,
+}: UseMentorshipFormProps) {
   const {
     form,
     mentorshipTypeOptions,

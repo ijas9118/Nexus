@@ -7,7 +7,7 @@ import ConfirmDialog from "@/components/molecules/ConfirmDialog";
 export interface UserData {
   _id: string;
   name: string;
-  profilePic: string;
+  profilePic?: string;
   username: string;
   isFollowing?: boolean;
   isConnected?: boolean;

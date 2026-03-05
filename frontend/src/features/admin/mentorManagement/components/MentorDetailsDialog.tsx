@@ -13,6 +13,7 @@ import { ScrollArea } from "@/components/organisms/scroll-area";
 import { Mentor } from "@/types/mentor";
 import { toast } from "sonner";
 import MentorService from "@/services/mentorService";
+import { AxiosError } from "axios";
 
 interface MentorDetailsDialogProps {
   open: boolean;
@@ -51,11 +52,13 @@ export const MentorDetailsDialog: FC<MentorDetailsDialogProps> = ({
       toast.success("Mentor approved successfully!");
       refetchMentorDetails(); // Refresh mentor details to show updated status
       onOpenChange(false); // Optionally close the dialog
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error.response?.data?.message || "Failed to approve mentor.";
-      setApproveError(errorMessage);
-      toast.error(errorMessage);
+        error instanceof AxiosError
+          ? error.response?.data?.message
+          : "Failed to approve mentor.";
+      setApproveError(errorMessage || "Failed to approve mentor.");
+      toast.error(errorMessage || "Failed to approve mentor.");
     } finally {
       setIsApproving(false);
     }

@@ -21,6 +21,7 @@ import type { NotificationTypeData } from "@/types/notification";
 import { isValidLucideIcon } from "@/utils/icon-utils";
 import { DynamicIcon } from "./dynamic-icon";
 import { HexColorPicker } from "react-colorful";
+import { AxiosError } from "axios";
 
 const roles = [
   { id: "admin", label: "Admin" },
@@ -151,9 +152,12 @@ export default function NotificationTypeForm({
           ? "Notification type updated successfully"
           : "Notification type created successfully",
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to save notification type:", error);
-      const errorMessage = error?.message || "Failed to save notification type";
+      const errorMessage =
+        error instanceof AxiosError
+          ? error.response?.data?.message
+          : "Failed to save notification type";
 
       if (errorMessage.toLowerCase().includes("already exists")) {
         form.setError("name", {

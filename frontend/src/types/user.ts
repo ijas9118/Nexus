@@ -19,6 +19,8 @@ export interface UserInterface {
   postsCount?: number;
   totalLikes?: number;
   totalViews?: number;
+  googleId?: string;
+  githubId?: string;
 }
 
 export interface IUser {

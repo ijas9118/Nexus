@@ -59,7 +59,7 @@ const MentorService = {
   }) => handleApi(() => api.put(`${MENTOR_ROUTE}/mentorship-details`, data)),
 
   getMentorDashboard: () =>
-    handleApi(() => api.get<any>(ADMIN_ROUTES.DASHBOARD)),
+    handleApi(() => api.get<unknown>(ADMIN_ROUTES.DASHBOARD)),
 };
 
 export default MentorService;

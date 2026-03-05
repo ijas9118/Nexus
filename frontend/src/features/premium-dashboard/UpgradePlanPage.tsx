@@ -50,9 +50,12 @@ export default function UpgradePlanPage() {
       const sessionUrl = await PaymentService.createSession(plan, email);
 
       window.location.href = sessionUrl;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Payment failed:", error);
-      toast.error(error.message || "Something went wrong. Please try again.");
+      toast.error(
+        (error as { message?: string })?.message ||
+          "Something went wrong. Please try again.",
+      );
     }
 
     // Here you would typically navigate to checkout or confirm the selection

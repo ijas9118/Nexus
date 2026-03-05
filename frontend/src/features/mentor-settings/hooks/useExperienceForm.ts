@@ -36,8 +36,28 @@ const experienceFormSchema = z.object({
 
 type ExperienceFormValues = z.infer<typeof experienceFormSchema>;
 
+import { ExpertiseArea, Technology } from "@/types/mentor";
+
+export interface ExperienceData {
+  currentRole?: string;
+  company?: string;
+  experienceLevel?: {
+    _id: string;
+    label?: string;
+    name?: string;
+    type?: string;
+    isActive?: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+  };
+  expertiseAreas?: ExpertiseArea[];
+  technologies?: Technology[];
+  bio?: string;
+  resume?: string;
+}
+
 // Custom Hook
-export const useExperienceForm = (experience: any) => {
+export const useExperienceForm = (experience?: ExperienceData) => {
   const queryClient = useQueryClient();
 
   // Fetch metadata
@@ -78,9 +98,8 @@ export const useExperienceForm = (experience: any) => {
         company: experience.company || "",
         experienceLevel: experience.experienceLevel?._id || "",
         expertiseAreas:
-          experience.expertiseAreas?.map((area: any) => area._id) || [],
-        technologies:
-          experience.technologies?.map((tech: any) => tech._id) || [],
+          experience.expertiseAreas?.map((area) => area._id) || [],
+        technologies: experience.technologies?.map((tech) => tech._id) || [],
         bio: experience.bio || "",
         resume: experience.resume || "",
       });

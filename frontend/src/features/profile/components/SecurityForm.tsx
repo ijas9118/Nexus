@@ -11,9 +11,10 @@ import { toast } from "sonner";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { ScrollArea } from "@/components/organisms/scroll-area";
+import { RootState } from "@/store/store";
 
 const SecurityForm: FC = () => {
-  const user = useSelector((state: any) => state.auth.user);
+  const user = useSelector((state: RootState) => state.auth.user);
   const [loading, setLoading] = useState(false);
 
   const {
@@ -29,6 +30,8 @@ const SecurityForm: FC = () => {
     },
   });
 
+  if (!user) return null;
+
   const handleDisconnect = (provider: "google" | "github") => {
     setLoading(true);
     toast.info(`Disconnecting ${provider} account is not yet implemented.`);
@@ -36,17 +39,22 @@ const SecurityForm: FC = () => {
     // Example: await disconnectAccount(provider); then update Redux state
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) => {
     setLoading(true);
 
     try {
       console.log("Updating Password...", data);
       await ProfileService.updatePassword(data);
       toast.success("Your password is updated.");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to update password", error);
       toast.error("Failed", {
-        description: error.message,
+        description:
+          error instanceof Error ? error.message : "Failed to update password",
       });
     } finally {
       setLoading(false);

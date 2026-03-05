@@ -6,7 +6,7 @@ import { SQUAD_ROUTES, USER_ROUTES } from "@/utils/constants";
 const SquadService = {
   createSquad: async (formData: FormData) =>
     handleApi(() =>
-      api.post<any>(SQUAD_ROUTES.BASE, formData, {
+      api.post<SquadDetail>(SQUAD_ROUTES.BASE, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       }),
     ),

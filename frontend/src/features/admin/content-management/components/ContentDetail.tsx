@@ -23,6 +23,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { BiDownvote, BiUpvote } from "react-icons/bi";
 import dayjs from "dayjs";
 import { Content } from "@/types/content";
+import { toast } from "sonner";
 
 const ContentDetail = () => {
   const params = useParams();
@@ -45,8 +46,11 @@ const ContentDetail = () => {
       // Invalidate the content query to refetch the updated data
       queryClient.invalidateQueries({ queryKey: ["content", contentId] });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Error verifying content:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to verify content";
+      toast.error(errorMessage);
     },
   });
 

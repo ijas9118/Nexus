@@ -3,7 +3,19 @@ import { Label } from "@/components/atoms/label";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
-const PasswordInput = ({ label, id, registerOptions, watchValue }: any) => {
+interface PasswordInputProps {
+  label: string;
+  id: string;
+  registerOptions: Record<string, unknown>;
+  watchValue?: string;
+}
+
+const PasswordInput = ({
+  label,
+  id,
+  registerOptions,
+  watchValue,
+}: PasswordInputProps) => {
   const [visible, setVisible] = useState(false);
 
   return (

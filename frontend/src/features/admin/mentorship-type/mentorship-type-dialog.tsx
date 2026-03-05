@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/atoms/button";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 import {
   Dialog,
   DialogContent,
@@ -104,9 +105,12 @@ export function MentorshipTypeDialog({
           : "Mentorship type created successfully",
       );
       setOpen(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to save mentorship type:", error);
-      const errorMessage = error?.message || "Failed to save mentorship type";
+      const errorMessage =
+        error instanceof AxiosError
+          ? error.response?.data?.message
+          : "Failed to save mentorship type";
 
       if (
         errorMessage.toLowerCase().includes("already exists") ||

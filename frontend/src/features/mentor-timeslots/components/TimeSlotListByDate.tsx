@@ -3,8 +3,10 @@ import { Trash2, Clock, Loader2 } from "lucide-react";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
 
+import { TimeSlot } from "@/types/mentor";
+
 interface TimeSlotListByDateProps {
-  timeSlots: any[];
+  timeSlots: TimeSlot[];
   isLoading: boolean;
   onDelete: (slotId: string) => void;
   isDeleting: boolean;

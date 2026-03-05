@@ -77,10 +77,11 @@ const BookingPage = () => {
     try {
       const sessionUrl = await BookingPaymentService.createSession(bookingData);
       window.location.href = sessionUrl;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Booking payment failed:", error);
       toast.error(
-        error.message || "Failed to initiate payment. Please try again.",
+        (error as { message?: string })?.message ||
+          "Failed to initiate payment. Please try again.",
       );
     }
   };

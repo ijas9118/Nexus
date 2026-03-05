@@ -1,5 +1,6 @@
 import api from "../api";
 import { handleApi } from "@/utils/handleApi";
+import { Content } from "@/types/content";
 import { USER_ROUTES } from "@/utils/constants";
 import { UserInterface } from "@/types/user";
 
@@ -17,7 +18,7 @@ const ProfileService = {
   }) => handleApi(() => api.post(USER_ROUTES.UPDATE_PASSWORD, data)),
 
   getUserContents: (username: string) =>
-    handleApi(() => api.post<any>(USER_ROUTES.CONTENTS, { username })),
+    handleApi(() => api.post<Content[]>(USER_ROUTES.CONTENTS, { username })),
 
   validateUsername: (username: string) =>
     handleApi(() =>

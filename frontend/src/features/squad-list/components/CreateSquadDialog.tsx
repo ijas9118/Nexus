@@ -111,7 +111,9 @@ export function CreateSquadDialog({
         formData.append("logo", data.logo);
       }
 
-      const result = await SquadService.createSquad(formData);
+      const result = (await SquadService.createSquad(
+        formData,
+      )) as SquadDetail & { message?: string };
       onSquadCreated(result);
       setLoading(false);
       setLogoPreview(null);

@@ -98,7 +98,7 @@ const ChatList = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("chatCreated", (chat: any) => {
+      socket.on("chatCreated", (chat: Chat) => {
         // Only add if not already in chats to prevent duplicates
         if (!chats.find((c) => c._id === chat._id)) {
           dispatch(setChats([...chats, chat]));
@@ -106,10 +106,10 @@ const ChatList = () => {
         // Set as active chat if it matches the current user selection
         if (
           activeChat?.id ===
-          chat.participants.find((p: any) => p._id !== userId)?._id
+          chat.participants.find((p: User) => p._id !== userId)?._id
         ) {
           const otherParticipant = chat.participants.find(
-            (p: any) => p._id !== userId,
+            (p: User) => p._id !== userId,
           );
           dispatch(
             setActiveChat({
@@ -125,7 +125,7 @@ const ChatList = () => {
         }
       });
 
-      socket.on("groupCreated", (group: any) => {
+      socket.on("groupCreated", (group: Group) => {
         if (!groups.find((g) => g._id === group._id)) {
           dispatch(setGroups([...groups, group]));
         }

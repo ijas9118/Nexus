@@ -87,10 +87,16 @@ export function useAuth() {
       if (signUp) {
         setShowOTP(true);
       } else navigate("/myFeed");
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+            ? error
+            : (error as { message?: string })?.message ||
+              "Something went wrong. Please try again.";
       toast.error("Authentication Failed", {
-        description:
-          error?.message || "Something went wrong. Please try again.",
+        description: errorMessage,
       });
     } finally {
       setLoading(false);
@@ -104,10 +110,16 @@ export function useAuth() {
       } else if (provider === "github") {
         await githubAuth();
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+            ? error
+            : (error as { message?: string })?.message ||
+              "Something went wrong. Please try again.";
       toast.error(`${provider} Authentication Failed`, {
-        description:
-          error?.message || "Something went wrong. Please try again.",
+        description: errorMessage,
       });
     }
   };

@@ -1,5 +1,6 @@
 import { useSocket } from "@/hooks/useSocket";
 import { RootState } from "@/store/store";
+import { Message } from "@/types";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MessageBubble from "./MessageBubble";
@@ -48,7 +49,7 @@ const ChatWindow = () => {
   useEffect(() => {
     if (!socket) return;
 
-    const handleNewMessage = (message: any) => {
+    const handleNewMessage = (message: Message) => {
       dispatch(
         setMessages({
           chatId: message.chatId,

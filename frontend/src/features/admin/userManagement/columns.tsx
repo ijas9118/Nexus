@@ -15,8 +15,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 export const getUserTableColumns = (
-  blockMutation: UseMutationResult<any, unknown, string>,
-  unblockMutation: UseMutationResult<any, unknown, string>,
+  blockMutation: UseMutationResult<UserManagementData, unknown, string>,
+  unblockMutation: UseMutationResult<UserManagementData, unknown, string>,
 ): ColumnDef<UserManagementData>[] => [
   {
     id: "select",

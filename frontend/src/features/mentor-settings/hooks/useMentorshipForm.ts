@@ -18,8 +18,8 @@ const mentorshipFormSchema = z.object({
 
 type MentorshipFormValues = z.infer<typeof mentorshipFormSchema>;
 
-interface UseMentorshipFormProps {
-  mentorData: {
+export interface UseMentorshipFormProps {
+  mentorData?: {
     mentorshipDetails?: {
       mentorshipTypes?: Array<{ _id: string }>;
       targetAudiences?: Array<{ _id: string }>;
@@ -84,15 +84,19 @@ export const useMentorshipForm = ({ mentorData }: UseMentorshipFormProps) => {
   });
 
   // Map options for MultiSelect
-  const mentorshipTypeOptions = mentorshipTypes.map((type: any) => ({
-    value: type._id,
-    label: type.name,
-  }));
+  const mentorshipTypeOptions = mentorshipTypes.map(
+    (type: { _id: string; name: string }) => ({
+      value: type._id,
+      label: type.name,
+    }),
+  );
 
-  const targetAudienceOptions = targetAudiences.map((audience: any) => ({
-    value: audience._id,
-    label: audience.name,
-  }));
+  const targetAudienceOptions = targetAudiences.map(
+    (audience: { _id: string; name: string }) => ({
+      value: audience._id,
+      label: audience.name,
+    }),
+  );
 
   return {
     form,

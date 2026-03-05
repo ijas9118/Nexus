@@ -18,10 +18,17 @@ export function useOtpVerification(email: string) {
       const { user, accessToken } = result;
       dispatch(setCredentials({ user, accessToken }));
       navigate("/myFeed");
-    } catch (error: any) {
-      console.log("Error occurred: ", error.message);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+            ? error
+            : (error as { message?: string })?.message ||
+              "Invalid OTP. Please try again.";
+      console.log("Error occurred: ", errorMessage);
       toast.error("Verification Failed", {
-        description: error?.message || "Invalid OTP. Please try again.",
+        description: errorMessage,
       });
     }
   };
@@ -33,10 +40,16 @@ export function useOtpVerification(email: string) {
         description: "A new OTP has been sent to your email.",
       });
       startCountdown();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+            ? error
+            : (error as { message?: string })?.message ||
+              "Something went wrong. Please try again.";
       toast.error("Failed to Resend OTP", {
-        description:
-          error?.message || "Something went wrong. Please try again.",
+        description: errorMessage,
       });
     }
   };

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AxiosError } from "axios";
 import { Loader2 } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -86,9 +87,12 @@ export function AudienceFormDialog({
           : "Target audience updated successfully",
       );
       onOpenChange(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to save target audience:", error);
-      const errorMessage = error?.message || "Failed to save target audience";
+      const errorMessage =
+        error instanceof AxiosError
+          ? error.response?.data?.message
+          : "Failed to save target audience";
 
       if (errorMessage.toLowerCase().includes("already exists")) {
         form.setError("name", {

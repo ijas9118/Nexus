@@ -35,11 +35,13 @@ const MentorCard = ({ mentor }: { mentor: Mentor }) => {
 
           <div className="mb-4">
             <div className="flex flex-wrap gap-2 mb-3">
-              {mentor.experience.expertiseAreas.map((skill: any) => (
-                <Badge key={skill._id} variant="secondary">
-                  {skill.name}
-                </Badge>
-              ))}
+              {mentor.experience.expertiseAreas.map(
+                (skill: { _id: string; name: string }) => (
+                  <Badge key={skill._id} variant="secondary">
+                    {skill.name}
+                  </Badge>
+                ),
+              )}
             </div>
             <p className="line-clamp-2 text-sm">{mentor.experience.bio}</p>
           </div>

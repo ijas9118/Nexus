@@ -4,7 +4,7 @@ import { handleApi } from "@/utils/handleApi";
 import { PLAN_ROUTES } from "@/utils/constants";
 
 const PlanService = {
-  createPlan: (planData: any) =>
+  createPlan: (planData: Partial<IPlan>) =>
     handleApi(() => api.post(PLAN_ROUTES.BASE, planData)),
 
   getAllPlans: async (): Promise<IPlan[]> => {

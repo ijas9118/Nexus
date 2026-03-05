@@ -33,14 +33,17 @@ export const useConnectUser = () => {
     onSuccess: () => {
       toast.success("Connection request sent");
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       if (typeof error === "string") {
         toast.error(error);
       } else if (typeof error === "object" && error !== null) {
         if ("statusCode" in error && error.statusCode === 409) {
           toast.error("Connection request already sent");
         } else {
-          toast.error(error.message || "Failed to send connection request");
+          toast.error(
+            (error as { message?: string }).message ||
+              "Failed to send connection request",
+          );
         }
       } else {
         toast.error("Something went wrong");

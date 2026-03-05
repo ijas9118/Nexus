@@ -10,6 +10,14 @@ export interface NotificationTypeData {
   updatedAt: string;
 }
 
+export interface NotificationTypeFormValues {
+  name: string;
+  description: string;
+  icon: string;
+  iconColor: string;
+  roles: string[];
+}
+
 export interface NotificationType {
   _id: string;
   name: string;

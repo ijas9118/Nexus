@@ -19,9 +19,10 @@ import {
   TableRow,
 } from "@/components/organisms/table";
 import { Badge } from "@/components/atoms/badge";
+import { IWithdrawalRequest } from "@/types/wallet";
 
 interface PendingRequestsTableProps {
-  requests: any[];
+  requests: IWithdrawalRequest[];
 }
 
 function PendingRequestsTable({ requests }: PendingRequestsTableProps) {
@@ -67,7 +68,7 @@ function PendingRequestsTable({ requests }: PendingRequestsTableProps) {
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <DollarSignIcon className="h-4 w-4 text-muted-foreground" />
-                      ${request.amount.toFixed(2)}
+                      ${(request.amount ?? 0).toFixed(2)}
                     </div>
                   </TableCell>
                   <TableCell>

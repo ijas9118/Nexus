@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { IWithdrawalRequest } from "@/types/wallet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
@@ -32,7 +33,8 @@ import { CheckIcon, MoreHorizontalIcon, XIcon } from "lucide-react";
 import WalletService from "@/services/walletService";
 
 export function WithdrawalRequestsTable() {
-  const [selectedRequest, setSelectedRequest] = useState<any>(null);
+  const [selectedRequest, setSelectedRequest] =
+    useState<IWithdrawalRequest | null>(null);
   const [actionType, setActionType] = useState<"view" | "approve" | "reject">(
     "view",
   );
@@ -44,7 +46,7 @@ export function WithdrawalRequestsTable() {
     data: withdrawalRequests = [],
     isLoading,
     error,
-  } = useQuery<any[]>({
+  } = useQuery<IWithdrawalRequest[]>({
     queryKey: ["pendingRequests"],
     queryFn: WalletService.getPendingRequests,
   });
@@ -80,7 +82,7 @@ export function WithdrawalRequestsTable() {
   });
 
   const handleAction = (
-    request: any,
+    request: IWithdrawalRequest,
     action: "view" | "approve" | "reject",
   ) => {
     setSelectedRequest(request);

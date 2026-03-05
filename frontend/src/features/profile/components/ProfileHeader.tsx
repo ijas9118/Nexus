@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { MapPin } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 import { useNavigate } from "react-router-dom";
 import StatDialog from "./StatDialog";
 
@@ -37,7 +38,7 @@ export default function ProfileHeader({
   followStats,
 }: ProfileHeaderProps) {
   const currentUser = useSelector(
-    (state: any) => state.auth.user?.username || "",
+    (state: RootState) => state.auth.user?.username || "",
   );
   const navigate = useNavigate();
 

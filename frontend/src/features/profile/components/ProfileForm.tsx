@@ -138,10 +138,11 @@ const ProfileForm = () => {
         description: "Your profile updated.",
       });
       navigator(`/profile/${data.username}`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Profile update failed:", error);
       toast.error("Oops!", {
-        description: error.message,
+        description:
+          error instanceof Error ? error.message : "Profile update failed",
       });
     } finally {
       setLoading(false); // Stop loading

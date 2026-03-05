@@ -4,7 +4,7 @@ import {
   QueryClientProvider,
   useQuery,
 } from "@tanstack/react-query";
-import { IWallet } from "@/types/wallet";
+import { IWallet, IWithdrawalRequest } from "@/types/wallet";
 import WalletService from "@/services/walletService";
 import WithdrawalDialog from "./components/WithdrawalDialog";
 import WalletBalanceCard from "./components/WalletBalanceCard";
@@ -37,7 +37,7 @@ function WalletPage() {
   });
 
   // Fetch pending withdrawal requests for the current user
-  const { data: pendingRequests = [] } = useQuery<any>({
+  const { data: pendingRequests = [] } = useQuery<IWithdrawalRequest[]>({
     queryKey: ["pendingRequests"],
     queryFn: WalletService.getUserPendingRequests,
   });

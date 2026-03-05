@@ -102,7 +102,7 @@ export default function ProfilePage() {
         username as string,
       );
       setProfileUser(updatedUser);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error updating follow status:", err);
       toast.error("Error", {
         description: err instanceof Error ? err.message : String(err),
@@ -158,7 +158,7 @@ export default function ProfilePage() {
           }));
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error updating connection status:", err);
       toast.error("Error", {
         description:
