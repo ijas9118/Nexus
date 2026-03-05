@@ -1,6 +1,8 @@
 import { AxiosError } from "axios";
-import api from "../api";
+
 import { AUTH_ROUTES, HOST } from "@/utils/constants";
+
+import api from "../api";
 
 export const loginUser = async (email: string, password: string) => {
   try {

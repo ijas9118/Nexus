@@ -5,8 +5,9 @@ import * as React from "react";
 import { forwardRef, useEffect } from "react";
 
 import { cn } from "@/lib/utils";
-import { Command, CommandGroup, CommandItem, CommandList } from "./command";
+
 import { Badge } from "../atoms/badge";
+import { Command, CommandGroup, CommandItem, CommandList } from "./command";
 
 export interface Option {
   value: string;

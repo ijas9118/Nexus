@@ -1,5 +1,7 @@
 import { formatDistanceToNow } from "date-fns";
-import { Clock, CheckCircle, XCircle, User } from "lucide-react";
+import { CheckCircle, Clock, User, XCircle } from "lucide-react";
+
+import { Badge } from "@/components/atoms/badge";
 import {
   Card,
   CardContent,
@@ -8,8 +10,8 @@ import {
   CardTitle,
 } from "@/components/molecules/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/organisms/tabs";
-import { Badge } from "@/components/atoms/badge";
-import { ContentItem } from "../VerifyContentPage";
+
+import type { ContentItem } from "../VerifyContentPage";
 
 interface ContentListProps {
   filteredContent: ContentItem[];

@@ -1,11 +1,8 @@
+import { format } from "date-fns";
+import { CalendarIcon, FilterX } from "lucide-react";
 import { useState } from "react";
-import { Calendar } from "@/components/organisms/calendar";
+
 import { Button } from "@/components/atoms/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/molecules/popover";
 import {
   Select,
   SelectContent,
@@ -13,8 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select";
-import { CalendarIcon, FilterX } from "lucide-react";
-import { format } from "date-fns";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/molecules/popover";
+import { Calendar } from "@/components/organisms/calendar";
 import { cn } from "@/lib/utils";
 
 // This would typically come from an API or be passed as props

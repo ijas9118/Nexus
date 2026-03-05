@@ -1,13 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { Input } from "@/components/atoms/input";
-import { Alert, AlertDescription } from "@/components/atoms/alert";
 import { AlertCircle } from "lucide-react";
-import UserCard from "./user-card";
-import { EmptyState } from "./empty-state";
-import FollowService from "@/services/followService";
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+
+import { Alert, AlertDescription } from "@/components/atoms/alert";
+import { Input } from "@/components/atoms/input";
+import FollowService from "@/services/followService";
+import type { RootState } from "@/store/store";
+import type { UserInterface } from "@/types/user";
+
+import { EmptyState } from "./empty-state";
+import UserCard from "./user-card";
 
 export default function FollowersList() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -48,7 +51,7 @@ export default function FollowersList() {
 
   const filteredFollowers =
     data?.filter(
-      (follower: any) =>
+      (follower: UserInterface) =>
         follower.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         follower.username.toLowerCase().includes(searchTerm.toLowerCase()),
     ) || [];
@@ -86,7 +89,7 @@ export default function FollowersList() {
         </div>
       ) : filteredFollowers.length > 0 ? (
         <div className="space-y-4">
-          {filteredFollowers.map((follower: any) => (
+          {filteredFollowers.map((follower: UserInterface) => (
             <UserCard
               key={follower._id}
               user={follower}

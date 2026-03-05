@@ -1,3 +1,8 @@
+import { Atom, DiamondPlus, Podcast } from "lucide-react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -9,15 +14,13 @@ import {
 } from "@/components/organisms/sidebar";
 import SquadService from "@/services/user/squadService";
 import { setUserSquads } from "@/store/slices/userSquadsSlice";
-import { Atom, DiamondPlus, Podcast } from "lucide-react";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import type { RootState } from "@/store/store";
+import type { SquadDetail } from "@/types/squad";
 
 const SquadSubmenu: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const squads = useSelector((state: any) => state.userSquads.squads);
+  const squads = useSelector((state: RootState) => state.userSquads.squads);
 
   useEffect(() => {
     const fetchUserSquads = async () => {
@@ -49,7 +52,7 @@ const SquadSubmenu: React.FC = () => {
           <span>Your Squads</span>
         </SidebarMenuButton>
         <SidebarMenuSub>
-          {squads.map((squad: any) => (
+          {squads.map((squad: SquadDetail) => (
             <SidebarMenuSubItem key={squad._id}>
               <SidebarMenuSubButton
                 onClick={() => navigate(`/squads/${squad.handle}`)}

@@ -1,11 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { Button } from "@/components/atoms/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/molecules/card";
 import {
   CheckCircle,
   Flag,
@@ -16,8 +8,18 @@ import {
 } from "lucide-react";
 import React from "react";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Button } from "@/components/atoms/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/molecules/card";
+import type { AdminComment } from "@/types/admin/comment";
+
 interface CommentsListProps {
-  comments: any;
+  comments: AdminComment[];
   getStatusBadge: (status: string) => React.ReactNode;
 }
 
@@ -38,7 +40,7 @@ const CommentsList = ({ comments, getStatusBadge }: CommentsListProps) => {
 
   return (
     <div className="grid gap-4">
-      {comments.map((comment: any) => (
+      {comments.map((comment: AdminComment) => (
         <Card key={comment._id}>
           <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
             <div className="flex items-center gap-2">

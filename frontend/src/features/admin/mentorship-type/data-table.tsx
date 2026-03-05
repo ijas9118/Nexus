@@ -1,15 +1,18 @@
-import { useState } from "react";
 import {
   type ColumnDef,
+  type ColumnFiltersState,
   flexRender,
   getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
-  type SortingState,
-  getSortedRowModel,
-  type ColumnFiltersState,
   getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  type SortingState,
+  useReactTable,
 } from "@tanstack/react-table";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
+
+import { Input } from "@/components/atoms/input";
 import {
   Table,
   TableBody,
@@ -18,8 +21,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/organisms/table";
-import { Input } from "@/components/atoms/input";
-import { motion, AnimatePresence } from "motion/react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

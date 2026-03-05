@@ -1,6 +1,7 @@
-import api from "@/services/api";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+import api from "@/services/api";
 
 export function useUpdateProfilePic() {
   const mutation = useMutation({

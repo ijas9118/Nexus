@@ -1,15 +1,17 @@
-import { Button } from "@/components/atoms/button";
-import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+
+import { Button } from "@/components/atoms/button";
+import MentorService from "@/services/mentorService";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import type { RootState } from "@/store/store";
+import type { Mentor } from "@/types/mentor";
+
+import MentorCard from "./components/MentorCard";
 import MentorFilters from "./components/MentorFilters";
 import SearchAndSort from "./components/SearchAndSort";
-import MentorCard from "./components/MentorCard";
-import { useQuery } from "@tanstack/react-query";
-import MentorService from "@/services/mentorService";
-import { Mentor } from "@/types/mentor";
-import { RootState } from "@/store/store";
 
 const Mentors = () => {
   const dispatch = useDispatch();
@@ -47,8 +49,6 @@ const Mentors = () => {
       );
     },
   });
-
-  console.log(mentors);
 
   if (isLoading) return <p>Loading mentor status...</p>;
   if (isError) return <p>Failed to load mentor status</p>;

@@ -1,3 +1,7 @@
+import type { UseMutationResult } from "@tanstack/react-query";
+import type { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
 import { Checkbox } from "@/components/atoms/checkbox";
@@ -9,14 +13,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import { UserManagementData } from "@/types/admin/user";
-import { UseMutationResult } from "@tanstack/react-query";
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import type { UserManagementData } from "@/types/admin/user";
 
 export const getUserTableColumns = (
-  blockMutation: UseMutationResult<any, unknown, string>,
-  unblockMutation: UseMutationResult<any, unknown, string>,
+  blockMutation: UseMutationResult<UserManagementData, unknown, string>,
+  unblockMutation: UseMutationResult<UserManagementData, unknown, string>,
 ): ColumnDef<UserManagementData>[] => [
   {
     id: "select",
@@ -135,9 +136,7 @@ export const getUserTableColumns = (
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => console.log("View", userId)}>
-              View user
-            </DropdownMenuItem>
+            <DropdownMenuItem>View user</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleBlockUnblock}>
               {isBlocked ? "Unblock" : "Block"}

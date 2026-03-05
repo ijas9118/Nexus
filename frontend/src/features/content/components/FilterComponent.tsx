@@ -1,3 +1,6 @@
+import { ChevronDown, Filter } from "lucide-react";
+import React from "react";
+
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
 import {
@@ -6,8 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import { ChevronDown, Filter } from "lucide-react";
-import React from "react";
 
 interface FilterProps {
   selectedTopics: string[];

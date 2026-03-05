@@ -1,7 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
-import type { Category } from "@/types/category";
-import CategoryService from "@/services/admin/categoryService";
+import { AxiosError } from "axios";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+
+import CategoryService from "@/services/admin/categoryService";
+import type { Category } from "@/types/category";
 
 interface PaginationData {
   page: number;
@@ -68,9 +70,13 @@ export function useCategoryManagement() {
         description: "Category added successfully",
       });
       fetchCategories();
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message =
+        err instanceof AxiosError
+          ? err.response?.data?.message
+          : "Failed to add category";
       toast.error("Error", {
-        description: err.response.data.message || "Failed to add category",
+        description: message || "Failed to add category",
       });
       throw err;
     }
@@ -83,9 +89,13 @@ export function useCategoryManagement() {
         description: "Category updated successfully",
       });
       fetchCategories();
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message =
+        err instanceof AxiosError
+          ? err.response?.data?.message
+          : "Failed to update category";
       toast.error("Error", {
-        description: err.response.data.message || "Failed to add category",
+        description: message || "Failed to update category",
       });
       throw err;
     }

@@ -1,12 +1,18 @@
+import type { QueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import {
-  CheckCircle,
-  XCircle,
   AlertCircle,
+  CheckCircle,
   Eye,
   MessageSquare,
+  XCircle,
 } from "lucide-react";
+import { toast } from "sonner";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import {
   Card,
   CardContent,
@@ -15,12 +21,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
-import { Button } from "@/components/atoms/button";
-import { Badge } from "@/components/atoms/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { toast } from "sonner";
-import type { QueryClient } from "@tanstack/react-query";
-import { ContentItem } from "../VerifyContentPage";
+
+import type { ContentItem } from "../VerifyContentPage";
 import { approveContent } from "./content-service";
 
 interface ContentPreviewProps {

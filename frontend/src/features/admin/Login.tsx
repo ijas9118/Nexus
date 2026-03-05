@@ -1,14 +1,16 @@
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
-import { Button } from "@/components/atoms/button";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { AdminService } from "@/services/admin/adminService";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "@/store/slices/authSlice";
-import { RootState } from "@/store/store";
+import type { RootState } from "@/store/store";
 
 type FormFields = {
   email: string;
@@ -37,16 +39,17 @@ export default function AdminLogin() {
     try {
       setErrorMessage(null);
       const result = await AdminService.loginAdmin(data.email, data.password);
-      console.log(result);
       if (result.user) {
         const { user, accessToken } = result;
         dispatch(setCredentials({ user, accessToken }));
       }
       if (result) navigate("/admin/dashboard");
-    } catch (error: any) {
-      setErrorMessage(
-        error.message || "An error occurred. Please try again later.",
-      );
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "An error occurred. Please try again later.";
+      setErrorMessage(message);
     }
   };
 

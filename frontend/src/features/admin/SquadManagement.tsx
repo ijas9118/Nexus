@@ -1,13 +1,14 @@
-import type React from "react";
-
-import { useState } from "react";
-import { Input } from "@/components/atoms/input";
 import { Loader2, Search } from "lucide-react";
-import { Button } from "@/components/atoms/button";
+import type React from "react";
+import { useState } from "react";
 import { toast } from "sonner";
-import { useSquadManagement } from "./squadManagement/hooks/use-squad-management";
-import SquadTable from "./squadManagement/components/squad-table";
+
+import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+
 import SquadPagination from "./squadManagement/components/squad-pagination";
+import SquadTable from "./squadManagement/components/squad-table";
+import { useSquadManagement } from "./squadManagement/hooks/use-squad-management";
 
 export default function AdminSquadManagement() {
   const [searchQuery, setSearchQuery] = useState("");

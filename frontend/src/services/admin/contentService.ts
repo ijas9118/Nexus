@@ -1,11 +1,14 @@
 import { AxiosError } from "axios";
-import api from "../api";
+
+import type { Content } from "@/types/content";
 import { ADMIN_ROUTES, CONTENT_ROUTES } from "@/utils/constants";
 
+import api from "../api";
+
 export const ContentService = {
-  getAllContents: async () => {
+  getAllContents: async (): Promise<Content[]> => {
     try {
-      const response = await api.get(ADMIN_ROUTES.CONTENT);
+      const response = await api.get<Content[]>(ADMIN_ROUTES.CONTENT);
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -18,9 +21,11 @@ export const ContentService = {
     }
   },
 
-  getContentById: async (contentId: string) => {
+  getContentById: async (contentId: string): Promise<Content> => {
     try {
-      const response = await api.get(`${CONTENT_ROUTES.POST}/${contentId}`);
+      const response = await api.get<Content>(
+        `${CONTENT_ROUTES.POST}/${contentId}`,
+      );
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {

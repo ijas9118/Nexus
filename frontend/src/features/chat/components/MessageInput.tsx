@@ -1,10 +1,12 @@
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { useSocket } from "@/hooks/useSocket";
-import { RootState } from "@/store/store";
-import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { setActiveChat, setChats } from "@/store/slices/chatSlice"; // Import relevant actions
+import type { RootState } from "@/store/store";
+import type { Chat } from "@/types";
 
 interface MessageInputProps {
   chatId: string;
@@ -50,23 +52,21 @@ const MessageInput = ({ chatId, chatType }: MessageInputProps) => {
   useEffect(() => {
     if (!socket || !pendingChat || !user) return;
 
-    const handleChatCreated = (newChat: any) => {
-      const recipient = newChat.participants.find(
-        (p: any) => p._id !== user._id,
-      );
+    const handleChatCreated = (newChat: Chat) => {
+      const recipient = newChat.participants.find((p) => p._id !== user._id);
 
       dispatch(setChats([...chats, newChat]));
 
-      if (recipient._id !== user._id)
+      if (recipient && recipient._id !== user._id)
         dispatch(
           setActiveChat({
             id: newChat._id,
             type: "Chat",
             userDetails: {
-              userId: recipient?._id,
-              name: recipient?.name || "Unknown",
-              username: recipient?.username,
-              profilePic: recipient?.profilePic,
+              userId: recipient._id,
+              name: recipient.name || "Unknown",
+              username: recipient.username,
+              profilePic: recipient.profilePic,
             },
           }),
         );

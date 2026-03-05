@@ -1,18 +1,21 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
+
 import { Separator } from "@/components/atoms/separator";
 import CommentSection from "@/features/content/components/CommentSection";
+import BookmarkService from "@/services/user/bookmarkService";
+import { CommentService } from "@/services/user/commentService";
+import VoteService from "@/services/voteService";
+import type { Content } from "@/types/content";
+
+import { CommentInput } from "./components/CommentInput";
+import { ContentBody } from "./components/ContentBody";
+import { ContentHeader } from "./components/ContentHeader";
+import { ContentLoadingSkeleton } from "./components/ContentLoadingSkeleton";
+import { InteractionBar } from "./components/InteractionBar";
 // import RelatedContent from "@/features/content/components/RelatedContent";
 import { useContent } from "./hooks/useContent";
-import { ContentLoadingSkeleton } from "./components/ContentLoadingSkeleton";
-import { ContentHeader } from "./components/ContentHeader";
-import { InteractionBar } from "./components/InteractionBar";
-import { ContentBody } from "./components/ContentBody";
-import { CommentInput } from "./components/CommentInput";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CommentService } from "@/services/user/commentService";
-import { toast } from "sonner";
-import VoteService from "@/services/voteService";
-import BookmarkService from "@/services/user/bookmarkService";
 
 export default function ContentDetails() {
   const { id } = useParams<{ id: string }>();
@@ -27,7 +30,7 @@ export default function ContentDetails() {
 
       const previousContent = queryClient.getQueryData(["content", id]);
 
-      queryClient.setQueryData(["content", id], (old: any) => {
+      queryClient.setQueryData<Content>(["content", id], (old) => {
         if (!old) return old;
         let upvoteCount = old.upvoteCount || 0;
         let downvoteCount = old.downvoteCount || 0;
@@ -117,7 +120,7 @@ export default function ContentDetails() {
       await queryClient.cancelQueries({ queryKey: ["content", id] });
       const previousContent = queryClient.getQueryData(["content", id]);
 
-      queryClient.setQueryData(["content", id], (old: any) => {
+      queryClient.setQueryData<Content>(["content", id], (old) => {
         if (!old) return old;
         return {
           ...old,
@@ -132,7 +135,7 @@ export default function ContentDetails() {
       toast.error("Failed to update bookmark");
     },
     onSuccess: (_data, _variables, context) => {
-      const wasBookmarked = (context?.previousContent as any)?.isBookmarked;
+      const wasBookmarked = (context?.previousContent as Content)?.isBookmarked;
       if (wasBookmarked) {
         toast.success("Removed from bookmarks");
       } else {
@@ -164,13 +167,13 @@ export default function ContentDetails() {
     <div className="container mx-auto px-4 py-8 max-w-4xl h-screen">
       <ContentHeader content={content} />
       <InteractionBar
-        isUpvoted={content.isUpvoted}
-        isDownvoted={content.isDownvoted}
+        isUpvoted={!!content.isUpvoted}
+        isDownvoted={!!content.isDownvoted}
         upvoteCount={content.upvoteCount ?? 0}
         downvoteCount={content.downvoteCount ?? 0}
         commentCount={content.commentCount ?? 0}
         viewCount={content.viewCount ?? 0}
-        isBookmarked={content.isBookmarked}
+        isBookmarked={!!content.isBookmarked}
         onUpvote={handleUpvote}
         onDownvote={handleDownvote}
         onBookmark={handleBookmark}
@@ -179,7 +182,7 @@ export default function ContentDetails() {
       <ContentBody
         thumbnailUrl={content.thumbnailUrl}
         title={content.title}
-        content={content.content}
+        content={content.content || ""}
       />
       <div className="mt-8">
         <h3 className="text-xl font-semibold mb-4">Comments</h3>

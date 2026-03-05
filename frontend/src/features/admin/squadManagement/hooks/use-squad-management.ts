@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
-import AdminSquadService from "@/services/admin/squadService";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Squad } from "@/types/squad";
+
+import AdminSquadService from "@/services/admin/squadService";
+import type { Squad } from "@/types/squad";
 
 interface PaginationData {
   page: number;

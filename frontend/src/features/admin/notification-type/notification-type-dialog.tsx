@@ -4,14 +4,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/organisms/dialog";
-import type { NotificationTypeData } from "@/types/notification";
+import type {
+  NotificationTypeData,
+  NotificationTypeFormValues,
+} from "@/types/notification";
+
 import NotificationTypeForm from "./notification-type-form";
 
 interface NotificationTypeDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initialData?: NotificationTypeData | null;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: NotificationTypeFormValues) => Promise<void>;
   title: string;
   isEditing?: boolean;
 }
@@ -24,7 +28,7 @@ export default function NotificationTypeDialog({
   title,
   isEditing = false,
 }: NotificationTypeDialogProps) {
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: NotificationTypeFormValues) => {
     await onSubmit(data);
   };
 

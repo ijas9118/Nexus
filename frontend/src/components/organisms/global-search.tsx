@@ -1,6 +1,12 @@
-import { useState, useRef, useEffect } from "react";
-import { Search, User, Users, FileText, Loader2 } from "lucide-react";
+import { FileText, Loader2, Search, User, Users } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Input } from "@/components/atoms/input";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useGlobalSearch } from "@/hooks/useGlobalSearch";
+
 import {
   Command,
   CommandEmpty,
@@ -8,10 +14,6 @@ import {
   CommandItem,
   CommandList,
 } from "./command";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { useGlobalSearch } from "@/hooks/useGlobalSearch";
-import { useDebounce } from "@/hooks/useDebounce";
-import { useNavigate } from "react-router-dom";
 
 interface SearchResultItem {
   id: string;

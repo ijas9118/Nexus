@@ -1,4 +1,10 @@
+import { ArrowRight, Github, Linkedin } from "lucide-react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+
 import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
 import {
   Card,
   CardContent,
@@ -7,13 +13,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
-import { Input } from "@/components/atoms/input";
-import { Label } from "@/components/atoms/label";
-import { ArrowRight, Github, Linkedin } from "lucide-react";
-import React, { useEffect } from "react";
 import { useMentorForm } from "@/context/MentorFormContext";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import type { RootState } from "@/store/store";
 
 interface PersonalInfoFormProps {
   onContinue: () => void;

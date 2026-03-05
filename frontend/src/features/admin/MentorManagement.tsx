@@ -1,8 +1,12 @@
-import { FC, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import type { FC } from "react";
+import { useState } from "react";
+
+import MentorService from "@/services/mentorService";
+
+import type { TransformedMentor } from "./mentorManagement/columns";
 import { columns } from "./mentorManagement/columns";
 import { DataTable } from "./mentorManagement/components/data-table";
-import MentorService from "@/services/mentorService";
-import { useQuery } from "@tanstack/react-query";
 import { MentorDetailsDialog } from "./mentorManagement/components/MentorDetailsDialog";
 
 const MentorManagement: FC = () => {
@@ -16,16 +20,18 @@ const MentorManagement: FC = () => {
   } = useQuery({
     queryKey: ["mentors"],
     queryFn: async () => {
-      const mentors: any = await MentorService.getAllMentors();
-      return mentors.map((mentor: any) => ({
-        _id: mentor._id,
-        name: mentor.userId?.name || "N/A",
-        email: mentor.userId?.email || "N/A",
-        username: mentor.userId?.username || "N/A",
-        profilePic: mentor.userId?.profilePic || "",
-        status: mentor.status,
-        createdAt: new Date(mentor.createdAt).toLocaleDateString(),
-      }));
+      const mentors = await MentorService.getAllMentors();
+      return mentors.map(
+        (mentor): TransformedMentor => ({
+          _id: mentor._id,
+          name: mentor.userId?.name || "N/A",
+          email: mentor.userId?.email || "N/A",
+          username: mentor.userId?.username || "N/A",
+          profilePic: mentor.userId?.profilePic || "",
+          status: mentor.status,
+          createdAt: new Date(mentor.createdAt).toLocaleDateString(),
+        }),
+      );
     },
   });
 
@@ -40,13 +46,9 @@ const MentorManagement: FC = () => {
     enabled: !!selectedMentorId,
   });
 
-  const handleRowClick = (mentor: any) => {
+  const handleRowClick = (mentor: TransformedMentor) => {
     setSelectedMentorId(mentor._id);
     setDialogOpen(true);
-  };
-
-  const hanldeBlock = (mentor: any) => {
-    console.log(mentor);
   };
 
   if (isMentorsLoading) {
@@ -62,7 +64,7 @@ const MentorManagement: FC = () => {
       <h1 className="text-3xl font-semibold mb-6">Mentor Management</h1>
 
       <DataTable
-        columns={columns(handleRowClick, hanldeBlock)} // Pass handleRowClick to columns
+        columns={columns(handleRowClick)} // Pass handleRowClick to columns
         data={mentors}
         onRowClick={handleRowClick} // Add row click handler
       />

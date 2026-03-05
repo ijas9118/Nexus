@@ -1,14 +1,16 @@
+import { LogOut, PlusCircle, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { PlusCircle, LogOut, UserPlus } from "lucide-react";
+import { Link } from "react-router-dom";
+
 import { Button } from "@/components/atoms/button";
 import { Separator } from "@/components/atoms/separator";
 import { useConfirmDialog } from "@/context/ConfirmDialogContext";
-import { InvitationShareMenu } from "./invitation-share-menu";
-import { Link } from "react-router-dom";
 import SquadService from "@/services/user/squadService";
-import { SquadDetail } from "@/types/squad";
 import { addUserSquad, removeUserSquad } from "@/store/slices/userSquadsSlice";
+import type { SquadDetail } from "@/types/squad";
+
+import { InvitationShareMenu } from "./invitation-share-menu";
 
 interface SquadActionsProps {
   squad: SquadDetail;

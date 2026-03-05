@@ -1,8 +1,10 @@
 import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import ProtectedRoute from "./ProtectedRoute";
+
 import { Skeleton } from "@/components/atoms/skeleton";
 import MentorDashboard from "@/features/mentor-dashboard/MentorDashboard";
+
+import ProtectedRoute from "./ProtectedRoute";
 
 // Lazy load page components
 const Layout = lazy(() => import("@/pages/Layout"));

@@ -1,10 +1,11 @@
+import type { ReactNode } from "react";
+
 import {
   Card,
+  CardContent,
   CardHeader,
   CardTitle,
-  CardContent,
 } from "@/components/molecules/card";
-import { ReactNode } from "react";
 
 interface StatCardProps {
   title: string;

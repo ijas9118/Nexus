@@ -1,11 +1,13 @@
 import { useRef, useState } from "react";
-import { useVideoCall } from "./hooks/useVideoCall";
-import { VideoPlayer } from "./components/VideoPlayer";
-import { CallControls } from "./components/CallControls";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { ReviewDialog } from "./components/ReviewDialog";
 import { useNavigate } from "react-router-dom";
+
+import type { RootState } from "@/store/store";
+
+import { CallControls } from "./components/CallControls";
+import { ReviewDialog } from "./components/ReviewDialog";
+import { VideoPlayer } from "./components/VideoPlayer";
+import { useVideoCall } from "./hooks/useVideoCall";
 
 export default function VideoCallPage() {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -36,9 +38,8 @@ export default function VideoCallPage() {
     }
   };
 
-  const handleReviewSubmit = (rating: number, feedback: string) => {
+  const handleReviewSubmit = (_rating: number, _feedback: string) => {
     // TODO: Send review data to the backend
-    console.log("Review submitted:", { rating, feedback });
     exitCall();
   };
 

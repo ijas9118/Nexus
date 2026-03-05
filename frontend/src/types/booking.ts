@@ -1,5 +1,5 @@
-import { MentorshipType } from "./mentor";
-import { IUser } from "./user";
+import type { MentorshipType } from "./mentor";
+import type { IUser } from "./user";
 
 export interface IBooking {
   _id: string;

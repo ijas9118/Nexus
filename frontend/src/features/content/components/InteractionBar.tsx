@@ -1,4 +1,3 @@
-import { Button } from "@/components/atoms/button";
 import {
   BookmarkIcon,
   EyeIcon,
@@ -11,6 +10,8 @@ import {
   BiSolidUpvote,
   BiUpvote,
 } from "react-icons/bi";
+
+import { Button } from "@/components/atoms/button";
 
 interface InteractionBarProps {
   isUpvoted: boolean;

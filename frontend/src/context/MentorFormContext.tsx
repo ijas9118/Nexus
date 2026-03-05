@@ -1,8 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
 
-import { MentorFormData } from "@/types/mentor";
 import React, { createContext, useContext } from "react";
-import { useForm, UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
+import { useForm } from "react-hook-form";
+
+import type { MentorFormData } from "@/types/mentor";
 
 interface MentorFormContextType {
   form: UseFormReturn<MentorFormData>;

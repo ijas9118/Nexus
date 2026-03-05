@@ -1,25 +1,25 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { MoreHorizontal } from "lucide-react";
 import dayjs from "dayjs";
+import { MoreHorizontal } from "lucide-react";
+import { toast } from "sonner";
 
-import { Card, CardContent } from "@/components/molecules/card";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
 import { Checkbox } from "@/components/atoms/checkbox";
+import { Card, CardContent } from "@/components/molecules/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
+import { DynamicLucidIcon } from "@/components/organisms/lucide-icon";
+import NotificationService from "@/services/notificationService";
 import type {
   INotification,
   NotificationType,
   NotificationTypeData,
 } from "@/types/notification";
-import NotificationService from "@/services/notificationService";
-import { toast } from "sonner";
-import { DynamicLucidIcon } from "@/components/organisms/lucide-icon";
 
 const notificationTypes: NotificationTypeData[] = [
   {

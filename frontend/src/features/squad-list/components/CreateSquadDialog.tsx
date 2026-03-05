@@ -1,7 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/atoms/select";
+import { Switch } from "@/components/atoms/switch";
 import {
   Dialog,
   DialogContent,
@@ -10,24 +25,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/organisms/dialog";
-import { Input } from "@/components/atoms/input";
-import { Label } from "@/components/atoms/label";
-import { Button } from "@/components/atoms/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/atoms/select";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import SquadService from "@/services/user/squadService";
 import CategoryService from "@/services/admin/categoryService";
-import { Category } from "@/types/category";
-import { toast } from "sonner";
-import { Switch } from "@/components/atoms/switch";
-import { Loader2 } from "lucide-react";
-import { SquadDetail } from "@/types/squad";
+import SquadService from "@/services/user/squadService";
+import type { Category } from "@/types/category";
+import type { SquadDetail } from "@/types/squad";
 
 const formSchema = z.object({
   name: z
@@ -111,7 +112,9 @@ export function CreateSquadDialog({
         formData.append("logo", data.logo);
       }
 
-      const result = await SquadService.createSquad(formData);
+      const result = (await SquadService.createSquad(
+        formData,
+      )) as SquadDetail & { message?: string };
       onSquadCreated(result);
       setLoading(false);
       setLogoPreview(null);

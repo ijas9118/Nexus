@@ -1,10 +1,16 @@
-import { useState, useRef, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { toast } from "sonner";
+import { AxiosError } from "axios";
 import { Loader2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { HexColorPicker } from "react-colorful";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
 import { Button } from "@/components/atoms/button";
+import { Checkbox } from "@/components/atoms/checkbox";
+import { Input } from "@/components/atoms/input";
+import { Textarea } from "@/components/atoms/textarea";
 import {
   Form,
   FormControl,
@@ -14,13 +20,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/organisms/form";
-import { Input } from "@/components/atoms/input";
-import { Textarea } from "@/components/atoms/textarea";
-import { Checkbox } from "@/components/atoms/checkbox";
 import type { NotificationTypeData } from "@/types/notification";
 import { isValidLucideIcon } from "@/utils/icon-utils";
+
 import { DynamicIcon } from "./dynamic-icon";
-import { HexColorPicker } from "react-colorful";
 
 const roles = [
   { id: "admin", label: "Admin" },
@@ -151,9 +154,12 @@ export default function NotificationTypeForm({
           ? "Notification type updated successfully"
           : "Notification type created successfully",
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to save notification type:", error);
-      const errorMessage = error?.message || "Failed to save notification type";
+      const errorMessage =
+        error instanceof AxiosError
+          ? error.response?.data?.message
+          : "Failed to save notification type";
 
       if (errorMessage.toLowerCase().includes("already exists")) {
         form.setError("name", {

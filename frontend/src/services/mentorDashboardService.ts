@@ -1,12 +1,13 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "./api";
-import {
+import type {
   EarningsResponse,
   PendingWithdrawalsResponse,
   RecentBooking,
   SessionStatsResponse,
 } from "@/types/mentorDashboard.types";
 import { ADMIN_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 const MentorDashboardService = {
   getEarnings: () =>

@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+
 import ConnectionsLayout from "./components/connections-layout";
 import ConnectionsLoading from "./components/connections-loading";
 

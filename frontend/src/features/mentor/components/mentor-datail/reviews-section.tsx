@@ -1,3 +1,5 @@
+import { Star } from "lucide-react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import {
   Card,
@@ -5,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
-import { Star } from "lucide-react";
 
 // Dummy review data
 const reviewsData = [

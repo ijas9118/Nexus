@@ -1,5 +1,8 @@
 import { format } from "date-fns";
-import { Pencil, Trash2, RefreshCw } from "lucide-react";
+import { Pencil, RefreshCw, Trash2 } from "lucide-react";
+
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import {
   Table,
   TableBody,
@@ -8,9 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/organisms/table";
-import { Button } from "@/components/atoms/button";
-import { Badge } from "@/components/atoms/badge";
-import { TargetAudience } from "@/types/mentor";
+import type { TargetAudience } from "@/types/mentor";
 
 interface AudienceTableProps {
   audiences: TargetAudience[];
@@ -25,7 +26,6 @@ export function AudienceTable({
   onDelete,
   onRestore,
 }: AudienceTableProps) {
-  console.log(audiences);
   return (
     <div className="rounded-md border overflow-hidden">
       <Table>

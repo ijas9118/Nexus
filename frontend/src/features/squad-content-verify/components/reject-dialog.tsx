@@ -1,4 +1,9 @@
+import type { QueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+
+import { Button } from "@/components/atoms/button";
+import { Textarea } from "@/components/atoms/textarea";
 import {
   Dialog,
   DialogContent,
@@ -7,11 +12,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/organisms/dialog";
-import { Button } from "@/components/atoms/button";
-import { Textarea } from "@/components/atoms/textarea";
-import { toast } from "sonner";
-import type { QueryClient } from "@tanstack/react-query";
-import { ContentItem } from "../VerifyContentPage";
+
+import type { ContentItem } from "../VerifyContentPage";
 import { rejectContent } from "./content-service";
 
 interface RejectDialogProps {

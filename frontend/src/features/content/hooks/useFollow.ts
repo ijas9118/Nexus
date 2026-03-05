@@ -1,6 +1,7 @@
-import FollowService from "@/services/followService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+import FollowService from "@/services/followService";
 
 export const useFollowUser = () => {
   const queryClient = useQueryClient();
@@ -30,17 +31,20 @@ export const useConnectUser = () => {
   return useMutation({
     mutationFn: (recipientId: string) =>
       FollowService.sendConnectionRequest(recipientId),
-    onSuccess: (data) => {
-      toast.success(data.message || "Connection request sent");
+    onSuccess: () => {
+      toast.success("Connection request sent");
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       if (typeof error === "string") {
         toast.error(error);
       } else if (typeof error === "object" && error !== null) {
         if ("statusCode" in error && error.statusCode === 409) {
           toast.error("Connection request already sent");
         } else {
-          toast.error(error.message || "Failed to send connection request");
+          toast.error(
+            (error as { message?: string }).message ||
+              "Failed to send connection request",
+          );
         }
       } else {
         toast.error("Something went wrong");

@@ -1,6 +1,11 @@
+import { AxiosError } from "axios";
+import { Loader2 } from "lucide-react";
 import type React from "react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
 import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
 import {
   Dialog,
   DialogContent,
@@ -9,9 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/organisms/dialog";
-import { Input } from "@/components/atoms/input";
-import { Label } from "@/components/atoms/label";
-import { Loader2 } from "lucide-react";
 
 interface EditCategoryDialogProps {
   category: { id: string; name: string };
@@ -50,11 +52,12 @@ export default function EditCategoryDialog({
     try {
       await onUpdate(category.id, name);
       onClose();
-    } catch (err: any) {
-      setError(
-        err.response.data.message ||
-          "Failed to add category. Please try again.",
-      );
+    } catch (err: unknown) {
+      const message =
+        err instanceof AxiosError
+          ? err.response?.data?.message
+          : "Failed to update category. Please try again.";
+      setError(message || "Failed to update category. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

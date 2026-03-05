@@ -1,4 +1,4 @@
-import { MentorDashboardData } from "./types";
+import type { MentorDashboardData } from "./types";
 
 export const mockData: MentorDashboardData = {
   totalEarnings: 2450,

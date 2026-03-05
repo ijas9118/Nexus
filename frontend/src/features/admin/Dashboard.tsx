@@ -1,24 +1,16 @@
-import { type FC, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
+  ArrowUpRight,
   Atom,
   Compass,
   CreditCard,
   GraduationCap,
   Loader,
-  User,
-  ArrowUpRight,
   Minus,
+  User,
 } from "lucide-react";
+import { type FC, useState } from "react";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/molecules/card";
 import { Button } from "@/components/atoms/button";
 import {
   Select,
@@ -27,9 +19,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/molecules/card";
 import { AdminService } from "@/services/admin/adminService";
-import { RevenueChart } from "./admin-dashboard/revenue-chart";
+
 import { MentorApplicationsChart } from "./admin-dashboard/mentor-applications-chart";
+import { RevenueChart } from "./admin-dashboard/revenue-chart";
 import { SubscriptionDistributionChart } from "./admin-dashboard/subscription-distribution-chart";
 
 const Dashboard: FC = () => {
@@ -173,7 +174,9 @@ const Dashboard: FC = () => {
             </div>
             <Select
               value={timeRange}
-              onValueChange={(value) => setTimeRange(value as any)}
+              onValueChange={(value) =>
+                setTimeRange(value as "7days" | "30days" | "90days" | "year")
+              }
             >
               <SelectTrigger className="w-[140px] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
                 <SelectValue placeholder="Select period" />

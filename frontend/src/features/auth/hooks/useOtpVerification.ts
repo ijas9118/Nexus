@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+
+import { resendOtp, verifyOtp } from "@/services/user/authService";
 import { setCredentials } from "@/store/slices/authSlice";
-import { verifyOtp, resendOtp } from "@/services/user/authService";
 
 export function useOtpVerification(email: string) {
   const [timer, setTimer] = useState(60);
@@ -18,10 +19,16 @@ export function useOtpVerification(email: string) {
       const { user, accessToken } = result;
       dispatch(setCredentials({ user, accessToken }));
       navigate("/myFeed");
-    } catch (error: any) {
-      console.log("Error occurred: ", error.message);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+            ? error
+            : (error as { message?: string })?.message ||
+              "Invalid OTP. Please try again.";
       toast.error("Verification Failed", {
-        description: error?.message || "Invalid OTP. Please try again.",
+        description: errorMessage,
       });
     }
   };
@@ -33,10 +40,16 @@ export function useOtpVerification(email: string) {
         description: "A new OTP has been sent to your email.",
       });
       startCountdown();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+            ? error
+            : (error as { message?: string })?.message ||
+              "Something went wrong. Please try again.";
       toast.error("Failed to Resend OTP", {
-        description:
-          error?.message || "Something went wrong. Please try again.",
+        description: errorMessage,
       });
     }
   };

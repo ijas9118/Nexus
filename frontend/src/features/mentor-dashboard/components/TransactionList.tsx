@@ -1,6 +1,8 @@
-import { cn } from "@/lib/utils";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { Transaction } from "../types";
+
+import { cn } from "@/lib/utils";
+
+import type { Transaction } from "../types";
 
 interface TransactionListProps {
   transactions: Transaction[];

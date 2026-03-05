@@ -17,6 +17,7 @@ export interface SquadDetail {
   adminName: string;
   adminUsername: string;
   adminProfilePic: string;
+  isAdmin?: boolean;
 }
 
 export interface SquadContent {

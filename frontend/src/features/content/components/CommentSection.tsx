@@ -1,3 +1,5 @@
+import type { Comment } from "@/types/comment";
+
 import { useComments } from "../hooks/useComments";
 import { CommentItem } from "./CommentItem";
 
@@ -24,12 +26,12 @@ export default function CommentSection({ contentId }: CommentSectionProps) {
     );
 
   const topLevelComments = comments.filter(
-    (comment: any) => !comment.parentCommentId,
+    (comment: Comment) => !comment.parentCommentId,
   );
 
   return (
     <div>
-      {topLevelComments.map((comment: any) => (
+      {topLevelComments.map((comment: Comment) => (
         <CommentItem
           key={comment._id.toString()}
           comment={comment}

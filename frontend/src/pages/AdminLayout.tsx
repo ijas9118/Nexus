@@ -1,5 +1,10 @@
-import AdminAppSidebar from "@/features/admin/components/app-sider";
-import { ModeToggle } from "@/components/theme/mode-toggle";
+import { Bell } from "lucide-react";
+import React from "react";
+import { useSelector } from "react-redux";
+import { Outlet } from "react-router-dom";
+
+import { Button } from "@/components/atoms/button";
+import { Separator } from "@/components/atoms/separator";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,19 +13,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/molecules/breadcrumb";
-import { Button } from "@/components/atoms/button";
-import { Separator } from "@/components/atoms/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/organisms/sidebar";
+import { ModeToggle } from "@/components/theme/mode-toggle";
+import AdminAppSidebar from "@/features/admin/components/app-sider";
 import useLogout from "@/hooks/useLogout";
-import { RootState } from "@/store/store";
-import { Bell } from "lucide-react";
-import React from "react";
-import { useSelector } from "react-redux";
-import { Outlet } from "react-router-dom";
+import type { RootState } from "@/store/store";
 
 const AdminLayout: React.FC = () => {
   const breadcrumbs = useSelector(

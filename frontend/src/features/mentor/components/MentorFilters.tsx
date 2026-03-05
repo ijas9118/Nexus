@@ -1,3 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
+import { Filter } from "lucide-react";
+
 import { Checkbox } from "@/components/atoms/checkbox";
 import { Label } from "@/components/atoms/label";
 import {
@@ -6,8 +9,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/molecules/accordion";
-import { Filter } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import MentorService from "@/services/mentorService";
 
 const sectionTitles = {

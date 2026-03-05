@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-import { Button } from "@/components/atoms/button";
-import type { NotificationTypeData } from "@/types/notification";
-import NotificationTypeList from "./notification-type-list";
-import NotificationTypeDialog from "./notification-type-dialog";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import NotificationTypeService from "@/services/notificationTypeService";
+import { useState } from "react";
 import { toast } from "sonner";
+
+import { Button } from "@/components/atoms/button";
+import NotificationTypeService from "@/services/notificationTypeService";
+import type {
+  NotificationTypeData,
+  NotificationTypeFormValues,
+} from "@/types/notification";
+
+import NotificationTypeDialog from "./notification-type-dialog";
+import NotificationTypeList from "./notification-type-list";
 
 export default function NotificationTypeManagement() {
   const queryClient = useQueryClient();
@@ -62,8 +67,12 @@ export default function NotificationTypeManagement() {
       );
       toast.success("Notification type deactivated successfully");
     },
-    onError: (error: any) => {
-      toast.error(error.message || "Failed to deactivate notification type");
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to deactivate notification type";
+      toast.error(errorMessage);
     },
   });
 
@@ -80,26 +89,28 @@ export default function NotificationTypeManagement() {
       );
       toast.success("Notification type activated successfully");
     },
-    onError: (error: any) => {
-      toast.error(error.message || "Failed to activate notification type");
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to activate notification type";
+      toast.error(errorMessage);
     },
   });
 
   const handleCreateNotificationType = async (
-    notificationType: Omit<
-      NotificationTypeData,
-      "_id" | "createdAt" | "updatedAt"
-    >,
+    notificationType: NotificationTypeFormValues,
   ) => {
     await createMutation.mutateAsync(notificationType);
   };
 
   const handleUpdateNotificationType = async (
-    updatedNotificationType: NotificationTypeData,
+    formData: NotificationTypeFormValues,
   ) => {
+    if (!editingNotificationType) return;
     await updateMutation.mutateAsync({
-      id: updatedNotificationType._id,
-      data: updatedNotificationType,
+      id: editingNotificationType._id,
+      data: formData,
     });
   };
 

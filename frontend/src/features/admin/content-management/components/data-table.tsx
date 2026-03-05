@@ -1,15 +1,18 @@
-import {
+import type {
   ColumnDef,
   ColumnFiltersState,
-  flexRender,
   SortingState,
   VisibilityState,
+} from "@tanstack/react-table";
+import {
+  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  getPaginationRowModel,
 } from "@tanstack/react-table";
+import React from "react";
 
 import {
   Table,
@@ -19,9 +22,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/organisms/table";
-import React from "react";
-import { DataTableToolbar } from "./tableToolbar";
+
 import { DataTablePagination } from "./tablePagination";
+import { DataTableToolbar } from "./tableToolbar";
 
 interface DataTableProps<TData extends { _id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];

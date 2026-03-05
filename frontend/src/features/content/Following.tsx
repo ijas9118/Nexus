@@ -1,11 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+
 import ContentService from "@/services/user/contentService";
-import FilterComponent from "./components/FilterComponent";
-import ContentTypeTab from "./components/ContentTypeTab";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import type { Content } from "@/types/content";
+
 import ContentCard from "./components/ContentCard";
-import { useQuery } from "@tanstack/react-query";
+import ContentTypeTab from "./components/ContentTypeTab";
+import FilterComponent from "./components/FilterComponent";
 
 export default function Following() {
   const dispatch = useDispatch();
@@ -31,8 +34,6 @@ export default function Following() {
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
   });
-
-  console.log(data);
 
   return (
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 py-8">
@@ -62,27 +63,27 @@ export default function Following() {
       )}
 
       <div className="flex flex-col space-y-8">
-        {data.map((item: any) => (
+        {data.map((item: Content) => (
           <ContentCard
             id={item._id}
             key={item._id}
             avatarFallback={"IA"}
-            profilePic={item.profilePic}
-            userName={item.name}
-            username={item.username}
+            profilePic={item.profilePic || ""}
+            userName={item.name || ""}
+            username={item.username || ""}
             contentType={item.contentType}
             heading={item.title}
             date={item.date}
             squad={item.squad}
             isPremium={item.isPremium}
             image={item.thumbnailUrl}
-            isBookmarked={item.isBookmarked}
+            isBookmarked={!!item.isBookmarked}
             upvoteCount={item.upvoteCount}
             downvoteCount={item.downvoteCount}
             commentCount={item.commentCount}
-            content={item.content}
-            isUpvoted={item.isUpvoted}
-            isDownvoted={item.isDownvoted}
+            content={item.content || ""}
+            isUpvoted={!!item.isUpvoted}
+            isDownvoted={!!item.isDownvoted}
             viewCount={item.viewCount}
           />
         ))}

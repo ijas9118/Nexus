@@ -1,10 +1,12 @@
-import { Input } from "@/components/atoms/input";
-import ContentService from "@/services/user/contentService";
-import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
-import { IHistoryItem } from "@/types/content";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+
+import { Input } from "@/components/atoms/input";
+import ContentService from "@/services/user/contentService";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import type { IHistoryItem } from "@/types/content";
+
 import HistoryCard from "./components/HistoryCard";
 
 const History = () => {
@@ -24,7 +26,6 @@ const History = () => {
     const fetchHistory = async () => {
       try {
         const data = await ContentService.getHistory();
-        console.log(data);
         setHistory(data);
       } catch (err: unknown) {
         if (err instanceof Error) {

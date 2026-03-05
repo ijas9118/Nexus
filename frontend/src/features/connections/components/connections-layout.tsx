@@ -4,9 +4,10 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/organisms/tabs";
+
+import ConnectionsList from "./connections-list";
 import FollowersList from "./followers-list";
 import FollowingList from "./following-list";
-import ConnectionsList from "./connections-list";
 
 export default function ConnectionsLayout() {
   return (

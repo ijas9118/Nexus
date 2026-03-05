@@ -1,14 +1,16 @@
-import { SquadHeader } from "./components/squad-header";
-import { SquadDescription } from "./components/squad-description";
-import { SquadAdmin } from "./components/squad-admin";
-import { SquadActions } from "./components/squad-actions";
-import { ContentList } from "./components/content-list";
-import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import SquadService from "@/services/user/squadService";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { useParams } from "react-router-dom";
+
+import SquadService from "@/services/user/squadService";
+import type { RootState } from "@/store/store";
+
+import { ContentList } from "./components/content-list";
+import { SquadActions } from "./components/squad-actions";
+import { SquadAdmin } from "./components/squad-admin";
+import { SquadDescription } from "./components/squad-description";
+import { SquadHeader } from "./components/squad-header";
 
 export default function SquadDetailPage() {
   const { handle } = useParams<{ handle: string }>();
@@ -26,7 +28,6 @@ export default function SquadDetailPage() {
 
   const isAdmin = user?._id === squad?.admin;
 
-  console.log(squad);
   if (isLoading) return <div>Loading squad details...</div>;
   if (isError || !squad) return <div>Error loading squad details</div>;
 

@@ -1,12 +1,14 @@
+import { Clock, FileText, Shield, Users } from "lucide-react";
 import type React from "react";
+
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
-import { Shield, Users, FileText, Clock } from "lucide-react";
-import { SquadStats } from "../SquadAdminDashboard";
+
+import type { SquadStats } from "../SquadAdminDashboard";
 
 interface StatsOverviewProps {
   stats?: SquadStats;

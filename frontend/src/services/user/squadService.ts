@@ -1,12 +1,13 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "../api";
-import { SquadContent, SquadDetail } from "@/types/squad";
+import type { SquadContent, SquadDetail } from "@/types/squad";
 import { SQUAD_ROUTES, USER_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "../api";
 
 const SquadService = {
   createSquad: async (formData: FormData) =>
     handleApi(() =>
-      api.post<any>(SQUAD_ROUTES.BASE, formData, {
+      api.post<SquadDetail>(SQUAD_ROUTES.BASE, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       }),
     ),
@@ -23,7 +24,7 @@ const SquadService = {
     handleApi(() => api.post(`${SQUAD_ROUTES.BASE}/${squadId}/leave`)),
 
   getUserJoinedSquads: async () =>
-    handleApi(() => api.get<any>(USER_ROUTES.SQUADS)),
+    handleApi(() => api.get<SquadDetail[]>(USER_ROUTES.SQUADS)),
 
   getSquadDetailsByHandle: async (handle: string) =>
     handleApi(() => api.get<SquadDetail>(`${SQUAD_ROUTES.DETAIL}/${handle}`)),
@@ -34,7 +35,7 @@ const SquadService = {
     ),
 
   getJoinedSquads: async (userId: string) =>
-    handleApi(() => api.post<any[]>(SQUAD_ROUTES.JOINED, { userId })),
+    handleApi(() => api.post<SquadDetail[]>(SQUAD_ROUTES.JOINED, { userId })),
 };
 
 export default SquadService;

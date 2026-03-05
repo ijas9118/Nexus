@@ -1,14 +1,8 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
-import { MessageSquare, Eye, Bookmark, Link2, Play } from "lucide-react";
-import { Button } from "@/components/atoms/button";
-import { Separator } from "@/components/atoms/separator";
-import { toast } from "sonner";
-import type { SquadContent } from "@/types/squad";
-import SquadService from "@/services/user/squadService";
-import { extractTextFromHtml } from "@/utils/htmlToText";
-import Premium from "@/components/icons/Premium";
-import { Badge } from "@/components/atoms/badge";
+import { Bookmark, Eye, Link2, MessageSquare, Play } from "lucide-react";
+import { useState } from "react";
 import {
   BiDownvote,
   BiSolidDownvote,
@@ -16,13 +10,20 @@ import {
   BiUpvote,
 } from "react-icons/bi";
 import { useSelector } from "react-redux";
-import type { RootState } from "@/store/store";
-import PremiumAccessAlert from "@/components/organisms/PremiumAccessAlert";
-import { useState } from "react";
-import BookmarkService from "@/services/user/bookmarkService";
 import { useNavigate } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { toast } from "sonner";
+
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
+import { Separator } from "@/components/atoms/separator";
+import Premium from "@/components/icons/Premium";
+import PremiumAccessAlert from "@/components/organisms/PremiumAccessAlert";
 import { ShareMenu } from "@/components/organisms/share-menu";
+import BookmarkService from "@/services/user/bookmarkService";
+import SquadService from "@/services/user/squadService";
+import type { RootState } from "@/store/store";
+import type { SquadContent } from "@/types/squad";
+import { extractTextFromHtml } from "@/utils/htmlToText";
 
 export function ContentList({ squadId }: { squadId: string }) {
   const isPremium = useSelector(

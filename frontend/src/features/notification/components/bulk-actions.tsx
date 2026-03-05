@@ -1,10 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Checkbox } from "@/components/atoms/checkbox";
-import { Button } from "@/components/atoms/button";
-import type { INotification } from "@/types/notification";
-import NotificationService from "@/services/notificationService";
 import { toast } from "sonner";
+
+import { Button } from "@/components/atoms/button";
+import { Checkbox } from "@/components/atoms/checkbox";
 import { DynamicLucidIcon } from "@/components/organisms/lucide-icon";
+import NotificationService from "@/services/notificationService";
+import type { INotification } from "@/types/notification";
 
 interface BulkActionsProps {
   selectedIds: string[];

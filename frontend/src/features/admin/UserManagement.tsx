@@ -1,8 +1,11 @@
-import { useState } from "react";
-import { getUserTableColumns } from "./userManagement/columns";
-import AdminUserService from "@/services/admin/userManagement";
-import { DataTable } from "./userManagement/components/data-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+
+import AdminUserService from "@/services/admin/userManagement";
+import type { IGetUsersResponse, UserManagementData } from "@/types/admin/user";
+
+import { getUserTableColumns } from "./userManagement/columns";
+import { DataTable } from "./userManagement/components/data-table";
 
 const UserManagement = () => {
   const [page, setPage] = useState(1);
@@ -10,18 +13,18 @@ const UserManagement = () => {
 
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error } = useQuery<IGetUsersResponse>({
     queryKey: ["admin-users", page, limit],
     queryFn: () => AdminUserService.getUsers(page, limit),
   });
 
-  const blockMutation = useMutation({
+  const blockMutation = useMutation<UserManagementData, unknown, string>({
     mutationFn: (userId: string) => AdminUserService.blockUser(userId),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["admin-users"] }),
   });
 
-  const unblockMutation = useMutation({
+  const unblockMutation = useMutation<UserManagementData, unknown, string>({
     mutationFn: (userId: string) => AdminUserService.unblockUser(userId),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["admin-users"] }),

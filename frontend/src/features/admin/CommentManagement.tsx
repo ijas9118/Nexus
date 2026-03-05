@@ -1,3 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
+import { AlertTriangle, CheckCircle, Trash2 } from "lucide-react";
+import { useState } from "react";
+
 import { Badge } from "@/components/atoms/badge";
 import {
   Tabs,
@@ -5,13 +9,12 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/organisms/tabs";
-import { AlertTriangle, CheckCircle, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { CommentService } from "@/services/admin/commentService";
+import type { AdminComment } from "@/types/admin/comment";
+
+import CommentFilters from "./comment-management/CommentFilters";
 import CommentsList from "./comment-management/CommentsList";
 import CommentStats from "./comment-management/CommentStats";
-import CommentFilters from "./comment-management/CommentFilters";
-import { useQuery } from "@tanstack/react-query";
-import { CommentService } from "@/services/admin/commentService";
 
 // Mock data for demonstration
 const squads = [
@@ -42,19 +45,25 @@ const CommentManagement = () => {
     data: comments = [],
     isLoading,
     isError,
-  } = useQuery({
+  } = useQuery<AdminComment[]>({
     queryKey: ["comments"],
     queryFn: CommentService.getAllComment,
   });
 
-  const filteredComments = comments.filter((comment: any) => {
-    if (selectedBlog && comment.blogId !== selectedBlog) {
+  const filteredComments = comments.filter((comment: AdminComment) => {
+    const commentContentId =
+      typeof comment.contentId === "string"
+        ? comment.contentId
+        : comment.contentId?._id;
+
+    if (selectedBlog && commentContentId !== selectedBlog) {
       return false;
     }
 
     if (!selectedBlog && selectedSquad) {
       const blogBelongsToSquad = blogs.find(
-        (blog) => blog.id === comment.blogId && blog.squadId === selectedSquad,
+        (blog) =>
+          blog.id === commentContentId && blog.squadId === selectedSquad,
       );
       if (!blogBelongsToSquad) return false;
     }
@@ -71,7 +80,7 @@ const CommentManagement = () => {
 
     if (
       searchQuery &&
-      !comment.content.toLowerCase().includes(searchQuery.toLowerCase())
+      !comment.text.toLowerCase().includes(searchQuery.toLowerCase())
     ) {
       return false;
     }
@@ -167,7 +176,7 @@ const CommentManagement = () => {
             <TabsContent value="active" className="mt-4">
               <CommentsList
                 comments={filteredComments.filter(
-                  (comment: any) => comment.status === "active",
+                  (comment: AdminComment) => comment.status === "active",
                 )}
                 getStatusBadge={getStatusBadge}
               />
@@ -175,7 +184,7 @@ const CommentManagement = () => {
             <TabsContent value="reported" className="mt-4">
               <CommentsList
                 comments={filteredComments.filter(
-                  (comment: any) => comment.status === "reported",
+                  (comment: AdminComment) => comment.status === "reported",
                 )}
                 getStatusBadge={getStatusBadge}
               />
@@ -183,42 +192,13 @@ const CommentManagement = () => {
             <TabsContent value="deleted" className="mt-4">
               <CommentsList
                 comments={filteredComments.filter(
-                  (comment: any) => comment.status === "deleted",
+                  (comment: AdminComment) => comment.status === "deleted",
                 )}
                 getStatusBadge={getStatusBadge}
               />
             </TabsContent>
           </>
         )}
-
-        {/* <TabsContent value="all" className="mt-4">
-          <CommentsList
-            comments={filteredComments}
-            getBlogTitle={getBlogTitle}
-            getStatusBadge={getStatusBadge}
-          />
-        </TabsContent>
-        <TabsContent value="active" className="mt-4">
-          <CommentsList
-            comments={filteredComments}
-            getBlogTitle={getBlogTitle}
-            getStatusBadge={getStatusBadge}
-          />
-        </TabsContent>
-        <TabsContent value="reported" className="mt-4">
-          <CommentsList
-            comments={filteredComments}
-            getBlogTitle={getBlogTitle}
-            getStatusBadge={getStatusBadge}
-          />
-        </TabsContent>
-        <TabsContent value="deleted" className="mt-4">
-          <CommentsList
-            comments={filteredComments}
-            getBlogTitle={getBlogTitle}
-            getStatusBadge={getStatusBadge}
-          />
-        </TabsContent> */}
       </Tabs>
     </div>
   );

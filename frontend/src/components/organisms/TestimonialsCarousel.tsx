@@ -1,3 +1,6 @@
+import Autoplay from "embla-carousel-autoplay";
+import React from "react";
+
 import {
   Carousel,
   CarouselContent,
@@ -5,9 +8,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/organisms/carousel";
-import Autoplay from "embla-carousel-autoplay";
+
 import TestimonialCard from "./TestimonialCard";
-import React from "react";
 
 interface Testimonial {
   name: string;

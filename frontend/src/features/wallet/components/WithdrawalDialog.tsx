@@ -1,7 +1,11 @@
-import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowUpIcon, DollarSignIcon, StarIcon } from "lucide-react";
+import { useState } from "react";
+
 import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
+import { Textarea } from "@/components/atoms/textarea";
 import {
   Dialog,
   DialogContent,
@@ -11,9 +15,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/organisms/dialog";
-import { Input } from "@/components/atoms/input";
-import { Label } from "@/components/atoms/label";
-import { Textarea } from "@/components/atoms/textarea";
 import WalletService from "@/services/walletService";
 
 function WithdrawalDialog() {

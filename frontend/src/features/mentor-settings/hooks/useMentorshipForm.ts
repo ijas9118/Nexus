@@ -1,11 +1,12 @@
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+import MentorService from "@/services/mentorService";
 import MentorshipTypeService from "@/services/mentorshipTypeService";
 import TargetAudienceService from "@/services/targetAudienceService";
-import MentorService from "@/services/mentorService";
 
 const mentorshipFormSchema = z.object({
   mentorshipTypes: z.array(z.string()).min(1, {
@@ -18,8 +19,8 @@ const mentorshipFormSchema = z.object({
 
 type MentorshipFormValues = z.infer<typeof mentorshipFormSchema>;
 
-interface UseMentorshipFormProps {
-  mentorData: {
+export interface UseMentorshipFormProps {
+  mentorData?: {
     mentorshipDetails?: {
       mentorshipTypes?: Array<{ _id: string }>;
       targetAudiences?: Array<{ _id: string }>;
@@ -84,15 +85,19 @@ export const useMentorshipForm = ({ mentorData }: UseMentorshipFormProps) => {
   });
 
   // Map options for MultiSelect
-  const mentorshipTypeOptions = mentorshipTypes.map((type: any) => ({
-    value: type._id,
-    label: type.name,
-  }));
+  const mentorshipTypeOptions = mentorshipTypes.map(
+    (type: { _id: string; name: string }) => ({
+      value: type._id,
+      label: type.name,
+    }),
+  );
 
-  const targetAudienceOptions = targetAudiences.map((audience: any) => ({
-    value: audience._id,
-    label: audience.name,
-  }));
+  const targetAudienceOptions = targetAudiences.map(
+    (audience: { _id: string; name: string }) => ({
+      value: audience._id,
+      label: audience.name,
+    }),
+  );
 
   return {
     form,

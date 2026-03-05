@@ -1,4 +1,4 @@
-import { Linkedin, Instagram, Twitter, Youtube } from "lucide-react";
+import { Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
 
 export const quickLinks = [
   { name: "Home", href: "/" },

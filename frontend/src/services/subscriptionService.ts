@@ -1,7 +1,8 @@
-import { ISubscriptionWithPlan } from "@/types/subscription";
-import api from "./api";
-import { handleApi } from "@/utils/handleApi";
+import type { ISubscriptionWithPlan } from "@/types/subscription";
 import { SUBSCRIPTION_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 const SubscriptionService = {
   getCurrentSubscription: () =>

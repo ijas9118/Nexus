@@ -1,75 +1,91 @@
-import api from "./api";
-import { handleApi } from "@/utils/handleApi";
+import type {
+  ConnectionStatus,
+  FollowStats,
+  PendingRequest,
+} from "@/types/follow";
+import type { UserInterface } from "@/types/user";
 import { FOLLOWER_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 const FollowService = {
   followUser: (followedId: string) =>
-    handleApi(() => api.post<any>(FOLLOWER_ROUTES.FOLLOW, { followedId })),
+    handleApi(() => api.post<void>(FOLLOWER_ROUTES.FOLLOW, { followedId })),
 
   checkIsFollowing: (followerId: string, followedId: string) =>
     handleApi(() =>
-      api.post<any>(FOLLOWER_ROUTES.IS_FOLLOWING, { followerId, followedId }),
+      api.post<boolean>(FOLLOWER_ROUTES.IS_FOLLOWING, {
+        followerId,
+        followedId,
+      }),
     ),
 
   unfollowUser: (followedId: string) =>
-    handleApi(() => api.post<any>(FOLLOWER_ROUTES.UNFOLLOW, { followedId })),
+    handleApi(() => api.post<void>(FOLLOWER_ROUTES.UNFOLLOW, { followedId })),
 
   sendConnectionRequest: (recipientId: string) =>
-    handleApi(() => api.post<any>(FOLLOWER_ROUTES.CONNECT, { recipientId })),
+    handleApi(() => api.post<void>(FOLLOWER_ROUTES.CONNECT, { recipientId })),
 
   withdrawConnectionRequest: (recipientId: string) =>
-    handleApi(() => api.post<any>(FOLLOWER_ROUTES.WITHDRAW, { recipientId })),
+    handleApi(() => api.post<void>(FOLLOWER_ROUTES.WITHDRAW, { recipientId })),
 
   acceptConnectionRequest: (requesterId: string) =>
-    handleApi(() => api.post<any>(FOLLOWER_ROUTES.ACCEPT, { requesterId })),
+    handleApi(() => api.post<void>(FOLLOWER_ROUTES.ACCEPT, { requesterId })),
 
   rejectConnectionRequest: (requesterId: string) =>
-    handleApi(() => api.post<any>(FOLLOWER_ROUTES.REJECT, { requesterId })),
+    handleApi(() => api.post<void>(FOLLOWER_ROUTES.REJECT, { requesterId })),
 
   removeConnection: (connectionId: string) =>
-    handleApi(() => api.post<any>(FOLLOWER_ROUTES.REMOVE, { connectionId })),
+    handleApi(() => api.post<void>(FOLLOWER_ROUTES.REMOVE, { connectionId })),
 
   hasSentConnectionRequest: (recipientId: string) =>
     handleApi(() =>
-      api.post<any>(FOLLOWER_ROUTES.HAS_REQUESTED, { recipientId }),
+      api.post<ConnectionStatus>(FOLLOWER_ROUTES.HAS_REQUESTED, {
+        recipientId,
+      }),
     ),
 
   checkConnected: (userId2: string) =>
-    handleApi(() => api.post<any>(FOLLOWER_ROUTES.IS_CONNECTED, { userId2 })),
+    handleApi(() =>
+      api.post<ConnectionStatus>(FOLLOWER_ROUTES.IS_CONNECTED, { userId2 }),
+    ),
 
   searchConnectedUsers: (searchTerm?: string) =>
     handleApi(() =>
-      api.get<any>(FOLLOWER_ROUTES.CONNECTIONS, {
+      api.get<UserInterface[]>(FOLLOWER_ROUTES.CONNECTIONS, {
         params: { search: searchTerm },
       }),
     ),
 
   getPendingRequests: () =>
-    handleApi(() => api.get<any>(FOLLOWER_ROUTES.PENDING)),
+    handleApi(() => api.get<PendingRequest[]>(FOLLOWER_ROUTES.PENDING)),
 
   getAllConnections: () =>
-    handleApi(() => api.get<any>(FOLLOWER_ROUTES.GET_ALL_CONNECTIONS)),
+    handleApi(() =>
+      api.get<UserInterface[]>(FOLLOWER_ROUTES.GET_ALL_CONNECTIONS),
+    ),
 
   getFollowStats: (userId: string) =>
-    handleApi(() => api.get<any>(`${FOLLOWER_ROUTES.STATS}/${userId}`)),
+    handleApi(() => api.get<FollowStats>(`${FOLLOWER_ROUTES.STATS}/${userId}`)),
 
   getFollowers: (userId: string) =>
     handleApi(() =>
-      api.get<any>(`${FOLLOWER_ROUTES.BASE}/${userId}/followers`),
+      api.get<UserInterface[]>(`${FOLLOWER_ROUTES.BASE}/${userId}/followers`),
     ),
 
   getFollowings: (userId: string) =>
     handleApi(() =>
-      api.get<any>(`${FOLLOWER_ROUTES.BASE}/${userId}/following`),
+      api.get<UserInterface[]>(`${FOLLOWER_ROUTES.BASE}/${userId}/following`),
     ),
 
   getConnections: (userId: string) =>
     handleApi(() =>
-      api.get<any>(`${FOLLOWER_ROUTES.BASE}/${userId}/connections`),
+      api.get<UserInterface[]>(`${FOLLOWER_ROUTES.BASE}/${userId}/connections`),
     ),
 
   getSentConnectionRequests: () =>
-    handleApi(() => api.get<any>(FOLLOWER_ROUTES.SENT_REQUESTS)),
+    handleApi(() => api.get<UserInterface[]>(FOLLOWER_ROUTES.SENT_REQUESTS)),
 };
 
 export default FollowService;

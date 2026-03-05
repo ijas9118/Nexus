@@ -1,6 +1,7 @@
+import type { FC } from "react";
+
 import { ScrollArea, ScrollBar } from "@/components/organisms/scroll-area";
-import { Category } from "@/types/category";
-import { FC } from "react";
+import type { Category } from "@/types/category";
 
 interface CategoryScrollProps {
   categories: Category[];

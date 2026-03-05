@@ -1,3 +1,5 @@
+import { Search } from "lucide-react";
+
 import { Input } from "@/components/atoms/input";
 import {
   Select,
@@ -6,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select";
-import { Search } from "lucide-react";
 
 const SearchAndSort = () => {
   return (

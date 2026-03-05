@@ -1,15 +1,18 @@
 import { AxiosError } from "axios";
-import api from "../api";
+
+import type { Comment } from "@/types/comment";
 import { CONTENT_ROUTES } from "@/utils/constants";
+
+import api from "../api";
 
 export const CommentService = {
   addComment: async (
     contentId: string,
     text: string,
     parentCommentId?: string,
-  ) => {
+  ): Promise<Comment> => {
     try {
-      const response = await api.post(CONTENT_ROUTES.COMMENTS, {
+      const response = await api.post<Comment>(CONTENT_ROUTES.COMMENTS, {
         contentId,
         text,
         parentCommentId,
@@ -26,9 +29,9 @@ export const CommentService = {
     }
   },
 
-  getCommentsByContentId: async (contentId: string) => {
+  getCommentsByContentId: async (contentId: string): Promise<Comment[]> => {
     try {
-      const response = await api.get(CONTENT_ROUTES.COMMENTS, {
+      const response = await api.get<Comment[]>(CONTENT_ROUTES.COMMENTS, {
         params: {
           contentId,
         },

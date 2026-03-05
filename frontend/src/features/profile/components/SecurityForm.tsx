@@ -1,19 +1,23 @@
+import { Lock, Trash2, Unlink } from "lucide-react";
+import type { FC } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
-import ProfileService from "@/services/user/profileService";
-import { Lock, Trash2, Unlink } from "lucide-react";
-import { FC, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
-import PasswordInput from "./PasswordInput";
-import { toast } from "sonner";
-import { FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
 import { ScrollArea } from "@/components/organisms/scroll-area";
+import ProfileService from "@/services/user/profileService";
+import type { RootState } from "@/store/store";
+
+import PasswordInput from "./PasswordInput";
 
 const SecurityForm: FC = () => {
-  const user = useSelector((state: any) => state.auth.user);
+  const user = useSelector((state: RootState) => state.auth.user);
   const [loading, setLoading] = useState(false);
 
   const {
@@ -29,6 +33,8 @@ const SecurityForm: FC = () => {
     },
   });
 
+  if (!user) return null;
+
   const handleDisconnect = (provider: "google" | "github") => {
     setLoading(true);
     toast.info(`Disconnecting ${provider} account is not yet implemented.`);
@@ -36,17 +42,20 @@ const SecurityForm: FC = () => {
     // Example: await disconnectAccount(provider); then update Redux state
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) => {
     setLoading(true);
 
     try {
-      console.log("Updating Password...", data);
       await ProfileService.updatePassword(data);
       toast.success("Your password is updated.");
-    } catch (error: any) {
-      console.error("Failed to update password", error);
+    } catch (error: unknown) {
       toast.error("Failed", {
-        description: error.message,
+        description:
+          error instanceof Error ? error.message : "Failed to update password",
       });
     } finally {
       setLoading(false);

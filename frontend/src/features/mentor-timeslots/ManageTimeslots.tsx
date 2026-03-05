@@ -1,6 +1,7 @@
 import { useState } from "react";
-import TimeSlotManagement from "./components/TimeSlotManagement";
+
 import SelectDate from "./components/SelectDate";
+import TimeSlotManagement from "./components/TimeSlotManagement";
 
 export default function MentorAvailabilityPage() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);

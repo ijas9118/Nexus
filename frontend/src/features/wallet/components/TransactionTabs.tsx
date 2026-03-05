@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/organisms/tabs";
+
 import {
   Select,
   SelectContent,
@@ -12,7 +7,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select";
-import { TransactionDetails } from "@/types/wallet";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/organisms/tabs";
+import type { TransactionDetails } from "@/types/wallet";
+
 import TransactionTable from "./TransactionTable";
 
 interface TransactionTabsProps {

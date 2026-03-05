@@ -1,24 +1,26 @@
-import { Badge } from "@/components/atoms/badge";
-import MentorService from "@/services/mentorService";
 import { useQuery } from "@tanstack/react-query";
 import { Briefcase, CalendarClock, CheckCircle, Clock } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { MentorStats } from "./components/mentor-datail/mentor-stats";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/organisms/tabs";
+
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/organisms/tabs";
+import MentorService from "@/services/mentorService";
+import type { ExpertiseArea, TargetAudience, Technology } from "@/types/mentor";
+
+import { MentorStats } from "./components/mentor-datail/mentor-stats";
 import { ReviewsSection } from "./components/mentor-datail/reviews-section";
-import { Button } from "@/components/atoms/button";
-import { ExpertiseArea, TargetAudience, Technology } from "@/types/mentor";
 
 const MentorDetailPage = () => {
   const { mentorId } = useParams<{ mentorId: string }>();
@@ -30,8 +32,6 @@ const MentorDetailPage = () => {
     queryKey: ["mentor-detail"],
     queryFn: () => MentorService.getMentorDetails(mentorId as string),
   });
-
-  console.log(mentorData);
 
   if (isLoading) return <p>Loading...</p>;
   if (isError || !mentorData) return <p>Error fetching mentor</p>;

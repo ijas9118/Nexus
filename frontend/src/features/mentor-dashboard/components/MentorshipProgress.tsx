@@ -1,5 +1,6 @@
 import { Progress } from "@/components/molecules/progress";
-import { MentorshipType } from "../types";
+
+import type { MentorshipType } from "../types";
 
 interface MentorshipProgressProps {
   mentorshipTypes: MentorshipType[];

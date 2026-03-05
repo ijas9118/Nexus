@@ -1,6 +1,7 @@
-import { useLocation, Navigate } from "react-router-dom";
-import SuccessPage from "./SuccessPage";
+import { Navigate, useLocation } from "react-router-dom";
+
 import CancelPage from "./CancelPage";
+import SuccessPage from "./SuccessPage";
 
 const BookingStatus = () => {
   const location = useLocation();

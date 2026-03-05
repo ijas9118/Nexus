@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
+
 import ProtectedRoute from "./ProtectedRoute";
 
 const AdminLayout = lazy(() => import("@/pages/AdminLayout"));

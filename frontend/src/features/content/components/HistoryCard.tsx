@@ -1,9 +1,12 @@
+import { TrashIcon } from "lucide-react";
+import React from "react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
 import { Card, CardContent } from "@/components/molecules/card";
-import { TrashIcon } from "lucide-react";
-import { IHistoryItem } from "@/types/content";
 import ContentService from "@/services/user/contentService";
+import type { IHistoryItem } from "@/types/content";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,7 +18,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../../../components/molecules/alert-dialog";
-import React from "react";
 
 interface IHistoryCardProps {
   item: IHistoryItem;

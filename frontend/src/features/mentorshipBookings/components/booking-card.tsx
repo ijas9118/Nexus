@@ -1,21 +1,23 @@
-import { useState } from "react";
 import { format, parseISO } from "date-fns";
-import type { IBooking } from "@/types/booking";
-import { Card, CardContent } from "@/components/molecules/card";
+import { Calendar, Clock, MoreVertical } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
-import { Calendar, Clock, MoreVertical } from "lucide-react";
+import { Card, CardContent } from "@/components/molecules/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import { toast } from "sonner";
-import { RescheduleDialog } from "./reschedule-dialog";
 import BookingService from "@/services/bookingService";
-import { useNavigate } from "react-router-dom";
+import type { IBooking } from "@/types/booking";
+
+import { RescheduleDialog } from "./reschedule-dialog";
 
 interface BookingCardProps {
   booking: IBooking;

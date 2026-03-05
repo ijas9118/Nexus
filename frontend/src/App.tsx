@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import UserRoutes from "./routes/UserRoutes";
-import MentorRoutes from "./routes/MentorRoutes";
-import AdminRoutes from "./routes/AdminRoutes";
+
 import { ThemeProvider } from "./components/theme/theme-provider";
-import store from "./store/store";
-import { refreshAccessToken } from "./store/slices/authSlice";
 import { ConfirmDialogProvider } from "./context/ConfirmDialogContext";
+import AdminRoutes from "./routes/AdminRoutes";
+import MentorRoutes from "./routes/MentorRoutes";
+import UserRoutes from "./routes/UserRoutes";
+import { refreshAccessToken } from "./store/slices/authSlice";
+import store from "./store/store";
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);

@@ -1,10 +1,11 @@
-import { IPlan } from "@/types/plans";
-import api from "./api";
-import { handleApi } from "@/utils/handleApi";
+import type { IPlan } from "@/types/plans";
 import { PLAN_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 const PlanService = {
-  createPlan: (planData: any) =>
+  createPlan: (planData: Partial<IPlan>) =>
     handleApi(() => api.post(PLAN_ROUTES.BASE, planData)),
 
   getAllPlans: async (): Promise<IPlan[]> => {

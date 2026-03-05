@@ -1,4 +1,11 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
+import { Checkbox } from "@/components/atoms/checkbox";
+import { Label } from "@/components/atoms/label";
+import { Textarea } from "@/components/atoms/textarea";
 import {
   Card,
   CardContent,
@@ -7,17 +14,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
-import { Checkbox } from "@/components/atoms/checkbox";
-import { Label } from "@/components/atoms/label";
-import { Textarea } from "@/components/atoms/textarea";
-import { Link, useNavigate } from "react-router-dom";
 import { useMentorForm } from "@/context/MentorFormContext";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import MentorService from "@/services/mentorService";
-import { toast } from "sonner";
-import { MentorFormData } from "@/types/mentor";
 import MentorshipTypeService from "@/services/mentorshipTypeService";
 import TargetAudienceService from "@/services/targetAudienceService";
+import type {
+  MentorFormData,
+  MentorshipType,
+  TargetAudience,
+} from "@/types/mentor";
 
 const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
   const navigator = useNavigate();
@@ -35,7 +40,7 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
     data: mentorshipTypesOptions,
     isLoading: isMentorshipTypesLoading,
     isError: isMentorshipTypesError,
-  } = useQuery({
+  } = useQuery<MentorshipType[]>({
     queryKey: ["mentorshipTypes"],
     queryFn: () => MentorshipTypeService.getAllTypes(),
   });
@@ -44,7 +49,7 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
     data: targetAudienceOptions,
     isLoading: isTargetAudiencesLoading,
     isError: isTargetAudiencesError,
-  } = useQuery({
+  } = useQuery<TargetAudience[]>({
     queryKey: ["targetAudiences"],
     queryFn: () => TargetAudienceService.getAll(),
   });
@@ -88,7 +93,6 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
   });
 
   const onSubmit = (data: MentorFormData) => {
-    console.log(data);
     mutation.mutate(data);
   };
 
@@ -111,7 +115,7 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
             </div>
           ) : (
             <div className="grid gap-2">
-              {(mentorshipTypesOptions ?? []).map((type: any) => (
+              {(mentorshipTypesOptions ?? []).map((type: MentorshipType) => (
                 <div key={type._id} className="flex items-start space-x-2">
                   <Checkbox
                     id={`mentorshipType-${type._id}`}
@@ -156,7 +160,7 @@ const MentorshipDetailsForm = ({ onBack }: { onBack: () => void }) => {
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-2">
-              {targetAudienceOptions?.map((audience: any) => (
+              {targetAudienceOptions?.map((audience: TargetAudience) => (
                 <div key={audience._id} className="flex items-center space-x-2">
                   <Checkbox
                     id={`audience-${audience._id}`}

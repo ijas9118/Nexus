@@ -1,5 +1,6 @@
+import { MoreHorizontalIcon, ReplyIcon, ThumbsUpIcon } from "lucide-react";
+
 import { Button } from "@/components/atoms/button";
-import { ThumbsUpIcon, ReplyIcon, MoreHorizontalIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,

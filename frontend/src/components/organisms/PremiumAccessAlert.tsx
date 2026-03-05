@@ -1,3 +1,6 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,8 +11,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/molecules/alert-dialog";
-import React from "react";
-import { useNavigate } from "react-router-dom";
 
 interface PremiumAccessAlertProps {
   open: boolean;

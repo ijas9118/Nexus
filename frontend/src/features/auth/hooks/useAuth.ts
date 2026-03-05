@@ -1,16 +1,16 @@
 import type React from "react";
-
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { setCredentials } from "@/store/slices/authSlice";
+
 import {
-  loginUser,
-  registerUser,
   githubAuth,
   googleAuth,
+  loginUser,
+  registerUser,
 } from "@/services/user/authService";
+import { setCredentials } from "@/store/slices/authSlice";
 import { isValidEmail } from "@/utils/validation";
 
 export interface AuthFormData {
@@ -87,10 +87,16 @@ export function useAuth() {
       if (signUp) {
         setShowOTP(true);
       } else navigate("/myFeed");
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+            ? error
+            : (error as { message?: string })?.message ||
+              "Something went wrong. Please try again.";
       toast.error("Authentication Failed", {
-        description:
-          error?.message || "Something went wrong. Please try again.",
+        description: errorMessage,
       });
     } finally {
       setLoading(false);
@@ -104,10 +110,16 @@ export function useAuth() {
       } else if (provider === "github") {
         await githubAuth();
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+            ? error
+            : (error as { message?: string })?.message ||
+              "Something went wrong. Please try again.";
       toast.error(`${provider} Authentication Failed`, {
-        description:
-          error?.message || "Something went wrong. Please try again.",
+        description: errorMessage,
       });
     }
   };

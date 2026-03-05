@@ -1,12 +1,14 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
+
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/organisms/tabs";
-import type { IBooking } from "@/types/booking";
 import BookingService from "@/services/bookingService";
+import type { IBooking } from "@/types/booking";
+
 import { BookingFilters } from "./components/booking-filters";
 import { BookingList } from "./components/booking-list";
 
@@ -42,8 +44,6 @@ export default function BookingsPage() {
   useEffect(() => {
     fetchBookings();
   }, [fetchBookings]);
-
-  console.log(bookings);
 
   const handleFilterChange = (newFilters: {
     date?: string;

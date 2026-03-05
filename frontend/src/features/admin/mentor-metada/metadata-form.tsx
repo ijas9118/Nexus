@@ -1,14 +1,25 @@
-import { useState, useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/atoms/select";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/organisms/dialog";
 import {
   Form,
@@ -18,15 +29,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/organisms/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/atoms/select";
-import { Input } from "@/components/atoms/input";
-import { Button } from "@/components/atoms/button";
 import type { MentorMetadataData } from "@/services/mentorMetadataService";
 
 const formSchema = z.object({
@@ -101,9 +103,12 @@ export default function MetadataForm({
           : "Metadata created successfully",
       );
       onClose();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to save metadata:", error);
-      const errorMessage = error?.message || "Failed to save metadata";
+      const errorMessage =
+        error instanceof AxiosError
+          ? error.response?.data?.message
+          : "Failed to save metadata";
 
       if (errorMessage.toLowerCase().includes("already exists")) {
         form.setError("name", {

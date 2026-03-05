@@ -1,8 +1,9 @@
+import dayjs from "dayjs";
+import { Clock } from "lucide-react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
-import { Clock } from "lucide-react";
-import { RecentBooking } from "@/types/mentorDashboard.types";
-import dayjs from "dayjs";
+import type { RecentBooking } from "@/types/mentorDashboard.types";
 
 interface BookingListProps {
   bookings: RecentBooking[];

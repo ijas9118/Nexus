@@ -1,19 +1,20 @@
+import dayjs from "dayjs";
+import { Link } from "react-router-dom";
+
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
+import { Separator } from "@/components/atoms/separator";
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from "@/components/molecules/card";
-import { Badge } from "@/components/atoms/badge";
-import { Separator } from "@/components/atoms/separator";
 import { Progress } from "@/components/molecules/progress";
-import { Button } from "@/components/atoms/button";
-import { ISubscriptionWithPlan } from "@/types/subscription";
-import dayjs from "dayjs";
+import type { ISubscriptionWithPlan } from "@/types/subscription";
 import { getPlanLogo } from "@/utils/planLogo";
-import { Link } from "react-router-dom";
 
 export default function MembershipCard({
   subscription,
@@ -28,7 +29,6 @@ export default function MembershipCard({
   const remainingDays = end.diff(today, "day");
   const usedDays = totalDays - remainingDays;
 
-  console.log(totalDays, remainingDays, usedDays);
   const progressPercent = Math.min(
     100,
     Math.max(0, (usedDays / totalDays) * 100),

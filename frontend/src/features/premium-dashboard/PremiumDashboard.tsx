@@ -1,11 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import SubscriptionService from "@/services/subscriptionService";
-import ProfileHeader from "./components/ProfileHeader";
-import MembershipCard from "./components/MembershipCard";
-import StatsCard from "./components/StatsCard";
-import MembershipBenefits from "./components/MembershipBenefits";
-import { Loader2, AlertCircle, ArrowLeft } from "lucide-react";
+import { AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+import SubscriptionService from "@/services/subscriptionService";
+
+import MembershipBenefits from "./components/MembershipBenefits";
+import MembershipCard from "./components/MembershipCard";
+import ProfileHeader from "./components/ProfileHeader";
+import StatsCard from "./components/StatsCard";
 
 export default function PremiumDashboard() {
   const navigator = useNavigate();

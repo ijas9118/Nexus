@@ -1,12 +1,30 @@
+import {
+  Atom,
+  Bell,
+  ChevronUp,
+  Compass,
+  CreditCard,
+  Database,
+  GraduationCap,
+  IndianRupee,
+  Layers,
+  LayoutDashboard,
+  Leaf,
+  MessageCircleMore,
+  Target,
+  Users,
+} from "lucide-react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import NexusLogo from "@/components/icons/NexusLogo";
 import { Collapsible } from "@/components/molecules/collapsible";
+import CollapsibleComponent from "@/components/organisms/CollapsibleComponent";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import NexusLogo from "@/components/icons/NexusLogo";
 import {
   Sidebar,
   SidebarContent,
@@ -17,23 +35,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/organisms/sidebar";
-import {
-  Atom,
-  Bell,
-  ChevronUp,
-  Compass,
-  CreditCard,
-  GraduationCap,
-  IndianRupee,
-  Layers,
-  LayoutDashboard,
-  MessageCircleMore,
-  Users,
-  Leaf,
-  Database,
-  Target,
-} from "lucide-react";
-import CollapsibleComponent from "@/components/organisms/CollapsibleComponent";
 
 const mainItem = [
   { title: "Dashboard", url: "dashboard", icon: LayoutDashboard },

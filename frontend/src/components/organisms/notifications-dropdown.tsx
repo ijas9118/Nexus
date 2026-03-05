@@ -1,21 +1,17 @@
-import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import {
   Bell,
-  Check,
-  Trash2,
-  CalendarPlus,
-  MessageSquare,
   BellIcon,
+  CalendarPlus,
+  Check,
+  MessageSquare,
   MoreVertical,
+  Trash2,
 } from "lucide-react";
+import { useState } from "react";
+
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/molecules/popover";
 import {
   Card,
   CardContent,
@@ -25,13 +21,19 @@ import {
   CardTitle,
 } from "@/components/molecules/card";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/molecules/popover";
+import type { INotification } from "@/types/notification";
+
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { ScrollArea } from "./scroll-area";
-import { INotification } from "@/types/notification";
 
 interface NotificationsDropdownProps {
   notifications: INotification[];

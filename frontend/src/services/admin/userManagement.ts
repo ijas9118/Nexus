@@ -1,7 +1,8 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "../api";
-import { IGetUsersResponse } from "@/types/admin/user";
+import type { IGetUsersResponse, UserManagementData } from "@/types/admin/user";
 import { ADMIN_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "../api";
 
 const AdminUserService = {
   getUsers: (page: number = 1, limit: number = 10) =>
@@ -15,10 +16,14 @@ const AdminUserService = {
     handleApi(() => api.get(`${ADMIN_ROUTES.USER}/${userId}`)),
 
   blockUser: (userId: string) =>
-    handleApi(() => api.patch(`${ADMIN_ROUTES.USER}/block/${userId}`)),
+    handleApi(() =>
+      api.patch<UserManagementData>(`${ADMIN_ROUTES.USER}/block/${userId}`),
+    ),
 
   unblockUser: (userId: string) =>
-    handleApi(() => api.patch(`${ADMIN_ROUTES.USER}/unblock/${userId}`)),
+    handleApi(() =>
+      api.patch<UserManagementData>(`${ADMIN_ROUTES.USER}/unblock/${userId}`),
+    ),
 };
 
 export default AdminUserService;

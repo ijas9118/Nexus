@@ -1,3 +1,11 @@
+import { useQuery } from "@tanstack/react-query";
+import { Calendar, Clock, Info } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
 import { Label } from "@/components/atoms/label";
 import { Textarea } from "@/components/atoms/textarea";
@@ -12,15 +20,8 @@ import {
 import BookingPaymentService from "@/services/bookingPaymentService";
 import MentorService from "@/services/mentorService";
 import TimeSlotService from "@/services/TimeSlotService";
-import { RootState } from "@/store/store";
-import { MentorshipType } from "@/types/mentor";
-import { useQuery } from "@tanstack/react-query";
-import { Calendar, Clock, Info } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { toast } from "sonner";
+import type { RootState } from "@/store/store";
+import type { MentorshipType } from "@/types/mentor";
 
 const BookingPage = () => {
   const { mentorId } = useParams<{ mentorId: string }>();
@@ -77,10 +78,11 @@ const BookingPage = () => {
     try {
       const sessionUrl = await BookingPaymentService.createSession(bookingData);
       window.location.href = sessionUrl;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Booking payment failed:", error);
       toast.error(
-        error.message || "Failed to initiate payment. Please try again.",
+        (error as { message?: string })?.message ||
+          "Failed to initiate payment. Please try again.",
       );
     }
   };

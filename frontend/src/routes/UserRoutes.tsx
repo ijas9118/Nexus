@@ -1,12 +1,14 @@
 import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import ProtectedRoute from "./ProtectedRoute";
-import { MentorFormProvider } from "@/context/MentorFormContext";
+
 import { Skeleton } from "@/components/atoms/skeleton";
+import { MentorFormProvider } from "@/context/MentorFormContext";
 import ConnectionsPage from "@/features/connections/ConnectionsPage";
-import SquadDetailPage from "@/features/squad-detail/SquadDetailPage";
-import VerifyContentPage from "@/features/squad-content-verify/VerifyContentPage";
 import SquadAdminDashboard from "@/features/squad-admin-dashboard/SquadAdminDashboard";
+import VerifyContentPage from "@/features/squad-content-verify/VerifyContentPage";
+import SquadDetailPage from "@/features/squad-detail/SquadDetailPage";
+
+import ProtectedRoute from "./ProtectedRoute";
 
 const Home = lazy(() => import("@/pages/Home"));
 const LoginPage = lazy(() => import("@/features/auth/Login"));

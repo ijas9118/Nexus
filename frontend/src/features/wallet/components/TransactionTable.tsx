@@ -6,6 +6,10 @@ import {
   ClockIcon,
   XCircleIcon,
 } from "lucide-react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import { Card, CardContent, CardFooter } from "@/components/molecules/card";
 import {
   Table,
@@ -15,10 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/organisms/table";
-import { Badge } from "@/components/atoms/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { Button } from "@/components/atoms/button";
-import { TransactionDetails } from "@/types/wallet";
+import type { TransactionDetails } from "@/types/wallet";
 
 interface TransactionTableProps {
   transactions: TransactionDetails[];

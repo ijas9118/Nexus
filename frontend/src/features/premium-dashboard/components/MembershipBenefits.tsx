@@ -1,13 +1,14 @@
+import { CalendarClock, LifeBuoy, Sparkles } from "lucide-react";
+
+import { Button } from "@/components/atoms/button";
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from "@/components/molecules/card";
-import { Button } from "@/components/atoms/button";
-import { Sparkles, CalendarClock, LifeBuoy } from "lucide-react";
 
 export default function MembershipBenefits({
   tier,

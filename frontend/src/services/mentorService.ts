@@ -1,6 +1,7 @@
-import { Mentor, MentorFormData, MentorshipType } from "@/types/mentor";
+import type { Mentor, MentorFormData, MentorshipType } from "@/types/mentor";
 import { ADMIN_ROUTES } from "@/utils/constants";
 import { handleApi } from "@/utils/handleApi";
+
 import api from "./api";
 const MENTOR_ROUTE = "/mentor";
 
@@ -59,7 +60,7 @@ const MentorService = {
   }) => handleApi(() => api.put(`${MENTOR_ROUTE}/mentorship-details`, data)),
 
   getMentorDashboard: () =>
-    handleApi(() => api.get<any>(ADMIN_ROUTES.DASHBOARD)),
+    handleApi(() => api.get<unknown>(ADMIN_ROUTES.DASHBOARD)),
 };
 
 export default MentorService;

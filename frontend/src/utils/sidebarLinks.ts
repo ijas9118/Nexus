@@ -1,18 +1,18 @@
 import {
   Bell,
   Bookmark,
+  CalendarClock,
   CircleCheckBig,
+  Clock,
+  CreditCard,
   Gem,
   History,
   Home,
+  LayoutDashboard,
   Send,
+  Settings,
   Star,
   UsersRoundIcon,
-  CalendarClock,
-  CreditCard,
-  Clock,
-  Settings,
-  LayoutDashboard,
 } from "lucide-react";
 
 // Base sidebar items for all users

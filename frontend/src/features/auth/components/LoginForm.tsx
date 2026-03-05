@@ -1,11 +1,13 @@
-import type React from "react";
-import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
-import { Input } from "@/components/atoms/input";
-import { Button } from "@/components/atoms/button";
-import { AuthFormData } from "../hooks/useAuth";
 import { motion } from "motion/react";
+import type React from "react";
 import { TbHexagonLetterDFilled } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
+
+import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+
+import type { AuthFormData } from "../hooks/useAuth";
 
 interface LoginFormProps {
   formData: AuthFormData;

@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
-import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 interface SocialLoginProps {
   onSocialAuth: (provider: "google" | "github") => void;

@@ -1,12 +1,13 @@
-import {
-  Review,
-  PaginatedReviewResponse,
-  MentorStats,
+import type {
   CreateReviewData,
+  MentorStats,
+  PaginatedReviewResponse,
+  Review,
   UpdateReviewData,
 } from "@/types/review";
-import api from "./api";
 import { REVIEW_ROUTES } from "@/utils/constants";
+
+import api from "./api";
 
 const ReviewService = {
   // Create a new review (POST /review)

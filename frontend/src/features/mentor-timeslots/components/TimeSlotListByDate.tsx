@@ -1,10 +1,13 @@
-import { motion, Variants } from "motion/react";
-import { Trash2, Clock, Loader2 } from "lucide-react";
+import { Clock, Loader2, Trash2 } from "lucide-react";
+import type { Variants } from "motion/react";
+import { motion } from "motion/react";
+
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
+import type { TimeSlot } from "@/types/mentor";
 
 interface TimeSlotListByDateProps {
-  timeSlots: any[];
+  timeSlots: TimeSlot[];
   isLoading: boolean;
   onDelete: (slotId: string) => void;
   isDeleting: boolean;

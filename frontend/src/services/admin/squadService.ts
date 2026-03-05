@@ -1,5 +1,6 @@
-import api from "../api";
 import { ADMIN_ROUTES } from "@/utils/constants";
+
+import api from "../api";
 
 const AdminSquadService = {
   getAllSquads: (

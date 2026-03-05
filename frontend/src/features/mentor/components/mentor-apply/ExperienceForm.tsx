@@ -1,12 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+import { ArrowRight } from "lucide-react";
+import React from "react";
+
 import { Button } from "@/components/atoms/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/molecules/card";
 import { Checkbox } from "@/components/atoms/checkbox";
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
@@ -18,11 +14,16 @@ import {
   SelectValue,
 } from "@/components/atoms/select";
 import { Textarea } from "@/components/atoms/textarea";
-import { ArrowRight } from "lucide-react";
-
-import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/molecules/card";
 import { useMentorForm } from "@/context/MentorFormContext";
-import { useQuery } from "@tanstack/react-query";
+import type { MentorMetadataData } from "@/services/mentorMetadataService";
 import MentorMetadataService from "@/services/mentorMetadataService";
 
 interface ExperienceFormProps {
@@ -136,7 +137,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
                 <SelectValue placeholder="Select experience level" />
               </SelectTrigger>
               <SelectContent>
-                {experienceLevels.map((level: any) => (
+                {experienceLevels.map((level: MentorMetadataData) => (
                   <SelectItem key={level._id} value={level._id}>
                     {level.name} ({level.label})
                   </SelectItem>
@@ -157,7 +158,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
             <div>Loading...</div>
           ) : (
             <div className="grid grid-cols-2 gap-2">
-              {expertiseAreaOptions.map((area: any) => (
+              {expertiseAreaOptions.map((area: MentorMetadataData) => (
                 <div key={area._id} className="flex items-center space-x-2">
                   <Checkbox
                     id={`expertise-${area._id}`}
@@ -193,7 +194,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({
             <div>Loading...</div>
           ) : (
             <div className="grid grid-cols-3 gap-2">
-              {technologyOptions.map((tech: any) => (
+              {technologyOptions.map((tech: MentorMetadataData) => (
                 <div key={tech._id} className="flex items-center space-x-2">
                   <Checkbox
                     id={`tech-${tech._id}`}

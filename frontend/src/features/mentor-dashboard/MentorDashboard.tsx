@@ -1,21 +1,23 @@
-import { IndianRupee, Users, Calendar, ArrowRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowRight, Calendar, IndianRupee, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+
+import { Button } from "@/components/atoms/button";
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from "@/components/molecules/card";
-import { Button } from "@/components/atoms/button";
-import { StatCard } from "./components/StatCard";
-import { mockData } from "./mockDashboardData";
+import MentorDashboardService from "@/services/mentorDashboardService";
+
 import { BookingList } from "./components/BookingList";
 import { MentorshipProgress } from "./components/MentorshipProgress";
+import { StatCard } from "./components/StatCard";
 import { TransactionList } from "./components/TransactionList";
-import { useQuery } from "@tanstack/react-query";
-import MentorDashboardService from "@/services/mentorDashboardService";
+import { mockData } from "./mockDashboardData";
 
 export default function MentorDashboard() {
   const { data: earnings } = useQuery({
@@ -42,8 +44,6 @@ export default function MentorDashboard() {
   //   queryKey: ["mentorTypes"],
   //   queryFn: MentorDashboardService.getMentorshipTypes,
   // });
-
-  console.log(bookings);
 
   return (
     <div className="container mx-auto px-4 sm:px-8 md:px-10 xl:px-24 py-8 space-y-6">

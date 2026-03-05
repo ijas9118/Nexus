@@ -1,10 +1,11 @@
 "use client";
 
-import { Badge } from "@/components/atoms/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { LockIcon } from "lucide-react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Badge } from "@/components/atoms/badge";
+import type { RootState } from "@/store/store";
 
 interface ContentPreviewProps {
   contentType: string;

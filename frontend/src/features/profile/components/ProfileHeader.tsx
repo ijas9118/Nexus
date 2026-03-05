@@ -1,32 +1,22 @@
-import { Button } from "@/components/atoms/button";
-import Mentor from "@/components/icons/Mentor";
-import Premium from "@/components/icons/Premium";
-import { Card } from "@/components/molecules/card";
-import ConfirmDialog from "@/components/molecules/ConfirmDialog";
-import getSocialIcon from "@/utils/getSocialIcons";
 import dayjs from "dayjs";
 import { MapPin } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+import { Button } from "@/components/atoms/button";
+import Mentor from "@/components/icons/Mentor";
+import Premium from "@/components/icons/Premium";
+import { Card } from "@/components/molecules/card";
+import ConfirmDialog from "@/components/molecules/ConfirmDialog";
+import type { RootState } from "@/store/store";
+import type { UserInterface } from "@/types/user";
+import getSocialIcon from "@/utils/getSocialIcons";
+
 import StatDialog from "./StatDialog";
 
 interface ProfileHeaderProps {
-  profileUser: {
-    _id: string;
-    name: string;
-    username: string;
-    profilePic?: string;
-    joinedAt: string;
-    role: string;
-    bio?: string;
-    socials: [{ platform: string; url: string }];
-    location: string;
-    postsCount: number;
-    totalLikes: number;
-    totalViews: number;
-    skills: string[];
-  };
+  profileUser: UserInterface | null;
   isFollowing: boolean;
   isConnected: boolean;
   hasSentRequest: boolean;
@@ -49,7 +39,7 @@ export default function ProfileHeader({
   followStats,
 }: ProfileHeaderProps) {
   const currentUser = useSelector(
-    (state: any) => state.auth.user?.username || "",
+    (state: RootState) => state.auth.user?.username || "",
   );
   const navigate = useNavigate();
 

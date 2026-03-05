@@ -1,10 +1,11 @@
+import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { Button } from "@/components/atoms/button";
 import NexusLogo from "@/components/icons/NexusLogo";
-import { navbarLinks } from "@/utils/navigationLinks";
-import { useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react";
 import useLogout from "@/hooks/useLogout";
+import { navbarLinks } from "@/utils/navigationLinks";
 
 const Navbar = () => {
   const navigate = useNavigate();

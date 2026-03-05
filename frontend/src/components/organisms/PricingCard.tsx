@@ -1,5 +1,8 @@
-import React from "react";
 import { Check, Pencil } from "lucide-react";
+import React from "react";
+
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import {
   Card,
   CardContent,
@@ -8,8 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/molecules/card";
-import { Button } from "@/components/atoms/button";
-import { Badge } from "@/components/atoms/badge";
 
 interface PriceCardProps {
   tier: string;

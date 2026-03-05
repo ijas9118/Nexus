@@ -20,6 +20,24 @@ export interface PointTransaction {
   createdAt: Date;
 }
 
+export interface IWithdrawalRequest {
+  _id: string;
+  userId: {
+    _id: string;
+    name: string;
+    email: string;
+    profilePic?: string;
+    role?: string;
+    type?: string;
+  };
+  amount?: number;
+  nexusPoints?: number;
+  status: "pending" | "approved" | "rejected";
+  withdrawalNote?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface IWallet {
   balance: number;
   nexusPoints: number;

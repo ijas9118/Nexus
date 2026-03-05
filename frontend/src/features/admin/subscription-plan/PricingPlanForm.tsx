@@ -1,4 +1,10 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Plus, X } from "lucide-react";
+import type { Variants } from "motion/react";
+import { motion } from "motion/react";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { Label } from "@/components/atoms/label";
@@ -9,10 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/atoms/select";
-import { ScrollArea } from "@/components/organisms/scroll-area";
 import { Switch } from "@/components/atoms/switch";
-import { Plus, X } from "lucide-react";
-import { motion, Variants } from "motion/react";
 import { FireIcon, FlameIcon, SparkIcon } from "@/components/icons/PlanIcons";
 import {
   DialogContent,
@@ -21,10 +24,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/organisms/dialog";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ScrollArea } from "@/components/organisms/scroll-area";
 import PlanService from "@/services/planService";
-import { toast } from "sonner";
-import { IPlan } from "@/types/plans";
+import type { IPlan } from "@/types/plans";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -186,8 +188,9 @@ const PricingPlanForm = ({ onClose, initialData }: PricingPlanFormProps) => {
       });
       onClose(); // Close the dialog
     },
-    onError: (error: any) => {
-      const errorMessage = error.message || "Failed to create plan";
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to create plan";
       toast.error("Error", {
         description: errorMessage,
       });
@@ -195,7 +198,7 @@ const PricingPlanForm = ({ onClose, initialData }: PricingPlanFormProps) => {
   });
 
   const updatePlanMutation = useMutation({
-    mutationFn: (updatedData: any) =>
+    mutationFn: (updatedData: Partial<IPlan>) =>
       PlanService.updatePlan(initialData!._id as string, updatedData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["plans"] });
@@ -204,9 +207,11 @@ const PricingPlanForm = ({ onClose, initialData }: PricingPlanFormProps) => {
       });
       onClose();
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to update plan";
       toast.error("Error", {
-        description: error.message || "Failed to update plan",
+        description: errorMessage,
       });
     },
   });

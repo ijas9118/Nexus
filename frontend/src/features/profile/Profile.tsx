@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
+
+import FollowService from "@/services/followService";
+import ProfileService from "@/services/user/profileService";
+import { setBreadcrumbs } from "@/store/slices/breadcrumbSlice";
+import type { RootState } from "@/store/store";
+import type { UserInterface } from "@/types/user";
+
 import ProfileActivity from "./components/ProfileActivity";
 import ProfileHeader from "./components/ProfileHeader";
 import SquadsList from "./components/SquadsList";
-import ProfileService from "@/services/user/profileService";
-import FollowService from "@/services/followService";
 
 export default function ProfilePage() {
   const { username } = useParams();
   const dispatch = useDispatch();
-  const currentUser = useSelector((state: any) => state.auth.user?._id);
-  const [profileUser, setProfileUser] = useState<any>(null);
+  const currentUser = useSelector((state: RootState) => state.auth.user?._id);
+  const [profileUser, setProfileUser] = useState<UserInterface | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [hasSentRequest, setHasSentRequest] = useState(false);
@@ -34,7 +38,7 @@ export default function ProfilePage() {
         const stats = await FollowService.getFollowStats(data._id);
         setStats(stats);
 
-        if (currentUser !== data?._id) {
+        if (currentUser && currentUser !== data?._id) {
           // Check if following
           const followingStatus = await FollowService.checkIsFollowing(
             currentUser,
@@ -100,10 +104,10 @@ export default function ProfilePage() {
         username as string,
       );
       setProfileUser(updatedUser);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error updating follow status:", err);
       toast.error("Error", {
-        description: err.message,
+        description: err instanceof Error ? err.message : String(err),
       });
     }
   };
@@ -156,10 +160,12 @@ export default function ProfilePage() {
           }));
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error updating connection status:", err);
       toast.error("Error", {
-        description: err.message || "Failed to update connection request",
+        description:
+          (err instanceof Error ? err.message : String(err)) ||
+          "Failed to update connection request",
       });
     }
   };
@@ -180,7 +186,7 @@ export default function ProfilePage() {
             onConnectionToggle={handleConnectionRequest}
             followStats={stats}
           />
-          <SquadsList profileUserId={profileUser?._id} />
+          {profileUser && <SquadsList profileUserId={profileUser._id} />}
         </div>
       </div>
     </div>

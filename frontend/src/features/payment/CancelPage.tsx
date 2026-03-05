@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { motion, Variants } from "motion/react";
+import type { Variants } from "motion/react";
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CancelPage = () => {

@@ -1,19 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { Input } from "@/components/atoms/input";
-import { Alert, AlertDescription } from "@/components/atoms/alert";
 import { AlertCircle } from "lucide-react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+
+import { Alert, AlertDescription } from "@/components/atoms/alert";
+import { Input } from "@/components/atoms/input";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/organisms/tabs";
-import UserCard from "./user-card";
 import FollowService from "@/services/followService";
+import type { RootState } from "@/store/store";
+import type { PendingRequest } from "@/types/follow";
+import type { UserInterface } from "@/types/user";
+
 import { EmptyState } from "./empty-state";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import UserCard from "./user-card";
 
 export default function ConnectionsList() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -90,7 +94,9 @@ export default function ConnectionsList() {
     }
   };
 
-  const filterUsers = (users: any[] = []) => {
+  const filterUsers = <T extends { name: string; username: string }>(
+    users: T[] = [],
+  ) => {
     return users.filter(
       (user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -98,9 +104,15 @@ export default function ConnectionsList() {
     );
   };
 
-  const filteredConnections = filterUsers(connections);
-  const filteredPendingOutgoing = filterUsers(pendingOutgoing);
-  const filteredPendingIncoming = filterUsers(pendingIncoming);
+  const filteredConnections = filterUsers(connections as UserInterface[]);
+  const filteredPendingOutgoing = filterUsers(
+    pendingOutgoing as UserInterface[],
+  );
+  const filteredPendingIncoming = (pendingIncoming || []).filter(
+    (req: PendingRequest) =>
+      req.requesterId.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      req.requesterId.username.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
   if (isErrorConnections) {
     return (
@@ -215,10 +227,15 @@ export default function ConnectionsList() {
             </div>
           ) : filteredPendingIncoming.length > 0 ? (
             <div className="space-y-4">
-              {filteredPendingIncoming.map((user) => (
+              {filteredPendingIncoming.map((req) => (
                 <UserCard
-                  key={user._id}
-                  user={user}
+                  key={req._id}
+                  user={{
+                    _id: req.requesterId._id,
+                    name: req.requesterId.name,
+                    username: req.requesterId.username,
+                    profilePic: req.requesterId.profilePic,
+                  }}
                   type="pending-incoming"
                   onAccept={handleAccept}
                   onReject={handleReject}

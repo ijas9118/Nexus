@@ -1,7 +1,8 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "./api";
-import { TargetAudience } from "@/types/mentor";
+import type { TargetAudience } from "@/types/mentor";
 import { TARGET_AUDIENCE_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 const TargetAudienceService = {
   // Get all target audiences

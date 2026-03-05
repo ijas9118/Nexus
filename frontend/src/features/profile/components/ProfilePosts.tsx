@@ -1,3 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
+import { MdDelete } from "react-icons/md";
+import { useParams } from "react-router-dom";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Badge } from "@/components/atoms/badge";
 import Premium from "@/components/icons/Premium";
@@ -14,9 +18,7 @@ import {
 } from "@/components/molecules/alert-dialog";
 import { Card, CardContent } from "@/components/molecules/card";
 import ProfileService from "@/services/user/profileService";
-import { useQuery } from "@tanstack/react-query";
-import { MdDelete } from "react-icons/md";
-import { useParams } from "react-router-dom";
+import type { Content } from "@/types/content";
 
 export default function ProfilePosts() {
   const { username } = useParams();
@@ -33,8 +35,8 @@ export default function ProfilePosts() {
   return (
     <div className="space-y-6 py-4">
       <h3 className="font-semibold">Your Posts</h3>
-      {data.length > 0 ? (
-        data.map((content: any) => (
+      {data && data.length > 0 ? (
+        data.map((content: Content) => (
           <Card key={content._id} className="w-full">
             <CardContent className="p-2">
               <div className="relative flex gap-4 h-32 items-center">

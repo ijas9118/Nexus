@@ -1,12 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
+import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage
+
 import authReducer from "./slices/authSlice";
 import breadcrumbReducer from "./slices/breadcrumbSlice";
-import squadReducer from "./slices/squadSlice";
-import userSquadsReducer from "./slices/userSquadsSlice";
 import chatReducer from "./slices/chatSlice";
 import notificationReducer from "./slices/notificationSlice";
+import squadReducer from "./slices/squadSlice";
+import userSquadsReducer from "./slices/userSquadsSlice";
 
 // Configure persistence for auth slice only
 const persistConfig = {

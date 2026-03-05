@@ -1,4 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { Search } from "lucide-react";
+import { toast } from "sonner";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
 import {
   Dialog,
   DialogContent,
@@ -7,18 +14,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/organisms/dialog";
-import { Button } from "@/components/atoms/button";
-import { Input } from "@/components/atoms/input";
-import { Badge } from "@/components/atoms/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { Search } from "lucide-react";
-import { toast } from "sonner";
-import {
-  inviteUserAsModerator,
-  searchUsers,
-  Squad,
-  User,
-} from "../SquadAdminDashboard";
+
+import type { Squad, User } from "../SquadAdminDashboard";
+import { inviteUserAsModerator, searchUsers } from "../SquadAdminDashboard";
 
 interface InviteModeratorDialogProps {
   open: boolean;

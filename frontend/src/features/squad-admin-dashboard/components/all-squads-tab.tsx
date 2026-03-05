@@ -1,3 +1,8 @@
+import { CheckCircle, Clock, UserPlus } from "lucide-react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import {
   Card,
   CardContent,
@@ -13,11 +18,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/organisms/table";
-import { Button } from "@/components/atoms/button";
-import { Badge } from "@/components/atoms/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { CheckCircle, Clock, UserPlus } from "lucide-react";
-import { Squad } from "../SquadAdminDashboard";
+
+import type { Squad } from "../SquadAdminDashboard";
 
 interface AllSquadsTabProps {
   squads: Squad[];

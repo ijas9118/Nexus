@@ -1,7 +1,8 @@
+import type { FC } from "react";
+
 import { Button } from "@/components/atoms/button";
 import { ScrollArea, ScrollBar } from "@/components/organisms/scroll-area";
 import { editProfileTabs } from "@/utils/navigationLinks";
-import { FC } from "react";
 
 interface SidebarProps {
   activeTab: string;

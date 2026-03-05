@@ -1,4 +1,5 @@
 import { Loader2 } from "lucide-react";
+
 import { Button } from "@/components/atoms/button";
 import {
   Form,
@@ -9,10 +10,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/organisms/form";
-import { MultiSelect } from "./multi-select";
-import { useMentorshipForm } from "../hooks/useMentorshipForm";
 
-export default function MentorshipDetailsForm({ mentorData }: any) {
+import type { UseMentorshipFormProps } from "../hooks/useMentorshipForm";
+import { useMentorshipForm } from "../hooks/useMentorshipForm";
+import { MultiSelect } from "./multi-select";
+
+export default function MentorshipDetailsForm({
+  mentorData,
+}: UseMentorshipFormProps) {
   const {
     form,
     mentorshipTypeOptions,

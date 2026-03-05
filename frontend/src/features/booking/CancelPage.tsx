@@ -1,4 +1,4 @@
-import { XCircle, ArrowLeft, MessageCircle } from "lucide-react";
+import { ArrowLeft, MessageCircle, XCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function CancelPage() {

@@ -1,7 +1,8 @@
-import { handleApi } from "@/utils/handleApi";
-import api from "./api";
-import { IWallet } from "@/types/wallet";
+import type { IWallet, IWithdrawalRequest } from "@/types/wallet";
 import { WALLET_ROUTES } from "@/utils/constants";
+import { handleApi } from "@/utils/handleApi";
+
+import api from "./api";
 
 const WalletService = {
   getWalletInfo: () => handleApi(() => api.get<IWallet>(WALLET_ROUTES.BASE)),
@@ -26,10 +27,10 @@ const WalletService = {
     handleApi(() => api.post<IWallet>(WALLET_ROUTES.POINTS, { points })),
 
   getPendingRequests: () =>
-    handleApi(() => api.get<any[]>(WALLET_ROUTES.REQUESTS)),
+    handleApi(() => api.get<IWithdrawalRequest[]>(WALLET_ROUTES.REQUESTS)),
 
   getUserPendingRequests: () =>
-    handleApi(() => api.get(WALLET_ROUTES.REQUESTS_USER)),
+    handleApi(() => api.get<IWithdrawalRequest[]>(WALLET_ROUTES.REQUESTS_USER)),
 
   approveWithdrawal: (requestId: string) =>
     handleApi(() => api.post(WALLET_ROUTES.REQUESTS_APPROVE, { requestId })),

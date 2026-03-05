@@ -1,7 +1,9 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Edit, Trash, RefreshCw } from "lucide-react";
-import { Button } from "@/components/atoms/button";
+import { ArrowUpDown, Edit, RefreshCw, Trash } from "lucide-react";
+import { motion } from "motion/react";
+
 import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import { motion } from "motion/react";
-import { MentorshipTypeData } from "@/types/mentor";
+import type { MentorshipTypeData } from "@/types/mentor";
 
 interface ColumnActionsProps {
   onEdit: (type: MentorshipTypeData) => void;

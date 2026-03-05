@@ -1,6 +1,14 @@
 import { Loader2 } from "lucide-react";
+
 import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/atoms/select";
 import { Textarea } from "@/components/atoms/textarea";
 import {
   Form,
@@ -11,17 +19,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/organisms/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/atoms/select";
-import { MultiSelect } from "./multi-select";
-import { useExperienceForm } from "../hooks/useExperienceForm";
 
-export default function ExperienceForm({ experience }: { experience: any }) {
+import type { ExperienceData } from "../hooks/useExperienceForm";
+import { useExperienceForm } from "../hooks/useExperienceForm";
+import { MultiSelect } from "./multi-select";
+
+export default function ExperienceForm({
+  experience,
+}: {
+  experience?: ExperienceData;
+}) {
   const {
     form,
     experienceLevels,
@@ -83,14 +90,16 @@ export default function ExperienceForm({ experience }: { experience: any }) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {experienceLevels.map((level: any) => (
-                    <SelectItem key={level._id} value={level._id}>
-                      <div className="flex gap-5">
-                        <span>{level.label}</span>
-                        <span>{level.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
+                  {experienceLevels.map(
+                    (level: { _id: string; label: string; name: string }) => (
+                      <SelectItem key={level._id} value={level._id}>
+                        <div className="flex gap-5">
+                          <span>{level.label}</span>
+                          <span>{level.name}</span>
+                        </div>
+                      </SelectItem>
+                    ),
+                  )}
                 </SelectContent>
               </Select>
               <FormDescription>
@@ -110,10 +119,12 @@ export default function ExperienceForm({ experience }: { experience: any }) {
               <FormControl>
                 <MultiSelect
                   selected={field.value}
-                  options={expertiseAreas.map((area: any) => ({
-                    value: area._id,
-                    label: area.name,
-                  }))}
+                  options={expertiseAreas.map(
+                    (area: { _id: string; name: string }) => ({
+                      value: area._id,
+                      label: area.name,
+                    }),
+                  )}
                   onChange={field.onChange}
                   placeholder="Select expertise areas"
                 />
@@ -135,10 +146,12 @@ export default function ExperienceForm({ experience }: { experience: any }) {
               <FormControl>
                 <MultiSelect
                   selected={field.value}
-                  options={technologies.map((tech: any) => ({
-                    value: tech._id,
-                    label: tech.name,
-                  }))}
+                  options={technologies.map(
+                    (tech: { _id: string; name: string }) => ({
+                      value: tech._id,
+                      label: tech.name,
+                    }),
+                  )}
                   onChange={field.onChange}
                   placeholder="Select technologies"
                 />

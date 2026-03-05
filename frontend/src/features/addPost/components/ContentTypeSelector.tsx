@@ -1,3 +1,6 @@
+import { Check, ImageIcon, Video } from "lucide-react";
+import type { UseFormReturn } from "react-hook-form";
+
 import {
   FormDescription,
   FormField,
@@ -5,9 +8,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/organisms/form";
-import { Check, ImageIcon, Video } from "lucide-react";
-import { UseFormReturn } from "react-hook-form";
-import { FormValues } from "./BlogCreationForm";
+
+import type { FormValues } from "./BlogCreationForm";
 
 interface ContentTypeSelectorProps {
   form: UseFormReturn<FormValues>;

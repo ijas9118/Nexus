@@ -1,3 +1,9 @@
+import dayjs from "dayjs";
+import EmojiPicker from "emoji-picker-react";
+import { MoreVertical } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -5,13 +11,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
 import { useSocket } from "@/hooks/useSocket";
-import { RootState } from "@/store/store";
-import { Message } from "@/types";
-import dayjs from "dayjs";
-import { MoreVertical } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import EmojiPicker from "emoji-picker-react";
+import type { RootState } from "@/store/store";
+import type { Message } from "@/types";
 
 interface MessageBubbleProps {
   message: Message;

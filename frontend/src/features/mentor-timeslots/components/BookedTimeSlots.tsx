@@ -1,13 +1,15 @@
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { AlertCircle, Clock, Loader2 } from "lucide-react";
+import type { Variants } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+
 import { Alert, AlertDescription } from "@/components/atoms/alert";
 import { Badge } from "@/components/atoms/badge";
 import { Card, CardContent } from "@/components/molecules/card";
 import TimeSlotService from "@/services/TimeSlotService";
-import { TimeSlot } from "@/types/mentor";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { useQuery } from "@tanstack/react-query";
-import dayjs from "dayjs";
-import { motion, AnimatePresence, Variants } from "motion/react";
-import { AlertCircle, Clock, Loader2 } from "lucide-react";
+import type { TimeSlot } from "@/types/mentor";
 
 const BookedTimeSlots = () => {
   const {

@@ -1,7 +1,10 @@
+import { Star } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-import { Star } from "lucide-react";
+
 import { Button } from "@/components/atoms/button";
+import { Label } from "@/components/atoms/label";
+import { Textarea } from "@/components/atoms/textarea";
 import {
   Dialog,
   DialogContent,
@@ -9,8 +12,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/organisms/dialog";
-import { Label } from "@/components/atoms/label";
-import { Textarea } from "@/components/atoms/textarea";
 
 interface ReviewDialogProps {
   open?: boolean;

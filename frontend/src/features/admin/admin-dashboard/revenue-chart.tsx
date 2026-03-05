@@ -1,3 +1,4 @@
+import { Loader } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -7,19 +8,19 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/organisms/chart";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/organisms/tabs";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/organisms/chart";
-import { Loader } from "lucide-react";
-import { RevenueStatsResponse } from "@/types/admin/dashboard";
+import type { RevenueStatsResponse } from "@/types/admin/dashboard";
 
 interface RevenueChartProps {
   data?: RevenueStatsResponse;

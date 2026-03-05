@@ -1,9 +1,10 @@
 // features/content/components/CommentInput.tsx
+import { SendIcon } from "lucide-react";
 import { useState } from "react";
+
 import { Avatar, AvatarFallback } from "@/components/atoms/avatar";
 import { Button } from "@/components/atoms/button";
 import { Textarea } from "@/components/atoms/textarea";
-import { SendIcon } from "lucide-react";
 
 interface CommentInputProps {
   onSubmit: (comment: string) => void;

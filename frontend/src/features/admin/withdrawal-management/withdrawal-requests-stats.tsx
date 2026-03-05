@@ -1,15 +1,16 @@
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/molecules/card";
-import {
   ArrowUpIcon,
   CheckCircle2Icon,
   Clock3Icon,
   XCircleIcon,
 } from "lucide-react";
+
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/molecules/card";
 
 export function WithdrawalRequestsStats() {
   // In a real application, these would be fetched from your API

@@ -1,3 +1,6 @@
+import type { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+
 import { Badge } from "@/components/atoms/badge";
 import { Button } from "@/components/atoms/button";
 import { Checkbox } from "@/components/atoms/checkbox";
@@ -9,14 +12,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/organisms/dropdown-menu";
-import { Mentor } from "@/types/mentor";
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+
+export interface TransformedMentor {
+  _id: string;
+  name: string;
+  email: string;
+  username: string;
+  profilePic: string;
+  status: string;
+  createdAt: string;
+}
 
 export const columns = (
-  handleRowClick: (mentor: any) => void,
-  handleBlock: (mentor: any) => void,
-): ColumnDef<Mentor>[] => [
+  handleRowClick: (mentor: TransformedMentor) => void,
+): ColumnDef<TransformedMentor>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -126,7 +135,6 @@ export const columns = (
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
-                handleBlock(mentor);
               }}
             >
               Block

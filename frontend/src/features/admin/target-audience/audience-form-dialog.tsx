@@ -1,8 +1,14 @@
-import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+import { Switch } from "@/components/atoms/switch";
 import {
   Dialog,
   DialogContent,
@@ -19,11 +25,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/organisms/form";
-import { Button } from "@/components/atoms/button";
-import { Input } from "@/components/atoms/input";
-import { Switch } from "@/components/atoms/switch";
-import { TargetAudience } from "@/types/mentor";
-import { toast } from "sonner";
+import type { TargetAudience } from "@/types/mentor";
 
 const formSchema = z.object({
   name: z
@@ -86,9 +88,12 @@ export function AudienceFormDialog({
           : "Target audience updated successfully",
       );
       onOpenChange(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to save target audience:", error);
-      const errorMessage = error?.message || "Failed to save target audience";
+      const errorMessage =
+        error instanceof AxiosError
+          ? error.response?.data?.message
+          : "Failed to save target audience";
 
       if (errorMessage.toLowerCase().includes("already exists")) {
         form.setError("name", {

@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { motion } from "motion/react";
+import { useState } from "react";
+
 import { Button } from "@/components/atoms/button";
+import MentorshipTypeService from "@/services/mentorshipTypeService";
+import type { MentorshipTypeData } from "@/types/mentor";
+
 import { columns } from "./mentorship-type/columns";
 import { DataTable } from "./mentorship-type/data-table";
 import { MentorshipTypeDialog } from "./mentorship-type/mentorship-type-dialog";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import MentorshipTypeService from "@/services/mentorshipTypeService";
-import { MentorshipTypeData } from "@/types/mentor";
 
 export default function MentorshipTypesPage() {
   const [open, setOpen] = useState(false);
@@ -26,8 +28,6 @@ export default function MentorshipTypesPage() {
     queryKey: ["mentorshipTypes"],
     queryFn: () => MentorshipTypeService.getAllTypes(true),
   });
-
-  console.log(mentorshipTypes);
 
   const handleCreateNew = () => {
     setEditingType(null);

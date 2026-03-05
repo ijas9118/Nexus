@@ -1,7 +1,16 @@
-import { useState } from "react";
 import { format } from "date-fns";
-import { Calendar } from "@/components/organisms/calendar";
+import { useState } from "react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/atoms/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/atoms/select";
+import { Calendar } from "@/components/organisms/calendar";
 import {
   Dialog,
   DialogContent,
@@ -10,15 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/organisms/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/atoms/select";
 import BookingService from "@/services/bookingService";
-import { toast } from "sonner";
 
 // Mock time slots - in a real app, these would be fetched from the API
 const TIME_SLOTS = [

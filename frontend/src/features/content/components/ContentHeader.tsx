@@ -1,20 +1,23 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
-import { Button } from "@/components/atoms/button";
-import { Badge } from "@/components/atoms/badge";
-import Premium from "@/components/icons/Premium";
-import { CalendarIcon } from "lucide-react";
 import dayjs from "dayjs";
+import { CalendarIcon } from "lucide-react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
+import { Badge } from "@/components/atoms/badge";
+import { Button } from "@/components/atoms/button";
+import Premium from "@/components/icons/Premium";
+import { useConfirmDialog } from "@/context/ConfirmDialogContext";
+import type { RootState } from "@/store/store";
+import type { Content } from "@/types/content";
+
 import {
   useConnectUser,
   useFollowUser,
   useUnfollowUser,
 } from "../hooks/useFollow";
-import { useConfirmDialog } from "@/context/ConfirmDialogContext";
 
 interface ContentHeaderProps {
-  content: any;
+  content: Content;
 }
 
 export const ContentHeader = ({ content }: ContentHeaderProps) => {

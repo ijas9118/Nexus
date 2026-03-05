@@ -1,4 +1,6 @@
 import { useState } from "react";
+
+import { Label } from "@/components/atoms/label";
 import {
   Select,
   SelectContent,
@@ -7,7 +9,6 @@ import {
   SelectValue,
 } from "@/components/atoms/select";
 import { Switch } from "@/components/atoms/switch";
-import { Label } from "@/components/atoms/label";
 
 interface FilterBarProps {
   onFilter: (type: string | null, includeInactive: boolean) => void;

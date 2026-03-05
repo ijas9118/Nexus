@@ -1,3 +1,7 @@
+import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/atoms/avatar";
 import { Input } from "@/components/atoms/input";
 import {
@@ -7,10 +11,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/organisms/dialog";
-import MultipleSelector, {
-  Option,
-} from "@/components/organisms/multiple-select";
+import type { Option } from "@/components/organisms/multiple-select";
+import MultipleSelector from "@/components/organisms/multiple-select";
 import { useSocket } from "@/hooks/useSocket";
+import FollowService from "@/services/followService";
 import { ChatService } from "@/services/user/chatService";
 import {
   setActiveChat,
@@ -18,13 +22,10 @@ import {
   setGroups,
   setPendingChat,
 } from "@/store/slices/chatSlice";
-import { RootState } from "@/store/store";
-import { Chat, Group, User } from "@/types";
-import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/store/store";
+import type { Chat, Group, User } from "@/types";
+
 import { formatLastMessageTime } from "../utils/last-message-format";
-import FollowService from "@/services/followService";
 
 const ChatList = () => {
   const dispatch = useDispatch();
@@ -64,8 +65,12 @@ const ChatList = () => {
   useEffect(() => {
     const fetchConnections = async () => {
       try {
-        const options = await FollowService.getAllConnections();
-        setConnectionOptions(options.data);
+        const connections = await FollowService.getAllConnections();
+        const options = connections.map((conn) => ({
+          label: conn.name,
+          value: conn._id,
+        }));
+        setConnectionOptions(options);
       } catch (error) {
         console.error("Failed to load connections:", error);
       }
@@ -94,7 +99,7 @@ const ChatList = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("chatCreated", (chat: any) => {
+      socket.on("chatCreated", (chat: Chat) => {
         // Only add if not already in chats to prevent duplicates
         if (!chats.find((c) => c._id === chat._id)) {
           dispatch(setChats([...chats, chat]));
@@ -102,10 +107,10 @@ const ChatList = () => {
         // Set as active chat if it matches the current user selection
         if (
           activeChat?.id ===
-          chat.participants.find((p: any) => p._id !== userId)?._id
+          chat.participants.find((p: User) => p._id !== userId)?._id
         ) {
           const otherParticipant = chat.participants.find(
-            (p: any) => p._id !== userId,
+            (p: User) => p._id !== userId,
           );
           dispatch(
             setActiveChat({
@@ -121,7 +126,7 @@ const ChatList = () => {
         }
       });
 
-      socket.on("groupCreated", (group: any) => {
+      socket.on("groupCreated", (group: Group) => {
         if (!groups.find((g) => g._id === group._id)) {
           dispatch(setGroups([...groups, group]));
         }
