@@ -1,7 +1,5 @@
 import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
-import { motion } from "motion/react";
 import type React from "react";
-import { TbHexagonLetterDFilled } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/atoms/button";
@@ -98,7 +96,7 @@ export function LoginForm({
         </div>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-4">
         <Button
           className="flex-1 bg-primary hover:bg-primary/90"
           onClick={handleSubmit}
@@ -107,18 +105,14 @@ export function LoginForm({
           {buttonText}
         </Button>
         {!signUp && (
-          <motion.div
-            className="flex justify-center items-center cursor-pointer"
+          <Button
+            type="button"
+            variant="outline"
+            className="flex-1"
             onClick={onDemoLogin}
-            title="Demo Login"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            whileTap={{ scale: 0.95 }}
           >
-            <TbHexagonLetterDFilled className="size-8 text-primary fill-[#4361ee] dark:fill-[#7993f8]" />
-          </motion.div>
+            Try Demo Account
+          </Button>
         )}
       </div>
 
