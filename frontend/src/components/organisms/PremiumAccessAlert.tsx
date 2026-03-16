@@ -37,7 +37,7 @@ const PremiumAccessAlert: React.FC<PremiumAccessAlertProps> = ({
           <AlertDialogCancel onClick={() => onOpenChange(false)}>
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction onClick={() => navigate("/pricing")}>
+          <AlertDialogAction onClick={() => navigate("/getPremium")}>
             Upgrade Now
           </AlertDialogAction>
         </AlertDialogFooter>

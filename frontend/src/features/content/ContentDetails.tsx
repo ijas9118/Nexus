@@ -8,6 +8,7 @@ import BookmarkService from "@/services/user/bookmarkService";
 import { CommentService } from "@/services/user/commentService";
 import VoteService from "@/services/voteService";
 import type { Content } from "@/types/content";
+import type { ApiError } from "@/types/error";
 
 import { CommentInput } from "./components/CommentInput";
 import { ContentBody } from "./components/ContentBody";
@@ -153,11 +154,38 @@ export default function ContentDetails() {
   };
 
   if (isLoading) return <ContentLoadingSkeleton />;
+
   if (error || !content) {
+    const errorData = error as ApiError;
+    const isPremiumError =
+      errorData?.statusCode === 403 ||
+      errorData?.message?.includes("subscription");
+
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <div className="text-destructive">
-          Failed to load content. Please try again later.
+      <div className="flex flex-col justify-center items-center min-h-[60vh] text-center space-y-4 px-4">
+        <div
+          className={
+            isPremiumError
+              ? "text-orange-600 bg-orange-50 p-8 rounded-xl border border-orange-100 max-w-lg"
+              : "text-destructive"
+          }
+        >
+          <p className="text-xl font-semibold mb-2">
+            {isPremiumError ? "Premium Content" : "Failed to load content"}
+          </p>
+          <p className="text-muted-foreground mb-6">
+            {isPremiumError
+              ? "This content is exclusive to premium members. Your current subscription may have expired or you need to upgrade to access this."
+              : "Please try again later or contact support if the problem persists."}
+          </p>
+          {isPremiumError && (
+            <button
+              onClick={() => (window.location.href = "/getPremium")}
+              className="px-6 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors shadow-lg shadow-orange-200"
+            >
+              Unlock Premium Access
+            </button>
+          )}
         </div>
       </div>
     );

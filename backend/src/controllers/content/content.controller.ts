@@ -65,7 +65,8 @@ export class ContentController implements IContentController {
     const pageNum = Number(page);
     const limitNum = Number(limit);
 
-    const result = await this._contentService.getAllContent(req.user._id, pageNum, limitNum);
+    const role = req.user.role as UserRole;
+    const result = await this._contentService.getAllContent(req.user._id, role, pageNum, limitNum);
 
     res.status(StatusCodes.OK).json(result);
   });

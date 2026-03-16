@@ -3,6 +3,7 @@ import { AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import SubscriptionService from "@/services/subscriptionService";
+import type { ApiError } from "@/types/error";
 
 import MembershipBenefits from "./components/MembershipBenefits";
 import MembershipCard from "./components/MembershipCard";
@@ -14,7 +15,7 @@ export default function PremiumDashboard() {
   const {
     data: subscription,
     isLoading,
-    isError,
+    error,
   } = useQuery({
     queryKey: ["subscription"],
     queryFn: SubscriptionService.getCurrentSubscription,
@@ -34,16 +35,33 @@ export default function PremiumDashboard() {
     );
   }
 
-  if (isError) {
+  if (error) {
+    const errorData = error as ApiError;
+    const isNoSubscription =
+      errorData?.statusCode === 404 ||
+      errorData?.message === "No active subscription found.";
+
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-4">
         <AlertCircle className="h-10 w-10 text-red-500" />
         <p className="text-lg font-medium text-red-600">
-          Something went sideways.
+          {isNoSubscription
+            ? "No Active Subscription"
+            : "Something went sideways."}
         </p>
-        <p className="text-muted-foreground text-sm">
-          Couldn't fetch subscription details. Please try again later.
+        <p className="text-muted-foreground text-sm max-w-md">
+          {isNoSubscription
+            ? "Your premium status has expired or was not found. Please resubscribe to continue enjoying premium perks."
+            : "Couldn't fetch subscription details. Please try again later."}
         </p>
+        {isNoSubscription && (
+          <button
+            onClick={() => navigator("/getPremium")}
+            className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors"
+          >
+            Go to Subscription Plans
+          </button>
+        )}
       </div>
     );
   }

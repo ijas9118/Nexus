@@ -17,7 +17,7 @@ function errorMiddleware(
 
   logger.error(statusCode.toString(), message);
 
-  res.status(statusCode).json({ message });
+  res.status(statusCode).json({ message, statusCode });
 }
 
 export default errorMiddleware;

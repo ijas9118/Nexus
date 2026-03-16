@@ -80,15 +80,9 @@ export class ContentService implements IContentService {
 
     if (content) {
       if (content.isPremium) {
-        if (role !== "premium" && role !== "mentor" && role !== "admin") {
+        const isAuthorized = await this._isUserAuthorizedForPremium(userId, role);
+        if (!isAuthorized) {
           throw new CustomError("Premium subscription required", StatusCodes.FORBIDDEN);
-        }
-
-        if (role === "premium") {
-          const activeSubscription = await this._subscriptionService.getUserActiveSubscription(userId);
-          if (!activeSubscription || new Date(activeSubscription.endDate) < new Date()) {
-            throw new CustomError("Your subscription has expired", StatusCodes.FORBIDDEN);
-          }
         }
       }
 
@@ -104,12 +98,19 @@ export class ContentService implements IContentService {
     return content;
   }
 
-  async getAllContent(userId: string, page: number, limit: number): Promise<{ contents: IContent[]; nextPage: number | null }> {
+  async getAllContent(
+    userId: string,
+    role: UserRole,
+    page: number,
+    limit: number,
+  ): Promise<{ contents: IContent[]; nextPage: number | null }> {
     const contents = await this._contentRepository.getFeedContents(userId, page, limit);
+    const gatedContents = await this._gateContentItems(contents, userId, role);
+
     const totalContents = await this.getContentCount();
     const nextPage = page * limit < totalContents ? page + 1 : null;
 
-    return { contents, nextPage };
+    return { contents: gatedContents, nextPage };
   }
 
   async getContentCount(): Promise<number> {
@@ -125,10 +126,43 @@ export class ContentService implements IContentService {
   }
 
   async getFollowingUsersContents(userId: string): Promise<IContent[]> {
-    return this._contentRepository.getFollowingUsersContents(userId);
+    const role = (await this._userRepository.findById(userId))?.role || "user";
+    const contents = await this._contentRepository.getFollowingUsersContents(userId);
+    return this._gateContentItems(contents, userId, role as UserRole);
   }
 
   async getUserContents(userId: string): Promise<IContent[]> {
-    return this._contentRepository.getUserContents(userId);
+    const role = (await this._userRepository.findById(userId))?.role || "user";
+    const contents = await this._contentRepository.getUserContents(userId);
+    return this._gateContentItems(contents, userId, role as UserRole);
+  }
+
+  private async _isUserAuthorizedForPremium(userId: string, role: UserRole): Promise<boolean> {
+    if (role === "admin" || role === "mentor")
+      return true;
+    if (role !== "premium")
+      return false;
+
+    const activeSubscription = await this._subscriptionService.getUserActiveSubscription(userId);
+    return !!activeSubscription && new Date(activeSubscription.endDate) > new Date();
+  }
+
+  private async _gateContentItems(
+    contents: IContent[],
+    userId: string,
+    role: UserRole,
+  ): Promise<IContent[]> {
+    const isAuthorized = await this._isUserAuthorizedForPremium(userId, role);
+
+    return contents.map((content) => {
+      if (content.isPremium && !isAuthorized) {
+        return {
+          ...content,
+          content: content.content ? `${content.content.substring(0, 150)}...` : "",
+          videoUrl: "", // Mask video URL too
+        } as IContent;
+      }
+      return content;
+    });
   }
 }

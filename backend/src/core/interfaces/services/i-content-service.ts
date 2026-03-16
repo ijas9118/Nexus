@@ -13,6 +13,7 @@ export interface IContentService {
   getContentById: (id: string, role: UserRole, userId: string) => Promise<IContent | null>;
   getAllContent: (
     userId: string,
+    role: UserRole,
     page: number,
     limit: number,
   ) => Promise<{ contents: IContent[]; nextPage: number | null }>;
