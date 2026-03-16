@@ -22,7 +22,6 @@ interface IUser extends Document<string> {
   socials?: Array<{ platform: string; url: string }>;
   role: UserRole;
   username: string;
-  isPremium: boolean;
   googleId?: string;
   githubId?: string;
   isBlocked: boolean;
@@ -95,7 +94,6 @@ const UserSchema: Schema = new Schema(
       type: String,
       required: true,
     },
-    isPremium: { type: Boolean, default: false },
     googleId: {
       type: String,
       unique: true,

@@ -46,9 +46,12 @@ const Squads: FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state?.openCreateSquadDialog && user?.isPremium) {
+    if (location.state?.openCreateSquadDialog && user?.role === "premium") {
       setIsDialogOpen(true);
-    } else if (location.state?.openCreateSquadDialog && !user?.isPremium) {
+    } else if (
+      location.state?.openCreateSquadDialog &&
+      user?.role !== "premium"
+    ) {
       setShowAlert(true);
     }
   }, [location.state, user]);
@@ -108,7 +111,7 @@ const Squads: FC = () => {
   }, [dispatch, selectedCategory, squadsByCategory, squads]);
 
   const handleJoinSquad = async (squad: SquadDetail) => {
-    if (squad.isPremium && !user?.isPremium) {
+    if (squad.isPremium && user?.role !== "premium") {
       toast.error("This squad is for premium members only. Upgrade to join!");
       return;
     }
@@ -147,7 +150,7 @@ const Squads: FC = () => {
           <div className="ml-auto flex items-center">
             <Button
               onClick={() => {
-                if (user?.isPremium) setIsDialogOpen(true);
+                if (user?.role === "premium") setIsDialogOpen(true);
                 else setShowAlert(true);
               }}
             >

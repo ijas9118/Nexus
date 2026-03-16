@@ -21,4 +21,5 @@ export interface ISubscriptionRepository extends IBaseRepository<ISubscription> 
     endDate: Date,
     groupByFormat: string,
   ) => Promise<Array<{ date: string; revenue: number }>>;
+  findExpiredActiveSubscriptions: () => Promise<ISubscription[]>;
 }

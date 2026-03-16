@@ -160,7 +160,7 @@ export class PaymentServce implements IPaymentService {
       interval: "month",
     });
 
-    const user = await this._userRepository.updatePremiumStatus(metadata.customerId, true);
+    const user = await this._userRepository.setUserRole(metadata.customerId, "premium");
     if (!user) {
       throw new CustomError(AUTH_MESSAGES.USER_NOT_FOUND, StatusCodes.NOT_FOUND);
     }

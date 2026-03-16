@@ -173,4 +173,11 @@ export class SubscriptionRepository
 
     return result;
   }
+
+  async findExpiredActiveSubscriptions(): Promise<ISubscription[]> {
+    return this._model.find({
+      status: "active",
+      endDate: { $lt: new Date() },
+    });
+  }
 }

@@ -27,7 +27,7 @@ import { extractTextFromHtml } from "@/utils/htmlToText";
 
 export function ContentList({ squadId }: { squadId: string }) {
   const isPremium = useSelector(
-    (state: RootState) => state.auth.user?.isPremium,
+    (state: RootState) => state.auth.user?.role === "premium",
   );
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();

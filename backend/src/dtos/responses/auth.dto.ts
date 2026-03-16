@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsEmail, IsOptional, IsString } from "class-validator";
+import { IsArray, IsEmail, IsOptional, IsString } from "class-validator";
 
 import type { UserRole } from "@/core/types/user-types";
 import type { IUser } from "@/models/user/user.model";
@@ -53,9 +53,6 @@ export class LoginResponseDTO {
   @IsString()
   username!: string;
 
-  @IsBoolean()
-  isPremium!: boolean;
-
   @IsOptional()
   @IsString()
   mentorId?: string;
@@ -69,7 +66,6 @@ export class LoginResponseDTO {
     dto.joinedSquads = entity.joinedSquads || [];
     dto.role = entity.role;
     dto.username = entity.username;
-    dto.isPremium = entity.isPremium;
     dto.mentorId = entity.mentorId;
     return dto;
   }

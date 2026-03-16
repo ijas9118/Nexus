@@ -40,7 +40,7 @@ const BasicDetailsForm: React.FC<BasicDetailsFormProps> = ({
   setThumbnailPreview,
 }) => {
   const isPremium = useSelector(
-    (state: RootState) => state.auth.user?.isPremium ?? false,
+    (state: RootState) => state.auth.user?.role === "premium",
   );
 
   return (

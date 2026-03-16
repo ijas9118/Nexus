@@ -7,10 +7,11 @@ interface ISubscription extends Document<string> {
   planId: mongoose.Types.ObjectId | string;
   paymentId: mongoose.Types.ObjectId | string;
   tier: string;
-  status: string;
+  status: "active" | "cancelled" | "expired" | "past_due";
   startDate: Date;
   endDate: Date;
   interval: string;
+  stripeSubscriptionId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,7 +40,7 @@ const SubscriptionSchema: Schema = new Schema(
     status: {
       type: String,
       required: true,
-      enum: ["active", "canceled", "expired"],
+      enum: ["active", "cancelled", "expired", "past_due"],
       default: "active",
     },
     startDate: {
@@ -49,6 +50,12 @@ const SubscriptionSchema: Schema = new Schema(
     endDate: {
       type: Date,
       required: true,
+    },
+    interval: {
+      type: String,
+    },
+    stripeSubscriptionId: {
+      type: String,
     },
   },
   {

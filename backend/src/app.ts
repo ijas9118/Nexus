@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes";
 
 import passport from "./config/passport";
 import { startCleanupJob } from "./jobs/cleanup-expired-reservations";
+import { startExpireSubscriptionsJob } from "./jobs/expire-subscriptions";
 import errorMiddleware from "./middlewares/error-middleware";
 import { httpLogger } from "./middlewares/http-logger";
 import routes from "./routes";
@@ -48,5 +49,6 @@ app.get("/health", (req, res) => {
 app.use(errorMiddleware);
 
 startCleanupJob();
+startExpireSubscriptionsJob();
 
 export default app;

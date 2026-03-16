@@ -3,6 +3,7 @@ import { Types } from "mongoose";
 
 import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repository";
 import type { SearchResultItem } from "@/core/types/search";
+import type { UserRole } from "@/core/types/user-types";
 import type { ISquad } from "@/models/social/squads.model";
 import type { IUser } from "@/models/user/user.model";
 
@@ -114,8 +115,8 @@ export class UserRepository extends BaseRepository<IUser> implements IUserReposi
     return user ? user._id.toString() : null;
   };
 
-  async updatePremiumStatus(userId: string, isPremium: boolean): Promise<IUser | null> {
-    return this.findByIdAndUpdate(userId, { isPremium, role: "premium" });
+  async setUserRole(userId: string, role: UserRole): Promise<IUser | null> {
+    return this.findByIdAndUpdate(userId, { role });
   }
 
   async search(criteria: { query: string; limit?: number }): Promise<SearchResultItem[]> {

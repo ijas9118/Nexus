@@ -139,7 +139,7 @@ export default function Layout() {
               ) : (
                 <NPLight className="h-7 w-8" />
               )}
-              {user?.isPremium && user.role === "mentor" ? (
+              {user?.role === "mentor" ? (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
@@ -150,7 +150,7 @@ export default function Layout() {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-              ) : user?.isPremium ? (
+              ) : user?.role === "premium" ? (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>

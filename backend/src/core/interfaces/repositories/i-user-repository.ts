@@ -1,5 +1,6 @@
 import type { BaseRepository } from "@/core/abstracts/base.repository";
 import type { SearchResultItem } from "@/core/types/search";
+import type { UserRole } from "@/core/types/user-types";
 import type { ISquad } from "@/models/social/squads.model";
 import type { IUser } from "@/models/user/user.model";
 
@@ -16,7 +17,7 @@ export interface IUserRepository extends BaseRepository<IUser> {
   findByGithubId: (githubId: string) => Promise<IUser | null>;
   getUserByUsername: (username: string) => Promise<IUser | null>;
   getUserIdByUsername: (username: string) => Promise<string | null>;
-  updatePremiumStatus: (userId: string, isPremium: boolean) => Promise<IUser | null>;
+  setUserRole: (userId: string, role: UserRole) => Promise<IUser | null>;
   search: (criteria: { query: string; limit?: number }) => Promise<SearchResultItem[]>;
   countUsers: () => Promise<number>;
   countMentors: () => Promise<number>;

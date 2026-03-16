@@ -46,7 +46,7 @@ interface ContentCardProps {
 const ContentCard: React.FC<ContentCardProps> = (props) => {
   const [isBookmarked, setIsBookmarked] = useState<boolean>(props.isBookmarked);
   const isPremium = useSelector(
-    (state: RootState) => state.auth.user?.isPremium,
+    (state: RootState) => state.auth.user?.role === "premium",
   );
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
