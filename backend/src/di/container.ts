@@ -224,6 +224,10 @@ container.bind<IOTPService>(TYPES.OTPService).to(OTPService);
 container.bind<IEmailService>(TYPES.EmailService).to(EmailService);
 container.bind<ITokenService>(TYPES.TokenService).to(TokenService);
 
+container.bind<ISubscriptionRepository>(TYPES.SubscriptionRepository).to(SubscriptionRepository);
+container.bind<ISubscriptionService>(TYPES.SubscriptionService).to(SubscriptionService);
+container.bind<ISubscriptionController>(TYPES.SubscriptionController).to(SubscriptionController);
+
 container.bind<IContentRepository>(TYPES.ContentRepository).to(ContentRepository);
 container.bind<IContentService>(TYPES.ContentService).to(ContentService);
 container.bind<IContentController>(TYPES.ContentController).to(ContentController);
@@ -287,10 +291,6 @@ container.bind<IMentorRepository>(TYPES.MentorRepository).to(MentorRepository);
 container.bind<ITimeSlotRepository>(TYPES.TimeSlotRepository).to(TimeSlotRepository);
 container.bind<ITimeSlotService>(TYPES.TimeSlotService).to(TimeSlotService);
 container.bind<ITimeSlotController>(TYPES.TimeSlotController).to(TimeSlotController);
-
-container.bind<ISubscriptionRepository>(TYPES.SubscriptionRepository).to(SubscriptionRepository);
-container.bind<ISubscriptionService>(TYPES.SubscriptionService).to(SubscriptionService);
-container.bind<ISubscriptionController>(TYPES.SubscriptionController).to(SubscriptionController);
 
 container.bind<IContentViewService>(TYPES.ContentViewService).to(ContentViewService);
 container.bind<IContentViewRepository>(TYPES.ContentViewRepository).to(ContentViewRepository);

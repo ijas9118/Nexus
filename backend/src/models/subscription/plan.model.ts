@@ -13,6 +13,7 @@ interface IPlan extends Document<string> {
   logo: string;
   featured: boolean;
   isActive: boolean;
+  stripePriceId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -69,6 +70,9 @@ const PlanSchema = new Schema<IPlan>(
     isActive: {
       type: Boolean,
       default: true,
+    },
+    stripePriceId: {
+      type: String,
     },
   },
   {

@@ -1,5 +1,6 @@
 import type { Express } from "express";
 
+import { StatusCodes } from "http-status-codes";
 import { inject, injectable } from "inversify";
 
 import type { IContentRepository } from "@/core/interfaces/repositories/i-content-repository";
@@ -7,11 +8,13 @@ import type { IUserRepository } from "@/core/interfaces/repositories/i-user-repo
 import type { IContentService } from "@/core/interfaces/services/i-content-service";
 import type { IContentViewService } from "@/core/interfaces/services/i-content-view-service";
 import type { IHistoryService } from "@/core/interfaces/services/i-history-service";
+import type { ISubscriptionService } from "@/core/interfaces/services/i-subscription-service";
 import type { UserRole } from "@/core/types/user-types";
 import type { IContent } from "@/models/content/content.model";
 
 import { TYPES } from "@/di/types";
 import { uploadToCloudinary } from "@/utils/cloudinary-utils";
+import CustomError from "@/utils/custom-error";
 
 @injectable()
 export class ContentService implements IContentService {
@@ -20,6 +23,7 @@ export class ContentService implements IContentService {
     @inject(TYPES.UserRepository) private _userRepository: IUserRepository,
     @inject(TYPES.ContentViewService) private _viewService: IContentViewService,
     @inject(TYPES.HistoryService) private _historyService: IHistoryService,
+    @inject(TYPES.SubscriptionService) private _subscriptionService: ISubscriptionService,
   ) {}
 
   async createContent(
@@ -74,11 +78,26 @@ export class ContentService implements IContentService {
   async getContentById(id: string, role: UserRole, userId: string): Promise<IContent | null> {
     const content = await this._contentRepository.findContent(id, role, userId);
 
-    if (content && userId) {
-      await this._viewService.handleContentView(userId, id);
+    if (content) {
+      if (content.isPremium) {
+        if (role !== "premium" && role !== "mentor" && role !== "admin") {
+          throw new CustomError("Premium subscription required", StatusCodes.FORBIDDEN);
+        }
 
-      if (role === "user") {
-        await this._historyService.addHistory(userId, id);
+        if (role === "premium") {
+          const activeSubscription = await this._subscriptionService.getUserActiveSubscription(userId);
+          if (!activeSubscription || new Date(activeSubscription.endDate) < new Date()) {
+            throw new CustomError("Your subscription has expired", StatusCodes.FORBIDDEN);
+          }
+        }
+      }
+
+      if (userId) {
+        await this._viewService.handleContentView(userId, id);
+
+        if (role === "user") {
+          await this._historyService.addHistory(userId, id);
+        }
       }
     }
 

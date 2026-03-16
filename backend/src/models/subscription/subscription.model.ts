@@ -12,6 +12,7 @@ interface ISubscription extends Document<string> {
   endDate: Date;
   interval: string;
   stripeSubscriptionId?: string;
+  stripeCustomerId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -55,6 +56,9 @@ const SubscriptionSchema: Schema = new Schema(
       type: String,
     },
     stripeSubscriptionId: {
+      type: String,
+    },
+    stripeCustomerId: {
       type: String,
     },
   },

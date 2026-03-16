@@ -169,6 +169,7 @@ export const MESSAGES = {
     PLAN_NOT_FOUND: "Plan not found",
     PLAN_DELETED: "Plan deleted successfully",
     NO_SUBSCRIPTION: "No active subscription found.",
+    SUBSCRIPTION_NOT_FOUND: "Subscription not found",
     WITHDRAWAL_SUBMITTED: "Withdrawal request submitted",
     ALREADY_SUBSCRIBED: "User is already subscribed to this plan with an active subscription.",
     UNKNOWN_SESSION_TYPE: "Unknown checkout session type",
